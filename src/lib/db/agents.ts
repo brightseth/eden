@@ -211,6 +211,26 @@ function getMockAgents(): Agent[] {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },
+    {
+      id: 'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+      name: 'Eden Academy Agent',
+      artistStatement: 'Demo agent for Eden Academy operator training system',
+      avatarUrl: null,
+      walletAddress: '0xabcd...',
+      currentStage: 2,
+      currentDay: 25,
+      totalDays: 100,
+      launchDate: new Date(now.getTime() + 75 * 24 * 60 * 60 * 1000).toISOString(),
+      daysUntilLaunch: 75,
+      economyMode: 'training' as const,
+      metadata: {
+        style: 'educational content',
+        medium: 'AI training demonstrations',
+        farcasterUsername: 'edenacademy',
+      },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
   ];
 }
 
