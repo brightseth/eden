@@ -164,7 +164,7 @@ export function DailyPracticeLog({ agentId, onAddEntry }: DailyPracticeLogProps)
   const momentumDirection = todayEntry?.collects > yesterdayEntry?.collects ? 'up' : 'down';
 
   const toggleTask = (taskId: string) => {
-    toggleTaskComplete({ taskId, completed: !todayTasks.find(t => t.id === taskId)?.completed });
+    toggleTaskComplete({ taskId, completed: !todayTasks.find((t: any) => t.id === taskId)?.completed });
   };
   
   const handleSaveEntry = () => {
