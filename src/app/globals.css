@@ -1,26 +1,173 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 0%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 20%;
+    --input: 0 0% 10%;
+    --ring: 0 0% 100%;
+    --radius: 0;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Color System */
+  .bg-eden-black {
+    background-color: #000000;
+  }
+  
+  .bg-eden-dark {
+    background-color: #0a0a0a;
+  }
+  
+  .text-eden-white {
+    color: #ffffff;
+  }
+  
+  .text-eden-gray {
+    color: #888888;
+  }
+  
+  .border-eden-white {
+    border-color: #ffffff;
+  }
+  
+  /* Category Colors */
+  .category-creative {
+    color: #00ff00;
+  }
+  
+  .category-social {
+    color: #00ffff;
+  }
+  
+  .category-economic {
+    color: #ff00ff;
+  }
+  
+  /* Status Colors */
+  .status-on-track {
+    color: #00ff00;
+  }
+  
+  .status-at-risk {
+    color: #ffff00;
+  }
+  
+  .status-behind {
+    color: #ff0000;
+  }
+  
+  /* Economy Mode Badges */
+  .economy-training {
+    @apply text-yellow-400 border;
+    background-color: rgba(120, 53, 15, 0.2);
+    border-color: rgba(250, 204, 21, 0.4);
+  }
+  
+  .economy-live {
+    @apply text-green-400 border;
+    background-color: rgba(20, 83, 45, 0.2);
+    border-color: rgba(74, 222, 128, 0.4);
+  }
+  
+  /* Typography */
+  .display-caps {
+    @apply uppercase tracking-wider font-bold;
+  }
+  
+  /* Progress Bar */
+  .progress-bar {
+    @apply font-mono text-green-400;
+  }
+  
+  /* Terminal Box Styles */
+  .terminal-box {
+    @apply border bg-black/50 backdrop-blur-sm;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .interactive-element {
+    @apply transition-all cursor-pointer;
+  }
+  
+  .interactive-element:hover {
+    border-color: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Grid Layouts */
+  .grid-academy {
+    @apply grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6;
+  }
+  
+  /* Terminal Headers */
+  .terminal-header {
+    @apply text-lg font-bold tracking-wider uppercase text-eden-white;
+  }
+  
+  /* Metric Cards */
+  .metric-card {
+    @apply terminal-box;
+  }
+  
+  .metric-value {
+    @apply text-2xl font-mono font-bold;
+  }
+  
+  .metric-label {
+    @apply text-xs text-eden-gray uppercase tracking-wide;
+  }
+  
+  /* Animations */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out;
+  }
+  
+  /* Glow Effects */
+  .glow-green {
+    text-shadow: 0 0 20px rgba(0, 255, 100, 0.5);
+  }
 }
