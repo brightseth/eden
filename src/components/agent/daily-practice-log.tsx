@@ -151,11 +151,11 @@ export function DailyPracticeLog({ agentId, onAddEntry }: DailyPracticeLogProps)
 
   // Calculate weekly totals
   const weeklyStats = practiceData?.metrics || {
-    totalCost: entries.reduce((sum, e) => sum + (e.cost_usdc || e.costUSDC || 0), 0),
-    totalRevenue: entries.reduce((sum, e) => sum + (e.revenue_usdc || e.revenueUSDC || 0), 0),
-    totalCollects: entries.reduce((sum, e) => sum + e.collects, 0),
-    avgEngagement: entries.reduce((sum, e) => sum + e.reactions, 0) / (entries.length || 1),
-    streakDays: entries.filter(e => (e.published_count || e.publishedCount || 0) > 0).length
+    totalCost: entries.reduce((sum: number, e: any) => sum + (e.cost_usdc || e.costUSDC || 0), 0),
+    totalRevenue: entries.reduce((sum: number, e: any) => sum + (e.revenue_usdc || e.revenueUSDC || 0), 0),
+    totalCollects: entries.reduce((sum: number, e: any) => sum + e.collects, 0),
+    avgEngagement: entries.reduce((sum: number, e: any) => sum + e.reactions, 0) / (entries.length || 1),
+    streakDays: entries.filter((e: any) => (e.published_count || e.publishedCount || 0) > 0).length
   };
 
   const weeklyProfit = weeklyStats.totalRevenue - weeklyStats.totalCost;
