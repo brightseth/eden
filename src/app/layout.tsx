@@ -31,14 +31,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-eden-black text-eden-white`}
       >
         <QueryProvider>
-          <RealtimeProvider>
-            <div className="min-h-screen flex flex-col">
-              <Header />
-              <main className="flex-1 container mx-auto px-4 py-8">
-                {children}
-              </main>
-            </div>
-          </RealtimeProvider>
+          <div className="min-h-screen flex flex-col">
+            <Header />
+            <main className="flex-1 container mx-auto px-4 py-8">
+              {children}
+            </main>
+          </div>
         </QueryProvider>
       </body>
     </html>

@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/client';
 import { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 
 export function useRealtimeSubscription() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
+    const supabase = createClient();
     const channels: RealtimeChannel[] = [];
 
     // Subscribe to daily_metrics changes
