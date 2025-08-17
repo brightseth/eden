@@ -3,6 +3,7 @@
 import React from 'react';
 import { Check, X, AlertTriangle, Trophy, TrendingUp, Clock } from 'lucide-react';
 import { useAgentMetrics } from '@/hooks/use-operator-data';
+import { safeToFixed, safeToInt } from '@/lib/utils/number';
 
 interface GraduationGateProps {
   agentId: string;
@@ -144,7 +145,7 @@ export function GraduationGate({ agentId }: GraduationGateProps) {
             </p>
           </div>
           <div className="text-right">
-            <div className="text-3xl font-mono">{overallProgress.toFixed(0)}%</div>
+            <div className="text-3xl font-mono">{safeToInt(overallProgress)}%</div>
             <div className="text-xs text-eden-gray">COMPLETE</div>
           </div>
         </div>
@@ -270,21 +271,21 @@ export function GraduationGate({ agentId }: GraduationGateProps) {
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div className="flex justify-between">
             <span className="text-eden-gray">Total Revenue:</span>
-            <span className="font-mono text-green-500">${MOCK_METRICS.totalRevenue.toFixed(2)}</span>
+            <span className="font-mono text-green-500">${safeToFixed(MOCK_METRICS.totalRevenue)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-eden-gray">Total Costs:</span>
-            <span className="font-mono text-red-500">-${MOCK_METRICS.totalCosts.toFixed(2)}</span>
+            <span className="font-mono text-red-500">-${safeToFixed(MOCK_METRICS.totalCosts)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-eden-gray">Net Profit:</span>
             <span className="font-mono text-green-500">
-              ${(MOCK_METRICS.totalRevenue - MOCK_METRICS.totalCosts).toFixed(2)}
+              ${safeToFixed(MOCK_METRICS.totalRevenue - MOCK_METRICS.totalCosts)}
             </span>
           </div>
           <div className="flex justify-between">
             <span className="text-eden-gray">Daily Average:</span>
-            <span className="font-mono">${MOCK_METRICS.avgDailyProfit.toFixed(2)}/day</span>
+            <span className="font-mono">${safeToFixed(MOCK_METRICS.avgDailyProfit)}/day</span>
           </div>
           <div className="flex justify-between">
             <span className="text-eden-gray">Total Collects:</span>
@@ -292,7 +293,7 @@ export function GraduationGate({ agentId }: GraduationGateProps) {
           </div>
           <div className="flex justify-between">
             <span className="text-eden-gray">Monthly Projection:</span>
-            <span className="font-mono text-green-500">${MOCK_METRICS.estimatedMonthlyRevenue.toFixed(2)}</span>
+            <span className="font-mono text-green-500">${safeToFixed(MOCK_METRICS.estimatedMonthlyRevenue)}</span>
           </div>
         </div>
       </div>

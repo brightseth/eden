@@ -65,7 +65,7 @@ export function AgentMetrics({ agent, overview, metrics }: AgentMetricsProps) {
                     creationsTrend > 0 ? 'text-green-400' : 'text-red-400'
                   )}>
                     {creationsTrend > 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                    {Math.abs(creationsTrend).toFixed(0)}%
+                    {safeToInt(Math.abs(creationsTrend))}%
                   </span>
                 )}
               </div>
@@ -125,14 +125,14 @@ export function AgentMetrics({ agent, overview, metrics }: AgentMetricsProps) {
                     engagementTrend > 0 ? 'text-green-400' : 
                     engagementTrend < 0 ? 'text-red-400' : ''
                   )}>
-                    {latestMetric.engagementScore.toFixed(1)}
+                    {safeToFixed(latestMetric.engagementScore, 1)}
                   </span>
                 </div>
                 
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-eden-gray">Balance</span>
                   <span className="font-mono">
-                    ${latestMetric.walletBalance.toFixed(2)}
+                    ${safeToFixed(latestMetric.walletBalance)}
                   </span>
                 </div>
               </div>

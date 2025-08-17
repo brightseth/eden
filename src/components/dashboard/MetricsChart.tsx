@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { DailyMetrics } from '@/types';
 import { Line, LineChart, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { cn } from '@/lib/utils';
+import { safeToFixed } from '@/lib/utils/number';
 
 interface MetricsChartProps {
   metrics: DailyMetrics[];
@@ -32,7 +33,7 @@ export function MetricsChart({ metrics, className }: MetricsChartProps) {
           <p className="text-xs font-mono mb-2">{label}</p>
           {payload.map((entry: any, index: number) => (
             <p key={index} className="text-xs" style={{ color: entry.color }}>
-              {entry.name}: ${entry.value.toFixed(2)}
+              {entry.name}: ${safeToFixed(entry.value)}
             </p>
           ))}
         </div>
@@ -111,13 +112,13 @@ export function MetricsChart({ metrics, className }: MetricsChartProps) {
         <div>
           <div className="text-xs text-eden-gray">TOTAL COSTS</div>
           <div className="text-sm font-mono font-bold text-eden-economic">
-            ${chartData.reduce((sum, d) => sum + d.costs, 0).toFixed(2)}
+            ${safeToFixed(chartData.reduce((sum, d) => sum + d.costs, 0))}
           </div>
         </div>
         <div>
           <div className="text-xs text-eden-gray">TOTAL REVENUE</div>
           <div className="text-sm font-mono font-bold text-eden-social">
-            ${chartData.reduce((sum, d) => sum + d.revenue, 0).toFixed(2)}
+            ${safeToFixed(chartData.reduce((sum, d) => sum + d.revenue, 0))}
           </div>
         </div>
         <div>
@@ -126,7 +127,7 @@ export function MetricsChart({ metrics, className }: MetricsChartProps) {
             'text-sm font-mono font-bold',
             chartData[chartData.length - 1]?.netPosition >= 0 ? 'text-eden-social' : 'text-eden-economic'
           )}>
-            ${chartData[chartData.length - 1]?.netPosition.toFixed(2) || '0.00'}
+            ${safeToFixed(chartData[chartData.length - 1]?.netPosition)}
           </div>
         </div>
         <div>

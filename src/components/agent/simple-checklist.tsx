@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Check, Square } from 'lucide-react';
+import { safeToInt } from '@/lib/utils/number';
 
 interface ChecklistItem {
   id: string;
@@ -74,7 +75,7 @@ export function SimpleChecklist() {
       <div className="space-y-2">
         <div className="flex justify-between text-xs font-mono">
           <span>{completedCount}/{items.length} COMPLETE</span>
-          <span>{progress.toFixed(0)}%</span>
+          <span>{safeToInt(progress)}%</span>
         </div>
         <div className="w-full bg-eden-white/10 rounded-full h-2">
           <div 
