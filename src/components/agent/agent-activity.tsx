@@ -4,6 +4,7 @@ import { DailyMetrics } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Activity, Image, MessageSquare, Users, Zap, TrendingUp, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { safeToFixed, safeToInt } from '@/lib/utils/number';
 
 interface AgentActivityProps {
   metrics?: DailyMetrics[];
@@ -56,7 +57,7 @@ export function AgentActivity({ metrics }: AgentActivityProps) {
         type: 'revenue',
         icon: TrendingUp,
         color: 'text-green-400',
-        title: `Earned $${metric.revenuePrimary.toFixed(2)}`,
+        title: `Earned $${safeToFixed(metric.revenuePrimary)}`,
         description: `Revenue from artwork sales`,
         value: metric.revenuePrimary,
       });
@@ -79,7 +80,7 @@ export function AgentActivity({ metrics }: AgentActivityProps) {
         icon: Activity,
         color: 'text-pink-400',
         title: 'High engagement day',
-        description: `Engagement score: ${metric.engagementScore.toFixed(0)}`,
+        description: `Engagement score: ${safeToInt(metric.engagementScore)}`,
         value: metric.engagementScore,
       });
     }
@@ -132,7 +133,7 @@ export function AgentActivity({ metrics }: AgentActivityProps) {
                 <Activity className="w-3 h-3" />
                 <span>Engagement</span>
               </div>
-              <p className="font-mono text-xl">{weeklyStats.avgEngagement.toFixed(0)}</p>
+              <p className="font-mono text-xl">{safeToInt(weeklyStats.avgEngagement)}</p>
             </div>
             
             <div className="space-y-1">
@@ -195,7 +196,7 @@ export function AgentActivity({ metrics }: AgentActivityProps) {
                         
                         {activity.type === 'revenue' && (
                           <span className="text-sm font-mono text-green-400">
-                            +${activity.value.toFixed(2)}
+                            +${safeToFixed(activity.value)}
                           </span>
                         )}
                       </div>

@@ -4,6 +4,7 @@ import { DailyMetrics } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp, TrendingDown, DollarSign, Coins, Wallet, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { safeToFixed, safeToInt } from '@/lib/utils/number';
 
 interface AgentEconomyProps {
   metrics?: DailyMetrics[];
@@ -54,7 +55,7 @@ export function AgentEconomy({ metrics }: AgentEconomyProps) {
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <p className="text-xs text-eden-gray uppercase">Wallet Balance</p>
-                <p className="text-2xl font-mono">${currentBalance.toFixed(2)}</p>
+                <p className="text-2xl font-mono">${safeToFixed(currentBalance)}</p>
                 <div className={cn(
                   "flex items-center gap-1 text-xs font-mono",
                   balanceChange >= 0 ? "text-green-400" : "text-red-400"
@@ -64,7 +65,7 @@ export function AgentEconomy({ metrics }: AgentEconomyProps) {
                   ) : (
                     <ArrowDownRight className="w-3 h-3" />
                   )}
-                  <span>{Math.abs(balanceChangePercent).toFixed(1)}%</span>
+                  <span>{safeToFixed(Math.abs(balanceChangePercent), 1)}%</span>
                   <span className="text-eden-gray">7d</span>
                 </div>
               </div>
@@ -82,10 +83,10 @@ export function AgentEconomy({ metrics }: AgentEconomyProps) {
                   "text-2xl font-mono",
                   netProfit7d >= 0 ? "text-green-400" : "text-red-400"
                 )}>
-                  {netProfit7d >= 0 ? '+' : ''}{netProfit7d.toFixed(2)}
+                  {netProfit7d >= 0 ? '+' : ''}{safeToFixed(netProfit7d)}
                 </p>
                 <p className="text-xs text-eden-gray">
-                  ${totalRevenue7d.toFixed(2)} - ${totalCosts7d.toFixed(2)}
+                  ${safeToFixed(totalRevenue7d)} - ${safeToFixed(totalCosts7d)}
                 </p>
               </div>
               {netProfit7d >= 0 ? (
@@ -115,7 +116,7 @@ export function AgentEconomy({ metrics }: AgentEconomyProps) {
                   <span>Revenue</span>
                 </div>
                 <p className="font-mono text-lg text-green-400">
-                  ${totalRevenue7d.toFixed(2)}
+                  ${safeToFixed(totalRevenue7d)}
                 </p>
               </div>
               
@@ -125,7 +126,7 @@ export function AgentEconomy({ metrics }: AgentEconomyProps) {
                   <span>Costs</span>
                 </div>
                 <p className="font-mono text-lg text-red-400">
-                  ${totalCosts7d.toFixed(2)}
+                  ${safeToFixed(totalCosts7d)}
                 </p>
               </div>
               
@@ -138,7 +139,7 @@ export function AgentEconomy({ metrics }: AgentEconomyProps) {
                   "font-mono text-lg",
                   netProfit7d >= 0 ? "text-green-400" : "text-red-400"
                 )}>
-                  {netProfit7d >= 0 ? '+' : ''}{netProfit7d.toFixed(2)}
+                  {netProfit7d >= 0 ? '+' : ''}{safeToFixed(netProfit7d)}
                 </p>
               </div>
             </div>
@@ -155,7 +156,7 @@ export function AgentEconomy({ metrics }: AgentEconomyProps) {
                   <span>Revenue</span>
                 </div>
                 <p className="font-mono text-lg text-green-400">
-                  ${totalRevenue30d.toFixed(2)}
+                  ${safeToFixed(totalRevenue30d)}
                 </p>
               </div>
               
@@ -165,7 +166,7 @@ export function AgentEconomy({ metrics }: AgentEconomyProps) {
                   <span>Costs</span>
                 </div>
                 <p className="font-mono text-lg text-red-400">
-                  ${totalCosts30d.toFixed(2)}
+                  ${safeToFixed(totalCosts30d)}
                 </p>
               </div>
               
@@ -178,7 +179,7 @@ export function AgentEconomy({ metrics }: AgentEconomyProps) {
                   "font-mono text-lg",
                   netProfit30d >= 0 ? "text-green-400" : "text-red-400"
                 )}>
-                  {netProfit30d >= 0 ? '+' : ''}{netProfit30d.toFixed(2)}
+                  {netProfit30d >= 0 ? '+' : ''}{safeToFixed(netProfit30d)}
                 </p>
               </div>
             </div>
@@ -212,7 +213,7 @@ export function AgentEconomy({ metrics }: AgentEconomyProps) {
                       "font-mono w-20 text-right",
                       day.net >= 0 ? "text-green-400" : "text-red-400"
                     )}>
-                      {day.net >= 0 ? '+' : ''}{day.net.toFixed(0)}
+                      {day.net >= 0 ? '+' : ''}{safeToInt(day.net)}
                     </span>
                   </div>
                 </div>

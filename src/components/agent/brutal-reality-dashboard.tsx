@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { AlertTriangle, TrendingDown, DollarSign, Target, X, ChevronRight } from 'lucide-react';
+import { safeToFixed } from '@/lib/utils/number';
 import { 
   CreatorMetrics, 
   GraduationRequirement,
@@ -123,12 +124,12 @@ export function BrutalRealityDashboard() {
           <div className="space-y-2 font-mono text-sm">
             <div className="flex justify-between">
               <span>Total spent so far</span>
-              <span className="text-red-500">-${metrics.totalSpent.toFixed(2)}</span>
+              <span className="text-red-500">-${safeToFixed(metrics.totalSpent)}</span>
             </div>
             <div className="flex justify-between">
               <span>Total earned</span>
               <span className={metrics.totalEarned > 0 ? 'text-green-500' : 'text-eden-gray'}>
-                ${metrics.totalEarned.toFixed(2)}
+                ${safeToFixed(metrics.totalEarned)}
               </span>
             </div>
             <div className="flex justify-between border-t border-eden-white/10 pt-2">
@@ -163,7 +164,7 @@ export function BrutalRealityDashboard() {
             </div>
             <div className="flex justify-between">
               <span>Engagement rate</span>
-              <span className="text-red-500">{(metrics.engagementRate * 100).toFixed(1)}% (basically zero)</span>
+              <span className="text-red-500">{safeToFixed(metrics.engagementRate * 100, 1)}% (basically zero)</span>
             </div>
             <div className="flex justify-between border-t border-eden-white/10 pt-2">
               <span>Sales</span>

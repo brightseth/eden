@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFinancialModel, useSaveFinancialModel } from '@/hooks/use-operator-data';
 import type { CreateFinancialModel } from '@/lib/validation/schemas';
+import { safeToFixed } from '@/lib/utils/number';
 
 interface FinancialModelProps {
   agentId: string;
@@ -131,7 +132,7 @@ export function FinancialModel({ agentId, currentTreasury = 0, onSave }: Financi
         <div className="space-y-4">
           <div>
             <label className="text-eden-gray text-sm">
-              PRICE PER UNIT: ${model.price.toFixed(2)}
+              PRICE PER UNIT: ${safeToFixed(model.price)}
             </label>
             <input
               type="range"
@@ -199,14 +200,14 @@ export function FinancialModel({ agentId, currentTreasury = 0, onSave }: Financi
           <div className="flex justify-between">
             <span className="text-eden-gray">Weekly Revenue:</span>
             <span className="text-eden-white font-mono">
-              ${model.weeklyRevenue.toFixed(2)}
+              ${safeToFixed(model.weeklyRevenue)}
             </span>
           </div>
           
           <div className="flex justify-between">
             <span className="text-eden-gray">Weekly Costs:</span>
             <span className="text-eden-white font-mono">
-              ${model.weeklyCOGS.toFixed(2)}
+              ${safeToFixed(model.weeklyCOGS)}
             </span>
           </div>
           
@@ -215,7 +216,7 @@ export function FinancialModel({ agentId, currentTreasury = 0, onSave }: Financi
             <span className={`font-mono ${
               model.weeklyGrossProfit >= 0 ? 'text-green-500' : 'text-red-500'
             }`}>
-              ${model.weeklyGrossProfit.toFixed(2)}
+              ${safeToFixed(model.weeklyGrossProfit)}
             </span>
           </div>
           
@@ -225,7 +226,7 @@ export function FinancialModel({ agentId, currentTreasury = 0, onSave }: Financi
               model.marginPercent >= 30 ? 'text-green-500' : 
               model.marginPercent >= 0 ? 'text-yellow-500' : 'text-red-500'
             }`}>
-              {model.marginPercent.toFixed(1)}%
+              {safeToFixed(model.marginPercent, 1)}%
             </span>
           </div>
           
@@ -261,7 +262,7 @@ export function FinancialModel({ agentId, currentTreasury = 0, onSave }: Financi
               {model.weeklyGrossProfit >= 0 ? '✓' : '□'}
             </span>
             <span className={model.weeklyGrossProfit >= 0 ? 'text-green-500' : 'text-eden-gray'}>
-              Weekly profit positive (currently: ${model.weeklyGrossProfit.toFixed(2)})
+              Weekly profit positive (currently: ${safeToFixed(model.weeklyGrossProfit)})
             </span>
           </div>
           
@@ -279,7 +280,7 @@ export function FinancialModel({ agentId, currentTreasury = 0, onSave }: Financi
               {model.marginPercent >= 30 ? '✓' : '□'}
             </span>
             <span className={model.marginPercent >= 30 ? 'text-green-500' : 'text-eden-gray'}>
-              Healthy margin (≥30%, currently: {model.marginPercent.toFixed(1)}%)
+              Healthy margin (≥30%, currently: {safeToFixed(model.marginPercent, 1)}%)
             </span>
           </div>
         </div>
@@ -287,10 +288,10 @@ export function FinancialModel({ agentId, currentTreasury = 0, onSave }: Financi
         {model.weeklyGrossProfit < 0 && (
           <div className="mt-4 p-3 bg-red-500/10 border border-red-500 rounded">
             <p className="text-red-500 text-sm font-mono">
-              ⚠️ LOSING ${Math.abs(model.weeklyGrossProfit).toFixed(2)}/WEEK
+              ⚠️ LOSING ${safeToFixed(Math.abs(model.weeklyGrossProfit))}/WEEK
             </p>
             <p className="text-eden-gray text-xs mt-1">
-              Increase price to ${(model.unitCost / (1 - model.platformFeePct) * 1.3).toFixed(2)} 
+              Increase price to ${safeToFixed(model.unitCost / (1 - model.platformFeePct) * 1.3)} 
               or reduce quantity to break even
             </p>
           </div>

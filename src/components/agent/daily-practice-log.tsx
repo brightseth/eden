@@ -11,6 +11,7 @@ import {
   useToggleTask
 } from '@/hooks/use-operator-data';
 import type { CreateDailyPractice } from '@/lib/validation/schemas';
+import { safeToFixed, safeToInt } from '@/lib/utils/number';
 
 interface DailyPracticeLogProps {
   agentId: string;
@@ -246,19 +247,19 @@ export function DailyPracticeLog({ agentId, onAddEntry }: DailyPracticeLogProps)
           <div className="flex justify-between">
             <span className="text-eden-gray">Revenue:</span>
             <span className="font-mono text-green-500">
-              ${weeklyStats.totalRevenue.toFixed(2)}
+              ${safeToFixed(weeklyStats.totalRevenue)}
             </span>
           </div>
           <div className="flex justify-between">
             <span className="text-eden-gray">Costs:</span>
             <span className="font-mono text-red-500">
-              -${weeklyStats.totalCost.toFixed(2)}
+              -${safeToFixed(weeklyStats.totalCost)}
             </span>
           </div>
           <div className="flex justify-between">
             <span className="text-eden-gray">Net Profit:</span>
             <span className={`font-mono ${weeklyProfit >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-              ${weeklyProfit.toFixed(2)}
+              ${safeToFixed(weeklyProfit)}
             </span>
           </div>
           <div className="flex justify-between">
@@ -294,8 +295,8 @@ export function DailyPracticeLog({ agentId, onAddEntry }: DailyPracticeLogProps)
               <div className="text-sm">
                 <p className="text-red-500 font-mono">UNPROFITABLE WEEK</p>
                 <p className="text-eden-gray text-xs mt-1">
-                  Need ${Math.abs(weeklyProfit).toFixed(2)} more revenue or reduce costs by 
-                  {' '}{((weeklyStats.totalCost - weeklyStats.totalRevenue) / weeklyStats.totalCost * 100).toFixed(0)}%
+                  Need ${safeToFixed(Math.abs(weeklyProfit))} more revenue or reduce costs by 
+                  {' '}{safeToInt((weeklyStats.totalCost - weeklyStats.totalRevenue) / weeklyStats.totalCost * 100)}%
                 </p>
               </div>
             </div>
@@ -330,7 +331,7 @@ export function DailyPracticeLog({ agentId, onAddEntry }: DailyPracticeLogProps)
                     <div className={`font-mono text-sm ${
                       revenue - cost >= 0 ? 'text-green-500' : 'text-red-500'
                     }`}>
-                      ${(revenue - cost).toFixed(2)}
+                      ${safeToFixed(revenue - cost)}
                     </div>
                   </div>
                 </div>

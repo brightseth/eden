@@ -1,6 +1,7 @@
 'use client';
 
 import { DollarSign, TrendingDown, Target, AlertTriangle } from 'lucide-react';
+import { safeToFixed } from '@/lib/utils/number';
 
 interface JournalEntry {
   day: number;
@@ -59,7 +60,7 @@ export function TrainingJournal() {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm text-eden-gray">COSTS</span>
-            <span className="font-mono text-red-500">-${totalSpent.toFixed(2)}</span>
+            <span className="font-mono text-red-500">-${safeToFixed(totalSpent)}</span>
           </div>
           <div className="w-full bg-eden-white/10 rounded-full h-2">
             <div className="bg-red-500 h-2 rounded-full" style={{ width: '100%' }} />
@@ -70,7 +71,7 @@ export function TrainingJournal() {
       <div className="border border-yellow-500/50 bg-yellow-500/10 rounded-lg p-4 mb-8">
         <div className="flex items-center gap-2">
           <AlertTriangle className="w-4 h-4 text-yellow-500" />
-          <span className="text-sm">You're spending ${avgSpendPerDay.toFixed(2)}/day with zero return</span>
+          <span className="text-sm">You're spending ${safeToFixed(avgSpendPerDay)}/day with zero return</span>
         </div>
       </div>
 
@@ -111,7 +112,7 @@ export function TrainingJournal() {
               <span className="text-red-500">□</span>
               <span>Profitable week</span>
             </span>
-            <span className="text-red-500 text-sm font-mono">-${totalSpent.toFixed(2)} this week</span>
+            <span className="text-red-500 text-sm font-mono">-${safeToFixed(totalSpent)} this week</span>
           </div>
         </div>
         
@@ -136,7 +137,7 @@ export function TrainingJournal() {
                 <span className="text-sm text-eden-gray w-16">{entry.date}</span>
                 <div className="flex items-center gap-4 text-sm">
                   <span className={entry.spent > 0 ? 'text-red-500' : 'text-eden-gray'}>
-                    -${entry.spent.toFixed(2)}
+                    -${safeToFixed(entry.spent)}
                   </span>
                   <span className="text-eden-gray">•</span>
                   <span className={entry.creations > 0 ? '' : 'text-eden-gray'}>
