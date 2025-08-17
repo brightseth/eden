@@ -80,7 +80,7 @@ export default function DashboardPage() {
             </div>
           ) : agents && agents.length > 0 ? (
             <div className="grid gap-4">
-              {agents.map((agent) => {
+              {agents.map((agent: any) => {
                 // Map old stage numbers to new stage names
                 const stageMap: { [key: number]: string } = {
                   1: 'setup',
