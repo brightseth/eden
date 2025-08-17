@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import { safeToFixed } from '@/lib/utils/number';
 import { 
   CURRICULUM_PHASES, 
   CURRICULUM_STAGES, 
@@ -40,7 +41,7 @@ export function EnhancedPhaseTimeline({
         </div>
         <div className="text-right">
           <div className="text-xs font-mono text-eden-gray">ONBOARDING</div>
-          <div className="text-lg font-mono">{overallProgress.toFixed(1)}%</div>
+          <div className="text-lg font-mono">{safeToFixed(overallProgress, 1)}%</div>
         </div>
       </div>
 
@@ -62,7 +63,7 @@ export function EnhancedPhaseTimeline({
       <div className="terminal-box bg-eden-black/50 p-4">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-mono text-eden-gray">ACADEMY PROGRESS</span>
-          <span className="text-xs font-mono">{overallProgress.toFixed(1)}% COMPLETE</span>
+          <span className="text-xs font-mono">{safeToFixed(overallProgress, 1)}% COMPLETE</span>
         </div>
         <div className="w-full bg-eden-white/10 rounded-full h-2">
           <div 

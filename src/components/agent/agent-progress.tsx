@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { CheckCircle2, Circle, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { safeToInt } from '@/lib/utils/number';
 
 interface AgentProgressProps {
   agent: Agent;
@@ -90,7 +91,7 @@ export function AgentProgress({ agent, overview }: AgentProgressProps) {
                       </h3>
                       {isCurrent && (
                         <span className="text-xs font-mono text-eden-gray">
-                          {stageProgress.toFixed(0)}%
+                          {safeToInt(stageProgress)}%
                         </span>
                       )}
                     </div>

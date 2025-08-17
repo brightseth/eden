@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Check, Square, ExternalLink, ChevronRight, Info } from 'lucide-react';
+import { safeToInt } from '@/lib/utils/number';
 
 interface ChecklistItem {
   id: string;
@@ -283,7 +284,7 @@ export function EnhancedChecklist() {
         <div className="mt-6 space-y-2">
           <div className="flex justify-between text-xs font-mono">
             <span>{tasks.filter(t => t.completed).length}/{tasks.length} TASKS COMPLETE</span>
-            <span>{overallProgress.toFixed(0)}%</span>
+            <span>{safeToInt(overallProgress)}%</span>
           </div>
           <div className="w-full bg-eden-white/10 rounded-full h-2">
             <div 

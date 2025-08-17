@@ -8,6 +8,7 @@ import { AgentActivity } from './agent-activity';
 import { AgentEconomy } from './agent-economy';
 import { AgentChecklist } from './agent-checklist';
 import { IntegrationDashboard } from './integration-dashboard';
+import { safeToInt } from '@/lib/utils/number';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
 import { Activity, DollarSign, CheckSquare, BarChart3, Calendar, Trophy, Settings } from 'lucide-react';
@@ -52,7 +53,7 @@ export function CurriculumTabs({ agentId, currentStage = 3 }: CurriculumTabsProp
             <span className="hidden md:inline">Economy</span>
             {economyTotal > 0 && (
               <span className="text-[10px] font-mono bg-eden-white/10 text-eden-white px-1.5 py-0.5 rounded">
-                ${economyTotal.toFixed(0)}
+                ${safeToInt(economyTotal)}
               </span>
             )}
           </TabsTrigger>
