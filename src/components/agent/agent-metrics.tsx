@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { TrendingUp, TrendingDown, Activity, DollarSign, Users, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { safeToFixed, safeToInt } from '@/lib/utils/number';
 
 interface AgentMetricsProps {
   agent: Agent;
@@ -76,7 +77,7 @@ export function AgentMetrics({ agent, overview, metrics }: AgentMetricsProps) {
                 <span>Revenue</span>
               </div>
               <div className="font-mono text-lg">
-                ${overview.metrics.revenue.toFixed(2)}
+                ${safeToFixed(overview.metrics.revenue)}
               </div>
             </div>
 

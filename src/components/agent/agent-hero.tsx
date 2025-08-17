@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { ExternalLink, Twitter, Globe, Wallet } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { safeToFixed, safeToInt } from '@/lib/utils/number';
 
 interface AgentHeroProps {
   agent: Agent;
@@ -91,7 +92,7 @@ export function AgentHero({ agent, overview }: AgentHeroProps) {
               <div className="flex items-center gap-2">
                 <span className="text-eden-gray">REVENUE:</span>
                 <span className="font-bold text-green-400">
-                  ${overview.metrics.revenue.toFixed(0)}
+                  ${safeToInt(overview.metrics.revenue)}
                 </span>
               </div>
             </div>

@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { formatDate, cn } from '@/lib/utils';
 import { useAgentOverview } from '@/hooks/use-agent-overview';
+import { safeToFixed } from '@/lib/utils/number';
 
 interface AgentCardProps {
   agent: Agent;
@@ -97,7 +98,7 @@ export function AgentCard({ agent }: AgentCardProps) {
             <div className="flex justify-between">
               <span className="text-eden-gray">REVENUE:</span>
               <span className={agent.economyMode === 'training' ? 'text-yellow-400' : 'category-economic'}>
-                ${overview?.metrics.revenue.toFixed(2) || '0.00'}
+                ${safeToFixed(overview?.metrics.revenue)}
                 {agent.economyMode === 'training' && ' [SIM]'}
               </span>
             </div>
