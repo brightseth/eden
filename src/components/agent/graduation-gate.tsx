@@ -100,7 +100,7 @@ export function GraduationGate({ agentId }: GraduationGateProps) {
       description: 'At least 10 total collects in 14 days',
       current: metrics.seven_day?.collects || 0,
       target: 10,
-      met: metrics.readiness.min_collects,
+      met: metrics.readiness?.min_collects || false,
       critical: true
     },
     {

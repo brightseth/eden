@@ -130,18 +130,19 @@ export const AgentMetricsResponseSchema = z.object({
     revenue: z.number(),
     profit: z.number(),
     margin_pct: z.number()
-  }),
+  }).nullable(),
   fourteen_day: z.object({
     published_days: z.number(),
     profitable: z.boolean(),
     blockers: z.array(z.string())
-  }),
+  }).nullable(),
   readiness: z.object({
     published_12_of_14: z.boolean(),
     profitable_7d: z.boolean(),
     no_blockers_14d: z.boolean(),
+    min_collects: z.boolean(),
     can_graduate: z.boolean()
-  })
+  }).nullable()
 });
 
 // ============================================

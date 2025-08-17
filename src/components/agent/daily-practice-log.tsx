@@ -192,12 +192,12 @@ export function DailyPracticeLog({ agentId, onAddEntry }: DailyPracticeLogProps)
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-mono">TODAY'S PRACTICE</h3>
           <span className="text-sm text-eden-gray">
-            {todayTasks.filter(t => t.completed).length}/{todayTasks.length} complete
+            {todayTasks.filter((t: any) => t.completed).length}/{todayTasks.length} complete
           </span>
         </div>
         
         <div className="space-y-2">
-          {todayTasks.map(task => (
+          {todayTasks.map((task: any) => (
             <div 
               key={task.id}
               className="flex items-center justify-between p-3 bg-eden-white/5 rounded hover:bg-eden-white/10 transition-colors"
