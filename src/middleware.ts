@@ -7,7 +7,6 @@ export function middleware(request: NextRequest) {
   // Redirect deleted routes
   const redirects: Record<string, string> = {
     '/train': '/academy',
-    '/academy/agent/geppetto': '/academy',
     '/academy/agent/miyomi': '/academy', 
     '/academy/agent/artcollector': '/academy',
     '/academy/agent/daomanager': '/academy',
@@ -27,7 +26,6 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/train',
-    '/academy/agent/geppetto',
     '/academy/agent/miyomi', 
     '/academy/agent/artcollector',
     '/academy/agent/daomanager',
