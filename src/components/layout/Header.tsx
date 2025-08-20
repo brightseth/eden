@@ -1,12 +1,14 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useSync, useSyncStatus } from '@/hooks/use-sync';
 import { RefreshCw, Terminal } from 'lucide-react';
 
 export function Header() {
   const { syncAll } = useSync();
   const { data: syncStatus } = useSyncStatus();
+  const pathname = usePathname();
   
   const isSyncing = syncStatus?.services && 
     Object.values(syncStatus.services).some(s => s.status === 'syncing');
@@ -15,10 +17,13 @@ export function Header() {
     <header className="border-b border-eden-white/20 bg-eden-black/90 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-2">
-            <Terminal className="w-5 h-5" />
-            <span className="display-caps text-lg">Eden Academy</span>
-          </Link>
+          <div className="flex items-center gap-6">
+            <Link href="/" className="flex items-center gap-2">
+              <Terminal className="w-5 h-5" />
+              <span className="display-caps text-lg">Eden</span>
+            </Link>
+            
+          </div>
           
           <div className="flex items-center gap-4">
             <button

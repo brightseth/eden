@@ -170,4 +170,14 @@
   .glow-green {
     text-shadow: 0 0 20px rgba(0, 255, 100, 0.5);
   }
+  
+  /* Scrollbar Hide */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }

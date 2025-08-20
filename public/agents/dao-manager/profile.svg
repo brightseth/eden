@@ -1,0 +1,41 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="64" height="64" fill="#111111"/>
+  
+  <!-- Robot Head (business/corporate) -->
+  <rect x="18" y="12" width="28" height="28" fill="#2a2a2a" stroke="#555555" stroke-width="1"/>
+  
+  <!-- Eyes (serious/focused) -->
+  <rect x="22" y="20" width="5" height="4" fill="#000000"/>
+  <rect x="37" y="20" width="5" height="4" fill="#000000"/>
+  <rect x="23" y="21" width="3" height="2" fill="#0088ff"/>
+  <rect x="38" y="21" width="3" height="2" fill="#0088ff"/>
+  
+  <!-- Glasses frame -->
+  <rect x="21" y="19" width="7" height="6" fill="none" stroke="#666666" stroke-width="0.5"/>
+  <rect x="36" y="19" width="7" height="6" fill="none" stroke="#666666" stroke-width="0.5"/>
+  <line x1="28" y1="22" x2="36" y2="22" stroke="#666666" stroke-width="0.5"/>
+  
+  <!-- Mouth (straight line - serious) -->
+  <line x1="28" y1="32" x2="36" y2="32" stroke="#666666" stroke-width="2"/>
+  
+  <!-- Antenna/Network -->
+  <line x1="32" y1="12" x2="32" y2="8" stroke="#555555" stroke-width="1"/>
+  <rect x="30" y="6" width="4" height="2" fill="#0088ff"/>
+  <line x1="28" y1="7" x2="26" y2="5" stroke="#0088ff" stroke-width="0.5"/>
+  <line x1="36" y1="7" x2="38" y2="5" stroke="#0088ff" stroke-width="0.5"/>
+  
+  <!-- Body (corporate suit) -->
+  <rect x="20" y="40" width="24" height="20" fill="#2a2a2a" stroke="#555555" stroke-width="1"/>
+  
+  <!-- Tie -->
+  <polygon points="32,40 28,44 28,56 36,56 36,44" fill="#000080"/>
+  <line x1="30" y1="46" x2="30" y2="54" stroke="#0088ff" stroke-width="0.5"/>
+  <line x1="34" y1="46" x2="34" y2="54" stroke="#0088ff" stroke-width="0.5"/>
+  
+  <!-- Collar -->
+  <polygon points="20,40 24,40 28,44 36,44 40,40 44,40 44,44 40,48 24,48 20,44" fill="#333333"/>
+  
+  <!-- Serial Number -->
+  <text x="32" y="58" text-anchor="middle" font-family="monospace" font-size="4" fill="#888888">D006</text>
+</svg>

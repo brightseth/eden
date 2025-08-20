@@ -1,0 +1,37 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="64" height="64" fill="#0f0f0f"/>
+  
+  <!-- Robot Head (anime/kawaii style) -->
+  <circle cx="32" cy="28" r="16" fill="#222222" stroke="#555555" stroke-width="1"/>
+  
+  <!-- Eyes (large anime style) -->
+  <ellipse cx="26" cy="24" rx="4" ry="5" fill="#111111"/>
+  <ellipse cx="38" cy="24" rx="4" ry="5" fill="#111111"/>
+  <circle cx="26" cy="23" r="2" fill="#ff69b4"/>
+  <circle cx="38" cy="23" r="2" fill="#ff69b4"/>
+  <circle cx="26" cy="22" r="1" fill="#ffffff"/>
+  <circle cx="38" cy="22" r="1" fill="#ffffff"/>
+  
+  <!-- Cute mouth -->
+  <ellipse cx="32" cy="32" rx="3" ry="2" fill="#111111"/>
+  <ellipse cx="32" cy="31" rx="2" ry="1" fill="#ff69b4"/>
+  
+  <!-- Hair ornaments -->
+  <circle cx="20" cy="18" r="2" fill="#ff69b4"/>
+  <circle cx="44" cy="18" r="2" fill="#ff69b4"/>
+  <line x1="20" y1="16" x2="20" y2="12" stroke="#ff69b4" stroke-width="1"/>
+  <line x1="44" y1="16" x2="44" y2="12" stroke="#ff69b4" stroke-width="1"/>
+  
+  <!-- Body (petite) -->
+  <ellipse cx="32" cy="50" rx="12" ry="10" fill="#222222" stroke="#555555" stroke-width="1"/>
+  
+  <!-- Chest panel (cute) -->
+  <rect x="28" y="46" width="8" height="6" fill="#111111"/>
+  <circle cx="30" cy="48" r="1" fill="#ff69b4"/>
+  <circle cx="34" cy="48" r="1" fill="#00ffff"/>
+  <rect x="29" y="51" width="6" height="1" fill="#ff69b4"/>
+  
+  <!-- Serial Number -->
+  <text x="32" y="58" text-anchor="middle" font-family="monospace" font-size="4" fill="#888888">M004</text>
+</svg>

@@ -1,0 +1,40 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="64" height="64" fill="#1a1a1a"/>
+  
+  <!-- Robot Head (craftsman style) -->
+  <rect x="14" y="10" width="36" height="32" fill="#333333" stroke="#666666" stroke-width="1"/>
+  
+  <!-- Eyes (tool-like) -->
+  <rect x="20" y="18" width="6" height="4" fill="#444444"/>
+  <rect x="38" y="18" width="6" height="4" fill="#444444"/>
+  <circle cx="23" cy="20" r="1" fill="#ffaa00"/>
+  <circle cx="41" cy="20" r="1" fill="#ffaa00"/>
+  
+  <!-- Nose/Tool -->
+  <polygon points="30,24 34,24 32,28" fill="#666666"/>
+  
+  <!-- Mouth/Workbench -->
+  <rect x="26" y="32" width="12" height="3" fill="#444444"/>
+  <rect x="27" y="33" width="2" height="1" fill="#ffaa00"/>
+  <rect x="31" y="33" width="2" height="1" fill="#ffaa00"/>
+  <rect x="35" y="33" width="2" height="1" fill="#ffaa00"/>
+  
+  <!-- Tools on head -->
+  <line x1="16" y1="12" x2="18" y2="8" stroke="#666666" stroke-width="1"/>
+  <line x1="46" y1="8" x2="48" y2="12" stroke="#666666" stroke-width="1"/>
+  <rect x="17" y="7" width="2" height="2" fill="#ffaa00"/>
+  <circle cx="47" cy="7" r="1" fill="#ffaa00"/>
+  
+  <!-- Body (workman style) -->
+  <rect x="18" y="42" width="28" height="18" fill="#333333" stroke="#666666" stroke-width="1"/>
+  
+  <!-- Work apron -->
+  <rect x="22" y="46" width="20" height="12" fill="#444444"/>
+  <circle cx="26" cy="50" r="1" fill="#ffaa00"/>
+  <circle cx="32" cy="50" r="1" fill="#ffaa00"/>
+  <circle cx="38" cy="50" r="1" fill="#ffaa00"/>
+  
+  <!-- Serial Number -->
+  <text x="32" y="57" text-anchor="middle" font-family="monospace" font-size="4" fill="#888888">G003</text>
+</svg>
