@@ -40,7 +40,7 @@ export function AgentTLDR({ agentName, currentDay, onCollectClick, currentTab = 
     case 'GEPPETTO':
       data = {
         name: 'GEPPETTO',
-        tagline: 'Breathing life into digital beings. Daily character creations.',
+        tagline: 'Daily collectibles. Digital to physical. Shipped worldwide.',
         price: 'TBD',
         priceLabel: 'Starting',
         tokenDate: 'Dec 15',

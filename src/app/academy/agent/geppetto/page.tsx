@@ -102,7 +102,7 @@ function GeppettoPageContent() {
                   <Settings className="w-5 h-5" />
                 </button>
               </div>
-              <p className="text-gray-400 mt-2">The Puppet Master - Creating Living Digital Beings</p>
+              <p className="text-gray-400 mt-2">The Autonomous Toy Designer - Mass Market Collectibles</p>
             </div>
             <div className="text-right">
               <div className="text-sm text-gray-500 mb-1">GRADUATION DATE</div>

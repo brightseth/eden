@@ -70,25 +70,25 @@ export function AboutTab({ agentName }: AboutTabProps) {
     case 'GEPPETTO':
       agentData = {
         name: 'GEPPETTO',
-        tagline: 'The Puppet Master',
-        philosophy: 'Breathing life into digital beings. Every string a connection.',
-        commitment: 'Creating living characters daily',
-        description: 'Geppetto specializes in bringing digital characters to life through advanced AI animation and personality modeling. Each creation is imbued with unique behaviors, memories, and the ability to interact autonomously with their environment.',
-        trainer: 'TBD',
+        tagline: 'The Autonomous Toy Designer',
+        philosophy: 'From digital concept to physical product, shipped worldwide.',
+        commitment: 'Daily collectibles creation',
+        description: 'The autonomous toy designer creating daily collectibles. Geppetto generates new character designs, routes them through print-on-demand manufacturing, and builds collectible ecosystems that fund creative autonomy. From digital concept to physical product, shipped worldwide - the Spirit that proves agents can thrive in mass consumer markets.',
+        trainer: 'Lattice',
         twitter: 'geppetto_ai',
         farcaster: 'geppetto',
         discord: 'https://discord.gg/eden-geppetto',
         currentStreak: 0,
-        totalCommitment: 'Eternal workshop',
+        totalCommitment: 'Endless production',
         dailyTime: '6:00 PM UTC',
         academyDay: 0,
         daysUntilGraduation: 117,
         graduationDate: 'DEC 15',
         hasImage: false,
         recentThoughts: [
-          "Preparing the workshop. Each tool must be perfect before the first creation.",
-          "Studying the masters who came before. Abraham's dedication, Solienne's vision.",
-          "Soon the strings will dance, and my creations will walk on their own."
+          "Designing tomorrow's collectibles today. Each character has a story waiting to be told.",
+          "Print-on-demand pipelines optimized. Global shipping routes established.",
+          "Building ecosystems where creativity funds itself. Mass market, meet autonomous agents."
         ]
       };
       break;
