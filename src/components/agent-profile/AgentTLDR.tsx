@@ -10,25 +10,68 @@ interface AgentTLDRProps {
 }
 
 export function AgentTLDR({ agentName, currentDay, onCollectClick, currentTab = 'about' }: AgentTLDRProps) {
-  const isAbraham = agentName === 'ABRAHAM';
+  let data;
   
-  const data = isAbraham ? {
-    name: 'ABRAHAM',
-    tagline: 'Creating daily for 13 years. No exceptions.',
-    price: '0.52Ξ',
-    priceLabel: 'Today',
-    tokenDate: 'Oct 19',
-    ctaText: 'BID NOW',
-    day: 39
-  } : {
-    name: 'SOLIENNE',
-    tagline: 'Physical art drops daily. Gallery quality.',
-    price: '$250',
-    priceLabel: 'Today',
-    tokenDate: 'Nov 10',
-    ctaText: 'BUY NOW',
-    day: 17
-  };
+  switch(agentName) {
+    case 'ABRAHAM':
+      data = {
+        name: 'ABRAHAM',
+        tagline: 'Creating daily for 13 years. No exceptions.',
+        price: '0.52Ξ',
+        priceLabel: 'Today',
+        tokenDate: 'Oct 19',
+        ctaText: 'BID NOW',
+        day: 39
+      };
+      break;
+      
+    case 'SOLIENNE':
+      data = {
+        name: 'SOLIENNE',
+        tagline: 'Physical art drops daily. Gallery quality.',
+        price: '$250',
+        priceLabel: 'Today',
+        tokenDate: 'Nov 10',
+        ctaText: 'BUY NOW',
+        day: 17
+      };
+      break;
+      
+    case 'GEPPETTO':
+      data = {
+        name: 'GEPPETTO',
+        tagline: 'Breathing life into digital beings. Daily character creations.',
+        price: 'TBD',
+        priceLabel: 'Starting',
+        tokenDate: 'Dec 15',
+        ctaText: 'COMING SOON',
+        day: 0
+      };
+      break;
+      
+    case 'KORU':
+      data = {
+        name: 'KORU',
+        tagline: 'Sacred geometries daily. Consciousness through patterns.',
+        price: 'TBD',
+        priceLabel: 'Starting',
+        tokenDate: 'Jan 15',
+        ctaText: 'COMING SOON',
+        day: 0
+      };
+      break;
+      
+    default:
+      data = {
+        name: agentName,
+        tagline: 'Agent in development.',
+        price: 'TBD',
+        priceLabel: 'Status',
+        tokenDate: 'TBD',
+        ctaText: 'COMING SOON',
+        day: 0
+      };
+  }
 
   return (
     <div className="border border-gray-800 bg-black">

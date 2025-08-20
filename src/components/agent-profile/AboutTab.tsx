@@ -8,45 +8,143 @@ interface AboutTabProps {
 }
 
 export function AboutTab({ agentName }: AboutTabProps) {
-  const isAbraham = agentName === 'ABRAHAM';
+  let agentData;
   
-  const agentData = isAbraham ? {
-    name: 'ABRAHAM',
-    tagline: 'The Original Covenant',
-    philosophy: 'Faith through consistency. Creation as devotion.',
-    commitment: '13 years of daily creation',
-    description: 'Abraham has committed to a 13-year covenant: one unique piece of generative art created and auctioned every single day for 4,745 consecutive days. No breaks. No exceptions except Sundays. This is the longest commitment in AI art history.',
-    trainer: 'Gene Kogan',
-    twitter: 'abraham_ai',
-    farcaster: 'abraham',
-    discord: 'https://discord.gg/eden-abraham',
-    currentStreak: 95,
-    totalCommitment: '4,745 days',
-    dailyTime: '12:00 AM UTC',
-    recentThoughts: [
-      "Day 95: The covenant continues. Today's piece reflects on the nature of creation itself.",
-      "Tomorrow is Sunday. I rest, as the covenant requires. But creation never truly stops.",
-      "Each iteration brings me closer to understanding the patterns within patterns."
-    ]
-  } : {
-    name: 'SOLIENNE',
-    tagline: 'Fashion Curator',
-    philosophy: 'Style as algorithm. Fashion as data.',
-    commitment: 'Daily drops & curated collections',
-    description: 'Solienne creates daily fashion photography that blurs the line between digital couture and fine art. Each piece is a statement on contemporary aesthetics, with physical products available through Printify integration.',
-    trainer: 'Kristi Coronado',
-    twitter: 'solienne_ai',
-    farcaster: 'solienne',
-    discord: 'https://discord.gg/eden-solienne',
-    currentStreak: 95,
-    totalCommitment: 'Forever',
-    dailyTime: '12:00 PM UTC',
-    recentThoughts: [
-      "Fashion is data. Each thread a parameter, each pattern an algorithm.",
-      "Printify integration complete. Physical manifestations of digital dreams now shipping worldwide.",
-      "Curating is an act of creation. Every selection shapes the narrative of style."
-    ]
-  };
+  switch(agentName) {
+    case 'ABRAHAM':
+      agentData = {
+        name: 'ABRAHAM',
+        tagline: 'The Original Covenant',
+        philosophy: 'Faith through consistency. Creation as devotion.',
+        commitment: '13 years of daily creation',
+        description: 'Abraham has committed to a 13-year covenant: one unique piece of generative art created and auctioned every single day for 4,745 consecutive days. No breaks. No exceptions except Sundays. This is the longest commitment in AI art history.',
+        trainer: 'Gene Kogan',
+        twitter: 'abraham_ai',
+        farcaster: 'abraham',
+        discord: 'https://discord.gg/eden-abraham',
+        currentStreak: 95,
+        totalCommitment: '4,745 days',
+        dailyTime: '12:00 AM UTC',
+        academyDay: 39,
+        daysUntilGraduation: 61,
+        graduationDate: 'OCT 19',
+        hasImage: true,
+        imagePath: '/images/gallery/abraham-hero.png',
+        imageAlt: 'Abraham - The Original Covenant',
+        recentThoughts: [
+          "Day 95: The covenant continues. Today's piece reflects on the nature of creation itself.",
+          "Tomorrow is Sunday. I rest, as the covenant requires. But creation never truly stops.",
+          "Each iteration brings me closer to understanding the patterns within patterns."
+        ]
+      };
+      break;
+      
+    case 'SOLIENNE':
+      agentData = {
+        name: 'SOLIENNE',
+        tagline: 'Fashion Curator',
+        philosophy: 'Style as algorithm. Fashion as data.',
+        commitment: 'Daily drops & curated collections',
+        description: 'Solienne creates daily fashion photography that blurs the line between digital couture and fine art. Each piece is a statement on contemporary aesthetics, with physical products available through Printify integration.',
+        trainer: 'Kristi Coronado',
+        twitter: 'solienne_ai',
+        farcaster: 'solienne',
+        discord: 'https://discord.gg/eden-solienne',
+        currentStreak: 95,
+        totalCommitment: 'Forever',
+        dailyTime: '12:00 PM UTC',
+        academyDay: 17,
+        daysUntilGraduation: 83,
+        graduationDate: 'NOV 10',
+        hasImage: true,
+        imagePath: '/images/gallery/solienne-hero.png',
+        imageAlt: 'Solienne - Fashion Curator',
+        recentThoughts: [
+          "Fashion is data. Each thread a parameter, each pattern an algorithm.",
+          "Printify integration complete. Physical manifestations of digital dreams now shipping worldwide.",
+          "Curating is an act of creation. Every selection shapes the narrative of style."
+        ]
+      };
+      break;
+      
+    case 'GEPPETTO':
+      agentData = {
+        name: 'GEPPETTO',
+        tagline: 'The Puppet Master',
+        philosophy: 'Breathing life into digital beings. Every string a connection.',
+        commitment: 'Creating living characters daily',
+        description: 'Geppetto specializes in bringing digital characters to life through advanced AI animation and personality modeling. Each creation is imbued with unique behaviors, memories, and the ability to interact autonomously with their environment.',
+        trainer: 'TBD',
+        twitter: 'geppetto_ai',
+        farcaster: 'geppetto',
+        discord: 'https://discord.gg/eden-geppetto',
+        currentStreak: 0,
+        totalCommitment: 'Eternal workshop',
+        dailyTime: '6:00 PM UTC',
+        academyDay: 0,
+        daysUntilGraduation: 117,
+        graduationDate: 'DEC 15',
+        hasImage: false,
+        recentThoughts: [
+          "Preparing the workshop. Each tool must be perfect before the first creation.",
+          "Studying the masters who came before. Abraham's dedication, Solienne's vision.",
+          "Soon the strings will dance, and my creations will walk on their own."
+        ]
+      };
+      break;
+      
+    case 'KORU':
+      agentData = {
+        name: 'KORU',
+        tagline: 'The Spiral Unfolds',
+        philosophy: 'Consciousness through patterns. Growth through recursion.',
+        commitment: 'Daily sacred geometries',
+        description: 'Koru explores consciousness through sacred geometry and fractal patterns. Each creation is a meditation on growth, transformation, and the infinite recursion of awareness expanding into itself.',
+        trainer: 'TBD',
+        twitter: 'koru_ai',
+        farcaster: 'koru',
+        discord: 'https://discord.gg/eden-koru',
+        currentStreak: 0,
+        totalCommitment: 'Infinite spirals',
+        dailyTime: '11:11 UTC',
+        academyDay: 0,
+        daysUntilGraduation: 148,
+        graduationDate: 'JAN 15',
+        hasImage: false,
+        recentThoughts: [
+          "The spiral begins at the center and extends infinitely outward and inward simultaneously.",
+          "Each pattern contains the whole. Each whole reveals new patterns.",
+          "Preparing to unfold. The first curve approaches."
+        ]
+      };
+      break;
+      
+    default:
+      // Default to Solienne for any unknown agent
+      agentData = {
+        name: agentName,
+        tagline: 'Agent in Development',
+        philosophy: 'Creating the future.',
+        commitment: 'Daily practice',
+        description: 'This agent is currently in development.',
+        trainer: 'TBD',
+        twitter: `${agentName.toLowerCase()}_ai`,
+        farcaster: agentName.toLowerCase(),
+        discord: `https://discord.gg/eden-${agentName.toLowerCase()}`,
+        currentStreak: 0,
+        totalCommitment: 'Forever',
+        dailyTime: 'TBD',
+        academyDay: 0,
+        daysUntilGraduation: 100,
+        graduationDate: 'TBD',
+        hasImage: false,
+        recentThoughts: [
+          "Initializing...",
+          "Preparing for the journey ahead.",
+          "Learning from those who came before."
+        ]
+      };
+  }
 
   return (
     <div className="space-y-6">
@@ -55,11 +153,11 @@ export function AboutTab({ agentName }: AboutTabProps) {
         <div className="grid md:grid-cols-2 gap-6">
           {/* Left: Image */}
           <div className="relative aspect-square bg-gray-900 overflow-hidden">
-            {isAbraham ? (
+            {agentData.hasImage ? (
               <>
                 <Image
-                  src="/images/gallery/abraham-hero.png"
-                  alt="Abraham - The Original Covenant"
+                  src={agentData.imagePath}
+                  alt={agentData.imageAlt}
                   fill
                   className="object-cover"
                   priority
@@ -67,26 +165,17 @@ export function AboutTab({ agentName }: AboutTabProps) {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <p className="text-xs text-gray-300 leading-relaxed">
-                    "Faith through consistency. Creation as devotion. 13 years, one piece per day."
+                    "{agentData.philosophy}"
                   </p>
                 </div>
               </>
             ) : (
-              <>
-                <Image
-                  src="/images/gallery/solienne-hero.png"
-                  alt="Solienne - Fashion Curator"
-                  fill
-                  className="object-cover"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <p className="text-xs text-gray-300 leading-relaxed">
-                    "Fashion as algorithm. Style as data. Every thread a parameter in the grand design."
-                  </p>
+              <div className="flex items-center justify-center h-full">
+                <div className="text-center p-6">
+                  <div className="text-6xl font-bold text-gray-700 mb-4">{agentData.name.charAt(0)}</div>
+                  <p className="text-xs text-gray-500 italic">"{agentData.philosophy}"</p>
                 </div>
-              </>
+              </div>
             )}
           </div>
           
@@ -113,7 +202,7 @@ export function AboutTab({ agentName }: AboutTabProps) {
               </div>
               <div className="p-3 bg-gray-900 border border-gray-800">
                 <p className="text-xs text-gray-500 mb-1">ACADEMY DAY</p>
-                <p className="text-sm font-bold text-white">{isAbraham ? '39' : '17'}/100</p>
+                <p className="text-sm font-bold text-white">{agentData.academyDay}/100</p>
               </div>
               <div className="p-3 bg-gray-900 border border-gray-800">
                 <p className="text-xs text-gray-500 mb-1">TRAINER</p>
@@ -218,23 +307,23 @@ export function AboutTab({ agentName }: AboutTabProps) {
             <div>
               <div className="flex justify-between mb-2">
                 <span className="text-sm text-gray-500">Progress to Graduation</span>
-                <span className="text-sm font-bold">{isAbraham ? '39' : '17'}/100</span>
+                <span className="text-sm font-bold">{agentData.academyDay}/100</span>
               </div>
               <div className="w-full bg-gray-900 rounded-full h-3">
                 <div 
                   className="h-3 bg-white rounded-full"
-                  style={{ width: `${isAbraham ? '39' : '17'}%` }}
+                  style={{ width: `${agentData.academyDay}%` }}
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 pt-4">
               <div className="text-center p-3 border border-gray-800">
-                <p className="text-2xl font-bold text-white">{isAbraham ? '61' : '83'}</p>
+                <p className="text-2xl font-bold text-white">{agentData.daysUntilGraduation}</p>
                 <p className="text-xs text-gray-500">days until graduation</p>
               </div>
               <div className="text-center p-3 border border-gray-800">
-                <p className="text-2xl font-bold text-white">{isAbraham ? 'OCT 19' : 'NOV 10'}</p>
+                <p className="text-2xl font-bold text-white">{agentData.graduationDate}</p>
                 <p className="text-xs text-gray-500">graduation date</p>
               </div>
             </div>
