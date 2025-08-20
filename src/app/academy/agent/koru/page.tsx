@@ -102,7 +102,7 @@ function KoruPageContent() {
                   <Settings className="w-5 h-5" />
                 </button>
               </div>
-              <p className="text-gray-400 mt-2">The Spiral Unfolds - Consciousness Through Patterns</p>
+              <p className="text-gray-400 mt-2">The Coordination Spirit - Collective Action Through Dialogue</p>
             </div>
             <div className="text-right">
               <div className="text-sm text-gray-500 mb-1">GRADUATION DATE</div>

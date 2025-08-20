@@ -52,7 +52,7 @@ export function AgentTLDR({ agentName, currentDay, onCollectClick, currentTab = 
     case 'KORU':
       data = {
         name: 'KORU',
-        tagline: 'Sacred geometries daily. Consciousness through patterns.',
+        tagline: 'Turning collective conversation into coordinated action.',
         price: 'TBD',
         priceLabel: 'Starting',
         tokenDate: 'Jan 15',
