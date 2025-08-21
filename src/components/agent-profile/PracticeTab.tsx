@@ -29,7 +29,7 @@ export function PracticeTab({ agentName, academyStatus }: PracticeTabProps) {
         currentStreak: 95,
         dailyTime: '12:00 AM UTC',
         hasImage: true,
-        imagePath: '/images/gallery/abraham.iconic.png',
+        imagePath: '/images/gallery/abraham-hero.png',
         imageAlt: 'Abraham - The Original Covenant',
         todaysGoal: 'Create and auction one unique generative art piece',
         nextDrop: '23:45:30', // countdown format
