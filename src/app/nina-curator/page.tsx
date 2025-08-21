@@ -69,6 +69,14 @@ export default function NinaCuratorPage() {
               <div className="text-xs text-gray-500 mb-1">POWERED BY</div>
               <div className="text-lg font-bold">ANTHROPIC CLAUDE</div>
               <div className="text-xs text-gray-500 mt-1">EDEN ACADEMY</div>
+              <a
+                href="https://design-critic-agent.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block mt-2 px-3 py-1 border border-gray-600 hover:border-white text-xs transition-colors"
+              >
+                Open in New Window →
+              </a>
             </div>
           </div>
         </div>

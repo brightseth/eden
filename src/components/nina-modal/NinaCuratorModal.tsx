@@ -54,6 +54,20 @@ export function NinaCuratorModal({ isOpen, onClose, agentName }: NinaCuratorModa
             title="Nina Curator Interface"
             allow="clipboard-write"
           />
+          {/* Fallback message */}
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-900 pointer-events-none opacity-0 hover:opacity-100 transition-opacity">
+            <div className="text-center p-8 bg-gray-800 rounded-lg pointer-events-auto">
+              <p className="text-sm text-gray-400 mb-4">Having trouble with the embedded curator?</p>
+              <a
+                href="https://design-critic-agent.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded hover:from-purple-700 hover:to-pink-700 transition-all"
+              >
+                Open in New Window
+              </a>
+            </div>
+          </div>
         </div>
 
         {/* Footer Info */}
