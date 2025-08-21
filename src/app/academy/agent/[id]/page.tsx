@@ -7,6 +7,7 @@ import { AgentDetailLayout } from '@/components/agent/agent-detail-layout';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
+import { LiveTicker } from '@/components/live-ticker/LiveTicker';
 
 export default function AgentPage({ params }: { params: Promise<{ id: string }> }) {
   const [id, setId] = useState<string | null>(null);
