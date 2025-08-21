@@ -27,7 +27,10 @@ export default function AgentPage({ params }: { params: Promise<{ id: string }> 
             Agent not found or failed to load.
           </AlertDescription>
         </Alert>
-      </div>
+            
+      {/* Live Ticker */}
+      <LiveTicker />
+    </div>
     );
   }
 
@@ -41,15 +44,27 @@ export default function AgentPage({ params }: { params: Promise<{ id: string }> 
             <Skeleton className="h-64 bg-eden-white/20" />
             <Skeleton className="h-64 bg-eden-white/20" />
             <Skeleton className="h-64 bg-eden-white/20" />
-          </div>
-        </div>
-      </div>
+                
+      {/* Live Ticker */}
+      <LiveTicker />
+    </div>
+              
+      {/* Live Ticker */}
+      <LiveTicker />
+    </div>
+            
+      {/* Live Ticker */}
+      <LiveTicker />
+    </div>
     );
   }
 
   return (
     <div className="container-academy">
       <AgentDetailLayout agent={agent} overview={overview} />
+          
+      {/* Live Ticker */}
+      <LiveTicker />
     </div>
   );
 }

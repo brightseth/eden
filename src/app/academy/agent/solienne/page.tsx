@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { ChevronRight, Settings } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { LiveTicker } from '@/components/live-ticker/LiveTicker';
+import { AboutDropdown } from '@/components/layout/AboutDropdown';
 import { CreatorToolsInterface } from '@/components/creator-tools/CreatorToolsInterface';
 import { PracticeTab } from '@/components/agent-profile/PracticeTab';
 import { CollectTab } from '@/components/agent-profile/CollectTab';
