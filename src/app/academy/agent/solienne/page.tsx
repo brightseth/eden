@@ -6,7 +6,6 @@ import { useSearchParams } from 'next/navigation';
 import { ChevronRight, Settings } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { LiveTicker } from '@/components/live-ticker/LiveTicker';
-import { AboutDropdown } from '@/components/layout/AboutDropdown';
 import { CreatorToolsInterface } from '@/components/creator-tools/CreatorToolsInterface';
 import { PracticeTab } from '@/components/agent-profile/PracticeTab';
 import { CollectTab } from '@/components/agent-profile/CollectTab';
@@ -39,26 +38,7 @@ function SoliennePageContent() {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <header className="border-b border-gray-800">
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="text-xl font-bold hover:text-gray-300 transition-colors">
-              EDEN
-            </Link>
-            <div className="flex items-center gap-6">
-              <AboutDropdown />
-              <a 
-              href="https://app.eden.art" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-1.5 border border-gray-600 hover:border-white transition-colors text-sm"
-            >
-              LOG IN →
-              </a>
-            </div>
-          </div>
-        </div>
-      </header>
+      <UnifiedHeader />
 
       {/* Breadcrumbs */}
       <div className="border-b border-gray-800">
@@ -219,6 +199,9 @@ function SoliennePageContent() {
       
       {/* Admin Dock */}
       <AdminDock agentName="SOLIENNE" />
+      
+      {/* Live Ticker */}
+      <LiveTicker />
     </div>
   );
 }

@@ -195,6 +195,9 @@ function GeppettoPageContent() {
       
       {/* Admin Dock */}
       <AdminDock agentName="GEPPETTO" />
+      
+      {/* Live Ticker */}
+      <LiveTicker />
     </div>
   );
 }

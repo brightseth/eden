@@ -195,6 +195,9 @@ function KoruPageContent() {
       
       {/* Admin Dock */}
       <AdminDock agentName="KORU" />
+      
+      {/* Live Ticker */}
+      <LiveTicker />
     </div>
   );
 }
