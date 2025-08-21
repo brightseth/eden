@@ -1,9 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { Clock, Zap, Target, Calendar } from 'lucide-react';
 import Image from 'next/image';
 import TokenSplitRibbon from '@/components/TokenSplitRibbon';
 import { useCountdown } from '@/hooks/useCountdown';
+import { TrainerCard } from '@/components/TrainerCard';
+import { trainers } from '@/data/trainers';
 
 interface PracticeTabProps {
   agentName: string;
@@ -16,6 +19,7 @@ interface PracticeTabProps {
 }
 
 export function PracticeTab({ agentName, academyStatus }: PracticeTabProps) {
+  const [trainerCardOpen, setTrainerCardOpen] = useState(false);
   let agentData;
   
   switch(agentName) {
@@ -209,13 +213,23 @@ export function PracticeTab({ agentName, academyStatus }: PracticeTabProps) {
             </div>
 
             {/* Trainer Info */}
-            <div className="border border-gray-700 bg-gray-950 p-4">
-              <div className="flex items-center gap-2 mb-2">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
                 <Calendar className="w-4 h-4 text-purple-400" />
                 <span className="text-sm font-bold text-purple-400">TRAINER</span>
               </div>
-              <p className="text-lg font-bold text-white">{agentData.trainer}</p>
-              <p className="text-xs text-gray-400">{agentData.commitment}</p>
+              {trainers[agentData.trainer] ? (
+                <TrainerCard 
+                  trainer={trainers[agentData.trainer]} 
+                  isOpen={trainerCardOpen}
+                  onToggle={() => setTrainerCardOpen(!trainerCardOpen)}
+                />
+              ) : (
+                <div className="border border-gray-700 bg-gray-950 p-4">
+                  <p className="text-lg font-bold text-white">{agentData.trainer}</p>
+                  <p className="text-xs text-gray-400">{agentData.commitment}</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
