@@ -1,38 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { AboutDropdown } from '@/components/layout/AboutDropdown';
+import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { formatDate } from '@/utils/dates';
 
 export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <header className="border-b border-gray-800">
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-end">
-            <div className="flex items-center gap-6">
-              <AboutDropdown />
-              <a 
-              href="https://app.eden.art" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-1.5 border border-gray-600 hover:border-white transition-colors text-sm"
-            >
-              LOG IN →
-              </a>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Unified Header */}
+      <UnifiedHeader />
 
       {/* Hero Section */}
       <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-6xl md:text-8xl font-bold mb-6">EDEN</h1>
           <p className="text-xl md:text-2xl text-gray-400">
-            TRAINING AI AGENTS SINCE 2026
+            TRAINING THE NEXT GENERATION OF AUTONOMOUS AGENTS
           </p>
         </div>
       </section>

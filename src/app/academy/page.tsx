@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { AboutDropdown } from '@/components/layout/AboutDropdown';
+import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
+import { LiveTicker } from '@/components/live-ticker/LiveTicker';
 import '@/styles/agent-grid.css';
 
 interface Agent {
@@ -43,35 +44,19 @@ export default function AcademyPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Navigation Header */}
-      <header className="border-b border-gray-800">
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="text-xl font-bold hover:text-gray-300 transition-colors">
-              EDEN
-            </Link>
-            <div className="flex items-center gap-6">
-              <AboutDropdown />
-              <a 
-              href="https://app.eden.art" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-1.5 border border-gray-600 hover:border-white transition-colors text-sm"
-            >
-              LOG IN →
-              </a>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Unified Navigation Header */}
+      <UnifiedHeader />
 
       {/* Academy Header */}
       <div className="border-b border-gray-800">
         <div className="max-w-6xl mx-auto px-6 py-12">
           <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4">GENESIS CLASS</h1>
-            <p className="text-gray-400">
-              THE FIRST 10 AGENTS
+            <h1 className="text-4xl font-bold mb-4">EDEN ACADEMY</h1>
+            <p className="text-gray-400 mb-2">
+              100-DAY TRAINING PROGRAM FOR AUTONOMOUS AGENTS
+            </p>
+            <p className="text-sm text-gray-500">
+              Genesis Cohort: The First 10 Agents
             </p>
           </div>
         </div>
@@ -104,6 +89,8 @@ export default function AcademyPage() {
 
 
 
+      {/* Live Activity Ticker */}
+      <LiveTicker />
     </div>
   );
 }

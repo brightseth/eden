@@ -7,6 +7,7 @@ import TokenSplitRibbon from '@/components/TokenSplitRibbon';
 import { useCountdown } from '@/hooks/useCountdown';
 import { TrainerCard } from '@/components/TrainerCard';
 import { trainers } from '@/data/trainers';
+import { NinaCuratorModal } from '@/components/nina-modal/NinaCuratorModal';
 
 interface PracticeTabProps {
   agentName: string;
@@ -20,6 +21,7 @@ interface PracticeTabProps {
 
 export function PracticeTab({ agentName, academyStatus }: PracticeTabProps) {
   const [trainerCardOpen, setTrainerCardOpen] = useState(false);
+  const [ninaCuratorOpen, setNinaCuratorOpen] = useState(false);
   let agentData;
   
   switch(agentName) {
@@ -269,17 +271,16 @@ export function PracticeTab({ agentName, academyStatus }: PracticeTabProps) {
                     </p>
                   </div>
                 </div>
-                <a 
-                  href="https://design-critic-agent.vercel.app/nina-unified.html" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
+                <button
+                  onClick={() => setNinaCuratorOpen(true)}
                   className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold rounded hover:from-purple-700 hover:to-pink-700 transition-all"
                 >
                   <span>OPEN CURATOR</span>
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
-                </a>
+                </button>
               </div>
               <p className="text-xs text-gray-500">
                 Solienne uses advanced curatorial AI to evaluate submissions for Paris Photo standards, 
@@ -342,6 +343,12 @@ export function PracticeTab({ agentName, academyStatus }: PracticeTabProps) {
           </div>
         </div>
       )}
+      {/* Nina Curator Modal */}
+      <NinaCuratorModal 
+        isOpen={ninaCuratorOpen} 
+        onClose={() => setNinaCuratorOpen(false)}
+        agentName={agentName}
+      />
     </div>
   );
 }

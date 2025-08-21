@@ -169,11 +169,11 @@ export function StudioHealth({ agentId, agentName }: StudioHealthProps) {
         </div>
 
         {/* Quick status indicators */}
-        <div className="grid grid-cols-4 gap-4 mt-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6">
           {Object.entries(metrics.bands).map(([key, band]) => (
-            <div key={key} className="text-center">
-              <div className="text-2xl mb-1">{getBandIcon(band)}</div>
-              <div className="text-xs text-gray-500 capitalize">
+            <div key={key} className="text-center p-3 bg-gray-950 rounded-lg">
+              <div className="text-3xl mb-2">{getBandIcon(band)}</div>
+              <div className="text-sm text-gray-400 capitalize">
                 {key.replace('_', ' ').replace('discipline', 'Practice')}
               </div>
             </div>
@@ -205,19 +205,19 @@ export function StudioHealth({ agentId, agentName }: StudioHealthProps) {
         </button>
         
         {expandedSection === 'practice' && (
-          <div className="px-4 pb-4 border-t border-gray-800">
-            <div className="grid grid-cols-3 gap-6 pt-4">
-              <div>
-                <div className="text-xs text-gray-500 mb-1">CADENCE HIT RATE</div>
-                <div className="text-2xl font-bold">{formatPercentage(metrics.practice_discipline.cadence_hit_rate)}</div>
+          <div className="px-6 pb-6 border-t border-gray-800">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
+              <div className="p-4 bg-gray-950 rounded-lg">
+                <div className="text-sm text-gray-500 mb-2">CADENCE HIT RATE</div>
+                <div className="text-2xl md:text-3xl font-bold">{formatPercentage(metrics.practice_discipline.cadence_hit_rate)}</div>
               </div>
-              <div>
-                <div className="text-xs text-gray-500 mb-1">CURRENT STREAK</div>
-                <div className="text-2xl font-bold">{metrics.practice_discipline.streak_days} days</div>
+              <div className="p-4 bg-gray-950 rounded-lg">
+                <div className="text-sm text-gray-500 mb-2">CURRENT STREAK</div>
+                <div className="text-2xl md:text-3xl font-bold">{metrics.practice_discipline.streak_days} days</div>
               </div>
-              <div>
-                <div className="text-xs text-gray-500 mb-1">MISSED DAYS (30D)</div>
-                <div className="text-2xl font-bold">{metrics.practice_discipline.missed_days}</div>
+              <div className="p-4 bg-gray-950 rounded-lg">
+                <div className="text-sm text-gray-500 mb-2">MISSED DAYS (30D)</div>
+                <div className="text-2xl md:text-3xl font-bold">{metrics.practice_discipline.missed_days}</div>
               </div>
             </div>
           </div>
