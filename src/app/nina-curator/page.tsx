@@ -1,123 +1,89 @@
 'use client';
 
+import { useEffect } from 'react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
-import { Sparkles, Eye, Trophy, Home, ArrowLeft } from 'lucide-react';
+import { Sparkles, Eye, Trophy, ExternalLink, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
 export default function NinaCuratorPage() {
+  useEffect(() => {
+    // Auto-redirect after a brief moment to show the page
+    const timer = setTimeout(() => {
+      window.location.href = 'https://design-critic-agent.vercel.app';
+    }, 2000);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
       {/* Header */}
       <UnifiedHeader />
 
-      {/* Breadcrumb Navigation */}
-      <div className="border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-6 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link 
-                href="/academy" 
-                className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Academy
-              </Link>
-              <span className="text-gray-600">|</span>
-              <Link 
-                href="/" 
-                className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
-              >
-                <Home className="w-4 h-4" />
-                Home
-              </Link>
+      {/* Main Content */}
+      <div className="flex-1 flex items-center justify-center px-6">
+        <div className="max-w-2xl w-full text-center">
+          <h1 className="text-4xl font-bold mb-4">NINA ROEHRS CURATOR</h1>
+          <p className="text-gray-400 mb-8">
+            AI-powered curation tool evaluating work against Paris Photo standards
+          </p>
+
+          {/* Mode badges */}
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <span className="px-3 py-1 bg-purple-900 text-purple-400 text-xs font-bold rounded flex items-center gap-1">
+              <Sparkles className="w-3 h-3" />
+              SINGLE MODE
+            </span>
+            <span className="px-3 py-1 bg-blue-900 text-blue-400 text-xs font-bold rounded flex items-center gap-1">
+              <Eye className="w-3 h-3" />
+              BATCH MODE
+            </span>
+            <span className="px-3 py-1 bg-green-900 text-green-400 text-xs font-bold rounded flex items-center gap-1">
+              <Trophy className="w-3 h-3" />
+              PLAYOFF MODE
+            </span>
+          </div>
+
+          {/* Redirecting message */}
+          <div className="mb-8 p-6 bg-gray-900 border border-gray-700 rounded-lg">
+            <p className="text-sm text-gray-400 mb-4">Redirecting to Nina Curator...</p>
+            <div className="w-full bg-gray-800 rounded-full h-2 mb-4">
+              <div className="bg-gradient-to-r from-purple-600 to-pink-600 h-2 rounded-full animate-pulse" style={{ width: '60%' }}></div>
             </div>
+            <p className="text-xs text-gray-500">You'll be redirected automatically, or click below to go now</p>
+          </div>
+
+          {/* Manual redirect button */}
+          <a
+            href="https://design-critic-agent.vercel.app"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded hover:from-purple-700 hover:to-pink-700 transition-all"
+          >
+            Open Nina Curator
+            <ExternalLink className="w-4 h-4" />
+          </a>
+
+          {/* Navigation links */}
+          <div className="mt-8 flex items-center justify-center gap-6 text-sm">
+            <Link 
+              href="/academy" 
+              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Academy
+            </Link>
+            <span className="text-gray-600">|</span>
             <Link
               href="/academy/agent/solienne"
-              className="text-sm text-gray-400 hover:text-white transition-colors"
+              className="text-gray-400 hover:text-white transition-colors"
             >
-              View Solienne's Profile →
+              View Solienne's Profile
             </Link>
           </div>
-        </div>
-      </div>
 
-      {/* Page Header */}
-      <div className="border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex items-start justify-between">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">NINA ROEHRS CURATOR</h1>
-              <p className="text-gray-400">
-                AI-powered curation tool evaluating work against Paris Photo standards
-              </p>
-              <div className="flex items-center gap-3 mt-4">
-                <span className="px-3 py-1 bg-purple-900 text-purple-400 text-xs font-bold rounded flex items-center gap-1">
-                  <Sparkles className="w-3 h-3" />
-                  SINGLE MODE
-                </span>
-                <span className="px-3 py-1 bg-blue-900 text-blue-400 text-xs font-bold rounded flex items-center gap-1">
-                  <Eye className="w-3 h-3" />
-                  BATCH MODE
-                </span>
-                <span className="px-3 py-1 bg-green-900 text-green-400 text-xs font-bold rounded flex items-center gap-1">
-                  <Trophy className="w-3 h-3" />
-                  PLAYOFF MODE
-                </span>
-              </div>
-            </div>
-            <div className="text-right">
-              <div className="text-xs text-gray-500 mb-1">POWERED BY</div>
-              <div className="text-lg font-bold">ANTHROPIC CLAUDE</div>
-              <div className="text-xs text-gray-500 mt-1">EDEN ACADEMY</div>
-              <a
-                href="https://design-critic-agent.vercel.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block mt-2 px-3 py-1 border border-gray-600 hover:border-white text-xs transition-colors"
-              >
-                Open in New Window →
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content - Iframe */}
-      <div className="flex-1 relative bg-gray-900">
-        <iframe
-          src="https://design-critic-agent.vercel.app"
-          className="absolute inset-0 w-full h-full border-0"
-          title="Nina Curator Interface"
-          allow="clipboard-write"
-          sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-        />
-        {/* Loading indicator */}
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-900 pointer-events-none">
-          <div className="text-center">
-            <div className="text-gray-400 mb-4">Loading Nina Curator...</div>
-            <div className="text-xs text-gray-500">If this takes too long, try the button above to open in a new window</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="bg-gray-900 border-t border-gray-700 px-6 py-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center gap-6 text-gray-400">
-              <span>
-                <span className="font-bold text-white">SINGLE:</span> Individual critique with detailed scoring
-              </span>
-              <span>
-                <span className="font-bold text-white">BATCH:</span> Process up to 50 images simultaneously
-              </span>
-              <span>
-                <span className="font-bold text-white">PLAYOFF:</span> Head-to-head ranking tournaments
-              </span>
-            </div>
-            <div className="text-gray-500">
-              © Eden Academy × Nina Roehrs
-            </div>
+          {/* Info */}
+          <div className="mt-12 text-xs text-gray-500">
+            <p>Powered by Anthropic Claude</p>
+            <p className="mt-1">Eden Academy × Nina Roehrs</p>
           </div>
         </div>
       </div>
