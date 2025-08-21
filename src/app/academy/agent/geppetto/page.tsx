@@ -10,8 +10,7 @@ import { FollowButton } from '@/components/agent-profile/FollowButton';
 import { CreatorToolsInterface } from '@/components/creator-tools/CreatorToolsInterface';
 import { PracticeTab } from '@/components/agent-profile/PracticeTab';
 import { CollectTab } from '@/components/agent-profile/CollectTab';
-import { PortfolioTab } from '@/components/agent-profile/PortfolioTab';
-import { CommunityTab } from '@/components/agent-profile/CommunityTab';
+import { PortfolioTab } from '@/components/agent-profile/PortfolioTabNew';
 import { TokenLaunchBanner } from '@/components/agent-profile/TokenLaunchBanner';
 import { AgentTLDR } from '@/components/agent-profile/AgentTLDR';
 import { MobileNav } from '@/components/agent-profile/MobileNav';
@@ -23,15 +22,15 @@ const GEPPETTO_GRADUATION = '2025-12-15'; // December 15, 2025
 
 function GeppettoPageContent() {
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<'practice' | 'collect' | 'tools'>('practice');
+  const [activeTab, setActiveTab] = useState<'practice' | 'collect' | 'portfolio' | 'tools'>('practice');
   
   // Calculate academy status
   const academyStatus = getAcademyStatus(GEPPETTO_GRADUATION);
   
   useEffect(() => {
     const tab = searchParams.get('tab');
-    if (tab && ['practice', 'collect', 'tools'].includes(tab)) {
-      setActiveTab(tab as 'practice' | 'collect' | 'tools');
+    if (tab && ['practice', 'collect', 'portfolio', 'tools'].includes(tab)) {
+      setActiveTab(tab as 'practice' | 'collect' | 'portfolio' | 'tools');
     } else if (!tab) {
       // Default to practice tab if no tab specified
       setActiveTab('practice');
@@ -148,7 +147,7 @@ function GeppettoPageContent() {
           <div className="flex justify-between items-center">
             <div className="flex-1 overflow-x-auto scrollbar-hide">
               <div className="flex gap-8 px-6">
-                {(['practice', 'collect'] as const).map((tab) => (
+                {(['practice', 'collect', 'portfolio'] as const).map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
@@ -184,6 +183,7 @@ function GeppettoPageContent() {
       <div className="max-w-6xl mx-auto px-6 py-8 pb-20 md:pb-8">
         {activeTab === 'practice' && <PracticeTab agentName="GEPPETTO" academyStatus={academyStatus} />}
         {activeTab === 'collect' && <CollectTab agentName="GEPPETTO" academyStatus={academyStatus} />}
+        {activeTab === 'portfolio' && <PortfolioTab agentId="geppetto" agentName="GEPPETTO" />}
         {activeTab === 'tools' && (
           <div>
             <CreatorToolsInterface agentName="GEPPETTO" graduationDate={GEPPETTO_GRADUATION} />

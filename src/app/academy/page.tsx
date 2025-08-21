@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { LiveTicker } from '@/components/live-ticker/LiveTicker';
+import { StudioHealth } from '@/components/studio-health/StudioHealth';
 import '@/styles/agent-grid.css';
 
 interface Agent {
@@ -60,6 +60,11 @@ export default function AcademyPage() {
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Studio Health - Autonomy Metrics */}
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        <StudioHealth />
       </div>
 
       {/* Agent Grid */}
