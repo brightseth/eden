@@ -83,13 +83,21 @@ export default function NinaCuratorPage() {
       </div>
 
       {/* Main Content - Iframe */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative bg-gray-900">
         <iframe
           src="https://design-critic-agent.vercel.app"
-          className="absolute inset-0 w-full h-full"
+          className="absolute inset-0 w-full h-full border-0"
           title="Nina Curator Interface"
           allow="clipboard-write"
+          sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
         />
+        {/* Loading indicator */}
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-900 pointer-events-none">
+          <div className="text-center">
+            <div className="text-gray-400 mb-4">Loading Nina Curator...</div>
+            <div className="text-xs text-gray-500">If this takes too long, try the button above to open in a new window</div>
+          </div>
+        </div>
       </div>
 
       {/* Footer */}
