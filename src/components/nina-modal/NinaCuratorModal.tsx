@@ -49,7 +49,7 @@ export function NinaCuratorModal({ isOpen, onClose, agentName }: NinaCuratorModa
         {/* Iframe Content */}
         <div className="flex-1 relative">
           <iframe
-            src="https://design-critic-agent.vercel.app/nina-unified.html"
+            src="https://design-critic-agent.vercel.app"
             className="absolute inset-0 w-full h-full"
             title="Nina Curator Interface"
             allow="clipboard-write"
