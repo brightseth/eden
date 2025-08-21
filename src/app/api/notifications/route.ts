@@ -140,7 +140,7 @@ export async function PATCH(request: Request) {
 }
 
 // Utility function to create notifications when events happen
-export async function createNotificationForFollowers(
+async function createNotificationForFollowers(
   agentId: string,
   agentName: string,
   eventType: string,
