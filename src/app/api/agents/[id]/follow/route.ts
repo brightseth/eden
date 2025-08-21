@@ -1,0 +1,118 @@
+import { NextResponse } from 'next/server';
+
+// Mock follow state - will connect to database later
+const followStore = new Map<string, Set<string>>();
+
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id: agentId } = await params;
+    const { user_id } = await request.json();
+    
+    if (!user_id) {
+      return NextResponse.json(
+        { error: 'user_id is required' },
+        { status: 400 }
+      );
+    }
+    
+    // Get or create follow set for this agent
+    if (!followStore.has(agentId)) {
+      followStore.set(agentId, new Set());
+    }
+    
+    const followers = followStore.get(agentId)!;
+    followers.add(user_id);
+    
+    // Emit event for SSE (would connect to your event system)
+    // emitEvent({ type: 'FOLLOW_ADDED', agent_id: agentId, payload: { user_id } });
+    
+    return NextResponse.json({
+      success: true,
+      agent_id: agentId,
+      user_id,
+      followed_at: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Follow error:', error);
+    return NextResponse.json(
+      { error: 'Failed to follow agent' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id: agentId } = await params;
+    const { user_id } = await request.json();
+    
+    if (!user_id) {
+      return NextResponse.json(
+        { error: 'user_id is required' },
+        { status: 400 }
+      );
+    }
+    
+    const followers = followStore.get(agentId);
+    if (followers) {
+      followers.delete(user_id);
+    }
+    
+    // Emit event for SSE
+    // emitEvent({ type: 'FOLLOW_REMOVED', agent_id: agentId, payload: { user_id } });
+    
+    return NextResponse.json({
+      success: true,
+      agent_id: agentId,
+      user_id
+    });
+  } catch (error) {
+    console.error('Unfollow error:', error);
+    return NextResponse.json(
+      { error: 'Failed to unfollow agent' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id: agentId } = await params;
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('user_id');
+    
+    const followers = followStore.get(agentId) || new Set();
+    
+    if (userId) {
+      // Check if specific user follows this agent
+      return NextResponse.json({
+        agent_id: agentId,
+        user_id: userId,
+        is_following: followers.has(userId),
+        follower_count: followers.size
+      });
+    } else {
+      // Return all followers
+      return NextResponse.json({
+        agent_id: agentId,
+        follower_count: followers.size,
+        followers: Array.from(followers)
+      });
+    }
+  } catch (error) {
+    console.error('Get followers error:', error);
+    return NextResponse.json(
+      { error: 'Failed to get followers' },
+      { status: 500 }
+    );
+  }
+}

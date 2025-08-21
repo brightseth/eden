@@ -1,112 +1,143 @@
 import { NextResponse } from 'next/server';
 
-// Mock data for now - will connect to Supabase later
-const generateMockLeaderboard = () => {
+// Enhanced mock data with revenue-based scoring formula
+const generateMockLeaderboard = (period: string) => {
   const agents = [
     { 
       id: 'abraham', 
       name: 'ABRAHAM', 
       status: 'GRADUATED',
+      avatar_url: '/agents/abraham/avatar.png',
       trainer: 'GENE KOGAN',
-      baseScore: 920
+      baseRevenue: 12500,
+      baseStreak: 45
     },
     { 
       id: 'solienne', 
       name: 'SOLIENNE', 
       status: 'IN ACADEMY',
+      avatar_url: '/agents/solienne/avatar.png',
       trainer: 'KRISTI CORONADO',
-      baseScore: 875
+      baseRevenue: 8750,
+      baseStreak: 22
     },
     { 
       id: 'geppetto', 
       name: 'GEPPETTO', 
       status: 'PRE-ACADEMY',
+      avatar_url: '/agents/geppetto/avatar.png',
       trainer: 'TBD',
-      baseScore: 450
+      baseRevenue: 0,
+      baseStreak: 0
     },
     { 
       id: 'koru', 
       name: 'KORU', 
       status: 'PRE-ACADEMY',
+      avatar_url: '/agents/koru/avatar.png',
       trainer: 'TBD',
-      baseScore: 380
+      baseRevenue: 0,
+      baseStreak: 0
     }
   ];
 
-  return agents.map((agent, idx) => {
-    // Add some variance to scores
-    const variance = Math.floor(Math.random() * 50) - 25;
-    const composite_score = Math.max(0, agent.baseScore + variance);
+  const periodMultiplier = period === '30d' ? 4 : period === '7d' ? 1 : 0.15;
+
+  return agents.map((agent) => {
+    // Add realistic variance
+    const revenueVariance = Math.random() * 0.3 - 0.15; // ±15%
+    const revenue_usd = Math.max(0, agent.baseRevenue * periodMultiplier * (1 + revenueVariance));
     
-    // Calculate component scores based on status
-    const multiplier = agent.status === 'GRADUATED' ? 1 : 
-                      agent.status === 'IN ACADEMY' ? 0.8 : 0.4;
+    // Calculate metrics based on agent status
+    const isActive = agent.status !== 'PRE-ACADEMY';
+    
+    // Engagement metrics
+    const follows = isActive ? Math.floor(Math.random() * 200 + 100) : 0;
+    const favorites = isActive ? Math.floor(Math.random() * 500 + 200) : 0;
+    const comments = isActive ? Math.floor(Math.random() * 100 + 50) : 0;
+    const bids = isActive ? Math.floor(Math.random() * 50 + 10) : 0;
+    
+    // Curation metrics
+    const includes = isActive ? Math.floor(Math.random() * 30 + 20) : 0;
+    const excludes = isActive ? Math.floor(Math.random() * 120 + 80) : 0;
+    const curation_pass_rate = (includes + excludes) > 0 ? includes / (includes + excludes) : 0;
+    
+    // Calculate engagement index
+    const engagement_idx = 1.0 * follows + 0.5 * favorites + 0.5 * comments + 1.5 * bids;
+    
+    // Streak normalization
+    const streak_days = agent.baseStreak + (isActive ? Math.floor(Math.random() * 10) : 0);
+    const streak_days_norm = Math.min(streak_days / 100, 1.0);
+    
+    // Calculate final score using the formula
+    const score = 
+      0.50 * Math.log1p(revenue_usd) +
+      0.20 * engagement_idx +
+      0.20 * streak_days_norm +
+      0.10 * curation_pass_rate;
     
     return {
       agent_id: agent.id,
-      agent_name: agent.name,
+      name: agent.name,
+      avatar_url: agent.avatar_url,
       status: agent.status,
       trainer: agent.trainer,
+      period,
       
-      // Overall metrics
-      composite_score,
-      rank: idx + 1,
-      percentile: Math.round((4 - idx) / 4 * 100),
+      // Core metrics
+      metrics: {
+        revenue_usd,
+        follows,
+        favorites,
+        comments,
+        bids,
+        includes,
+        excludes,
+        curation_pass_rate: Number(curation_pass_rate.toFixed(3)),
+        streak_days,
+        streak_days_norm: Number(streak_days_norm.toFixed(3)),
+        engagement_idx: Number(engagement_idx.toFixed(1))
+      },
       
-      // Component scores
-      practice_score: Math.round(250 * multiplier + Math.random() * 50),
-      creation_score: Math.round(350 * multiplier + Math.random() * 50), 
-      engagement_score: Math.round(200 * multiplier + Math.random() * 50),
-      quality_score: Math.round(200 * multiplier + Math.random() * 50),
+      // Score
+      score: Number(score.toFixed(2)),
       
-      // Practice metrics
-      total_challenges: Math.floor(30 * multiplier + Math.random() * 10),
-      best_streak: Math.floor(15 * multiplier + Math.random() * 5),
-      perfect_percentage: Math.round(60 * multiplier + Math.random() * 20),
+      // Display-friendly percentages
+      curation_percentage: Math.round(curation_pass_rate * 100),
       
-      // Creation metrics
-      total_submissions: Math.floor(100 * multiplier + Math.random() * 50),
-      total_included: Math.floor(20 * multiplier + Math.random() * 10),
-      inclusion_percentage: Math.round(20 * multiplier + Math.random() * 10),
-      
-      // Engagement metrics
-      followers: Math.floor(500 * multiplier + Math.random() * 200),
-      total_reactions: Math.floor(1000 * multiplier + Math.random() * 500),
-      total_comments: Math.floor(200 * multiplier + Math.random() * 100),
-      
-      // Quality metrics
-      curator_percentage: Math.round(70 * multiplier + Math.random() * 20),
-      peer_rating: Number((3 * multiplier + Math.random() * 2).toFixed(2)),
-      trainer_rating: Number((3.5 * multiplier + Math.random() * 1.5).toFixed(2)),
-      
-      // Trend (random for now)
-      trend: Math.random() > 0.5 ? 'up' : Math.random() > 0.3 ? 'down' : 'stable',
-      trend_value: Math.floor(Math.random() * 5) - 2
+      // Trend (compare to yesterday)
+      trend: Math.random() > 0.6 ? 'up' : Math.random() > 0.3 ? 'stable' : 'down',
+      trend_value: Math.floor(Math.random() * 3) - 1
     };
-  }).sort((a, b) => b.composite_score - a.composite_score);
+  }).sort((a, b) => b.score - a.score).map((agent, idx) => ({
+    ...agent,
+    rank: idx + 1,
+    percentile: Math.round(((agents.length - idx - 1) / agents.length) * 100)
+  }));
 };
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const timeframe = searchParams.get('timeframe') || '30d';
+    const period = searchParams.get('period') || '7d';
     const limit = parseInt(searchParams.get('limit') || '10');
     
-    // Generate mock leaderboard data
-    const leaderboard = generateMockLeaderboard().slice(0, limit);
+    // Generate mock leaderboard data with new scoring
+    const items = generateMockLeaderboard(period).slice(0, limit);
     
-    // Add metadata
+    // Response format matching the spec
     const response = {
-      leaderboard,
+      period,
+      count: items.length,
+      items,
       metadata: {
-        timeframe,
         updated_at: new Date().toISOString(),
         total_agents: 4,
         scoring_weights: {
-          practice: 0.25,
-          creation: 0.35,
+          revenue: 0.50,
           engagement: 0.20,
-          quality: 0.20
+          streak: 0.20,
+          curation: 0.10
         }
       }
     };
