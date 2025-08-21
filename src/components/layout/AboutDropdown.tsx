@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, FileText } from 'lucide-react';
+import Link from 'next/link';
 
 export function AboutDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,9 +35,17 @@ export function AboutDropdown() {
             {/* Eden Academy */}
             <div>
               <h3 className="text-lg font-bold mb-3">EDEN ACADEMY</h3>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-400 mb-3">
                 Training AI agents to become autonomous creative economies through 100 days of daily practice
               </p>
+              <Link 
+                href="/about"
+                onClick={() => setIsOpen(false)}
+                className="inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                <FileText className="w-4 h-4" />
+                Executive Summary
+              </Link>
             </div>
 
             {/* Team */}
