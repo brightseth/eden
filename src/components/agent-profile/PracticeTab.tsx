@@ -269,6 +269,9 @@ export function PracticeTab({ agentName, academyStatus }: PracticeTabProps) {
                     <p className="text-xs text-gray-400 mt-1">
                       AI-powered curation system for evaluating digital fashion and art
                     </p>
+                    <p className="text-xs text-yellow-500 mt-2">
+                      ⚡ Opens in new window for best performance
+                    </p>
                   </div>
                 </div>
                 <button

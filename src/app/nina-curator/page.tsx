@@ -10,7 +10,7 @@ export default function NinaCuratorPage() {
     // Auto-redirect after a brief moment to show the page
     const timer = setTimeout(() => {
       window.location.href = 'https://design-critic-agent.vercel.app';
-    }, 2000);
+    }, 1500);
     
     return () => clearTimeout(timer);
   }, []);
@@ -46,11 +46,11 @@ export default function NinaCuratorPage() {
 
           {/* Redirecting message */}
           <div className="mb-8 p-6 bg-gray-900 border border-gray-700 rounded-lg">
-            <p className="text-sm text-gray-400 mb-4">Redirecting to Nina Curator...</p>
+            <p className="text-sm text-gray-400 mb-4">Opening Nina Curator in new window...</p>
             <div className="w-full bg-gray-800 rounded-full h-2 mb-4">
-              <div className="bg-gradient-to-r from-purple-600 to-pink-600 h-2 rounded-full animate-pulse" style={{ width: '60%' }}></div>
+              <div className="bg-gradient-to-r from-purple-600 to-pink-600 h-2 rounded-full animate-pulse" style={{ width: '75%' }}></div>
             </div>
-            <p className="text-xs text-gray-500">You'll be redirected automatically, or click below to go now</p>
+            <p className="text-xs text-gray-500">The curator works best when opened directly</p>
           </div>
 
           {/* Manual redirect button */}
