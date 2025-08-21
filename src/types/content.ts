@@ -13,11 +13,14 @@ export interface Asset {
   source: AssetSource;
   state: AssetState;
   
-  title?: string;
-  description?: string;
+  title?: string | null;
+  description?: string | null;
   created_at: string;
+  published_at?: string;
   captured_at?: string;
   tags: string[];
+  collection_ids?: string[];
+  cross_post_enabled?: boolean;
   
   media: {
     url: string;

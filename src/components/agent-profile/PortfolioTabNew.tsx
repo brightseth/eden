@@ -19,6 +19,7 @@ export function PortfolioTab({ agentId, agentName }: PortfolioTabProps) {
   const [filterState, setFilterState] = useState<AssetState | 'ALL'>('ALL');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedAssets, setSelectedAssets] = useState<Set<string>>(new Set());
+  const [publishing, setPublishing] = useState<string | null>(null);
 
   // Fetch assets on mount
   useEffect(() => {
@@ -55,6 +56,27 @@ export function PortfolioTab({ agentId, agentName }: PortfolioTabProps) {
     if (e.target.files) {
       const files = Array.from(e.target.files);
       setSelectedFiles(prev => [...prev, ...files]);
+    }
+  };
+
+  const handlePublish = async (assetId: string) => {
+    setPublishing(assetId);
+    try {
+      const response = await fetch(`/api/assets/${assetId}/publish`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      if (response.ok) {
+        fetchAssets(); // Refresh to show updated state
+      } else {
+        const error = await response.json();
+        console.error('Publish failed:', error);
+      }
+    } catch (error) {
+      console.error('Publish error:', error);
+    } finally {
+      setPublishing(null);
     }
   };
 
@@ -277,6 +299,22 @@ export function PortfolioTab({ agentId, agentName }: PortfolioTabProps) {
                         {tag}
                       </span>
                     ))}
+                  </div>
+                )}
+                
+                {/* Action buttons */}
+                {asset.state === 'CURATED' && asset.curation?.verdict !== 'EXCLUDE' && (
+                  <button
+                    onClick={() => handlePublish(asset.id)}
+                    disabled={publishing === asset.id}
+                    className="mt-2 w-full px-2 py-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white text-xs font-bold rounded transition-colors"
+                  >
+                    {publishing === asset.id ? 'Publishing...' : 'Publish'}
+                  </button>
+                )}
+                {asset.state === 'PUBLISHED' && (
+                  <div className="mt-2 text-xs text-green-400 text-center">
+                    ✓ Published
                   </div>
                 )}
               </div>

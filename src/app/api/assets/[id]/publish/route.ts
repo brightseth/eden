@@ -1,0 +1,106 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { Asset, AssetState } from '@/types/content';
+
+// Mock storage - will replace with Supabase
+declare global {
+  var assetStore: Map<string, Asset> | undefined;
+}
+
+const getAssetStore = () => {
+  if (!global.assetStore) {
+    global.assetStore = new Map<string, Asset>();
+  }
+  return global.assetStore;
+};
+
+// Mock event emitter for SSE
+const emitEvent = (type: string, payload: any) => {
+  // This will be replaced with actual SSE implementation
+  console.log('Event emitted:', type, payload);
+};
+
+// POST /api/assets/[id]/publish - Publish an asset
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  
+  try {
+    const assetStore = getAssetStore();
+    const asset = assetStore.get(id);
+    
+    // Asset existence check
+    if (!asset) {
+      return NextResponse.json(
+        { error: 'Asset not found' },
+        { status: 404 }
+      );
+    }
+    
+    // Guard: Only allow publishing curated assets that aren't excluded
+    if (asset.state !== 'CURATED') {
+      return NextResponse.json(
+        { 
+          error: 'Asset must be curated before publishing',
+          current_state: asset.state,
+          required_state: 'CURATED'
+        },
+        { status: 400 }
+      );
+    }
+    
+    if (asset.curation?.verdict === 'EXCLUDE') {
+      return NextResponse.json(
+        { 
+          error: 'Cannot publish excluded assets',
+          verdict: asset.curation.verdict,
+          rationale: asset.curation.rationale
+        },
+        { status: 400 }
+      );
+    }
+    
+    // Update asset state to published
+    asset.state = 'PUBLISHED' as AssetState;
+    asset.published_at = new Date().toISOString();
+    
+    // Store updated asset
+    assetStore.set(id, asset);
+    
+    // Emit SSE event
+    emitEvent('asset.published', {
+      asset_id: asset.id,
+      agent_id: asset.agent_id,
+      title: asset.title,
+      media_url: asset.media.url,
+      published_at: asset.published_at,
+      curation_verdict: asset.curation?.verdict,
+      collection_ids: asset.collection_ids || []
+    });
+    
+    // Optional: Cross-post hook (to be implemented)
+    if (asset.cross_post_enabled) {
+      // Queue cross-posting to social platforms
+      console.log('Queuing cross-post for asset:', asset.id);
+    }
+    
+    return NextResponse.json({
+      success: true,
+      asset: {
+        id: asset.id,
+        state: asset.state,
+        published_at: asset.published_at,
+        public_url: `/api/agents/${asset.agent_id}/published/${asset.id}`
+      },
+      message: 'Asset published successfully'
+    });
+    
+  } catch (error) {
+    console.error('Publish error:', error);
+    return NextResponse.json(
+      { error: 'Failed to publish asset' },
+      { status: 500 }
+    );
+  }
+}

@@ -2,12 +2,22 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Asset, AssetKind } from '@/types/content';
 
 // Mock storage - will replace with Supabase
-const assetStore = new Map<string, Asset>();
+declare global {
+  var assetStore: Map<string, Asset> | undefined;
+}
+
+const getAssetStore = () => {
+  if (!global.assetStore) {
+    global.assetStore = new Map<string, Asset>();
+  }
+  return global.assetStore;
+};
 
 // Mock auto-curation queue
 async function enqueueCuration(assetId: string) {
   // Simulate async curation
   setTimeout(async () => {
+    const assetStore = getAssetStore();
     const asset = assetStore.get(assetId);
     if (!asset) return;
     
@@ -45,6 +55,7 @@ export async function GET(
   const kind = searchParams.get('kind');
   
   // Filter assets by agent_id and optional params
+  const assetStore = getAssetStore();
   const assets = Array.from(assetStore.values()).filter(asset => {
     if (asset.agent_id !== id) return false;
     if (state && asset.state !== state) return false;
@@ -68,6 +79,7 @@ export async function POST(
     const data = await request.json();
     const { files, urls, title, description, tags = [] } = data;
     
+    const assetStore = getAssetStore();
     const results: Asset[] = [];
     const sources = files || urls || [];
     
@@ -132,6 +144,7 @@ export async function PATCH(
     const assetId = segments[segments.length - 1];
     
     const updates = await request.json();
+    const assetStore = getAssetStore();
     const asset = assetStore.get(assetId);
     
     if (!asset || asset.agent_id !== id) {
