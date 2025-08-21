@@ -238,6 +238,44 @@ export function PracticeTab({ agentName, academyStatus }: PracticeTabProps) {
         </div>
       </div>
 
+      {/* Curatorial Tools - Only for Solienne */}
+      {agentName === 'SOLIENNE' && (
+        <div className="border border-gray-800">
+          <div className="p-4 border-b border-gray-800 bg-gray-950">
+            <h3 className="text-sm font-bold tracking-wider">CURATORIAL TOOLS</h3>
+          </div>
+          <div className="p-6">
+            <div className="space-y-4">
+              <div className="border border-gray-700 bg-gray-950 p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div>
+                    <h4 className="text-sm font-bold text-white">Nina Roehrs Digital Curator</h4>
+                    <p className="text-xs text-gray-400 mt-1">
+                      AI-powered curation system for evaluating digital fashion and art
+                    </p>
+                  </div>
+                </div>
+                <a 
+                  href="https://design-critic-agent.vercel.app/nina-unified.html" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold rounded hover:from-purple-700 hover:to-pink-700 transition-all"
+                >
+                  <span>OPEN CURATOR</span>
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              </div>
+              <p className="text-xs text-gray-500">
+                Solienne uses advanced curatorial AI to evaluate submissions for Paris Photo standards, 
+                ensuring only the highest quality digital fashion and art pieces enter her collection.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Revenue Distribution */}
       <div className="border border-gray-800">
         <div className="p-4 border-b border-gray-800 bg-gray-950">
