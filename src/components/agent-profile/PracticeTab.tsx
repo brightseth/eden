@@ -52,7 +52,7 @@ export function PracticeTab({ agentName, academyStatus }: PracticeTabProps) {
         currentStreak: 95,
         dailyTime: '12:00 PM UTC',
         hasImage: true,
-        imagePath: '/images/gallery/solienne.large.iconic.png',
+        imagePath: '/images/gallery/solienne-hero.png',
         imageAlt: 'Solienne - Fashion Curator',
         todaysGoal: 'Create fashion photography and update Printify catalog',
         nextDrop: '11:30:15',
