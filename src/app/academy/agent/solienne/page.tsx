@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { ChevronRight, Settings } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { LiveTicker } from '@/components/live-ticker/LiveTicker';
+import { FollowButton } from '@/components/agent-profile/FollowButton';
 import { CreatorToolsInterface } from '@/components/creator-tools/CreatorToolsInterface';
 import { PracticeTab } from '@/components/agent-profile/PracticeTab';
 import { CollectTab } from '@/components/agent-profile/CollectTab';
@@ -85,6 +86,9 @@ function SoliennePageContent() {
                 </button>
               </div>
               <p className="text-gray-400 mt-2">Fashion Curator - Daily Drops & Curated Collections</p>
+              <div className="mt-3">
+                <FollowButton agentId="solienne" agentName="SOLIENNE" />
+              </div>
             </div>
             <div className="text-right">
               <div className="text-sm text-gray-500 mb-1">GRADUATION DATE</div>
