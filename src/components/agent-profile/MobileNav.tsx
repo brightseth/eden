@@ -1,18 +1,16 @@
 'use client';
 
-import { Wallet, Grid, Info, Users, Settings } from 'lucide-react';
+import { Wallet, Play, Settings } from 'lucide-react';
 
 interface MobileNavProps {
   activeTab: string;
-  onTabChange: (tab: 'collect' | 'portfolio' | 'about' | 'community' | 'tools') => void;
+  onTabChange: (tab: 'practice' | 'collect' | 'tools') => void;
 }
 
 export function MobileNav({ activeTab, onTabChange }: MobileNavProps) {
   const tabs = [
+    { id: 'practice' as const, label: 'Practice', icon: Play },
     { id: 'collect' as const, label: 'Collect', icon: Wallet },
-    { id: 'portfolio' as const, label: 'Portfolio', icon: Grid },
-    { id: 'about' as const, label: 'About', icon: Info },
-    { id: 'community' as const, label: 'Community', icon: Users },
     { id: 'tools' as const, label: 'Creator', icon: Settings },
   ];
 

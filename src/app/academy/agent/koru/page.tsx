@@ -6,31 +6,33 @@ import { useSearchParams } from 'next/navigation';
 import { ChevronRight, Settings } from 'lucide-react';
 import { AboutDropdown } from '@/components/layout/AboutDropdown';
 import { CreatorToolsInterface } from '@/components/creator-tools/CreatorToolsInterface';
-import { AboutTab } from '@/components/agent-profile/AboutTab';
+import { PracticeTab } from '@/components/agent-profile/PracticeTab';
 import { CollectTab } from '@/components/agent-profile/CollectTab';
 import { PortfolioTab } from '@/components/agent-profile/PortfolioTab';
 import { CommunityTab } from '@/components/agent-profile/CommunityTab';
 import { TokenLaunchBanner } from '@/components/agent-profile/TokenLaunchBanner';
 import { AgentTLDR } from '@/components/agent-profile/AgentTLDR';
 import { MobileNav } from '@/components/agent-profile/MobileNav';
+import { AdminDock } from '@/components/AdminDock';
+import { StickyCTA } from '@/components/StickyCTA';
 import { getAcademyStatus } from '@/utils/academy-dates';
 
 const KORU_GRADUATION = '2026-01-15'; // January 15, 2026
 
 function KoruPageContent() {
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<'collect' | 'portfolio' | 'about' | 'community' | 'tools'>('about');
+  const [activeTab, setActiveTab] = useState<'practice' | 'collect' | 'tools'>('practice');
   
   // Calculate academy status
   const academyStatus = getAcademyStatus(KORU_GRADUATION);
   
   useEffect(() => {
     const tab = searchParams.get('tab');
-    if (tab && ['collect', 'portfolio', 'about', 'community', 'tools'].includes(tab)) {
-      setActiveTab(tab as 'collect' | 'portfolio' | 'about' | 'community' | 'tools');
+    if (tab && ['practice', 'collect', 'tools'].includes(tab)) {
+      setActiveTab(tab as 'practice' | 'collect' | 'tools');
     } else if (!tab) {
-      // Default to about tab if no tab specified
-      setActiveTab('about');
+      // Default to practice tab if no tab specified
+      setActiveTab('practice');
     }
   }, [searchParams]);
 
@@ -160,7 +162,7 @@ function KoruPageContent() {
           <div className="flex justify-between items-center">
             <div className="flex-1 overflow-x-auto scrollbar-hide">
               <div className="flex gap-8 px-6">
-                {(['collect', 'portfolio', 'about', 'community'] as const).map((tab) => (
+                {(['practice', 'collect'] as const).map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
@@ -194,10 +196,8 @@ function KoruPageContent() {
 
       {/* Content */}
       <div className="max-w-6xl mx-auto px-6 py-8 pb-20 md:pb-8">
+        {activeTab === 'practice' && <PracticeTab agentName="KORU" academyStatus={academyStatus} />}
         {activeTab === 'collect' && <CollectTab agentName="KORU" academyStatus={academyStatus} />}
-        {activeTab === 'portfolio' && <PortfolioTab agentName="KORU" />}
-        {activeTab === 'about' && <AboutTab agentName="KORU" />}
-        {activeTab === 'community' && <CommunityTab agentName="KORU" />}
         {activeTab === 'tools' && (
           <div>
             <CreatorToolsInterface agentName="KORU" graduationDate={KORU_GRADUATION} />
@@ -207,6 +207,12 @@ function KoruPageContent() {
 
       {/* Mobile Navigation */}
       <MobileNav activeTab={activeTab} onTabChange={setActiveTab} />
+      
+      {/* Sticky CTA */}
+      <StickyCTA agentName="KORU" currentTab={activeTab} />
+      
+      {/* Admin Dock */}
+      <AdminDock agentName="KORU" />
     </div>
   );
 }

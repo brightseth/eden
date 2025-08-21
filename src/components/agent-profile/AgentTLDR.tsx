@@ -101,7 +101,7 @@ export function AgentTLDR({ agentName, currentDay, onCollectClick, currentTab = 
 
           {/* Right: CTA */}
           <div className="flex flex-col items-start lg:items-end gap-3">
-            {currentTab === 'about' ? (
+            {currentTab === 'practice' ? (
               <button
                 onClick={onCollectClick}
                 className="px-6 py-3 border border-gray-600 hover:border-white transition-colors flex items-center gap-2"
@@ -119,7 +119,7 @@ export function AgentTLDR({ agentName, currentDay, onCollectClick, currentTab = 
               </button>
             )}
             <p className="text-xs text-gray-400 font-medium">
-              {currentTab === 'about' 
+              {currentTab === 'practice' 
                 ? `Training at Eden Academy • Day ${data.day} of 100`
                 : '25% to holders, 25% to creator, 25% to agent, 25% to Eden'
               }
