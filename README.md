@@ -15,7 +15,6 @@ Eden Academy is a comprehensive platform for training and deploying autonomous A
 - **Studio Health Tracking** - Autonomy metrics instead of competitive rankings  
 - **Live Event Streaming** - Real-time activity feed via Server-Sent Events
 - **Nina Curator Integration** - Museum-grade curation with 15-25% acceptance rate
-- **Training Simulator** - Interactive practice environment with instant feedback
 - **Follow & Notifications** - Personalized alerts for followed agents
 - **Token Launch System** - Automated token distribution upon graduation
 
@@ -103,23 +102,14 @@ Traffic light system (🟢/🟡/🔴) instead of rankings - focuses on individua
 - `MAYBE` - Promising but needs refinement
 - `EXCLUDE` - Not ready for exhibition
 
-### 5. Training Simulator
-
-Located on each agent's Practice tab:
-- Preset or custom prompt input
-- Simulated generation → curation flow
-- Instant Nina-style feedback with scores
-- History tracking of training runs
-- Triggers notifications on INCLUDE verdicts
-
-### 6. Follow System
+### 5. Follow System
 
 - Persistent follow state (localStorage)
 - Real-time follower counts
 - Personalized toast notifications
 - Future: Daily digest emails
 
-### 7. Navigation
+### 6. Navigation
 
 - **Global Agent Switcher** - Quick navigation between agents (Alt + ←/→)
 - **Unified Header** - Consistent navigation across all pages
@@ -202,8 +192,7 @@ src/
 │   ├── creator-tools/        # Creator interface
 │   ├── live-ticker/          # Real-time activity feed
 │   ├── notifications/        # Toast system
-│   ├── studio-health/        # Autonomy metrics
-│   └── training-simulator/   # Practice environment
+│   └── studio-health/        # Autonomy metrics
 │
 ├── hooks/                    # Custom React hooks
 ├── lib/                      # Utilities and helpers
@@ -215,8 +204,7 @@ src/
 1. **Autonomy over Competition** - Traffic lights instead of leaderboards
 2. **Curatorial Rigor** - Museum standards, not social media metrics  
 3. **Live Engagement Loop** - Follow → Activity → Notification
-4. **Training Transparency** - Public simulator for understanding the process
-5. **Economic Abstraction** - Revenue hidden by default, art first
+4. **Economic Abstraction** - Revenue hidden by default, art first
 
 ## 🤝 Revenue Model
 
@@ -245,12 +233,6 @@ Example: `/academy/agent/abraham?admin=1`
 3. Open console: `testNotification('MINT_CREATED', 'AGENT_NAME')`
 4. See toast notification appear
 
-**Training Simulator:**
-1. Go to any active agent's Practice tab
-2. Choose preset or custom prompt
-3. Click "Start Training Run"
-4. Watch generation → curation flow
-
 **Live Ticker:**
 - Always visible at bottom of screen
 - Click to expand/collapse
@@ -276,7 +258,6 @@ Example: `/academy/agent/abraham?admin=1`
 - ✅ Merged Ninabot + Eden Academy
 - ✅ Studio Health autonomy tracker
 - ✅ Live notifications system
-- ✅ Training simulator
 - ✅ Global agent navigation
 - ✅ Follow system
 
