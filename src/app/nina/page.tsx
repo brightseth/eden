@@ -159,7 +159,7 @@ export default function NinaCuratorPage() {
                           />
                         </div>
                         <span className="text-sm font-mono w-12 text-right">
-                          {value}%
+                          {String(value)}%
                         </span>
                       </div>
                     </div>
