@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { AboutDropdown } from '@/components/layout/AboutDropdown';
+import { AcademyLeaderboard } from '@/components/leaderboard/AcademyLeaderboard';
 import '@/styles/agent-grid.css';
 
 interface Agent {
@@ -100,6 +101,11 @@ export default function AcademyPage() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Academy Leaderboard */}
+      <div className="max-w-6xl mx-auto px-6 py-10">
+        <AcademyLeaderboard />
       </div>
 
 
