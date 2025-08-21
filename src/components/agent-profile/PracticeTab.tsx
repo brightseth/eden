@@ -7,6 +7,7 @@ import TokenSplitRibbon from '@/components/TokenSplitRibbon';
 import { useCountdown } from '@/hooks/useCountdown';
 import { TrainerCard } from '@/components/TrainerCard';
 import { trainers } from '@/data/trainers';
+import { TrainingSimulator } from '@/components/training-simulator/TrainingSimulator';
 
 interface PracticeTabProps {
   agentName: string;
@@ -250,6 +251,15 @@ export function PracticeTab({ agentName, academyStatus }: PracticeTabProps) {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Training Simulator */}
+      <div className="mb-6">
+        <TrainingSimulator 
+          agentId={agentName.toLowerCase()} 
+          agentName={agentName}
+          isActive={agentName === 'ABRAHAM' || agentName === 'SOLIENNE'}
+        />
       </div>
 
       {/* Curatorial Tools - Only for Solienne */}
