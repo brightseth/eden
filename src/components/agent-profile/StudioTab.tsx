@@ -1,16 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { Upload, BarChart3, Settings, ChevronRight, Inbox } from 'lucide-react';
+import { Upload, BarChart3, Settings, ChevronRight, Inbox, Calendar } from 'lucide-react';
 import { NinaCuratorEmbed } from '@/components/studio/NinaCuratorEmbed';
 import { ReviewBoard } from '@/components/review-board/ReviewBoard';
+import { PracticeCalendar } from '@/components/practice-calendar/PracticeCalendar';
 
 interface StudioTabProps {
   agentName: string;
 }
 
 export function StudioTab({ agentName }: StudioTabProps) {
-  const [activeSection, setActiveSection] = useState<'review' | 'upload' | 'performance' | 'settings'>('review');
+  const [activeSection, setActiveSection] = useState<'review' | 'calendar' | 'upload' | 'performance' | 'settings'>('review');
 
   return (
     <div className="flex flex-col md:flex-row gap-6">
@@ -28,6 +29,22 @@ export function StudioTab({ agentName }: StudioTabProps) {
           <div className="text-left flex-1">
             <div className="font-bold">Review Board</div>
             <div className="text-xs text-gray-400">Inbox & curation</div>
+          </div>
+          <ChevronRight className="w-4 h-4 text-gray-500" />
+        </button>
+        
+        <button
+          onClick={() => setActiveSection('calendar')}
+          className={`w-full flex items-center gap-3 px-4 py-3 rounded transition-colors ${
+            activeSection === 'calendar' 
+              ? 'bg-gray-900 border border-gray-700' 
+              : 'hover:bg-gray-950'
+          }`}
+        >
+          <Calendar className="w-5 h-5 text-green-400" />
+          <div className="text-left flex-1">
+            <div className="font-bold">Practice Calendar</div>
+            <div className="text-xs text-gray-400">Track daily progress</div>
           </div>
           <ChevronRight className="w-4 h-4 text-gray-500" />
         </button>
@@ -85,6 +102,10 @@ export function StudioTab({ agentName }: StudioTabProps) {
       <div className="flex-1">
         {activeSection === 'review' && (
           <ReviewBoard agentName={agentName} />
+        )}
+        
+        {activeSection === 'calendar' && (
+          <PracticeCalendar agentName={agentName} />
         )}
         
         {activeSection === 'upload' && (
