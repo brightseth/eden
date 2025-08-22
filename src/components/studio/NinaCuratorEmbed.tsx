@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Upload, Sparkles, AlertTriangle, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { saveCuration, publishCuration } from '@/lib/db/curations';
 
@@ -27,9 +27,30 @@ interface NinaCuratorEmbedProps {
 export function NinaCuratorEmbed({ agentName = 'UNKNOWN' }: NinaCuratorEmbedProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
   const [result, setResult] = useState<CurationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [agentDay, setAgentDay] = useState<number>(1);
+
+  // Fetch agent's current day
+  useEffect(() => {
+    const fetchAgentDay = async () => {
+      try {
+        const res = await fetch(`/api/agents/${agentName.toLowerCase()}`);
+        if (res.ok) {
+          const data = await res.json();
+          setAgentDay(data.agent?.day_count || 1);
+        }
+      } catch (error) {
+        console.error('Failed to fetch agent day:', error);
+      }
+    };
+    
+    if (agentName !== 'UNKNOWN') {
+      fetchAgentDay();
+    }
+  }, [agentName]);
 
   const processImage = async (file: File) => {
     setIsProcessing(true);
@@ -231,8 +252,84 @@ export function NinaCuratorEmbed({ agentName = 'UNKNOWN' }: NinaCuratorEmbedProp
                   Try Another
                 </button>
                 {result.verdict === 'INCLUDE' && (
-                  <button className="flex-1 px-4 py-2 bg-green-900 text-green-400 hover:bg-green-800 rounded transition-colors">
-                    Publish to Collection
+                  <button 
+                    onClick={async () => {
+                      setIsPublishing(true);
+                      try {
+                        // Try to find next available day
+                        let currentDay = agentDay + 1;
+                        let workCreated = false;
+                        let work = null;
+                        
+                        // Try up to 10 days ahead
+                        for (let i = 0; i < 10; i++) {
+                          const workResponse = await fetch('/api/works', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                              agent_id: agentName.toLowerCase(),
+                              day: currentDay + i,
+                              media_url: imagePreview, // Already includes data:image prefix
+                              prompt: result.i_see || 'Studio upload',
+                              notes: JSON.stringify(result)
+                            })
+                          });
+                          
+                          if (workResponse.ok) {
+                            work = await workResponse.json();
+                            workCreated = true;
+                            setAgentDay(currentDay + i); // Update the day counter
+                            break;
+                          } else if (workResponse.status === 409) {
+                            // Day already exists, try next
+                            continue;
+                          } else {
+                            throw new Error('Failed to create work');
+                          }
+                        }
+                        
+                        if (!workCreated || !work) {
+                          throw new Error('Could not find available day slot');
+                        }
+                        
+                        // Publish the work
+                        const publishResponse = await fetch(`/api/works/${work.id}/publish`, {
+                          method: 'POST'
+                        });
+                        
+                        if (!publishResponse.ok) {
+                          throw new Error('Failed to publish work');
+                        }
+                        
+                        alert(`Successfully published to collection! (Day ${work.day})`);
+                        
+                        // Reset the form
+                        setImagePreview(null);
+                        setResult(null);
+                        setError(null);
+                        
+                      } catch (error) {
+                        console.error('Publish error:', error);
+                        alert('Failed to publish. Try uploading via the main Upload page instead.');
+                      } finally {
+                        setIsPublishing(false);
+                      }
+                    }}
+                    disabled={isPublishing}
+                    className={`flex-1 px-4 py-2 rounded transition-colors ${
+                      isPublishing 
+                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
+                        : 'bg-green-900 text-green-400 hover:bg-green-800'
+                    }`}
+                  >
+                    {isPublishing ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Publishing...
+                      </span>
+                    ) : (
+                      'Publish to Collection'
+                    )}
                   </button>
                 )}
               </div>
