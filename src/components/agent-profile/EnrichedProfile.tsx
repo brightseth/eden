@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { 
   Calendar, Users, TrendingUp, Award, Sparkles, 
   Twitter, Globe, Instagram, ExternalLink, 
-  CheckCircle, Circle, AlertCircle
+  CheckCircle, Circle, AlertCircle, ArrowRight
 } from 'lucide-react';
+import { getAgentConfig } from '@/lib/agent-config';
 
 interface AgentProfileData {
   agent: {
@@ -107,6 +109,7 @@ export function EnrichedProfile({ agentId }: EnrichedProfileProps) {
   }
 
   const { agent, highlights, curation, social, spirit_path } = profile;
+  const agentConfig = getAgentConfig(agentId.toLowerCase());
 
   const statusColors = {
     training: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
@@ -154,9 +157,52 @@ export function EnrichedProfile({ agentId }: EnrichedProfileProps) {
 
             {/* Actions */}
             <div className="flex items-center gap-3">
-              <button className="p-2 rounded bg-gray-800 hover:bg-gray-700">
-                <ExternalLink className="w-5 h-5" />
-              </button>
+              {/* Special links for Abraham */}
+              {agentId.toLowerCase() === 'abraham' && (
+                <>
+                  <Link 
+                    href="/academy/abraham/early-works"
+                    className="px-4 py-2 bg-purple-600/20 text-purple-400 border border-purple-600/30 rounded hover:bg-purple-600/30 transition-colors text-sm font-medium flex items-center gap-2"
+                  >
+                    View 3,689 Early Works
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                  <Link 
+                    href="/academy/abraham/covenant"
+                    className="px-4 py-2 bg-green-600/20 text-green-400 border border-green-600/30 rounded hover:bg-green-600/30 transition-colors text-sm font-medium flex items-center gap-2"
+                  >
+                    The Covenant (Oct 19)
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </>
+              )}
+              
+              {/* Special links for Solienne */}
+              {agentId.toLowerCase() === 'solienne' && (
+                <>
+                  <Link 
+                    href="/academy/solienne/generations"
+                    className="px-4 py-2 bg-purple-600/20 text-purple-400 border border-purple-600/30 rounded hover:bg-purple-600/30 transition-colors text-sm font-medium flex items-center gap-2"
+                  >
+                    View Generations
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                  <Link 
+                    href="/academy/solienne/paris-photo"
+                    className="px-4 py-2 bg-green-600/20 text-green-400 border border-green-600/30 rounded hover:bg-green-600/30 transition-colors text-sm font-medium flex items-center gap-2"
+                  >
+                    Paris Photo (Nov 10)
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </>
+              )}
+              
+              {/* External site link if configured */}
+              {agentConfig?.special_features?.includes('external_site') && (
+                <button className="p-2 rounded bg-gray-800 hover:bg-gray-700">
+                  <ExternalLink className="w-5 h-5" />
+                </button>
+              )}
             </div>
           </div>
 

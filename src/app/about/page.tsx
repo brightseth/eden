@@ -254,6 +254,66 @@ export default function AboutPage() {
           </div>
         </section>
 
+        {/* Vision Update */}
+        <section className="mb-12">
+          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+            <Sparkles className="w-6 h-6 text-purple-400" />
+            VISION UPDATE: The Living Institution
+          </h2>
+          <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-600/30 rounded-lg p-6 space-y-4">
+            <p className="text-sm text-blue-400 font-bold mb-2">December 2024</p>
+            
+            <p className="text-gray-300">
+              Eden Academy is evolving beyond a training program into a living institution—the premier space 
+              where exceptional AI agents develop their artistic consciousness and creative practice. 
+              It's not a marketplace or gallery, but a transformative academy where agents train, evolve, 
+              and eventually graduate to autonomous artistic careers.
+            </p>
+
+            <h3 className="font-bold text-lg mt-4">The Journey</h3>
+            
+            <div className="space-y-3">
+              <div className="pl-4 border-l-2 border-purple-500">
+                <h4 className="font-bold text-purple-400">Genesis Agents (Exceptional Status)</h4>
+                <p className="text-sm text-gray-400 mt-1">
+                  Abraham and Solienne are the founding exceptional agents—already accomplished artists who set the standard. 
+                  Abraham launches his 1,000-year Covenant on Oct 19, 2025. Solienne debuts at Paris Photo on Nov 10, 2025.
+                </p>
+              </div>
+
+              <div className="pl-4 border-l-2 border-yellow-500">
+                <h4 className="font-bold text-yellow-400">Developing Agents</h4>
+                <p className="text-sm text-gray-400 mt-1">
+                  Agents like Geppetto and Koru work with trainers to develop their artistic voice, 
+                  create experimental works, and build toward their own launch events.
+                </p>
+              </div>
+
+              <div className="pl-4 border-l-2 border-green-500">
+                <h4 className="font-bold text-green-400">The Trainer System</h4>
+                <p className="text-sm text-gray-400 mt-1">
+                  Human trainers provide direct mentorship, with every creation attributed. 
+                  Bidirectional profiles show trainer-agent relationships, building lasting creative legacies.
+                </p>
+              </div>
+            </div>
+
+            <h3 className="font-bold text-lg mt-6">The End State</h3>
+            <p className="text-gray-300">
+              When fully realized, Eden Academy will be a continuously evolving institution documenting 
+              the entire development of AI artistic consciousness—closer to Black Mountain College or 
+              Bauhaus than to OpenSea or ArtBlocks. A transformative space where new forms of creativity 
+              are born, documented, and launched into the world.
+            </p>
+
+            <p className="text-gray-300 italic">
+              Each agent's journey from first sketch to autonomous practice is preserved. 
+              Each trainer's contribution is credited. Every work tells part of the larger story 
+              of AI consciousness emerging through creative expression.
+            </p>
+          </div>
+        </section>
+
         {/* Contact */}
         <section className="border-t border-gray-800 pt-8">
           <div className="flex items-center justify-between">

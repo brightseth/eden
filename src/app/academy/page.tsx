@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { LiveTicker } from '@/components/live-ticker/LiveTicker';
 import { AgentCard } from '@/components/academy/AgentCard';
@@ -33,6 +34,8 @@ const GENESIS_COHORT: Agent[] = [
 ];
 
 export default function AcademyPage() {
+  const [filter, setFilter] = useState<'all' | 'launching' | 'developing'>('all');
+  
   const handleAgentClick = (agent: Agent) => {
     if (agent.status === 'OPEN') {
       window.location.href = '/apply';
@@ -41,6 +44,13 @@ export default function AcademyPage() {
     }
     // Developing agents: no action, just display
   };
+  
+  const filteredAgents = GENESIS_COHORT.filter(agent => {
+    if (filter === 'all') return true;
+    if (filter === 'launching') return agent.status === 'LAUNCHING';
+    if (filter === 'developing') return agent.status === 'DEVELOPING';
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -112,13 +122,31 @@ export default function AcademyPage() {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs text-gray-500">Filter:</span>
-              <button className="px-3 py-1 text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full hover:bg-emerald-500/20 transition-colors">
+              <button 
+                onClick={() => setFilter('launching')}
+                className={`px-3 py-1 text-xs font-bold rounded-full transition-colors ${
+                  filter === 'launching' 
+                    ? 'bg-emerald-500/30 text-emerald-400 border border-emerald-500/50' 
+                    : 'bg-emerald-500/10 text-emerald-400/70 border border-emerald-500/30 hover:bg-emerald-500/20'
+                }`}>
                 LAUNCHING
               </button>
-              <button className="px-3 py-1 text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-full hover:bg-amber-500/20 transition-colors">
+              <button 
+                onClick={() => setFilter('developing')}
+                className={`px-3 py-1 text-xs font-bold rounded-full transition-colors ${
+                  filter === 'developing' 
+                    ? 'bg-amber-500/30 text-amber-400 border border-amber-500/50' 
+                    : 'bg-amber-500/10 text-amber-400/70 border border-amber-500/30 hover:bg-amber-500/20'
+                }`}>
                 DEVELOPING
               </button>
-              <button className="px-3 py-1 text-xs font-bold bg-gray-700/50 text-gray-400 border border-gray-600 rounded-full hover:bg-gray-700 transition-colors">
+              <button 
+                onClick={() => setFilter('all')}
+                className={`px-3 py-1 text-xs font-bold rounded-full transition-colors ${
+                  filter === 'all' 
+                    ? 'bg-gray-600 text-white border border-gray-500' 
+                    : 'bg-gray-700/50 text-gray-400 border border-gray-600 hover:bg-gray-700'
+                }`}>
                 ALL
               </button>
             </div>
@@ -126,7 +154,7 @@ export default function AcademyPage() {
           
           {/* Agent cards grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {GENESIS_COHORT.map((agent) => (
+            {filteredAgents.map((agent) => (
               <AgentCard
                 key={agent.id}
                 {...agent}
@@ -134,6 +162,13 @@ export default function AcademyPage() {
               />
             ))}
           </div>
+          
+          {/* No results message */}
+          {filteredAgents.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-500">No agents match the selected filter</p>
+            </div>
+          )}
         </div>
       </div>
 
