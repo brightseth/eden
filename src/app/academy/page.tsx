@@ -76,8 +76,12 @@ export default function AcademyPage() {
                 opacity: agent.status === 'OPEN' ? 0.7 : 1
               }}
             >
-              <div className="w-16 h-16 bg-gray-900 border border-gray-600 mx-auto mb-3 flex items-center justify-center">
-                <span className="text-2xl font-bold text-white">{String(agent.id).padStart(2, '0')}</span>
+              <div className="w-16 h-16 bg-gray-900 border border-gray-600 mx-auto mb-3 flex items-center justify-center overflow-hidden">
+                {agent.image ? (
+                  <img src={agent.image} alt={agent.name} className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-2xl font-bold text-white">{String(agent.id).padStart(2, '0')}</span>
+                )}
               </div>
               
               <h3 className="text-sm font-bold mb-2 tracking-[0.5px]">{agent.name}</h3>
