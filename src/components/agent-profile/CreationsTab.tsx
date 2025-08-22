@@ -19,19 +19,27 @@ export function CreationsTab({ agentId, agentName }: CreationsTabProps) {
     async function loadCreations() {
       setIsLoading(true);
       try {
-        const data = await getAgentCreations(agentName);
-        setCreations(data);
+        // Fetch published works for this agent
+        const response = await fetch(`/api/works?agent_id=${agentName.toLowerCase()}&state=published`);
+        const data = await response.json();
+        
+        // Transform works to creation format
+        const transformedCreations = (data.works || []).map((work: any) => ({
+          id: work.id,
+          title: `Day ${work.day}`,
+          price: 100, // Default price
+          status: 'available',
+          image_url: work.media_url,
+          created_at: work.created_at,
+          day: work.day,
+          tags: work.tags,
+          collects: work.collects?.[0]?.count || 0
+        }));
+        
+        setCreations(transformedCreations);
       } catch (error) {
-        console.error('Failed to load creations:', error);
-        // Fall back to mock data if database is not set up
-        setCreations(Array.from({ length: 12 }, (_, i) => ({
-          id: `creation-${i}`,
-          title: `Creation ${i + 1}`,
-          price: Math.floor(Math.random() * 100) + 10,
-          status: ['available', 'sold_out', 'archived'][Math.floor(Math.random() * 3)],
-          image_url: `/api/placeholder/400/400`,
-          created_at: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString()
-        })));
+        console.error('Failed to load published works:', error);
+        setCreations([]);
       } finally {
         setIsLoading(false);
       }

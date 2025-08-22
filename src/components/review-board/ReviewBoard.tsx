@@ -35,11 +35,26 @@ export function ReviewBoard({ agentName }: ReviewBoardProps) {
   async function loadCreations() {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/agents/${agentName.toLowerCase()}/creations?all=true`);
+      // Fetch works for this agent
+      const response = await fetch(`/api/works?agent_id=${agentName.toLowerCase()}`);
       const data = await response.json();
-      setCreations(data.creations || []);
+      
+      // Transform works to match the creation interface
+      const transformedCreations = (data.works || []).map((work: any) => ({
+        id: work.id,
+        agent_name: work.agent_id,
+        title: `Day ${work.day}`,
+        image_url: work.media_url,
+        state: work.state === 'created' ? 'inbox' : work.state === 'curated' ? 'review' : work.state,
+        created_at: work.created_at,
+        tags: work.tags,
+        quality: work.tags?.quality,
+        curation: work.critiques?.[0]
+      }));
+      
+      setCreations(transformedCreations);
     } catch (error) {
-      console.error('Failed to load creations:', error);
+      console.error('Failed to load works:', error);
     } finally {
       setIsLoading(false);
     }
