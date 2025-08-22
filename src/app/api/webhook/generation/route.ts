@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Store in database
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from('creations')
       .insert({
