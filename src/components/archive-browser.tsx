@@ -53,6 +53,7 @@ export function ArchiveBrowser({
   const [selectedModel, setSelectedModel] = useState<string>('');
   const [dateRange, setDateRange] = useState<{ start?: string; end?: string }>({});
   const [models, setModels] = useState<{ name: string; count: number }[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const itemsPerPage = 24;
   
   const supabase = createClientComponentClient();
@@ -90,7 +91,11 @@ export function ArchiveBrowser({
     
     if (error) {
       console.error('Error fetching archives:', error);
+      setError(error.message || 'Failed to load archives');
+      setArchives([]);
+      setTotalCount(0);
     } else {
+      setError(null);
       setArchives(data || []);
       setTotalCount(count || 0);
     }
@@ -151,6 +156,11 @@ export function ArchiveBrowser({
       {loading ? (
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      ) : error ? (
+        <div className="text-center py-12">
+          <p className="text-red-500 mb-2">Error loading archives</p>
+          <p className="text-sm text-muted-foreground">{error}</p>
         </div>
       ) : archives.length === 0 ? (
         <div className="text-center py-12">
