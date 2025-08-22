@@ -5,7 +5,7 @@ import { ArchiveBrowser } from '@/components/archive-browser';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, MapPin, Clock } from 'lucide-react';
-import { differenceInDays, format } from 'date-fns';
+import { differenceInDays } from 'date-fns';
 
 export default function ParisPhotoPage() {
   const [daysUntil, setDaysUntil] = useState(0);
