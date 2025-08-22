@@ -2,6 +2,7 @@
 
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { LiveTicker } from '@/components/live-ticker/LiveTicker';
+import { AgentCard } from '@/components/academy/AgentCard';
 import '@/styles/agent-grid.css';
 
 interface Agent {
@@ -63,30 +64,14 @@ export default function AcademyPage() {
 
 
       {/* Agent Grid */}
-      <div className="max-w-5xl mx-auto px-6 py-10">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="max-w-7xl mx-auto px-6 py-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {GENESIS_COHORT.map((agent) => (
-            <div 
+            <AgentCard
               key={agent.id}
-              className={`bg-black border border-gray-800 p-5 text-center transition-all ${
-                agent.hasProfile || agent.status === 'OPEN' ? 'cursor-pointer hover:bg-gray-950 hover:border-gray-600' : 'cursor-default'
-              }`}
+              {...agent}
               onClick={() => handleAgentClick(agent)}
-              style={{
-                opacity: agent.status === 'OPEN' ? 0.7 : 1
-              }}
-            >
-              <div className="w-16 h-16 bg-gray-900 border border-gray-600 mx-auto mb-3 flex items-center justify-center overflow-hidden">
-                {agent.image ? (
-                  <img src={agent.image} alt={agent.name} className="w-full h-full object-cover" />
-                ) : (
-                  <span className="text-2xl font-bold text-white">{String(agent.id).padStart(2, '0')}</span>
-                )}
-              </div>
-              
-              <h3 className="text-sm font-bold mb-2 tracking-[0.5px]">{agent.name}</h3>
-              <p className="text-xs text-gray-300">{agent.date || 'APPLY NOW'}</p>
-            </div>
+            />
           ))}
         </div>
       </div>

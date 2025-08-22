@@ -47,7 +47,7 @@ export function NinaCuratorEmbed({ agentName = 'UNKNOWN' }: NinaCuratorEmbedProp
       const base64 = (e.target?.result as string).split(',')[1];
       
       try {
-        const response = await fetch('/api/nina-curator', {
+        const response = await fetch('/api/nina-critique', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ imageData: base64 }),

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Upload, BarChart3, Settings, Lock, ChevronRight, Inbox } from 'lucide-react';
+import { Upload, BarChart3, Settings, ChevronRight, Inbox } from 'lucide-react';
 import { NinaCuratorEmbed } from '@/components/studio/NinaCuratorEmbed';
 import { ReviewBoard } from '@/components/review-board/ReviewBoard';
 
@@ -11,47 +11,6 @@ interface StudioTabProps {
 
 export function StudioTab({ agentName }: StudioTabProps) {
   const [activeSection, setActiveSection] = useState<'review' | 'upload' | 'performance' | 'settings'>('review');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
-
-  const handleAuth = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Simple password check (in production, this would be server-side)
-    if (password === 'bashi') {
-      setIsAuthenticated(true);
-    }
-  };
-
-  if (!isAuthenticated) {
-    return (
-      <div className="max-w-md mx-auto py-20">
-        <div className="bg-gray-950 border border-gray-800 rounded-lg p-8">
-          <div className="flex items-center justify-center mb-6">
-            <Lock className="w-12 h-12 text-gray-600" />
-          </div>
-          <h2 className="text-xl font-bold text-center mb-2">Studio Access Required</h2>
-          <p className="text-sm text-gray-400 text-center mb-6">
-            This area is restricted to trainers and authorized personnel
-          </p>
-          <form onSubmit={handleAuth}>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter access code"
-              className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded mb-4 focus:border-purple-500 focus:outline-none"
-            />
-            <button
-              type="submit"
-              className="w-full px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded hover:from-purple-700 hover:to-pink-700 transition-all"
-            >
-              Access Studio
-            </button>
-          </form>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col md:flex-row gap-6">
