@@ -257,7 +257,7 @@ export function NinaCuratorEmbed({ agentName = 'UNKNOWN' }: NinaCuratorEmbedProp
                       setIsPublishing(true);
                       try {
                         // Try to find next available day
-                        let currentDay = agentDay + 1;
+                        const currentDay = agentDay + 1;
                         let workCreated = false;
                         let work = null;
                         
