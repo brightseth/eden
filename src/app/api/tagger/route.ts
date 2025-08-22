@@ -31,7 +31,7 @@ Rules:
 
 // Daily budget tracking (simple in-memory for now)
 let dailySpend = 0;
-let dailyBudget = parseFloat(process.env.TAGGER_DAILY_BUDGET || '10');
+const dailyBudget = parseFloat(process.env.TAGGER_DAILY_BUDGET || '10');
 let lastResetDate = new Date().toDateString();
 
 function checkAndResetBudget() {
