@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
 
     if (error) throw error;
 
-    // Get latest work for each agent
+    // Get latest work for each agent and add avatar
     const agentsWithWork = await Promise.all(
       (agents || []).map(async (agent) => {
         const { data: latestWork } = await supabase
@@ -27,6 +27,7 @@ export async function GET(request: NextRequest) {
 
         return {
           ...agent,
+          avatar_url: `/agents/${agent.id}/profile.svg`,
           latest_work: latestWork
         };
       })

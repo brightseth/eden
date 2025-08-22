@@ -46,6 +46,7 @@ export async function GET(
 
     return NextResponse.json({
       ...agent,
+      avatar_url: `/agents/${agent.id}/profile.svg`,
       works: works || [],
       spirit: spirit || null,
       work_count: works?.length || 0
