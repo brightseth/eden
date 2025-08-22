@@ -83,10 +83,10 @@ function AbrahamPageContent() {
               {/* Quick Links */}
               <div className="flex gap-3 mt-4">
                 <Link
-                  href="/academy/abraham/everydays"
+                  href="/academy/abraham/early-works"
                   className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded text-sm font-medium transition-colors"
                 >
-                  View 3,693 Everydays →
+                  View 3,689 Early Works →
                 </Link>
                 <Link
                   href="/academy/abraham/covenant"

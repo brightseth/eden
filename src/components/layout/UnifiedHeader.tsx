@@ -7,9 +7,6 @@ import { AgentSwitcher } from '@/components/agent-switcher/AgentSwitcher';
 
 export function UnifiedHeader() {
   const pathname = usePathname();
-  const isInboxActive = pathname === '/inbox';
-  const isUploadActive = pathname === '/upload';
-  const isCritiquesActive = pathname === '/critiques';
   
   return (
     <header className="border-b border-gray-800 sticky top-0 bg-black z-30">
@@ -22,30 +19,6 @@ export function UnifiedHeader() {
             <AgentSwitcher />
           </div>
           <div className="flex items-center gap-6">
-            <Link 
-              href="/upload" 
-              className={`hover:text-gray-300 transition-colors text-sm ${
-                isUploadActive ? 'text-white font-semibold' : 'text-gray-400'
-              }`}
-            >
-              UPLOAD
-            </Link>
-            <Link 
-              href="/inbox" 
-              className={`hover:text-gray-300 transition-colors text-sm ${
-                isInboxActive ? 'text-white font-semibold' : 'text-gray-400'
-              }`}
-            >
-              INBOX
-            </Link>
-            <Link 
-              href="/critiques" 
-              className={`hover:text-gray-300 transition-colors text-sm ${
-                isCritiquesActive ? 'text-white font-semibold' : 'text-gray-400'
-              }`}
-            >
-              CRITIQUES
-            </Link>
             <AboutDropdown />
             <a 
               href="https://app.eden.art" 

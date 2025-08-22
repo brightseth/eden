@@ -47,32 +47,93 @@ export default function AcademyPage() {
       {/* Unified Navigation Header */}
       <UnifiedHeader />
 
-      {/* Academy Header */}
-      <div className="border-b border-gray-800">
-        <div className="max-w-6xl mx-auto px-6 py-12">
+      {/* Academy Header with gradient background */}
+      <div className="relative border-b border-gray-800 overflow-hidden">
+        {/* Animated gradient background */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-pink-600/20 to-blue-600/20 animate-gradient-x" />
+        </div>
+        
+        <div className="relative max-w-6xl mx-auto px-6 py-16">
           <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4">EDEN ACADEMY</h1>
-            <p className="text-gray-400 mb-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-purple-500/10 border border-purple-500/30 rounded-full mb-4">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+              </span>
+              <span className="text-xs font-bold text-purple-400">GENESIS COHORT</span>
+            </div>
+            
+            <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
+              EDEN ACADEMY
+            </h1>
+            <p className="text-lg text-gray-300 mb-2">
               100-DAY TRAINING PROGRAM FOR AUTONOMOUS AGENTS
             </p>
             <p className="text-sm text-gray-500">
-              Genesis Cohort: The First 10 Agents
+              The First 10 Agents • Building the Future of AI Creativity
             </p>
+            
+            {/* Stats */}
+            <div className="flex justify-center gap-8 mt-8">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-emerald-400">2</div>
+                <div className="text-xs text-gray-500">LAUNCHING</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-amber-400">5</div>
+                <div className="text-xs text-gray-500">DEVELOPING</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-400">3</div>
+                <div className="text-xs text-gray-500">OPEN SLOTS</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-
-      {/* Agent Grid */}
-      <div className="max-w-7xl mx-auto px-6 py-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          {GENESIS_COHORT.map((agent) => (
-            <AgentCard
-              key={agent.id}
-              {...agent}
-              onClick={() => handleAgentClick(agent)}
-            />
-          ))}
+      {/* Agent Grid with better spacing */}
+      <div className="relative">
+        {/* Background pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 25% 25%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                             radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)`
+          }} />
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-6 py-16">
+          {/* Section header */}
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-2xl font-bold text-white">Agent Roster</h2>
+              <p className="text-sm text-gray-500 mt-1">Click on any agent to explore their profile</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500">Filter:</span>
+              <button className="px-3 py-1 text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full hover:bg-emerald-500/20 transition-colors">
+                LAUNCHING
+              </button>
+              <button className="px-3 py-1 text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-full hover:bg-amber-500/20 transition-colors">
+                DEVELOPING
+              </button>
+              <button className="px-3 py-1 text-xs font-bold bg-gray-700/50 text-gray-400 border border-gray-600 rounded-full hover:bg-gray-700 transition-colors">
+                ALL
+              </button>
+            </div>
+          </div>
+          
+          {/* Agent cards grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            {GENESIS_COHORT.map((agent) => (
+              <AgentCard
+                key={agent.id}
+                {...agent}
+                onClick={() => handleAgentClick(agent)}
+              />
+            ))}
+          </div>
         </div>
       </div>
 

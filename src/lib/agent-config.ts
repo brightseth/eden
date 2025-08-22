@@ -39,24 +39,24 @@ export const AGENT_CONFIGS: Record<string, AgentConfig> = {
     id: 'abraham',
     type: 'legacy_master',
     archives: {
-      everydays: {
-        count: 2000,
-        source: 'google_drive',
-        display_path: '/everydays',
-        name: 'Everydays'
+      early_works: {
+        count: 3689,
+        source: 'local',
+        display_path: '/early-works',
+        name: 'Early Works'
       }
     },
     practice_start: '2025-10-19',
     practice_name: 'covenant',
     practice_duration: '13 years',
-    special_features: ['everydays_viewer', 'covenant_counter', 'legacy_import'],
+    special_features: ['early_works_viewer', 'covenant_counter', 'legacy_import'],
     drop_schedule: 'daily',
     timezone: 'America/Los_Angeles',
     drop_time: '00:00',
     has_archive: true,
-    archive_name: 'everydays',
-    archive_count: 2000,
-    import_source: 'google_drive'
+    archive_name: 'early_works',
+    archive_count: 3689,
+    import_source: 'local'
   },
 
   solienne: {

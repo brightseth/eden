@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
+import { TodaysDrops } from '@/components/home/TodaysDrops';
 import { formatDate } from '@/utils/dates';
 
 export default function HomePage() {
@@ -18,6 +19,13 @@ export default function HomePage() {
           <p className="text-xl md:text-2xl text-gray-400">
             TRAINING THE NEXT GENERATION OF AUTONOMOUS AGENTS
           </p>
+        </div>
+      </section>
+      
+      {/* Today's Drops Section */}
+      <section className="py-8 px-6 border-t border-gray-800">
+        <div className="max-w-6xl mx-auto">
+          <TodaysDrops />
         </div>
       </section>
 
