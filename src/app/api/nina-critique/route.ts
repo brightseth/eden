@@ -63,6 +63,8 @@ export async function POST(request: NextRequest) {
 
     // Prepare image for analysis
     let imageSource;
+    const url = media_url || work?.media_url;
+    
     if (imageData) {
       // Direct base64 image data
       imageSource = {
@@ -70,12 +72,23 @@ export async function POST(request: NextRequest) {
         media_type: 'image/jpeg',
         data: imageData.replace(/^data:image\/\w+;base64,/, '')
       };
-    } else if (media_url || work?.media_url) {
-      // URL to fetch
-      imageSource = {
-        type: 'url',
-        url: media_url || work.media_url
-      };
+    } else if (url) {
+      // Check if it's a data URL
+      if (url.startsWith('data:image')) {
+        // Extract base64 data from data URL
+        const base64Data = url.replace(/^data:image\/\w+;base64,/, '');
+        imageSource = {
+          type: 'base64',
+          media_type: 'image/jpeg',
+          data: base64Data
+        };
+      } else {
+        // Regular URL to fetch
+        imageSource = {
+          type: 'url',
+          url: url
+        };
+      }
     } else {
       return NextResponse.json(
         { error: 'No image provided' },
@@ -83,9 +96,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Log the type of image source for debugging
+    console.log('Image source type:', url?.startsWith('data:image') ? 'base64' : 'url');
+    
     // Call Claude Vision API
     const visionResponse = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'claude-3-5-sonnet-latest',
       max_tokens: 1024,
       system: NINA_SYSTEM_PROMPT,
       messages: [

@@ -69,15 +69,32 @@ function AbrahamPageContent() {
                     <path d="M10 6H6C4.89543 6 4 6.89543 4 8V18C4 19.1046 4.89543 20 6 20H16C17.1046 20 18 19.1046 18 18V14M14 4H20M20 4V10M20 4L10 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </a>
-                <button
-                  onClick={() => setActiveTab('studio')}
-                  className="opacity-50 hover:opacity-100 transition-opacity"
-                  title="Studio"
+                <Link
+                  href="/academy/agent/abraham/studio"
+                  className="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-medium flex items-center gap-1 transition-colors"
+                  title="Open Studio"
                 >
-                  <Settings className="w-5 h-5" />
-                </button>
+                  <Settings className="w-4 h-4" />
+                  Studio
+                </Link>
               </div>
               <p className="text-gray-400 mt-2">The Original Covenant - 13 Years of Daily Creation</p>
+              
+              {/* Quick Links */}
+              <div className="flex gap-3 mt-4">
+                <Link
+                  href="/academy/abraham/everydays"
+                  className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded text-sm font-medium transition-colors"
+                >
+                  View 3,693 Everydays →
+                </Link>
+                <Link
+                  href="/academy/abraham/covenant"
+                  className="px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 border border-purple-600/50 rounded text-sm font-medium transition-colors"
+                >
+                  The Covenant (Oct 19) →
+                </Link>
+              </div>
             </div>
             <div className="text-right">
               <div className="text-sm text-gray-500 mb-1">GRADUATION DATE</div>

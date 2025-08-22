@@ -12,14 +12,18 @@ interface UploadedWork {
   tags?: any;
 }
 
-export function ImageUploader() {
+interface ImageUploaderProps {
+  defaultAgent?: string;
+}
+
+export function ImageUploader({ defaultAgent = 'abraham' }: ImageUploaderProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadedWorks, setUploadedWorks] = useState<UploadedWork[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   // Form state
-  const [agentId, setAgentId] = useState('abraham');
+  const [agentId, setAgentId] = useState(defaultAgent);
   const [day, setDay] = useState(1);
   const [prompt, setPrompt] = useState('');
 

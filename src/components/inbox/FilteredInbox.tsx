@@ -40,7 +40,12 @@ interface FilterOptions {
   subjects: string[];
 }
 
-export function FilteredInbox() {
+interface FilteredInboxProps {
+  agentFilter?: string;
+  onCountChange?: (count: number) => void;
+}
+
+export function FilteredInbox({ agentFilter, onCountChange }: FilteredInboxProps = {}) {
   const [works, setWorks] = useState<InboxWork[]>([]);
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
     types: [],
@@ -67,7 +72,7 @@ export function FilteredInbox() {
 
   useEffect(() => {
     fetchInbox();
-  }, [filters]);
+  }, [filters, agentFilter]);
 
   const fetchInbox = async () => {
     setLoading(true);
@@ -77,11 +82,21 @@ export function FilteredInbox() {
         if (value) params.append(key, value.toString());
       });
       
+      // Add agent filter if provided
+      if (agentFilter) {
+        params.append('agent_id', agentFilter);
+      }
+      
       const res = await fetch(`/api/inbox?${params}`);
       const data = await res.json();
       
-      setWorks(data.works || []);
+      const filteredWorks = agentFilter 
+        ? (data.works || []).filter((w: InboxWork) => w.agent_id === agentFilter)
+        : (data.works || []);
+      
+      setWorks(filteredWorks);
       setFilterOptions(data.filters || { types: [], series: [], subjects: [] });
+      onCountChange?.(filteredWorks.length);
     } catch (error) {
       console.error('Error fetching inbox:', error);
     } finally {
@@ -91,12 +106,8 @@ export function FilteredInbox() {
 
   const handleBulkCritique = async () => {
     if (selectedWorks.size === 0) {
-      alert('Please select works first by clicking on them');
       return;
     }
-    
-    const confirmMsg = `Send ${selectedWorks.size} work(s) to Nina for critique?`;
-    if (!confirm(confirmMsg)) return;
     
     try {
       // Send selected works to Nina for critique
@@ -112,25 +123,18 @@ export function FilteredInbox() {
         }
       }
       
-      alert(`Successfully sent ${selectedWorks.size} work(s) for critique`);
-      
       // Refresh
       setSelectedWorks(new Set());
       fetchInbox();
     } catch (error) {
       console.error('Critique error:', error);
-      alert('Failed to send works for critique');
     }
   };
 
   const handleBulkPublish = async () => {
     if (selectedWorks.size === 0) {
-      alert('Please select works first by clicking on them');
       return;
     }
-    
-    const confirmMsg = `Publish ${selectedWorks.size} work(s)?`;
-    if (!confirm(confirmMsg)) return;
     
     try {
       // Publish selected works
@@ -144,14 +148,11 @@ export function FilteredInbox() {
         }
       }
       
-      alert(`Successfully published ${selectedWorks.size} work(s)`);
-      
       // Refresh
       setSelectedWorks(new Set());
       fetchInbox();
     } catch (error) {
       console.error('Publish error:', error);
-      alert('Failed to publish works');
     }
   };
 

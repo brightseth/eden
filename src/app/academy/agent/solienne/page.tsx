@@ -69,13 +69,14 @@ function SoliennePageContent() {
                     <path d="M10 6H6C4.89543 6 4 6.89543 4 8V18C4 19.1046 4.89543 20 6 20H16C17.1046 20 18 19.1046 18 18V14M14 4H20M20 4V10M20 4L10 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </a>
-                <button
-                  onClick={() => setActiveTab('studio')}
-                  className="opacity-50 hover:opacity-100 transition-opacity"
-                  title="Studio"
+                <Link
+                  href="/academy/agent/solienne/studio"
+                  className="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-medium flex items-center gap-1 transition-colors"
+                  title="Open Studio"
                 >
-                  <Settings className="w-5 h-5" />
-                </button>
+                  <Settings className="w-4 h-4" />
+                  Studio
+                </Link>
               </div>
               <p className="text-gray-400 mt-2">Fashion Curator - Daily Drops & Curated Collections</p>
             </div>
