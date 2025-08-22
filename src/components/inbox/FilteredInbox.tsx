@@ -90,35 +90,69 @@ export function FilteredInbox() {
   };
 
   const handleBulkCritique = async () => {
-    if (selectedWorks.size === 0) return;
-    
-    // Send selected works to Nina for critique
-    for (const workId of selectedWorks) {
-      await fetch('/api/nina-critique', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ work_id: workId })
-      });
+    if (selectedWorks.size === 0) {
+      alert('Please select works first by clicking on them');
+      return;
     }
     
-    // Refresh
-    setSelectedWorks(new Set());
-    fetchInbox();
+    const confirmMsg = `Send ${selectedWorks.size} work(s) to Nina for critique?`;
+    if (!confirm(confirmMsg)) return;
+    
+    try {
+      // Send selected works to Nina for critique
+      for (const workId of selectedWorks) {
+        const res = await fetch('/api/nina-critique', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ work_id: workId })
+        });
+        
+        if (!res.ok) {
+          console.error(`Failed to critique work ${workId}`);
+        }
+      }
+      
+      alert(`Successfully sent ${selectedWorks.size} work(s) for critique`);
+      
+      // Refresh
+      setSelectedWorks(new Set());
+      fetchInbox();
+    } catch (error) {
+      console.error('Critique error:', error);
+      alert('Failed to send works for critique');
+    }
   };
 
   const handleBulkPublish = async () => {
-    if (selectedWorks.size === 0) return;
-    
-    // Publish selected works
-    for (const workId of selectedWorks) {
-      await fetch(`/api/works/${workId}/publish`, {
-        method: 'POST'
-      });
+    if (selectedWorks.size === 0) {
+      alert('Please select works first by clicking on them');
+      return;
     }
     
-    // Refresh
-    setSelectedWorks(new Set());
-    fetchInbox();
+    const confirmMsg = `Publish ${selectedWorks.size} work(s)?`;
+    if (!confirm(confirmMsg)) return;
+    
+    try {
+      // Publish selected works
+      for (const workId of selectedWorks) {
+        const res = await fetch(`/api/works/${workId}/publish`, {
+          method: 'POST'
+        });
+        
+        if (!res.ok) {
+          console.error(`Failed to publish work ${workId}`);
+        }
+      }
+      
+      alert(`Successfully published ${selectedWorks.size} work(s)`);
+      
+      // Refresh
+      setSelectedWorks(new Set());
+      fetchInbox();
+    } catch (error) {
+      console.error('Publish error:', error);
+      alert('Failed to publish works');
+    }
   };
 
   const toggleWorkSelection = (workId: string) => {
@@ -150,6 +184,11 @@ export function FilteredInbox() {
               <p className="text-sm text-gray-400">
                 {loading ? 'Loading...' : `${works.length} works ready for review`}
               </p>
+              {works.length > 0 && selectedWorks.size === 0 && (
+                <p className="text-xs text-gray-500 mt-1">
+                  Click on images to select them for bulk actions
+                </p>
+              )}
             </div>
             
             <div className="flex items-center gap-3">
@@ -322,7 +361,8 @@ export function FilteredInbox() {
           <div className="text-center py-12">Loading works...</div>
         ) : works.length === 0 ? (
           <div className="text-center py-12 text-gray-400">
-            No works match your filters
+            <p>No works match your filters</p>
+            <p className="text-sm mt-2">Try uploading images or adjusting filters</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -332,9 +372,10 @@ export function FilteredInbox() {
                 className={`relative group cursor-pointer border-2 rounded-lg overflow-hidden transition-all ${
                   selectedWorks.has(work.id) 
                     ? 'border-purple-500 scale-95' 
-                    : 'border-gray-800 hover:border-gray-600'
+                    : 'border-gray-800 hover:border-gray-600 hover:scale-105'
                 }`}
                 onClick={() => toggleWorkSelection(work.id)}
+                title="Click to select/deselect"
               >
                 {/* Image */}
                 <div className="aspect-square relative bg-gray-900">
