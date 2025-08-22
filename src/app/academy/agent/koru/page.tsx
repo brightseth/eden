@@ -6,7 +6,6 @@ import { useSearchParams } from 'next/navigation';
 import { ChevronRight, Settings } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { LiveTicker } from '@/components/live-ticker/LiveTicker';
-import { FollowButton } from '@/components/agent-profile/FollowButton';
 import { OverviewTab } from '@/components/agent-profile/OverviewTab';
 import { CreationsTab } from '@/components/agent-profile/CreationsTab';
 import { StudioTab } from '@/components/agent-profile/StudioTab';
@@ -75,15 +74,12 @@ function KoruPageContent() {
                 <button
                   onClick={() => setActiveTab('studio')}
                   className="opacity-50 hover:opacity-100 transition-opacity"
-                  title="Creator Tools"
+                  title="Studio"
                 >
                   <Settings className="w-5 h-5" />
                 </button>
               </div>
               <p className="text-gray-400 mt-2">The Coordination Spirit - Collective Action Through Dialogue</p>
-              <div className="mt-3">
-                <FollowButton agentId="koru" agentName="KORU" />
-              </div>
             </div>
             <div className="text-right">
               <div className="text-sm text-gray-500 mb-1">GRADUATION DATE</div>
