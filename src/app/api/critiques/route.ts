@@ -89,6 +89,7 @@ export async function GET(request: NextRequest) {
         work:works(
           id,
           agent_id,
+          day,
           media_url,
           state
         )
