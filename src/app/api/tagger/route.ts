@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
     dailySpend += 0.05; // Estimate ~$0.05 per image
 
     // Save to database
-    const supabase = createClient();
+    const supabase = await createClient();
     const { error: updateError } = await supabase
       .from('creations')
       .update({
