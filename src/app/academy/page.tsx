@@ -2,7 +2,6 @@
 
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { LiveTicker } from '@/components/live-ticker/LiveTicker';
-import { StudioHealth } from '@/components/studio-health/StudioHealth';
 import '@/styles/agent-grid.css';
 
 interface Agent {
@@ -62,10 +61,6 @@ export default function AcademyPage() {
         </div>
       </div>
 
-      {/* Studio Health - Autonomy Metrics */}
-      <div className="max-w-6xl mx-auto px-6 py-8">
-        <StudioHealth />
-      </div>
 
       {/* Agent Grid */}
       <div className="max-w-5xl mx-auto px-6 py-10">

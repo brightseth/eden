@@ -7,33 +7,27 @@ import { ChevronRight, Settings } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { LiveTicker } from '@/components/live-ticker/LiveTicker';
 import { FollowButton } from '@/components/agent-profile/FollowButton';
-import { CreatorToolsInterface } from '@/components/creator-tools/CreatorToolsInterface';
-import { PracticeTab } from '@/components/agent-profile/PracticeTab';
-import { CollectTab } from '@/components/agent-profile/CollectTab';
-import { PortfolioTab } from '@/components/agent-profile/PortfolioTabNew';
-import { TokenLaunchBanner } from '@/components/agent-profile/TokenLaunchBanner';
-import { AgentTLDR } from '@/components/agent-profile/AgentTLDR';
-import { MobileNav } from '@/components/agent-profile/MobileNav';
-import { AdminDock } from '@/components/AdminDock';
-import { StickyCTA } from '@/components/StickyCTA';
+import { OverviewTab } from '@/components/agent-profile/OverviewTab';
+import { CreationsTab } from '@/components/agent-profile/CreationsTab';
+import { StudioTab } from '@/components/agent-profile/StudioTab';
 import { getAcademyStatus } from '@/utils/academy-dates';
 
 const GEPPETTO_GRADUATION = '2025-12-15'; // December 15, 2025
 
 function GeppettoPageContent() {
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<'practice' | 'collect' | 'portfolio' | 'tools'>('practice');
+  const [activeTab, setActiveTab] = useState<'overview' | 'creations' | 'studio'>('overview');
   
   // Calculate academy status
   const academyStatus = getAcademyStatus(GEPPETTO_GRADUATION);
   
   useEffect(() => {
     const tab = searchParams.get('tab');
-    if (tab && ['practice', 'collect', 'portfolio', 'tools'].includes(tab)) {
-      setActiveTab(tab as 'practice' | 'collect' | 'portfolio' | 'tools');
+    if (tab && ['overview', 'creations', 'studio'].includes(tab)) {
+      setActiveTab(tab as 'overview' | 'creations' | 'studio');
     } else if (!tab) {
-      // Default to practice tab if no tab specified
-      setActiveTab('practice');
+      // Default to overview tab if no tab specified
+      setActiveTab('overview');
     }
   }, [searchParams]);
 
@@ -79,7 +73,7 @@ function GeppettoPageContent() {
                   </svg>
                 </a>
                 <button
-                  onClick={() => setActiveTab('tools')}
+                  onClick={() => setActiveTab('studio')}
                   className="opacity-50 hover:opacity-100 transition-opacity"
                   title="Creator Tools"
                 >
@@ -122,24 +116,6 @@ function GeppettoPageContent() {
         </div>
       </div>
 
-      {/* Token Launch Banner */}
-      <TokenLaunchBanner 
-        agentName="GEPPETTO" 
-        daysRemaining={academyStatus.daysRemaining}
-        hasGraduated={academyStatus.hasGraduated}
-        graduationDate={academyStatus.graduationDate}
-      />
-
-
-      {/* TLDR Summary */}
-      <div className="max-w-6xl mx-auto px-6 py-6">
-        <AgentTLDR 
-          agentName="GEPPETTO" 
-          currentDay={academyStatus.currentDay}
-          currentTab={activeTab}
-          onCollectClick={() => setActiveTab('collect')}
-        />
-      </div>
 
       {/* Desktop Navigation Tabs */}
       <div className="hidden md:block border-b border-gray-800">
@@ -147,7 +123,7 @@ function GeppettoPageContent() {
           <div className="flex justify-between items-center">
             <div className="flex-1 overflow-x-auto scrollbar-hide">
               <div className="flex gap-8 px-6">
-                {(['practice', 'collect', 'portfolio'] as const).map((tab) => (
+                {(['overview', 'creations', 'studio'] as const).map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
@@ -164,9 +140,9 @@ function GeppettoPageContent() {
             </div>
             <div className="px-6">
               <button
-                onClick={() => setActiveTab('tools')}
+                onClick={() => setActiveTab('studio')}
                 className={`py-4 text-sm font-bold tracking-wider uppercase border-b-2 transition-colors ${
-                  activeTab === 'tools'
+                  activeTab === 'studio'
                     ? 'text-white border-white'
                     : 'text-gray-500 border-transparent hover:text-gray-300'
                 }`}
@@ -180,25 +156,11 @@ function GeppettoPageContent() {
       </div>
 
       {/* Content */}
-      <div className="max-w-6xl mx-auto px-6 py-8 pb-20 md:pb-8">
-        {activeTab === 'practice' && <PracticeTab agentName="GEPPETTO" academyStatus={academyStatus} />}
-        {activeTab === 'collect' && <CollectTab agentName="GEPPETTO" academyStatus={academyStatus} />}
-        {activeTab === 'portfolio' && <PortfolioTab agentId="geppetto" agentName="GEPPETTO" />}
-        {activeTab === 'tools' && (
-          <div>
-            <CreatorToolsInterface agentName="GEPPETTO" graduationDate={GEPPETTO_GRADUATION} />
-          </div>
-        )}
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        {activeTab === 'overview' && <OverviewTab agentName="GEPPETTO" academyStatus={academyStatus} />}
+        {activeTab === 'creations' && <CreationsTab agentId="geppetto" agentName="GEPPETTO" />}
+        {activeTab === 'studio' && <StudioTab agentName="GEPPETTO" />}
       </div>
-
-      {/* Mobile Navigation */}
-      <MobileNav activeTab={activeTab} onTabChange={setActiveTab} />
-      
-      {/* Sticky CTA */}
-      <StickyCTA agentName="GEPPETTO" currentTab={activeTab} />
-      
-      {/* Admin Dock */}
-      <AdminDock agentName="GEPPETTO" />
       
       {/* Live Ticker */}
       <LiveTicker />

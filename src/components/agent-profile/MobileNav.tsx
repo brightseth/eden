@@ -4,14 +4,14 @@ import { Wallet, Play, Settings } from 'lucide-react';
 
 interface MobileNavProps {
   activeTab: string;
-  onTabChange: (tab: 'practice' | 'collect' | 'tools') => void;
+  onTabChange: (tab: 'overview' | 'creations' | 'studio') => void;
 }
 
 export function MobileNav({ activeTab, onTabChange }: MobileNavProps) {
   const tabs = [
-    { id: 'practice' as const, label: 'Practice', icon: Play },
-    { id: 'collect' as const, label: 'Collect', icon: Wallet },
-    { id: 'tools' as const, label: 'Creator', icon: Settings },
+    { id: 'overview' as const, label: 'Overview', icon: Play },
+    { id: 'creations' as const, label: 'Creations', icon: Wallet },
+    { id: 'studio' as const, label: 'Studio', icon: Settings },
   ];
 
   return (
