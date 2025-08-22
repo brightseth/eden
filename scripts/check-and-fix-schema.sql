@@ -1,0 +1,122 @@
+-- Check what type the agents.id column actually is
+SELECT 
+    column_name, 
+    data_type, 
+    udt_name
+FROM information_schema.columns
+WHERE table_name = 'agents' 
+AND column_name = 'id';
+
+-- If you see uuid above, then we need to either:
+-- Option 1: Drop and recreate agents table with text ID
+-- Option 2: Modify works table to use uuid for agent_id
+
+-- Let's go with Option 1: Drop and recreate everything clean
+-- First drop all dependent tables
+DROP TABLE IF EXISTS spirits CASCADE;
+DROP TABLE IF EXISTS collects CASCADE;
+DROP TABLE IF EXISTS critiques CASCADE;
+DROP TABLE IF EXISTS tags CASCADE;
+DROP TABLE IF EXISTS works CASCADE;
+DROP TABLE IF EXISTS agents CASCADE;
+
+-- Now create with correct types
+CREATE TABLE agents (
+  id           text PRIMARY KEY,  -- This is TEXT, not UUID
+  name         text NOT NULL,
+  tagline      text,
+  trainer      text NOT NULL,
+  status       text NOT NULL DEFAULT 'training'
+    CHECK (status IN ('training','graduating','spirit')),
+  day_count    int  NOT NULL DEFAULT 0,
+  created_at   timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE works (
+  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  agent_id     text NOT NULL REFERENCES agents(id) ON DELETE CASCADE,  -- This matches agents.id type
+  day          int  NOT NULL CHECK (day >= 0),
+  media_url    text NOT NULL,
+  kind         text NOT NULL DEFAULT 'image',
+  prompt       text,
+  notes        text,
+  state        text NOT NULL DEFAULT 'created'
+    CHECK (state IN ('created','curated','published')),
+  created_at   timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE tags (
+  work_id    uuid PRIMARY KEY REFERENCES works(id) ON DELETE CASCADE,
+  taxonomy   jsonb,
+  features   jsonb,
+  quality    jsonb,
+  routing    jsonb,
+  confidence numeric,
+  version    text,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE critiques (
+  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  work_id    uuid NOT NULL REFERENCES works(id) ON DELETE CASCADE,
+  critic     text NOT NULL,
+  verdict    text NOT NULL CHECK (verdict IN ('INCLUDE','MAYBE','EXCLUDE')),
+  scores     jsonb,
+  rationale  text,
+  flags      jsonb,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE collects (
+  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  work_id    uuid NOT NULL REFERENCES works(id) ON DELETE CASCADE,
+  collector  text NOT NULL,
+  amount     numeric(18,8) NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE spirits (
+  agent_id text PRIMARY KEY REFERENCES agents(id) ON DELETE CASCADE,
+  symbol   text NOT NULL,
+  supply   numeric,
+  treasury numeric,
+  holders  int,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+-- Create indexes
+CREATE UNIQUE INDEX works_agent_day ON works(agent_id, day);
+CREATE INDEX works_created_at ON works(created_at DESC);
+CREATE INDEX works_state ON works(state);
+CREATE INDEX works_agent_state ON works(agent_id, state);
+CREATE INDEX tags_routing_curator ON tags((routing->>'send_to_curator'));
+CREATE INDEX tags_quality_print ON tags((quality->>'print_readiness'));
+CREATE INDEX critiques_work_id ON critiques(work_id);
+CREATE INDEX critiques_verdict ON critiques(verdict);
+CREATE INDEX collects_work_id ON collects(work_id);
+CREATE INDEX collects_collector ON collects(collector);
+
+-- Insert agents with TEXT ids
+INSERT INTO agents (id, name, tagline, trainer, status, day_count) VALUES
+  ('abraham', 'Abraham', 'Philosophical AI artist exploring consciousness', 'gene@eden.art', 'training', 45),
+  ('solienne', 'Solienne', 'Fashion-forward biotech aesthete', 'kristi@eden.art', 'training', 23),
+  ('geppetto', 'Geppetto', 'Toymaker crafting digital dreams', 'tbd@eden.art', 'training', 12),
+  ('koru', 'Koru', 'Systems poet visualizing coordination', 'tbd@eden.art', 'training', 8);
+
+-- Create trigger function
+CREATE OR REPLACE FUNCTION auto_curate_on_include()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.verdict = 'INCLUDE' THEN
+    UPDATE works SET state = 'curated' 
+    WHERE id = NEW.work_id AND state = 'created';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create trigger
+CREATE TRIGGER auto_curate_trigger
+  AFTER INSERT ON critiques
+  FOR EACH ROW
+  EXECUTE FUNCTION auto_curate_on_include();

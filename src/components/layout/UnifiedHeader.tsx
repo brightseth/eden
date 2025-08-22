@@ -1,10 +1,14 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { AboutDropdown } from './AboutDropdown';
 import { AgentSwitcher } from '@/components/agent-switcher/AgentSwitcher';
 
 export function UnifiedHeader() {
+  const pathname = usePathname();
+  const isInboxActive = pathname === '/inbox';
+  
   return (
     <header className="border-b border-gray-800 sticky top-0 bg-black z-30">
       <div className="max-w-6xl mx-auto px-6 py-4">
@@ -16,6 +20,14 @@ export function UnifiedHeader() {
             <AgentSwitcher />
           </div>
           <div className="flex items-center gap-6">
+            <Link 
+              href="/inbox" 
+              className={`hover:text-gray-300 transition-colors text-sm ${
+                isInboxActive ? 'text-white font-semibold' : 'text-gray-400'
+              }`}
+            >
+              INBOX
+            </Link>
             <AboutDropdown />
             <a 
               href="https://app.eden.art" 

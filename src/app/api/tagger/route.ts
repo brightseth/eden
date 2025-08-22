@@ -1,35 +1,51 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@/lib/supabase/server';
+import Anthropic from '@anthropic-ai/sdk';
 
-const TAGGER_SYSTEM_PROMPT = `You are Solienne's Tagger. Return STRICT JSON only (no prose). 
-Classify a single image using this taxonomy and extract brief, useful features.
+// Initialize Anthropic client
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY!,
+});
+
+// Tagger system prompt (final version)
+const TAGGER_PROMPT = `You are Eden's Tagger. Return STRICT JSON only.
+Classify one image so Trainers can triage before curation.
 
 Schema:
 {
- "asset_id": string,
- "i_see": string,                            // max 2 sentences, factual
- "taxonomy": {
-   "type": "portrait|manifesto|process|product|performance|landscape|abstract|poster",
-   "subject": string[],                      // e.g., ["single-figure","biotech-adornment"]
-   "format": "color|b&w|duotone",
-   "mood": string[],                         // e.g., ["mythic","serene"]
-   "series": string                          // short label; propose if a pattern is evident, else ""
- },
- "features": { "palette": string[], "lighting": string[], "composition": string[], "text_presence": boolean },
- "quality": { "artifact_risk": "low|medium|high", "print_readiness": 0..1, "duplication_hint": string, "nsfw_risk": "low|medium|high" },
- "claude_suggestions": { "title": string, "alt_text": string, "caption": string },
- "routing": { "send_to_curator": boolean, "share_candidates": string[] },
- "confidence": 0..1,
- "version": "tagger-1.0.0"
+  "taxonomy": {
+    "type": "portrait|manifesto|process|product|performance|landscape|abstract|poster",
+    "subject": string[],
+    "format": "color|b&w|duotone",
+    "mood": string[],
+    "series": string
+  },
+  "features": { 
+    "palette": string[], 
+    "lighting": string[], 
+    "composition": string[], 
+    "text_presence": boolean 
+  },
+  "quality": { 
+    "artifact_risk": "low|medium|high", 
+    "print_readiness": 0..1, 
+    "phash": string 
+  },
+  "routing": { 
+    "send_to_curator": boolean, 
+    "share_candidates": string[] 
+  },
+  "confidence": 0..1,
+  "version": "tagger-1.0.0"
 }
 
 Rules:
-- Prefer "low" artifact risk unless clear evidence of AI distortions.
-- If unsure, lower confidence and set series="".
-- Keep title/caption succinct; no hype.`;
+- Be concise and consistent. Lower confidence if unsure.
+- Favor "low" artifact_risk unless distortions are obvious.
+- Keep series labels short (1-3 words max).
+- send_to_curator=true for high quality or interesting pieces.`;
 
-// Daily budget tracking (simple in-memory for now)
+// Budget tracking (in-memory for now, should use DB in production)
 let dailySpend = 0;
 const dailyBudget = parseFloat(process.env.TAGGER_DAILY_BUDGET || '10');
 let lastResetDate = new Date().toDateString();
@@ -42,62 +58,51 @@ function checkAndResetBudget() {
   }
 }
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY!,
-});
-
+// POST /api/tagger - Process a work with AI vision (internal worker)
 export async function POST(request: NextRequest) {
   try {
     // Check if tagger is enabled
     if (process.env.TAGGER_ENABLED !== 'true') {
       return NextResponse.json({ 
-        error: 'Tagger is disabled',
+        message: 'Tagger is disabled',
         enabled: false 
-      }, { status: 503 });
-    }
-
-    // Check daily budget
-    checkAndResetBudget();
-    if (dailySpend >= dailyBudget) {
-      console.log('Daily budget exceeded:', dailySpend, '/', dailyBudget);
-      return NextResponse.json({ 
-        error: 'Daily budget exceeded',
-        budget_exceeded: true 
-      }, { status: 429 });
-    }
-
-    const { creation_id, image_url, image_data } = await request.json();
-
-    if (!creation_id || (!image_url && !image_data)) {
-      return NextResponse.json({ 
-        error: 'Missing required fields' 
-      }, { status: 400 });
-    }
-
-    // Sampling (only process 1 in N)
-    const sampleRate = parseInt(process.env.TAGGER_SAMPLE_RATE || '1');
-    if (sampleRate > 1 && Math.random() > (1 / sampleRate)) {
-      return NextResponse.json({ 
-        skipped: true, 
-        reason: 'sampling' 
       });
     }
 
-    // Prepare image for Claude
-    let imageBase64 = image_data;
-    if (image_url && !image_data) {
-      // Fetch image if only URL provided
-      const imageResponse = await fetch(image_url);
-      const buffer = await imageResponse.arrayBuffer();
-      imageBase64 = Buffer.from(buffer).toString('base64');
+    // Check budget
+    checkAndResetBudget();
+    if (dailySpend >= dailyBudget) {
+      return NextResponse.json({ 
+        error: 'Daily budget exceeded',
+        spent: dailySpend,
+        budget: dailyBudget
+      }, { status: 429 });
     }
 
-    // Call Claude
-    const response = await anthropic.messages.create({
+    // Apply sampling rate
+    const sampleRate = parseFloat(process.env.TAGGER_SAMPLE || '1.0');
+    if (Math.random() > sampleRate) {
+      return NextResponse.json({ 
+        message: 'Skipped due to sampling',
+        sample_rate: sampleRate 
+      });
+    }
+
+    const body = await request.json();
+    const { work_id, media_url } = body;
+
+    if (!work_id || !media_url) {
+      return NextResponse.json(
+        { error: 'Missing required fields: work_id, media_url' },
+        { status: 400 }
+      );
+    }
+
+    // Call Claude Vision API
+    const visionResponse = await anthropic.messages.create({
       model: 'claude-3-5-sonnet-20241022',
-      max_tokens: 1500,
-      temperature: 0.2,
-      system: TAGGER_SYSTEM_PROMPT,
+      max_tokens: 1024,
+      system: TAGGER_PROMPT,
       messages: [
         {
           role: 'user',
@@ -105,14 +110,13 @@ export async function POST(request: NextRequest) {
             {
               type: 'image',
               source: {
-                type: 'base64',
-                media_type: 'image/jpeg',
-                data: imageBase64,
+                type: 'url',
+                url: media_url,
               },
             },
             {
               type: 'text',
-              text: 'Analyze this image and return the JSON classification.',
+              text: 'Analyze this image and return the classification JSON.',
             },
           ],
         },
@@ -120,66 +124,74 @@ export async function POST(request: NextRequest) {
     });
 
     // Parse response
-    const content = response.content[0];
-    if (content.type !== 'text') {
-      throw new Error('Unexpected response type from Claude');
-    }
+    const responseText = visionResponse.content[0].type === 'text' 
+      ? visionResponse.content[0].text 
+      : '';
 
     let tags;
     try {
-      const jsonMatch = content.text.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) {
-        throw new Error('No JSON found in response');
-      }
+      // Extract JSON from response (Claude sometimes adds text around it)
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error('No JSON found in response');
       tags = JSON.parse(jsonMatch[0]);
     } catch (parseError) {
-      console.error('Failed to parse Claude response:', content.text);
-      throw new Error('Failed to parse tagging response');
+      console.error('Failed to parse tagger response:', responseText);
+      return NextResponse.json(
+        { error: 'Failed to parse AI response' },
+        { status: 500 }
+      );
     }
 
-    // Update spend estimate (rough)
-    dailySpend += 0.05; // Estimate ~$0.05 per image
+    // Update spend estimate
+    dailySpend += 0.05; // Rough estimate per image
 
     // Save to database
     const supabase = await createClient();
     const { error: updateError } = await supabase
-      .from('creations')
-      .update({
-        tags,
+      .from('tags')
+      .upsert({
+        work_id,
+        taxonomy: tags.taxonomy,
+        features: tags.features,
         quality: tags.quality,
         routing: tags.routing,
-        tagger_version: tags.version,
-        tagger_confidence: tags.confidence,
-        metadata: {
-          tagger_processed: new Date().toISOString(),
-          tagger_spend: 0.05
-        }
+        confidence: tags.confidence || 0.8,
+        version: tags.version || 'tagger-1.0.0'
       })
-      .eq('id', creation_id);
+      .select();
 
     if (updateError) {
-      console.error('Failed to update creation with tags:', updateError);
-    }
-
-    // Queue for curator if needed
-    if (tags.routing?.send_to_curator) {
-      // This would queue the curator job
-      console.log('Would queue curator for creation:', creation_id);
+      console.error('Failed to save tags:', updateError);
+      throw updateError;
     }
 
     return NextResponse.json({
       success: true,
-      creation_id,
+      work_id,
       tags,
-      daily_spend: dailySpend,
-      daily_budget: dailyBudget
+      spend: dailySpend.toFixed(2),
+      budget_remaining: (dailyBudget - dailySpend).toFixed(2)
     });
 
   } catch (error: any) {
     console.error('Tagger error:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to tag image' },
+      { error: error.message || 'Tagger processing failed' },
       { status: 500 }
     );
   }
+}
+
+// GET /api/tagger - Check tagger status
+export async function GET() {
+  checkAndResetBudget();
+  
+  return NextResponse.json({
+    enabled: process.env.TAGGER_ENABLED === 'true',
+    sample_rate: parseFloat(process.env.TAGGER_SAMPLE || '1.0'),
+    daily_budget: dailyBudget,
+    daily_spend: dailySpend.toFixed(2),
+    budget_remaining: (dailyBudget - dailySpend).toFixed(2),
+    reset_date: lastResetDate
+  });
 }
