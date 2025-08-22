@@ -193,21 +193,52 @@ export default function CritiquesPage() {
                         {selectedCritique?.id === critique.id ? 'Hide' : 'View'} Full Critique
                       </button>
                       
-                      {critique.verdict === 'INCLUDE' && critique.work?.state === 'curated' && (
+                      {critique.verdict === 'INCLUDE' && critique.work?.state !== 'published' && (
                         <button
                           onClick={async () => {
-                            if (confirm('Publish this work?')) {
-                              await fetch(`/api/works/${critique.work_id}/publish`, {
+                            if (confirm('Publish this work to the collection?')) {
+                              const res = await fetch(`/api/works/${critique.work_id}/publish`, {
                                 method: 'POST'
                               });
-                              alert('Work published!');
-                              fetchCritiques();
+                              if (res.ok) {
+                                alert('Work published successfully!');
+                                fetchCritiques();
+                              } else {
+                                alert('Failed to publish work');
+                              }
                             }
                           }}
-                          className="px-3 py-1 bg-green-900 text-green-400 hover:bg-green-800 rounded text-sm"
+                          className="px-3 py-1 bg-green-900 text-green-400 hover:bg-green-800 rounded text-sm font-bold"
                         >
-                          Publish
+                          ✓ Publish to Collection
                         </button>
+                      )}
+                      
+                      {critique.verdict === 'EXCLUDE' && critique.work?.state !== 'published' && (
+                        <button
+                          onClick={async () => {
+                            if (confirm('Delete this work? This cannot be undone.')) {
+                              const res = await fetch(`/api/works/${critique.work_id}`, {
+                                method: 'DELETE'
+                              });
+                              if (res.ok) {
+                                alert('Work deleted');
+                                fetchCritiques();
+                              } else {
+                                alert('Failed to delete work');
+                              }
+                            }
+                          }}
+                          className="px-3 py-1 bg-red-900 text-red-400 hover:bg-red-800 rounded text-sm"
+                        >
+                          × Delete
+                        </button>
+                      )}
+                      
+                      {critique.work?.state === 'published' && (
+                        <span className="px-3 py-1 bg-gray-800 text-gray-400 rounded text-sm">
+                          ✓ Published
+                        </span>
                       )}
                     </div>
 
