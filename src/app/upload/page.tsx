@@ -1,18 +1,31 @@
 'use client';
 
+import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { ImageUploader } from '@/components/upload/ImageUploader';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
 export default function UploadPage() {
   return (
     <div className="min-h-screen bg-black text-white">
+      {/* Navigation Header */}
+      <UnifiedHeader />
+      
       {/* Header */}
       <div className="border-b border-gray-800">
         <div className="max-w-6xl mx-auto px-6 py-8">
           <div className="text-center">
             <h1 className="text-3xl font-bold mb-2">Upload & Tag Images</h1>
-            <p className="text-gray-400">
+            <p className="text-gray-400 mb-4">
               Upload images for automatic AI analysis and tagging
             </p>
+            <Link 
+              href="/inbox"
+              className="inline-flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300"
+            >
+              View tagged works in Inbox
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </div>

@@ -141,15 +141,14 @@ export function FilteredInbox() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Header */}
+    <div>
+      {/* Action Bar */}
       <div className="border-b border-gray-800 sticky top-0 bg-black z-10">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold">Content Inbox</h1>
               <p className="text-sm text-gray-400">
-                {works.length} works ready for review
+                {loading ? 'Loading...' : `${works.length} works ready for review`}
               </p>
             </div>
             
