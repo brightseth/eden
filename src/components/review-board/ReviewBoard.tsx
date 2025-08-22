@@ -46,7 +46,7 @@ export function ReviewBoard({ agentName }: ReviewBoardProps) {
   }
 
   // Move creation to new state
-  async function moveCreation(id: string, newState: 'inbox' | 'review' | 'published') {
+  async function moveCreation(id: string, newState: 'inbox' | 'review' | 'published' | 'archive') {
     try {
       await fetch(`/api/creations/${id}/state`, {
         method: 'PATCH',
