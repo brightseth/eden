@@ -11,7 +11,7 @@ export async function GET(
     const limit = parseInt(searchParams.get('limit') || '50');
     const after = searchParams.get('after'); // ISO timestamp
     
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // Build query
     let query = supabase
