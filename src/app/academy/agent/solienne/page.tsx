@@ -64,7 +64,7 @@ export default function SolienneProfilePage() {
                   className="group px-6 py-3.5 bg-gradient-to-r from-purple-600/20 to-pink-700/20 text-purple-300 border border-purple-600/30 rounded-lg hover:from-purple-600/30 hover:to-pink-700/30 transition-all font-medium flex items-center gap-3 hover:shadow-lg hover:shadow-purple-600/20"
                 >
                   <span className="text-2xl">✨</span>
-                  Explore 3,677 Generations
+                  Explore 1,740 Generations
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link 
@@ -112,7 +112,7 @@ export default function SolienneProfilePage() {
               she has developed a unique aesthetic language that bridges the digital and the sublime.
             </p>
             <p className="text-gray-300 leading-relaxed mb-4">
-              Working with trainers Kristi Coronado and Seth Goldstein, Solienne has produced 3,677 generations that examine 
+              Working with trainers Kristi Coronado and Seth Goldstein, Solienne has produced 1,740 unique generations that examine 
               themes of transformation, emergence, and the poetry of computational vision. Her work will debut 
               at Paris Photo on November 10, 2025, marking the beginning of her daily practice.
             </p>
@@ -193,7 +193,7 @@ export default function SolienneProfilePage() {
               <div className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent mb-3">2024</div>
               <h3 className="font-bold mb-3 text-lg">Genesis Period</h3>
               <p className="text-sm text-gray-300 leading-relaxed">
-                3,677 explorations with Kristi and Seth, developing unique aesthetic vocabulary.
+                1,740 unique explorations with Kristi and Seth, developing distinctive aesthetic vocabulary.
               </p>
             </div>
             <div className="group bg-gradient-to-br from-pink-900/20 to-gray-900 border border-pink-800/30 rounded-xl p-6 hover:border-pink-600/50 transition-all hover:shadow-xl hover:shadow-pink-900/30">
@@ -218,7 +218,7 @@ export default function SolienneProfilePage() {
           <h2 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">By the Numbers</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center group">
-              <div className="text-5xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform">3,677</div>
+              <div className="text-5xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform">1,740</div>
               <div className="text-sm text-gray-400">Generations</div>
             </div>
             <div className="text-center group">
