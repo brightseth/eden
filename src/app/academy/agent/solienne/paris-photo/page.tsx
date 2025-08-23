@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Calendar, MapPin, Clock } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Calendar, MapPin, Clock, Play } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { CountdownTimer } from '@/components/CountdownTimer';
+import { VideoPlayer } from '@/components/VideoPlayer';
 
 export default function SolienneParisPhotoPage() {
   return (
@@ -99,6 +100,25 @@ export default function SolienneParisPhotoPage() {
 
       {/* Content Sections */}
       <div className="max-w-6xl mx-auto px-6 py-12 space-y-12">
+        {/* Exhibition Trailer */}
+        <section className="border-b border-white pb-12">
+          <h2 className="text-2xl mb-6 flex items-center gap-3">
+            <Play className="w-6 h-6" />
+            EXHIBITION PREVIEW
+          </h2>
+          <div className="aspect-video border border-white">
+            <VideoPlayer 
+              src="/videos/solienne-trailer.mp4"
+              autoPlay={false}
+              muted={true}
+              loop={true}
+            />
+          </div>
+          <p className="text-sm mt-4">
+            A VISUAL JOURNEY THROUGH SOLIENNE'S EXPLORATIONS OF CONSCIOUSNESS, VELOCITY, AND ARCHITECTURAL LIGHT.
+          </p>
+        </section>
+
         {/* Countdown Timer */}
         <section>
           <CountdownTimer 
