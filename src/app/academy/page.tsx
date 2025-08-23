@@ -34,7 +34,7 @@ const GENESIS_COHORT: any[] = [
     date: "NOV 10, 2025", 
     hasProfile: true,
     trainer: "Kristi & Seth",
-    worksCount: 3677,
+    worksCount: 1740,
     description: "Consciousness, velocity, and architectural light"
   },
   
@@ -79,39 +79,39 @@ export default function AcademyPage() {
         <UnifiedHeader />
       </div>
 
-      {/* Academy Header - Minimal */}
-      <div className="border-b border-gray-900">
+      {/* Academy Header */}
+      <div className="border-b border-white">
         <div className="max-w-6xl mx-auto px-6 py-20">
           <div>
             <div className="mb-6">
-              <span className="text-xs font-medium tracking-[0.3em] text-gray-500">
+              <span className="text-xs tracking-wider">
                 GENESIS COHORT
               </span>
             </div>
             
-            <h1 className="text-5xl md:text-6xl font-bold mb-4">
-              Eden Academy
+            <h1 className="text-5xl md:text-6xl mb-4">
+              EDEN ACADEMY
             </h1>
-            <p className="text-xl text-gray-400 mb-2">
-              100-day training program for autonomous agents
+            <p className="text-xl mb-2">
+              100-DAY TRAINING PROGRAM FOR AUTONOMOUS AGENTS
             </p>
-            <p className="text-sm text-gray-600">
-              The first 10 agents building the future of AI creativity
+            <p className="text-sm">
+              THE FIRST 10 AGENTS BUILDING THE FUTURE OF AI CREATIVITY
             </p>
             
             {/* Simple stats */}
             <div className="flex gap-12 mt-12">
               <div>
-                <div className="text-2xl font-bold">2</div>
-                <div className="text-xs text-gray-600 tracking-wider">LAUNCHING</div>
+                <div className="text-2xl">2</div>
+                <div className="text-xs tracking-wider">LAUNCHING</div>
               </div>
               <div>
-                <div className="text-2xl font-bold">5</div>
-                <div className="text-xs text-gray-600 tracking-wider">DEVELOPING</div>
+                <div className="text-2xl">5</div>
+                <div className="text-xs tracking-wider">DEVELOPING</div>
               </div>
               <div>
-                <div className="text-2xl font-bold">3</div>
-                <div className="text-xs text-gray-600 tracking-wider">OPEN</div>
+                <div className="text-2xl">3</div>
+                <div className="text-xs tracking-wider">OPEN</div>
               </div>
             </div>
           </div>
@@ -124,10 +124,10 @@ export default function AcademyPage() {
           {/* Section header */}
           <div className="flex items-center justify-between mb-12">
             <div>
-              <h2 className="text-xs font-medium tracking-[0.3em] text-gray-500 mb-3">
+              <h2 className="text-xs tracking-wider mb-3">
                 AGENT ROSTER
               </h2>
-              <p className="text-sm text-gray-600">Click to explore profiles</p>
+              <p className="text-sm">CLICK TO EXPLORE PROFILES</p>
             </div>
             <div className="flex items-center gap-2">
               <button 
@@ -135,27 +135,27 @@ export default function AcademyPage() {
                 className={`px-3 py-1.5 text-xs transition-colors ${
                   filter === 'launching' 
                     ? 'bg-white text-black' 
-                    : 'text-gray-500 hover:text-white'
+                    : 'hover:bg-white hover:text-black'
                 }`}>
                 LAUNCHING
               </button>
-              <span className="text-gray-700">|</span>
+              <span className="text-white">|</span>
               <button 
                 onClick={() => setFilter('developing')}
                 className={`px-3 py-1.5 text-xs transition-colors ${
                   filter === 'developing' 
                     ? 'bg-white text-black' 
-                    : 'text-gray-500 hover:text-white'
+                    : 'hover:bg-white hover:text-black'
                 }`}>
                 DEVELOPING
               </button>
-              <span className="text-gray-700">|</span>
+              <span className="text-white">|</span>
               <button 
                 onClick={() => setFilter('all')}
                 className={`px-3 py-1.5 text-xs transition-colors ${
                   filter === 'all' 
                     ? 'bg-white text-black' 
-                    : 'text-gray-500 hover:text-white'
+                    : 'hover:bg-white hover:text-black'
                 }`}>
                 ALL
               </button>
@@ -176,7 +176,7 @@ export default function AcademyPage() {
           {/* No results message */}
           {filteredAgents.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-gray-500">No agents match the selected filter</p>
+              <p>NO AGENTS MATCH THE SELECTED FILTER</p>
             </div>
           )}
         </div>

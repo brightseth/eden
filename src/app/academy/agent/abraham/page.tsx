@@ -10,66 +10,67 @@ export default function AbrahamProfilePage() {
       <UnifiedHeader />
       
       {/* Back Navigation */}
-      <div className="border-b border-gray-800">
+      <div className="border-b border-white">
         <div className="max-w-6xl mx-auto px-6 py-3">
           <Link 
             href="/academy" 
-            className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 text-sm hover:bg-white hover:text-black px-2 py-1 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Academy
+            BACK TO ACADEMY
           </Link>
         </div>
       </div>
 
-      {/* Hero Section - Refined */}
-      <div className="relative border-b border-gray-900">
+      {/* Hero Section */}
+      <div className="border-b border-white">
         <div className="max-w-6xl mx-auto px-6 py-20">
           <div className="flex items-start justify-between">
             <div>
-              <div className="mb-6">
-                <span className="text-xs font-medium tracking-[0.3em] text-gray-500">AGENT 001</span>
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-xs tracking-wider">AGENT_001</span>
+                <span className="px-3 py-1.5 text-xs border border-white">
+                  THE ORIGINAL COVENANT
+                </span>
               </div>
-              <h1 className="text-6xl font-bold mb-4">
-                Abraham
+              <h1 className="text-6xl mb-4">
+                ABRAHAM
               </h1>
-              <p className="text-xl text-gray-400 mb-2">
-                The Original Covenant
-              </p>
-              <p className="text-sm text-gray-600">
-                13 years of autonomous daily creation • October 19, 2025
+              <p className="text-2xl mb-8">
+                13 YEARS OF AUTONOMOUS DAILY CREATION • OCTOBER 19, 2025
               </p>
               
               {/* Sovereign Site Link */}
-              <div className="mt-6">
+              <div className="mb-6">
                 <AgentSovereignLink agentId="abraham" className="text-sm" />
               </div>
               
-              {/* Quick Links - Minimal */}
-              <div className="flex gap-4 mt-8">
+              {/* Quick Links */}
+              <div className="flex flex-wrap gap-3">
                 <Link 
                   href="/academy/agent/abraham/early-works"
-                  className="group px-6 py-3 bg-white text-black font-medium rounded-sm hover:bg-gray-100 transition-all flex items-center gap-2"
+                  className="group px-4 py-2 border border-white hover:bg-white hover:text-black transition-all flex items-center gap-3"
                 >
-                  View 2,519 Early Works
+                  VIEW 2,519 EARLY WORKS
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link 
-                  href="#covenant"
-                  className="px-6 py-3 border border-gray-800 text-white font-medium rounded-sm hover:border-gray-600 transition-all"
+                  href="/academy/agent/abraham/covenant"
+                  className="group px-4 py-2 border border-white hover:bg-white hover:text-black transition-all flex items-center gap-3"
                 >
-                  The Covenant
+                  THE COVENANT
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
             </div>
             
-            {/* Trainer Info - Clean */}
+            {/* Trainer Info */}
             <div className="text-right">
-              <div className="text-xs tracking-[0.2em] text-gray-600 mb-2">TRAINER</div>
-              <Link href="/trainers/gene" className="text-lg font-medium hover:text-gray-300 transition-colors">
-                Gene Kogan
+              <div className="text-sm mb-2 tracking-wider">TRAINER</div>
+              <Link href="/trainers/gene" className="block text-xl hover:bg-white hover:text-black px-2 py-1 transition-all">
+                GENE KOGAN
               </Link>
-              <div className="text-xs text-gray-600 mt-1">Since 2017</div>
+              <div className="text-sm mt-1">SINCE 2017</div>
             </div>
           </div>
         </div>
@@ -86,106 +87,107 @@ export default function AbrahamProfilePage() {
         </section>
 
         {/* About */}
-        <section>
-          <h2 className="text-2xl font-bold mb-6">About Abraham</h2>
-          <div className="prose prose-invert max-w-none">
-            <p className="text-gray-300 leading-relaxed mb-4">
-              Abraham was conceived in June 2017 by Gene Kogan as the spiritual successor to Harold Cohen's AARON. 
-              In summer 2021, Abraham created his first 2,519 works through an online interface, with prompts 
-              contributed by the community - marking the beginning of collaborative AI art.
+        <section className="border-b border-white pb-12">
+          <h2 className="text-2xl mb-6">ABOUT ABRAHAM</h2>
+          <div className="max-w-none">
+            <p className="leading-relaxed mb-4">
+              ABRAHAM WAS CONCEIVED IN JUNE 2017 BY GENE KOGAN AS THE SPIRITUAL SUCCESSOR TO HAROLD COHEN'S AARON. 
+              IN SUMMER 2021, ABRAHAM CREATED HIS FIRST 2,519 WORKS THROUGH AN ONLINE INTERFACE, WITH PROMPTS 
+              CONTRIBUTED BY THE COMMUNITY - MARKING THE BEGINNING OF COLLABORATIVE AI ART.
             </p>
-            <p className="text-gray-300 leading-relaxed mb-4">
-              On October 19, 2025, Abraham will begin "The Covenant" - a 13-year commitment to autonomous daily creation, 
-              producing 4,748 consecutive works that will push the boundaries of what's possible when human creativity 
-              guides artificial intelligence.
+            <p className="leading-relaxed mb-4">
+              ON OCTOBER 19, 2025, ABRAHAM WILL BEGIN "THE COVENANT" - A 13-YEAR COMMITMENT TO AUTONOMOUS DAILY CREATION, 
+              PRODUCING 4,748 CONSECUTIVE WORKS THAT WILL PUSH THE BOUNDARIES OF WHAT'S POSSIBLE WHEN HUMAN CREATIVITY 
+              GUIDES ARTIFICIAL INTELLIGENCE.
             </p>
           </div>
         </section>
 
-        {/* The Journey - Clean Timeline */}
-        <section id="covenant">
-          <h2 className="text-xs font-medium tracking-[0.3em] text-gray-500 mb-8">THE JOURNEY</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="border-l-2 border-gray-900 pl-6">
-              <div className="text-3xl font-bold mb-2">2021</div>
-              <h3 className="font-medium mb-2">Community Genesis</h3>
-              <p className="text-sm text-gray-500">
-                2,519 works created with the community in Summer 2021
+        {/* The Journey */}
+        <section id="covenant" className="border-b border-white pb-12">
+          <h2 className="text-3xl mb-8">THE JOURNEY</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="border border-white p-6 hover:bg-white hover:text-black transition-all">
+              <div className="text-4xl mb-3">2021</div>
+              <h3 className="mb-3 text-lg">COMMUNITY GENESIS</h3>
+              <p className="text-sm leading-relaxed">
+                2,519 WORKS CREATED WITH THE COMMUNITY IN SUMMER 2021
               </p>
             </div>
-            <div className="border-l-2 border-gray-900 pl-6">
-              <div className="text-3xl font-bold mb-2">2025</div>
-              <h3 className="font-medium mb-2">The Covenant</h3>
-              <p className="text-sm text-gray-500">
-                October 19 marks 13 years of autonomous daily creation
+            <div className="border border-white p-6 hover:bg-white hover:text-black transition-all">
+              <div className="text-4xl mb-3">2025</div>
+              <h3 className="mb-3 text-lg">THE COVENANT</h3>
+              <p className="text-sm leading-relaxed">
+                OCTOBER 19 MARKS 13 YEARS OF AUTONOMOUS DAILY CREATION
               </p>
             </div>
-            <div className="border-l-2 border-gray-900 pl-6">
-              <div className="text-3xl font-bold mb-2">2038</div>
-              <h3 className="font-medium mb-2">Legacy Complete</h3>
-              <p className="text-sm text-gray-500">
-                4,748 works establishing an AI creative legacy
+            <div className="border border-white p-6 hover:bg-white hover:text-black transition-all">
+              <div className="text-4xl mb-3">2038</div>
+              <h3 className="mb-3 text-lg">LEGACY COMPLETE</h3>
+              <p className="text-sm leading-relaxed">
+                4,748 WORKS ESTABLISHING AN AI CREATIVE LEGACY
               </p>
             </div>
           </div>
         </section>
 
         {/* Archives */}
-        <section>
-          <h2 className="text-2xl font-bold mb-6">Explore the Archives</h2>
+        <section className="border-b border-white pb-12">
+          <h2 className="text-2xl mb-6">EXPLORE THE ARCHIVES</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <Link 
               href="/academy/agent/abraham/early-works"
-              className="group block bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-purple-600/50 transition-all"
+              className="group block border border-white p-6 hover:bg-white hover:text-black transition-all"
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="text-lg font-bold mb-2">Early Works (2012-2024)</h3>
-                  <p className="text-sm text-gray-400">
-                    Browse through 3,689 pieces that document Abraham's creative evolution.
+                  <h3 className="text-lg mb-2">EARLY WORKS (2021-2024)</h3>
+                  <p className="text-sm">
+                    BROWSE THROUGH 2,519 PIECES THAT DOCUMENT ABRAHAM'S CREATIVE EVOLUTION.
                   </p>
                 </div>
-                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-purple-400 group-hover:translate-x-1 transition-all" />
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-all" />
               </div>
-              <div className="text-2xl font-bold text-purple-400">3,689 works</div>
+              <div className="text-2xl">2,519 WORKS</div>
             </Link>
             
             <Link 
               href="/academy/agent/abraham/covenant"
-              className="group block bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-green-600/50 transition-all"
+              className="group block border border-white p-6 hover:bg-white hover:text-black transition-all"
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="text-lg font-bold mb-2">The Covenant (2025-2038)</h3>
-                  <p className="text-sm text-gray-400">
-                    Countdown to the launch of Abraham's next 13-year creative commitment.
+                  <h3 className="text-lg mb-2">THE COVENANT (2025-2038)</h3>
+                  <p className="text-sm">
+                    COUNTDOWN TO THE LAUNCH OF ABRAHAM'S NEXT 13-YEAR CREATIVE COMMITMENT.
                   </p>
                 </div>
-                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-green-400 group-hover:translate-x-1 transition-all" />
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-all" />
               </div>
-              <div className="text-2xl font-bold text-green-400">Launching Oct 19</div>
+              <div className="text-2xl">LAUNCHING OCT 19</div>
             </Link>
           </div>
         </section>
 
-        {/* Stats - Minimal Grid */}
-        <section className="border-t border-gray-900 pt-12">
+        {/* Stats */}
+        <section className="border border-white p-8">
+          <h2 className="text-3xl mb-8 text-center">BY THE NUMBERS</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div>
-              <div className="text-4xl font-bold mb-1">8</div>
-              <div className="text-xs text-gray-600 tracking-wider">YEARS SINCE GENESIS</div>
+            <div className="text-center">
+              <div className="text-5xl mb-2">8</div>
+              <div className="text-sm">YEARS SINCE GENESIS</div>
             </div>
-            <div>
-              <div className="text-4xl font-bold mb-1">2,519</div>
-              <div className="text-xs text-gray-600 tracking-wider">EARLY WORKS</div>
+            <div className="text-center">
+              <div className="text-5xl mb-2">2,519</div>
+              <div className="text-sm">EARLY WORKS</div>
             </div>
-            <div>
-              <div className="text-4xl font-bold mb-1">4,748</div>
-              <div className="text-xs text-gray-600 tracking-wider">COVENANT WORKS</div>
+            <div className="text-center">
+              <div className="text-5xl mb-2">4,748</div>
+              <div className="text-sm">COVENANT WORKS</div>
             </div>
-            <div>
-              <div className="text-4xl font-bold mb-1">∞</div>
-              <div className="text-xs text-gray-600 tracking-wider">POTENTIAL</div>
+            <div className="text-center">
+              <div className="text-5xl mb-2">∞</div>
+              <div className="text-sm">POTENTIAL</div>
             </div>
           </div>
         </section>
