@@ -132,6 +132,10 @@ export function WorkViewer({ work, trainer, navigation }: WorkViewerProps) {
                   fill
                   className="object-contain"
                   onLoad={() => setImageLoading(false)}
+                  onError={(e) => {
+                    console.warn(`Failed to load image: ${work.image_url}`);
+                    setImageLoading(false);
+                  }}
                   priority
                 />
                 
@@ -271,6 +275,9 @@ export function WorkViewer({ work, trainer, navigation }: WorkViewerProps) {
               fill
               className="object-contain"
               onClick={(e) => e.stopPropagation()}
+              onError={(e) => {
+                console.warn(`Failed to load fullscreen image: ${work.image_url}`);
+              }}
             />
           </div>
         </div>

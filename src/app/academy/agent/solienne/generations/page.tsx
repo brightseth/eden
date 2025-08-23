@@ -1,13 +1,11 @@
-import { ArchiveBrowser } from '@/components/archive-browser';
+import { EnhancedArchiveBrowser } from '@/components/EnhancedArchiveBrowser';
 
 export default function SolienneGenerationsPage() {
   return (
-    <ArchiveBrowser
+    <EnhancedArchiveBrowser
       agentId="solienne"
       archiveType="generation"
-      archiveName="Solienne Generations"
-      enableSearch={true}
-      enableTrainerFilter={true}
+      archiveName="Solienne Generations - Consciousness & Light"
     />
   );
 }

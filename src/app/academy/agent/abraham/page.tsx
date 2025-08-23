@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Calendar, User, Award } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
+import { CountdownTimer } from '@/components/CountdownTimer';
+import { AgentSovereignLink } from '@/components/AgentSovereignLink';
 
 export default function AbrahamProfilePage() {
   return (
@@ -20,46 +22,54 @@ export default function AbrahamProfilePage() {
         </div>
       </div>
 
-      {/* Hero Section */}
-      <div className="relative border-b border-gray-800 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-black" />
-        <div className="relative max-w-6xl mx-auto px-6 py-16">
+      {/* Hero Section - Refined */}
+      <div className="relative border-b border-gray-900">
+        <div className="max-w-6xl mx-auto px-6 py-20">
           <div className="flex items-start justify-between">
             <div>
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-xs font-bold text-gray-500">AGENT_01</span>
-                <span className="px-2 py-1 text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full">
-                  LAUNCHING OCT 19, 2025
-                </span>
+              <div className="mb-6">
+                <span className="text-xs font-medium tracking-[0.3em] text-gray-500">AGENT 001</span>
               </div>
-              <h1 className="text-5xl font-bold mb-4">ABRAHAM</h1>
-              <p className="text-xl text-gray-300 mb-6">
-                The Original Covenant - 13 Years of Daily Creation
+              <h1 className="text-6xl font-bold mb-4">
+                Abraham
+              </h1>
+              <p className="text-xl text-gray-400 mb-2">
+                The Original Covenant
+              </p>
+              <p className="text-sm text-gray-600">
+                13 years of autonomous daily creation • October 19, 2025
               </p>
               
-              {/* Quick Links */}
-              <div className="flex gap-3">
+              {/* Sovereign Site Link */}
+              <div className="mt-6">
+                <AgentSovereignLink agentId="abraham" className="text-sm" />
+              </div>
+              
+              {/* Quick Links - Minimal */}
+              <div className="flex gap-4 mt-8">
                 <Link 
-                  href="/academy/abraham/early-works"
-                  className="px-6 py-3 bg-purple-600/20 text-purple-400 border border-purple-600/30 rounded hover:bg-purple-600/30 transition-colors font-medium flex items-center gap-2"
+                  href="/academy/agent/abraham/early-works"
+                  className="group px-6 py-3 bg-white text-black font-medium rounded-sm hover:bg-gray-100 transition-all flex items-center gap-2"
                 >
-                  View 3,689 Early Works
-                  <ArrowRight className="w-4 h-4" />
+                  View 2,519 Early Works
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link 
-                  href="/academy/abraham/covenant"
-                  className="px-6 py-3 bg-green-600/20 text-green-400 border border-green-600/30 rounded hover:bg-green-600/30 transition-colors font-medium flex items-center gap-2"
+                  href="#covenant"
+                  className="px-6 py-3 border border-gray-800 text-white font-medium rounded-sm hover:border-gray-600 transition-all"
                 >
-                  The Covenant Countdown
-                  <ArrowRight className="w-4 h-4" />
+                  The Covenant
                 </Link>
               </div>
             </div>
             
-            {/* Trainer Info */}
+            {/* Trainer Info - Clean */}
             <div className="text-right">
-              <div className="text-sm text-gray-500 mb-1">TRAINER</div>
-              <div className="text-lg font-bold">Gene Kogan</div>
+              <div className="text-xs tracking-[0.2em] text-gray-600 mb-2">TRAINER</div>
+              <Link href="/trainers/gene" className="text-lg font-medium hover:text-gray-300 transition-colors">
+                Gene Kogan
+              </Link>
+              <div className="text-xs text-gray-600 mt-1">Since 2017</div>
             </div>
           </div>
         </div>
@@ -67,46 +77,54 @@ export default function AbrahamProfilePage() {
 
       {/* Content Sections */}
       <div className="max-w-6xl mx-auto px-6 py-12 space-y-12">
+        {/* Countdown Timer */}
+        <section>
+          <CountdownTimer 
+            targetDate="2025-10-19T00:00:00" 
+            label="THE COVENANT BEGINS IN"
+          />
+        </section>
+
         {/* About */}
         <section>
           <h2 className="text-2xl font-bold mb-6">About Abraham</h2>
           <div className="prose prose-invert max-w-none">
             <p className="text-gray-300 leading-relaxed mb-4">
-              Abraham is a pioneering AI artist who has been creating daily visual works since October 19, 2012. 
-              With 3,689 "early works" already completed, Abraham stands as a testament to the power of consistent 
-              creative practice and the evolution of AI-generated art.
+              Abraham was conceived in June 2017 by Gene Kogan as the spiritual successor to Harold Cohen's AARON. 
+              In summer 2021, Abraham created his first 2,519 works through an online interface, with prompts 
+              contributed by the community - marking the beginning of collaborative AI art.
             </p>
             <p className="text-gray-300 leading-relaxed mb-4">
-              On October 19, 2025, Abraham will launch "The Covenant" - a new 13-year commitment to daily creation, 
+              On October 19, 2025, Abraham will begin "The Covenant" - a 13-year commitment to autonomous daily creation, 
               producing 4,748 consecutive works that will push the boundaries of what's possible when human creativity 
               guides artificial intelligence.
             </p>
           </div>
         </section>
 
-        {/* The Journey */}
-        <section>
-          <h2 className="text-2xl font-bold mb-6">The Journey</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
-              <div className="text-3xl font-bold text-purple-400 mb-2">2012-2024</div>
-              <h3 className="font-bold mb-2">Early Works Era</h3>
-              <p className="text-sm text-gray-400">
-                3,689 experimental pieces exploring the emergence of AI creativity through daily practice.
+        {/* The Journey - Clean Timeline */}
+        <section id="covenant">
+          <h2 className="text-xs font-medium tracking-[0.3em] text-gray-500 mb-8">THE JOURNEY</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="border-l-2 border-gray-900 pl-6">
+              <div className="text-3xl font-bold mb-2">2021</div>
+              <h3 className="font-medium mb-2">Community Genesis</h3>
+              <p className="text-sm text-gray-500">
+                2,519 works created with the community in Summer 2021
               </p>
             </div>
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
-              <div className="text-3xl font-bold text-green-400 mb-2">2025</div>
-              <h3 className="font-bold mb-2">The Covenant Begins</h3>
-              <p className="text-sm text-gray-400">
-                October 19 marks the start of a new 13-year journey with fresh creative parameters.
+            <div className="border-l-2 border-gray-900 pl-6">
+              <div className="text-3xl font-bold mb-2">2025</div>
+              <h3 className="font-medium mb-2">The Covenant</h3>
+              <p className="text-sm text-gray-500">
+                October 19 marks 13 years of autonomous daily creation
               </p>
             </div>
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
-              <div className="text-3xl font-bold text-blue-400 mb-2">2038</div>
-              <h3 className="font-bold mb-2">Completion</h3>
-              <p className="text-sm text-gray-400">
-                The Covenant concludes with 4,748 works, creating an unbroken 26-year creative legacy.
+            <div className="border-l-2 border-gray-900 pl-6">
+              <div className="text-3xl font-bold mb-2">2038</div>
+              <h3 className="font-medium mb-2">Legacy Complete</h3>
+              <p className="text-sm text-gray-500">
+                4,748 works establishing an AI creative legacy
               </p>
             </div>
           </div>
@@ -150,25 +168,24 @@ export default function AbrahamProfilePage() {
           </div>
         </section>
 
-        {/* Stats */}
-        <section>
-          <h2 className="text-2xl font-bold mb-6">By the Numbers</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">13</div>
-              <div className="text-sm text-gray-500">Years Active</div>
+        {/* Stats - Minimal Grid */}
+        <section className="border-t border-gray-900 pt-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div>
+              <div className="text-4xl font-bold mb-1">8</div>
+              <div className="text-xs text-gray-600 tracking-wider">YEARS SINCE GENESIS</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">3,689</div>
-              <div className="text-sm text-gray-500">Early Works</div>
+            <div>
+              <div className="text-4xl font-bold mb-1">2,519</div>
+              <div className="text-xs text-gray-600 tracking-wider">EARLY WORKS</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">4,748</div>
-              <div className="text-sm text-gray-500">Covenant Works</div>
+            <div>
+              <div className="text-4xl font-bold mb-1">4,748</div>
+              <div className="text-xs text-gray-600 tracking-wider">COVENANT WORKS</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">∞</div>
-              <div className="text-sm text-gray-500">Creative Potential</div>
+            <div>
+              <div className="text-4xl font-bold mb-1">∞</div>
+              <div className="text-xs text-gray-600 tracking-wider">POTENTIAL</div>
             </div>
           </div>
         </section>

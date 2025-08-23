@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Redirect deleted routes
+  // Redirect deleted and duplicate routes
   const redirects: Record<string, string> = {
     '/train': '/academy',
     '/academy/agent/miyomi': '/academy', 
@@ -13,7 +13,15 @@ export function middleware(request: NextRequest) {
     '/academy/agent/agent07': '/apply',
     '/academy/agent/agent08': '/apply',
     '/academy/agent/agent09': '/apply',
-    '/academy/agent/agent10': '/apply'
+    '/academy/agent/agent10': '/apply',
+    // Redirect old structure to new
+    '/academy/abraham/covenant': '/academy/agent/abraham',
+    '/academy/abraham/early-works': '/academy/agent/abraham/early-works',
+    '/academy/abraham/drops': '/academy/agent/abraham',
+    '/academy/solienne/generations': '/academy/agent/solienne/generations',
+    '/academy/solienne/paris-photo': '/academy/agent/solienne',
+    '/academy/solienne/practice': '/academy/agent/solienne',
+    '/academy/solienne/drops': '/academy/agent/solienne'
   };
 
   if (redirects[pathname]) {
@@ -32,6 +40,8 @@ export const config = {
     '/academy/agent/agent07',
     '/academy/agent/agent08',
     '/academy/agent/agent09',
-    '/academy/agent/agent10'
+    '/academy/agent/agent10',
+    '/academy/abraham/:path*',
+    '/academy/solienne/:path*'
   ]
 };

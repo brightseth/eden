@@ -6,178 +6,162 @@
   :root {
     --background: 0 0% 0%;
     --foreground: 0 0% 100%;
-    --card: 0 0% 0%;
-    --card-foreground: 0 0% 100%;
-    --popover: 0 0% 0%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 60%;
-    --accent: 0 0% 15%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 20%;
-    --input: 0 0% 10%;
-    --ring: 0 0% 100%;
-    --radius: 0;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-white;
   }
+  
   body {
-    @apply bg-background text-foreground;
+    @apply bg-black text-white;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  /* MINIMAL TYPOGRAPHY */
+  h1, h2, h3, h4, h5, h6, p, a, button, span, div {
+    @apply font-bold uppercase tracking-wider;
+  }
+  
+  h1 {
+    @apply text-4xl md:text-6xl;
+  }
+  
+  h2 {
+    @apply text-2xl md:text-4xl;
+  }
+  
+  h3 {
+    @apply text-xl md:text-2xl;
+  }
+  
+  /* LINKS */
+  a {
+    @apply hover:opacity-50 transition-opacity;
+  }
+  
+  /* BUTTONS */
+  button {
+    @apply bg-black text-white border border-white px-4 py-2 hover:bg-white hover:text-black transition-all;
+  }
+  
+  /* INPUTS */
+  input, textarea, select {
+    @apply bg-black text-white border border-white px-4 py-2 uppercase tracking-wider font-bold;
+  }
+  
+  input::placeholder, textarea::placeholder {
+    @apply text-gray-500;
+  }
+  
+  /* REMOVE ALL COLORS AND GRADIENTS */
+  [class*="text-purple"],
+  [class*="text-pink"],
+  [class*="text-blue"],
+  [class*="text-orange"],
+  [class*="text-green"],
+  [class*="text-red"],
+  [class*="text-yellow"] {
+    @apply text-white !important;
+  }
+  
+  [class*="bg-purple"],
+  [class*="bg-pink"],
+  [class*="bg-blue"],
+  [class*="bg-orange"],
+  [class*="bg-green"],
+  [class*="bg-red"],
+  [class*="bg-yellow"],
+  [class*="bg-gray-9"],
+  [class*="bg-gray-8"] {
+    @apply bg-black !important;
+  }
+  
+  [class*="border-purple"],
+  [class*="border-pink"],
+  [class*="border-blue"],
+  [class*="border-orange"],
+  [class*="border-green"],
+  [class*="border-red"],
+  [class*="border-yellow"],
+  [class*="border-gray-9"],
+  [class*="border-gray-8"],
+  [class*="border-gray-7"] {
+    @apply border-white !important;
+  }
+  
+  /* REMOVE GRADIENTS */
+  [class*="bg-gradient"] {
+    background: transparent !important;
+  }
+  
+  /* MINIMAL SCROLLBAR */
+  ::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: black;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: white;
+  }
+  
+  /* FOCUS STATES */
+  *:focus {
+    outline: 1px solid white;
+    outline-offset: 2px;
+  }
+  
+  /* DISABLE ANIMATIONS */
+  * {
+    animation: none !important;
+    transition: opacity 0.2s ease !important;
   }
 }
 
-@layer utilities {
-  /* Color System */
-  .bg-eden-black {
-    background-color: #000000;
-  }
-  
-  .bg-eden-dark {
-    background-color: #0a0a0a;
-  }
-  
-  .text-eden-white {
-    color: #ffffff;
-  }
-  
-  .text-eden-gray {
-    color: #888888;
-  }
-  
-  .border-eden-white {
-    border-color: #ffffff;
-  }
-  
-  /* Category Colors */
-  .category-creative {
-    color: #00ff00;
-  }
-  
-  .category-social {
-    color: #00ffff;
-  }
-  
-  .category-economic {
-    color: #ff00ff;
-  }
-  
-  /* Status Colors */
-  .status-on-track {
-    color: #00ff00;
-  }
-  
-  .status-at-risk {
-    color: #ffff00;
-  }
-  
-  .status-behind {
-    color: #ff0000;
-  }
-  
-  /* Economy Mode Badges */
-  .economy-training {
-    @apply text-yellow-400 border;
-    background-color: rgba(120, 53, 15, 0.2);
-    border-color: rgba(250, 204, 21, 0.4);
-  }
-  
-  .economy-live {
-    @apply text-green-400 border;
-    background-color: rgba(20, 83, 45, 0.2);
-    border-color: rgba(74, 222, 128, 0.4);
-  }
-  
-  /* Typography */
-  .display-caps {
-    @apply uppercase tracking-wider font-bold;
-  }
-  
-  /* Progress Bar */
-  .progress-bar {
-    @apply font-mono text-green-400;
-  }
-  
-  /* Terminal Box Styles */
-  .terminal-box {
-    @apply border bg-black/50 backdrop-blur-sm;
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-  
-  .interactive-element {
-    @apply transition-all cursor-pointer;
-  }
-  
-  .interactive-element:hover {
-    border-color: rgba(255, 255, 255, 1);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-  }
-  
-  /* Grid Layouts */
-  .grid-academy {
-    @apply grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6;
-  }
-  
-  /* Terminal Headers */
-  .terminal-header {
-    @apply text-lg font-bold tracking-wider uppercase text-eden-white;
-  }
-  
-  /* Metric Cards */
-  .metric-card {
-    @apply terminal-box;
-  }
-  
-  .metric-value {
-    @apply text-2xl font-mono font-bold;
-  }
-  
-  .metric-label {
-    @apply text-xs text-eden-gray uppercase tracking-wide;
-  }
-  
-  /* Animations */
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .animate-fade-in {
-    animation: fade-in 0.5s ease-out;
-  }
-  
-  /* Glow Effects */
-  .glow-green {
-    text-shadow: 0 0 20px rgba(0, 255, 100, 0.5);
-  }
-  
-  /* Scrollbar Hide */
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
+/* UTILITY CLASSES */
+.minimal-border {
+  border: 1px solid white;
+}
+
+.minimal-button {
+  background: black;
+  color: white;
+  border: 1px solid white;
+  padding: 0.5rem 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: bold;
+}
+
+.minimal-button:hover {
+  background: white;
+  color: black;
+}
+
+.minimal-input {
+  background: black;
+  color: white;
+  border: 1px solid white;
+  padding: 0.5rem 1rem;
+}
+
+/* OVERRIDE ANY REMAINING STYLES */
+.animate-pulse {
+  animation: none !important;
+}
+
+.shadow-lg, .shadow-xl, .shadow-2xl {
+  box-shadow: none !important;
+}
+
+.rounded, .rounded-lg, .rounded-xl, .rounded-full {
+  border-radius: 0 !important;
 }

@@ -19,7 +19,13 @@ const nextConfig: NextConfig = {
         hostname: 'ctlygyrkibupejllgglr.supabase.co',
         pathname: '/storage/v1/object/public/**',
       },
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+      },
     ],
+    // Disable optimization to fix broken images
+    unoptimized: true,
   },
 };
 

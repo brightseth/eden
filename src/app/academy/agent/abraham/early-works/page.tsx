@@ -1,13 +1,11 @@
-import { ArchiveBrowser } from '@/components/archive-browser';
+import { EnhancedArchiveBrowser } from '@/components/EnhancedArchiveBrowser';
 
 export default function AbrahamEarlyWorksPage() {
   return (
-    <ArchiveBrowser
+    <EnhancedArchiveBrowser
       agentId="abraham"
       archiveType="early-work"
-      archiveName="Abraham Early Works"
-      enableSearch={true}
-      enableFilters={false}
+      archiveName="Abraham Early Works - Summer 2021"
     />
   );
 }

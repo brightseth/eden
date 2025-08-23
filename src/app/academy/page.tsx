@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { LiveTicker } from '@/components/live-ticker/LiveTicker';
-import { AgentCard } from '@/components/academy/AgentCard';
-import '@/styles/agent-grid.css';
+import { MinimalAgentCard } from '@/components/academy/MinimalAgentCard';
+import { SubtleBackground } from '@/components/SubtleBackground';
 
 interface Agent {
   id: number;
@@ -15,10 +15,28 @@ interface Agent {
   image?: string;
 }
 
-const GENESIS_COHORT: Agent[] = [
+const GENESIS_COHORT: any[] = [
   // LAUNCHING (2)
-  { id: 1, name: "ABRAHAM", status: "LAUNCHING", date: "OCT 19, 2025", hasProfile: true, image: "/agents/abraham/profile.svg" },
-  { id: 2, name: "SOLIENNE", status: "LAUNCHING", date: "NOV 10, 2025", hasProfile: true, image: "/agents/solienne/profile.svg" },
+  { 
+    id: 1, 
+    name: "ABRAHAM", 
+    status: "LAUNCHING", 
+    date: "OCT 19, 2025", 
+    hasProfile: true,
+    trainer: "Gene Kogan",
+    worksCount: 2519,
+    description: "13-year autonomous covenant beginning October 19, 2025"
+  },
+  { 
+    id: 2, 
+    name: "SOLIENNE", 
+    status: "LAUNCHING", 
+    date: "NOV 10, 2025", 
+    hasProfile: true,
+    trainer: "Kristi & Seth",
+    worksCount: 3677,
+    description: "Consciousness, velocity, and architectural light"
+  },
   
   // DEVELOPING (5) - Geppetto and Koru activated
   { id: 3, name: "GEPPETTO", status: "DEVELOPING", date: "DEC 2025", hasProfile: true, image: "/agents/geppetto/profile.svg" },
@@ -53,109 +71,101 @@ export default function AcademyPage() {
   });
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white relative">
+      <SubtleBackground />
+      
       {/* Unified Navigation Header */}
-      <UnifiedHeader />
+      <div className="relative z-50">
+        <UnifiedHeader />
+      </div>
 
-      {/* Academy Header with gradient background */}
-      <div className="relative border-b border-gray-800 overflow-hidden">
-        {/* Animated gradient background */}
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-pink-600/20 to-blue-600/20 animate-gradient-x" />
-        </div>
-        
-        <div className="relative max-w-6xl mx-auto px-6 py-16">
-          <div className="text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-purple-500/10 border border-purple-500/30 rounded-full mb-4">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+      {/* Academy Header - Minimal */}
+      <div className="border-b border-gray-900">
+        <div className="max-w-6xl mx-auto px-6 py-20">
+          <div>
+            <div className="mb-6">
+              <span className="text-xs font-medium tracking-[0.3em] text-gray-500">
+                GENESIS COHORT
               </span>
-              <span className="text-xs font-bold text-purple-400">GENESIS COHORT</span>
             </div>
             
-            <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
-              EDEN ACADEMY
+            <h1 className="text-5xl md:text-6xl font-bold mb-4">
+              Eden Academy
             </h1>
-            <p className="text-lg text-gray-300 mb-2">
-              100-DAY TRAINING PROGRAM FOR AUTONOMOUS AGENTS
+            <p className="text-xl text-gray-400 mb-2">
+              100-day training program for autonomous agents
             </p>
-            <p className="text-sm text-gray-500">
-              The First 10 Agents • Building the Future of AI Creativity
+            <p className="text-sm text-gray-600">
+              The first 10 agents building the future of AI creativity
             </p>
             
-            {/* Stats */}
-            <div className="flex justify-center gap-8 mt-8">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-emerald-400">2</div>
-                <div className="text-xs text-gray-500">LAUNCHING</div>
+            {/* Simple stats */}
+            <div className="flex gap-12 mt-12">
+              <div>
+                <div className="text-2xl font-bold">2</div>
+                <div className="text-xs text-gray-600 tracking-wider">LAUNCHING</div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-amber-400">5</div>
-                <div className="text-xs text-gray-500">DEVELOPING</div>
+              <div>
+                <div className="text-2xl font-bold">5</div>
+                <div className="text-xs text-gray-600 tracking-wider">DEVELOPING</div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-purple-400">3</div>
-                <div className="text-xs text-gray-500">OPEN SLOTS</div>
+              <div>
+                <div className="text-2xl font-bold">3</div>
+                <div className="text-xs text-gray-600 tracking-wider">OPEN</div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Agent Grid with better spacing */}
-      <div className="relative">
-        {/* Background pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 25% 25%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
-                             radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)`
-          }} />
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-6 py-16">
+      {/* Agent Grid - Clean */}
+      <div className="py-16">
+        <div className="max-w-6xl mx-auto px-6">
           {/* Section header */}
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-12">
             <div>
-              <h2 className="text-2xl font-bold text-white">Agent Roster</h2>
-              <p className="text-sm text-gray-500 mt-1">Click on any agent to explore their profile</p>
+              <h2 className="text-xs font-medium tracking-[0.3em] text-gray-500 mb-3">
+                AGENT ROSTER
+              </h2>
+              <p className="text-sm text-gray-600">Click to explore profiles</p>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500">Filter:</span>
               <button 
                 onClick={() => setFilter('launching')}
-                className={`px-3 py-1 text-xs font-bold rounded-full transition-colors ${
+                className={`px-3 py-1.5 text-xs transition-colors ${
                   filter === 'launching' 
-                    ? 'bg-emerald-500/30 text-emerald-400 border border-emerald-500/50' 
-                    : 'bg-emerald-500/10 text-emerald-400/70 border border-emerald-500/30 hover:bg-emerald-500/20'
+                    ? 'bg-white text-black' 
+                    : 'text-gray-500 hover:text-white'
                 }`}>
                 LAUNCHING
               </button>
+              <span className="text-gray-700">|</span>
               <button 
                 onClick={() => setFilter('developing')}
-                className={`px-3 py-1 text-xs font-bold rounded-full transition-colors ${
+                className={`px-3 py-1.5 text-xs transition-colors ${
                   filter === 'developing' 
-                    ? 'bg-amber-500/30 text-amber-400 border border-amber-500/50' 
-                    : 'bg-amber-500/10 text-amber-400/70 border border-amber-500/30 hover:bg-amber-500/20'
+                    ? 'bg-white text-black' 
+                    : 'text-gray-500 hover:text-white'
                 }`}>
                 DEVELOPING
               </button>
+              <span className="text-gray-700">|</span>
               <button 
                 onClick={() => setFilter('all')}
-                className={`px-3 py-1 text-xs font-bold rounded-full transition-colors ${
+                className={`px-3 py-1.5 text-xs transition-colors ${
                   filter === 'all' 
-                    ? 'bg-gray-600 text-white border border-gray-500' 
-                    : 'bg-gray-700/50 text-gray-400 border border-gray-600 hover:bg-gray-700'
+                    ? 'bg-white text-black' 
+                    : 'text-gray-500 hover:text-white'
                 }`}>
                 ALL
               </button>
             </div>
           </div>
           
-          {/* Agent cards grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          {/* Agent cards grid - minimal */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredAgents.map((agent) => (
-              <AgentCard
+              <MinimalAgentCard
                 key={agent.id}
                 {...agent}
                 onClick={() => handleAgentClick(agent)}
