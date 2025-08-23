@@ -9,25 +9,37 @@ const supabase = createClient(
 async function removeDuplicates() {
   console.log('Removing duplicate Solienne works...\n');
   
-  // Get all Solienne works
-  const { data: works, error } = await supabase
-    .from('agent_archives')
-    .select('*')
-    .eq('agent_id', 'solienne')
-    .order('created_date', { ascending: true }); // Keep oldest
-
-  if (error) {
-    console.error('Error fetching works:', error);
-    return;
+  // Get all Solienne works - fetch ALL to ensure we catch all duplicates
+  let allWorks = [];
+  let offset = 0;
+  const limit = 1000;
+  
+  while (true) {
+    const { data: batch, error } = await supabase
+      .from('agent_archives')
+      .select('*')
+      .eq('agent_id', 'solienne')
+      .order('created_date', { ascending: true }) // Keep oldest
+      .range(offset, offset + limit - 1);
+      
+    if (error) {
+      console.error('Error fetching works:', error);
+      return;
+    }
+    
+    if (!batch || batch.length === 0) break;
+    allWorks = [...allWorks, ...batch];
+    if (batch.length < limit) break;
+    offset += limit;
   }
 
-  console.log(`Total Solienne works before: ${works.length}`);
+  console.log(`Total Solienne works before: ${allWorks.length}`);
   
   // Track seen image URLs to identify duplicates
   const seenImages = new Set();
   const duplicateIds = [];
   
-  works.forEach(work => {
+  allWorks.forEach(work => {
     if (seenImages.has(work.image_url)) {
       duplicateIds.push(work.id);
     } else {

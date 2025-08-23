@@ -145,8 +145,13 @@ export function EnhancedArchiveBrowser({
     
     if (error) {
       console.error('Error fetching archives:', error);
+      setArchives([]);
+      setTotalCount(0);
     } else {
-      setArchives(data || []);
+      // Ensure we're replacing, not concatenating
+      const uniqueData = data || [];
+      console.log(`Fetched ${uniqueData.length} items, total count: ${count}`);
+      setArchives(uniqueData);
       setTotalCount(count || 0);
     }
     
@@ -333,9 +338,14 @@ export function EnhancedArchiveBrowser({
           </div>
         ) : viewMode === 'grid' ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-            {archives.map((item) => (
+            {archives.map((item, index) => {
+              // Debug duplicate rendering
+              if (index > 0 && archives[index - 1].id === item.id) {
+                console.warn(`Duplicate item detected at index ${index}:`, item.id, item.title);
+              }
+              return (
               <Link
-                key={item.id}
+                key={`${item.id}-${index}`}
                 href={`/academy/agent/${agentId}/${archiveType}s/${item.archive_number || item.id}`}
                 className="group"
               >
@@ -371,7 +381,8 @@ export function EnhancedArchiveBrowser({
                   </div>
                 </div>
               </Link>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div className="space-y-2">
@@ -390,12 +401,6 @@ export function EnhancedArchiveBrowser({
                       unoptimized
                       priority={false}
                       loading="lazy"
-                      onError={(e) => {
-                        // Fallback to direct image URL if thumbnail fails
-                        if (item.thumbnail_url && e.currentTarget.src === item.thumbnail_url) {
-                          e.currentTarget.src = item.image_url;
-                        }
-                      }}
                     />
                   </div>
                   <div className="flex-1">
