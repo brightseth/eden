@@ -87,8 +87,27 @@ export function EnhancedArchiveBrowser({
   }, [page, searchTerm, sortBy, sortOrder]); // Removed selectedTags until column is added
   
   async function fetchAvailableTags() {
-    // For now, use predefined tags since we haven't run image analysis yet
-    setAvailableTags(SOLIENNE_TAGS);
+    // Get unique tags from metadata
+    const { data } = await supabase
+      .from('agent_archives')
+      .select('metadata')
+      .eq('agent_id', agentId)
+      .not('metadata->tags', 'is', null);
+      
+    const tagSet = new Set<string>();
+    data?.forEach(item => {
+      if (item.metadata?.tags && Array.isArray(item.metadata.tags)) {
+        item.metadata.tags.forEach((tag: string) => {
+          if (typeof tag === 'string') {
+            tagSet.add(tag);
+          }
+        });
+      }
+    });
+    
+    const sortedTags = Array.from(tagSet).sort();
+    // Use predefined tags if no tags found in metadata
+    setAvailableTags(sortedTags.length > 0 ? sortedTags : SOLIENNE_TAGS);
   }
   
   async function fetchArchives() {
@@ -105,10 +124,13 @@ export function EnhancedArchiveBrowser({
       query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
     }
     
-    // Apply tag filters (disabled until tags column is added)
-    // if (selectedTags.length > 0) {
-    //   query = query.contains('tags', selectedTags);
-    // }
+    // Apply tag filters using metadata->tags
+    if (selectedTags.length > 0) {
+      // Filter by tags in metadata
+      selectedTags.forEach(tag => {
+        query = query.contains('metadata->>tags', [tag]);
+      });
+    }
     
     // Apply sorting
     const orderColumn = sortBy === 'number' ? 'archive_number' : 

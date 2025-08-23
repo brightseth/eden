@@ -75,9 +75,11 @@ export function CurationInterface({ agentId, title }: CurationInterfaceProps) {
       query = query.or(`title.ilike.%${searchTerm}%`);
     }
 
-    // Apply tag filters
+    // Apply tag filters using metadata
     if (selectedTags.length > 0) {
-      query = query.contains('metadata->tags', selectedTags);
+      selectedTags.forEach(tag => {
+        query = query.contains('metadata->>tags', [tag]);
+      });
     }
 
     // Apply sorting
