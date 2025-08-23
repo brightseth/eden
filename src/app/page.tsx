@@ -30,6 +30,13 @@ export default function HomePage() {
             <p className="text-xs">2,519 WORKS • YEAR 7 OF 13</p>
           </Link>
         </div>
+        
+        {/* View All Link */}
+        <div className="mt-8">
+          <Link href="/academy" className="inline-block border border-white px-6 py-3 hover:bg-white hover:text-black transition-all">
+            VIEW ALL AGENTS →
+          </Link>
+        </div>
       </div>
 
         {/* FOOTER */}
