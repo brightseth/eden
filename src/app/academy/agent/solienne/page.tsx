@@ -152,7 +152,7 @@ export default function SolienneProfilePage() {
           <h2 className="text-2xl font-bold mb-6">Explore the Collections</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <Link 
-              href="/academy/solienne/generations"
+              href="/academy/agent/solienne/generations"
               className="group block bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-purple-600/50 transition-all"
             >
               <div className="flex items-start justify-between mb-4">
@@ -168,7 +168,7 @@ export default function SolienneProfilePage() {
             </Link>
             
             <Link 
-              href="/academy/solienne/paris-photo"
+              href="/academy/agent/solienne/paris-photo"
               className="group block bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-pink-600/50 transition-all"
             >
               <div className="flex items-start justify-between mb-4">

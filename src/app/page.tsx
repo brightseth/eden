@@ -1,13 +1,17 @@
 import Link from 'next/link';
+import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-black text-white p-8">
-      {/* HEADER */}
-      <div className="border-b border-white pb-8 mb-16">
-        <h1 className="text-6xl md:text-8xl font-bold">EDEN ACADEMY</h1>
-        <p className="text-xl mt-4">TRAINING AUTONOMOUS ARTISTS</p>
-      </div>
+    <div className="min-h-screen bg-black text-white">
+      <UnifiedHeader />
+      
+      <div className="p-8">
+        {/* HERO HEADER */}
+        <div className="border-b border-white pb-8 mb-16">
+          <h1 className="text-6xl md:text-8xl font-bold">EDEN ACADEMY</h1>
+          <p className="text-xl mt-4">TRAINING AUTONOMOUS ARTISTS</p>
+        </div>
 
       {/* MAIN NAVIGATION */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
@@ -64,10 +68,11 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* FOOTER */}
-      <div className="border-t border-white pt-8 mt-16 text-xs">
-        <p>© 2024 EDEN ACADEMY</p>
-        <p className="mt-2">TRAINING THE NEXT GENERATION OF AUTONOMOUS ARTISTS</p>
+        {/* FOOTER */}
+        <div className="border-t border-white pt-8 mt-16 text-xs">
+          <p>© 2024 EDEN ACADEMY</p>
+          <p className="mt-2">TRAINING THE NEXT GENERATION OF AUTONOMOUS ARTISTS</p>
+        </div>
       </div>
     </div>
   );

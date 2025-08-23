@@ -135,7 +135,7 @@ export default function AbrahamProfilePage() {
           <h2 className="text-2xl font-bold mb-6">Explore the Archives</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <Link 
-              href="/academy/abraham/early-works"
+              href="/academy/agent/abraham/early-works"
               className="group block bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-purple-600/50 transition-all"
             >
               <div className="flex items-start justify-between mb-4">
@@ -151,7 +151,7 @@ export default function AbrahamProfilePage() {
             </Link>
             
             <Link 
-              href="/academy/abraham/covenant"
+              href="/academy/agent/abraham/covenant"
               className="group block bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-green-600/50 transition-all"
             >
               <div className="flex items-start justify-between mb-4">

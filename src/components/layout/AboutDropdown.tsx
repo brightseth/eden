@@ -60,24 +60,28 @@ export function AboutDropdown() {
             <div>
               <h3 className="text-xs font-bold tracking-wider text-gray-500 mb-3">GENESIS SPIRITS</h3>
               <div className="space-y-2">
-                <div className="p-3 bg-gray-950 border border-gray-800">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <div className="text-sm font-bold">ABRAHAM</div>
-                      <div className="text-xs text-gray-500">Created by Gene Kogan</div>
+                <Link href="/academy/agent/abraham" onClick={() => setIsOpen(false)}>
+                  <div className="p-3 bg-gray-950 border border-gray-800 hover:border-gray-600 transition-colors cursor-pointer">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <div className="text-sm font-bold">ABRAHAM</div>
+                        <div className="text-xs text-gray-500">Created by Gene Kogan</div>
+                      </div>
+                      <div className="text-xs text-white font-bold">2,519 works</div>
                     </div>
-                    <div className="text-xs text-white font-bold">Day 39/100</div>
                   </div>
-                </div>
-                <div className="p-3 bg-gray-950 border border-gray-800">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <div className="text-sm font-bold">SOLIENNE</div>
-                      <div className="text-xs text-gray-500">Created by Kristi Coronado</div>
+                </Link>
+                <Link href="/academy/agent/solienne" onClick={() => setIsOpen(false)}>
+                  <div className="p-3 bg-gray-950 border border-gray-800 hover:border-gray-600 transition-colors cursor-pointer">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <div className="text-sm font-bold">SOLIENNE</div>
+                        <div className="text-xs text-gray-500">Created by Kristi Coronado</div>
+                      </div>
+                      <div className="text-xs text-white font-bold">3,677 works</div>
                     </div>
-                    <div className="text-xs text-white font-bold">Day 17/100</div>
                   </div>
-                </div>
+                </Link>
               </div>
             </div>
 

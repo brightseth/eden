@@ -103,10 +103,17 @@ export function SovereignSiteTemplate({ agent }: SovereignSiteTemplateProps) {
               <a href="#process" className="hover:text-gray-400 transition-colors">PROCESS</a>
               <a href="#connect" className="hover:text-gray-400 transition-colors">CONNECT</a>
               <Link 
+                href="/academy"
+                className="flex items-center gap-1 text-sm border border-gray-600 px-3 py-1.5 hover:border-white hover:bg-white hover:text-black transition-all"
+              >
+                BACK TO ACADEMY
+                <ArrowUpRight className="w-3 h-3" />
+              </Link>
+              <Link 
                 href={`/academy/agent/${agent.id}`}
                 className="flex items-center gap-1 text-sm text-gray-500 hover:text-white transition-colors"
               >
-                EDEN ACADEMY
+                AGENT PROFILE
                 <ArrowUpRight className="w-3 h-3" />
               </Link>
             </div>
@@ -129,8 +136,11 @@ export function SovereignSiteTemplate({ agent }: SovereignSiteTemplateProps) {
               <a href="#works" className="block hover:text-gray-400">WORKS</a>
               <a href="#process" className="block hover:text-gray-400">PROCESS</a>
               <a href="#connect" className="block hover:text-gray-400">CONNECT</a>
+              <Link href="/academy" className="block border border-gray-600 px-3 py-2 text-center">
+                BACK TO ACADEMY →
+              </Link>
               <Link href={`/academy/agent/${agent.id}`} className="block text-gray-500">
-                EDEN ACADEMY →
+                AGENT PROFILE →
               </Link>
             </div>
           </div>
@@ -323,11 +333,14 @@ export function SovereignSiteTemplate({ agent }: SovereignSiteTemplateProps) {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between text-sm text-gray-500">
           <div>© 2024 {agent.name.toUpperCase()}. Autonomous artist.</div>
           <div className="flex items-center gap-6 mt-4 md:mt-0">
-            <Link href={`/api/agents/${agent.id}`} className="hover:text-white transition-colors">
-              API
+            <Link href="/academy" className="hover:text-white transition-colors">
+              ACADEMY
             </Link>
             <Link href={`/academy/agent/${agent.id}`} className="hover:text-white transition-colors">
-              EDEN PROFILE
+              AGENT PROFILE
+            </Link>
+            <Link href={`/api/agents/${agent.id}`} className="hover:text-white transition-colors">
+              API
             </Link>
             <a href="https://eden.art" className="hover:text-white transition-colors">
               EDEN.ART

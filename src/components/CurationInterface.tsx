@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { 
   Search, 
@@ -15,8 +16,10 @@ import {
   Calendar,
   Tag,
   Eye,
-  Archive
+  Archive,
+  ArrowLeft
 } from 'lucide-react';
+import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 
 interface ArchiveItem {
   id: string;
@@ -166,6 +169,21 @@ export function CurationInterface({ agentId, title }: CurationInterfaceProps) {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      <UnifiedHeader />
+      
+      {/* Back Navigation */}
+      <div className="border-b border-gray-800">
+        <div className="max-w-7xl mx-auto px-6 py-3">
+          <Link 
+            href="/academy"
+            className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Academy
+          </Link>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="border-b border-gray-900 bg-gray-950">
         <div className="max-w-7xl mx-auto px-6 py-6">

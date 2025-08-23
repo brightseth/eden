@@ -14,8 +14,10 @@ import {
   Calendar,
   Hash,
   Image as ImageIcon,
-  Tag
+  Tag,
+  ArrowLeft
 } from 'lucide-react';
+import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 
 interface ArchiveItem {
   id: string;
@@ -142,6 +144,21 @@ export function EnhancedArchiveBrowser({
 
   return (
     <div className="min-h-screen bg-black text-white">
+      <UnifiedHeader />
+      
+      {/* Back Navigation */}
+      <div className="border-b border-gray-800">
+        <div className="max-w-7xl mx-auto px-6 py-3">
+          <Link 
+            href={`/academy/agent/${agentId}`}
+            className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to {agentId.charAt(0).toUpperCase() + agentId.slice(1)} Profile
+          </Link>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="border-b border-gray-900">
         <div className="max-w-7xl mx-auto px-6 py-6">
