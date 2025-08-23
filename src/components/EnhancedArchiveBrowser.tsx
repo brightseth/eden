@@ -325,12 +325,9 @@ export function EnhancedArchiveBrowser({
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                       sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 16vw"
-                      onError={(e) => {
-                        // Fallback to direct image URL if thumbnail fails
-                        if (item.thumbnail_url && e.currentTarget.src === item.thumbnail_url) {
-                          e.currentTarget.src = item.image_url;
-                        }
-                      }}
+                      unoptimized
+                      priority={false}
+                      loading="lazy"
                     />
                     {item.archive_number && (
                       <div className="absolute top-2 left-2 px-2 py-1 bg-black/80 text-xs">
@@ -368,6 +365,9 @@ export function EnhancedArchiveBrowser({
                       alt={item.title}
                       fill
                       className="object-cover"
+                      unoptimized
+                      priority={false}
+                      loading="lazy"
                       onError={(e) => {
                         // Fallback to direct image URL if thumbnail fails
                         if (item.thumbnail_url && e.currentTarget.src === item.thumbnail_url) {

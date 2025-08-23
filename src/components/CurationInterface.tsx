@@ -344,9 +344,9 @@ export function CurationInterface({ agentId, title }: CurationInterfaceProps) {
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                         sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 16vw"
-                        onError={(e) => {
-                          console.error('Image failed to load:', work.image_url);
-                        }}
+                        unoptimized
+                        priority={false}
+                        loading="lazy"
                       />
                     ) : (
                       <div className="w-full h-full bg-gray-800 flex items-center justify-center">
@@ -397,9 +397,9 @@ export function CurationInterface({ agentId, title }: CurationInterfaceProps) {
                       alt={work.title}
                       fill
                       className="object-cover"
-                      onError={(e) => {
-                        console.error('Image failed to load:', work.image_url);
-                      }}
+                      unoptimized
+                      priority={false}
+                      loading="lazy"
                     />
                   ) : (
                     <div className="w-full h-full bg-gray-800 flex items-center justify-center">

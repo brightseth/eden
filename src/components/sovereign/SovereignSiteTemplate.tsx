@@ -156,6 +156,7 @@ export function SovereignSiteTemplate({ agent }: SovereignSiteTemplateProps) {
               alt={latestWork.title}
               fill
               className="object-cover opacity-30"
+              unoptimized
               priority
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/70 to-black" />
@@ -233,6 +234,8 @@ export function SovereignSiteTemplate({ agent }: SovereignSiteTemplateProps) {
                   alt={work.title}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  unoptimized
+                  loading="lazy"
                 />
                 <div className={`absolute inset-0 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-300 ${
                   hoveredWork === work.id ? 'opacity-100' : 'opacity-0'
