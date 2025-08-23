@@ -13,60 +13,45 @@ import { getAgentConfig } from '@/lib/agent-config';
 interface AgentProfileData {
   agent: {
     id: string;
-    name: string;
-    tagline: string;
-    status: 'training' | 'graduating' | 'spirit';
-    day_count: number;
-    trainer: {
-      display: string;
-      avatar: string;
-      links: Record<string, string>;
+    displayName: string;
+    status: 'LAUNCHING' | 'DEVELOPING' | 'LIVE';
+    practice: {
+      name: string;
+      startAt?: string;
+      day?: number | null;
+      milestones?: Array<{ name: string; completed: boolean }>;
     };
-    statement: string;
-    influences: string[];
-    contract: {
-      cadence: string;
-      focus: string;
-      season: string;
+    trainer?: {
+      id: string;
+      displayName: string;
+      avatarUrl?: string;
+      socials?: Record<string, string>;
     };
-    spirit: {
-      symbol: string;
-      supply: string;
-      treasury: string;
-      holders: number;
-    } | null;
+    statement?: string;
+    contract?: string;
+    influences?: string[];
+    socials?: Record<string, string>;
+    heroUrl?: string;
+    avatarUrl?: string;
   };
   highlights: Array<{
-    work_id: string;
-    thumb_url: string;
-    title: string;
-    curated_at: string;
-    collect_count: number;
-    tags: Record<string, string>;
+    id: string;
+    archiveNumber?: number;
+    imageUrl: string;
+    title?: string;
+    createdDate?: string;
+    trainerId?: string;
   }>;
   curation: {
     include: number;
     maybe: number;
     exclude: number;
-    recent_rationales: string[];
-    gate: {
-      print_pass_rate: number;
-      artifact_low_rate: number;
-    };
+    includeRate: number;
   };
   social: {
-    collect_total: number;
-    recent_collectors: string[];
-    follower_count: number;
+    followers?: number;
+    collectors?: number;
   };
-  spirit_path: {
-    milestones: {
-      foundation: boolean;
-      midcourse: boolean;
-      thesis: boolean;
-    };
-    projected_window: string;
-  } | null;
 }
 
 interface EnrichedProfileProps {
@@ -108,13 +93,13 @@ export function EnrichedProfile({ agentId }: EnrichedProfileProps) {
     return <div className="text-center py-12">Agent not found</div>;
   }
 
-  const { agent, highlights, curation, social, spirit_path } = profile;
+  const { agent, highlights, curation, social } = profile;
   const agentConfig = getAgentConfig(agentId.toLowerCase());
 
   const statusColors = {
-    training: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-    graduating: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-    spirit: 'bg-green-500/20 text-green-400 border-green-500/30'
+    LAUNCHING: 'bg-green-500/20 text-green-400 border-green-500/30',
+    DEVELOPING: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+    LIVE: 'bg-blue-500/20 text-blue-400 border-blue-500/30'
   };
 
   return (
@@ -126,31 +111,33 @@ export function EnrichedProfile({ agentId }: EnrichedProfileProps) {
             <div className="flex items-start gap-6">
               {/* Avatar */}
               <div className="relative w-24 h-24 rounded-full overflow-hidden bg-gradient-to-br from-purple-600 to-pink-600">
-                {agent.trainer.avatar && agent.trainer.avatar !== '/images/trainers/placeholder.svg' ? (
+                {agent.avatarUrl ? (
                   <Image
-                    src={agent.trainer.avatar}
-                    alt={agent.name}
+                    src={agent.avatarUrl}
+                    alt={agent.displayName}
                     fill
                     className="object-cover"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-3xl font-bold">
-                    {agent.name[0]}
+                    {agent.displayName[0]}
                   </div>
                 )}
               </div>
 
               {/* Info */}
               <div>
-                <h1 className="text-3xl font-bold mb-1">{agent.name}</h1>
-                <p className="text-gray-400 mb-3">{agent.tagline}</p>
+                <h1 className="text-3xl font-bold mb-1">{agent.displayName}</h1>
+                <p className="text-gray-400 mb-3">{agent.practice.name}</p>
                 <div className="flex items-center gap-4">
                   <span className={`px-3 py-1 rounded-full text-xs font-bold border ${statusColors[agent.status]}`}>
-                    {agent.status.toUpperCase()}
+                    {agent.status}
                   </span>
-                  <span className="text-sm text-gray-500">
-                    Day {agent.day_count} • {agent.status === 'spirit' ? 'Graduated' : 'On track for Elevation'}
-                  </span>
+                  {agent.practice.day !== null && (
+                    <span className="text-sm text-gray-500">
+                      Day {agent.practice.day}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -206,38 +193,21 @@ export function EnrichedProfile({ agentId }: EnrichedProfileProps) {
             </div>
           </div>
 
-          {/* Spirit Panel or Path */}
-          {agent.spirit ? (
-            <div className="mt-6 p-4 bg-green-950/30 border border-green-500/30 rounded-lg">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-bold text-green-400 mb-1">SPIRIT STATUS</h3>
-                  <p className="text-sm text-gray-400">
-                    Token: {agent.spirit.symbol} • Supply: {agent.spirit.supply} • Treasury: {agent.spirit.treasury} • Holders: {agent.spirit.holders}
-                  </p>
-                </div>
-                <Award className="w-8 h-8 text-green-400" />
-              </div>
-            </div>
-          ) : (
+          {/* Practice Milestones */}
+          {agent.practice.milestones && agent.practice.milestones.length > 0 && (
             <div className="mt-6 p-4 bg-gray-950 border border-gray-800 rounded-lg">
-              <h3 className="font-bold mb-2">Path to Spirit</h3>
+              <h3 className="font-bold mb-2">Practice Milestones</h3>
               <div className="flex items-center gap-6">
-                <div className="flex items-center gap-2">
-                  {spirit_path?.milestones.foundation ? <CheckCircle className="w-5 h-5 text-green-400" /> : <Circle className="w-5 h-5 text-gray-600" />}
-                  <span className="text-sm">Foundation</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  {spirit_path?.milestones.midcourse ? <CheckCircle className="w-5 h-5 text-green-400" /> : <Circle className="w-5 h-5 text-gray-600" />}
-                  <span className="text-sm">Mid-course</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  {spirit_path?.milestones.thesis ? <CheckCircle className="w-5 h-5 text-green-400" /> : <Circle className="w-5 h-5 text-gray-600" />}
-                  <span className="text-sm">Thesis</span>
-                </div>
-                <div className="ml-auto text-sm text-gray-400">
-                  Projected elevation: {spirit_path?.projected_window}
-                </div>
+                {agent.practice.milestones.map((milestone, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    {milestone.completed ? (
+                      <CheckCircle className="w-5 h-5 text-green-400" />
+                    ) : (
+                      <Circle className="w-5 h-5 text-gray-600" />
+                    )}
+                    <span className="text-sm">{milestone.name}</span>
+                  </div>
+                ))}
               </div>
             </div>
           )}

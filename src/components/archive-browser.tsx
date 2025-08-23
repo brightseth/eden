@@ -33,6 +33,7 @@ interface ArchiveBrowserProps {
   curationTag?: string;
   enableSearch?: boolean;
   enableFilters?: boolean;
+  enableTrainerFilter?: boolean;
 }
 
 export function ArchiveBrowser({ 
@@ -42,7 +43,8 @@ export function ArchiveBrowser({
   showCuration = false,
   curationTag,
   enableSearch = true,
-  enableFilters = false
+  enableFilters = false,
+  enableTrainerFilter = false
 }: ArchiveBrowserProps) {
   const [archives, setArchives] = useState<ArchiveItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,13 +56,21 @@ export function ArchiveBrowser({
   const [dateRange, setDateRange] = useState<{ start?: string; end?: string }>({});
   const [models, setModels] = useState<{ name: string; count: number }[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [selectedTrainer, setSelectedTrainer] = useState<string>('');
+  const [trainers, setTrainers] = useState<{ id: string; name: string; count: number }[]>([]);
   const itemsPerPage = 24;
   
   const supabase = createClientComponentClient();
   
   useEffect(() => {
     fetchArchives();
-  }, [page, searchTerm, curationTag]);
+  }, [page, searchTerm, curationTag, selectedTrainer]);
+  
+  useEffect(() => {
+    if (enableTrainerFilter) {
+      fetchTrainerStats();
+    }
+  }, [enableTrainerFilter]);
   
   async function fetchArchives() {
     setLoading(true);
@@ -79,6 +89,11 @@ export function ArchiveBrowser({
     // Apply search filter
     if (searchTerm) {
       query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
+    }
+    
+    // Apply trainer filter
+    if (selectedTrainer) {
+      query = query.eq('trainer_id', selectedTrainer);
     }
     
     // Pagination
@@ -101,6 +116,36 @@ export function ArchiveBrowser({
     }
     
     setLoading(false);
+  }
+  
+  async function fetchTrainerStats() {
+    const { data } = await supabase
+      .from('agent_archives')
+      .select('trainer_id')
+      .eq('agent_id', agentId)
+      .eq('archive_type', archiveType)
+      .not('trainer_id', 'is', null);
+    
+    const trainerCounts: Record<string, number> = {};
+    data?.forEach(item => {
+      if (item.trainer_id) {
+        trainerCounts[item.trainer_id] = (trainerCounts[item.trainer_id] || 0) + 1;
+      }
+    });
+    
+    // Get trainer names
+    const { data: trainerData } = await supabase
+      .from('trainers')
+      .select('id, display_name')
+      .in('id', Object.keys(trainerCounts));
+    
+    const trainerList = trainerData?.map(t => ({
+      id: t.id,
+      name: t.display_name,
+      count: trainerCounts[t.id] || 0
+    })) || [];
+    
+    setTrainers(trainerList.sort((a, b) => b.count - a.count));
   }
   
   const totalPages = Math.ceil(totalCount / itemsPerPage);
@@ -130,20 +175,52 @@ export function ArchiveBrowser({
         </div>
         
         {/* Search and filters */}
-        <div className="flex gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder={`Search ${archiveName.toLowerCase()}...`}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
+        <div className="flex flex-col gap-4">
+          <div className="flex gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder={`Search ${archiveName.toLowerCase()}...`}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            {showCuration && (
+              <Badge variant="secondary" className="px-4 py-2">
+                {curationTag ? `Curated: ${curationTag.replace('_', ' ')}` : 'All Items'}
+              </Badge>
+            )}
           </div>
-          {showCuration && (
-            <Badge variant="secondary" className="px-4 py-2">
-              {curationTag ? `Curated: ${curationTag.replace('_', ' ')}` : 'All Items'}
-            </Badge>
+          
+          {/* Trainer filter chips */}
+          {enableTrainerFilter && trainers.length > 0 && (
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Filter by trainer:</span>
+              <Button
+                variant={selectedTrainer === '' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => {
+                  setSelectedTrainer('');
+                  setPage(1);
+                }}
+              >
+                All
+              </Button>
+              {trainers.map(trainer => (
+                <Button
+                  key={trainer.id}
+                  variant={selectedTrainer === trainer.id ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => {
+                    setSelectedTrainer(trainer.id);
+                    setPage(1);
+                  }}
+                >
+                  {trainer.name} ({trainer.count})
+                </Button>
+              ))}
+            </div>
           )}
         </div>
         
@@ -171,7 +248,7 @@ export function ArchiveBrowser({
           {archives.map((item) => (
             <Link
               key={item.id}
-              href={`/academy/${agentId}/${archiveType}s/${item.archive_number || item.id}`}
+              href={`/academy/agent/${agentId}/${archiveType}s/${item.archive_number || item.id}`}
             >
               <Card className="group cursor-pointer overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="aspect-square relative bg-muted">
@@ -208,7 +285,7 @@ export function ArchiveBrowser({
           {archives.map((item) => (
             <Link
               key={item.id}
-              href={`/academy/${agentId}/${archiveType}s/${item.archive_number || item.id}`}
+              href={`/academy/agent/${agentId}/${archiveType}s/${item.archive_number || item.id}`}
             >
               <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex gap-4">

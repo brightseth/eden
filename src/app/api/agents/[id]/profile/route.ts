@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@/utils/supabase/server';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: agentId } = await context.params;
     const supabase = await createClient();
-    const { id: agentId } = await params;
 
-    // Get agent with metadata
+    // Get agent with trainer info
     const { data: agent, error: agentError } = await supabase
       .from('agents')
       .select('*')
@@ -23,154 +23,129 @@ export async function GET(
       );
     }
 
-    // Get curated highlights (top 12 published works)
+    // Get trainer if exists (handle missing foreign key gracefully)
+    let trainer = null;
+    if (agent.primary_trainer_id) {
+      const { data: trainerData } = await supabase
+        .from('trainers')
+        .select('id, display_name, avatar_url, socials')
+        .eq('id', agent.primary_trainer_id)
+        .single();
+      trainer = trainerData;
+    }
+
+    // Calculate practice day (LA timezone)
+    let practiceDay = null;
+    if (agent.practice_start) {
+      const start = new Date(agent.practice_start);
+      const now = new Date();
+      const diffTime = now.getTime() - start.getTime();
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      practiceDay = diffDays > 0 ? diffDays + 1 : null; // Day 1 = start day
+    }
+
+    // Get highlights (last 12 works)
     const { data: highlights } = await supabase
-      .from('works')
-      .select(`
-        id,
-        media_url,
-        state,
-        created_at,
-        collect_count,
-        tags
-      `)
+      .from('agent_archives')
+      .select('id, archive_number, image_url, title, created_date, trainer_id')
       .eq('agent_id', agentId)
-      .eq('state', 'published')
-      .order('created_at', { ascending: false })
+      .in('archive_type', ['generation', 'early_work'])
+      .order('created_date', { ascending: false, nullsFirst: false })
       .limit(12);
 
-    // Get curation stats
-    const { data: critiques } = await supabase
-      .from('critiques')
-      .select('verdict')
-      .eq('work_id', supabase.from('works').select('id').eq('agent_id', agentId));
+    // Get curation stats from archives metadata
+    const { data: archives } = await supabase
+      .from('agent_archives')
+      .select('metadata')
+      .eq('agent_id', agentId);
 
-    const curationStats = {
+    let curationStats = {
       include: 0,
       maybe: 0,
-      exclude: 0
+      exclude: 0,
+      includeRate: 0
     };
 
-    if (critiques) {
-      critiques.forEach(c => {
-        const verdict = c.verdict?.toLowerCase() || 'maybe';
-        if (verdict in curationStats) {
-          curationStats[verdict as keyof typeof curationStats]++;
+    if (archives) {
+      archives.forEach(a => {
+        const verdict = a.metadata?.verdict?.toUpperCase();
+        if (verdict === 'INCLUDE') curationStats.include++;
+        else if (verdict === 'MAYBE') curationStats.maybe++;
+        else if (verdict === 'EXCLUDE') curationStats.exclude++;
+      });
+      
+      const total = curationStats.include + curationStats.maybe + curationStats.exclude;
+      if (total > 0) {
+        curationStats.includeRate = Math.round((curationStats.include / total) * 100) / 100;
+      }
+    }
+
+    // Determine milestones based on practice day and mode
+    const milestones = [];
+    if (practiceDay !== null) {
+      // Common milestones
+      const checkpoints = [
+        { day: 1, label: 'Day 1' },
+        { day: 7, label: 'Week 1' },
+        { day: 30, label: 'Month 1' },
+        { day: 50, label: 'Day 50' },
+        { day: 100, label: 'Day 100' },
+        { day: 365, label: 'Year 1' }
+      ];
+      
+      // For Abraham's 13-year covenant, add special milestones
+      if (agent.mode === 'autonomous' && agent.id === 'abraham') {
+        checkpoints.push(
+          { day: 1000, label: 'Day 1000' },
+          { day: 2372, label: 'Halfway' },
+          { day: 4745, label: 'Covenant Complete' }
+        );
+      }
+      
+      checkpoints.forEach(cp => {
+        if (practiceDay >= cp.day) {
+          milestones.push({ label: cp.label, reached: true });
+        } else if (milestones.length < 4) {
+          milestones.push({ label: cp.label, reached: false });
         }
       });
     }
 
-    // Get recent rationales
-    const { data: recentCritiques } = await supabase
-      .from('critiques')
-      .select('rationale, created_at')
-      .eq('work_id', supabase.from('works').select('id').eq('agent_id', agentId))
-      .order('created_at', { ascending: false })
-      .limit(5);
-
-    const recentRationales = recentCritiques?.map(c => 
-      c.rationale?.split('\n')[0] || ''
-    ).filter(r => r.length > 0) || [];
-
-    // Get follower count
-    const { count: followerCount } = await supabase
-      .from('followers')
-      .select('*', { count: 'exact', head: true })
-      .eq('agent_id', agentId);
-
-    // Get total collection count
-    const { data: collectStats } = await supabase
-      .from('works')
-      .select('collect_count')
-      .eq('agent_id', agentId);
-
-    const totalCollects = collectStats?.reduce((sum, w) => sum + (w.collect_count || 0), 0) || 0;
-
-    // Get recent collectors (mock for now)
-    const recentCollectors = ['0x3a..9f', 'anon2', 'anon3'];
-
-    // Get milestones
-    const { data: milestones } = await supabase
-      .from('agent_milestones')
-      .select('milestone, completed_at')
-      .eq('agent_id', agentId);
-
-    const milestonesMap = {
-      foundation: false,
-      midcourse: false,
-      thesis: false
-    };
-
-    milestones?.forEach(m => {
-      if (m.milestone in milestonesMap) {
-        milestonesMap[m.milestone as keyof typeof milestonesMap] = true;
-      }
-    });
-
-    // Calculate day count (mock for now, should be from agent.created_at)
-    const dayCount = agent.day_count || Math.floor(Math.random() * 100);
-    
-    // Determine status based on day count
-    const status = agent.status || (dayCount >= 100 ? 'spirit' : dayCount >= 90 ? 'graduating' : 'training');
-
-    // Build response
+    // Build response matching EnrichedProfile expectations (per directive)
     const response = {
       agent: {
         id: agent.id,
-        name: agent.name,
-        tagline: agent.tagline || `${agent.name} explores AI creativity`,
-        status,
-        day_count: dayCount,
-        trainer: agent.meta?.trainer || {
-          display: 'Unknown Trainer',
-          avatar: '/images/trainers/placeholder.svg',
-          links: {}
+        displayName: agent.display_name || agent.id,
+        status: agent.status || 'DEVELOPING',
+        mode: agent.mode || 'guided', // autonomous or guided
+        practice: {
+          name: agent.practice_name || 'Daily Practice',
+          startAt: agent.practice_start,
+          day: practiceDay,
+          milestones
         },
-        statement: agent.meta?.statement || `${agent.name} is training to become an autonomous creative agent.`,
-        influences: agent.meta?.influences || [],
-        contract: agent.meta?.contract || {
-          cadence: '6 works/week',
-          focus: 'Creative exploration',
-          season: 'S1: Genesis'
-        },
-        spirit: status === 'spirit' ? {
-          symbol: `$${agent.name.toUpperCase()}`,
-          supply: '1,000,000,000',
-          treasury: '0',
-          holders: 0
-        } : null
+        trainer: trainer ? {
+          id: trainer.id,
+          displayName: trainer.display_name,
+          avatarUrl: trainer.avatar_url,
+          socials: trainer.socials
+        } : null,
+        statement: agent.statement,
+        contract: agent.contract,
+        influences: agent.influences || [],
+        socials: agent.socials || {},
+        heroUrl: agent.hero_url,
+        avatarUrl: agent.avatar_url
       },
-      highlights: highlights?.map(w => ({
-        work_id: w.id,
-        thumb_url: w.media_url,
-        title: w.tags?.title || 'Untitled',
-        curated_at: w.created_at,
-        collect_count: w.collect_count || 0,
-        tags: {
-          type: w.tags?.type || 'creation',
-          series: w.tags?.series || 'genesis'
-        }
+      highlights: highlights?.map(h => ({
+        id: h.id,
+        archiveNumber: h.archive_number,
+        imageUrl: h.image_url || h.thumbnail_url,
+        title: h.title || `Work #${h.archive_number}`,
+        createdDate: h.created_date,
+        trainerId: h.trainer_id
       })) || [],
-      stream: {
-        count: highlights?.length || 0
-      },
-      curation: {
-        ...curationStats,
-        recent_rationales: recentRationales,
-        gate: {
-          print_pass_rate: 0.62,
-          artifact_low_rate: 0.71
-        }
-      },
-      social: {
-        collect_total: totalCollects,
-        recent_collectors: recentCollectors,
-        follower_count: followerCount || 0
-      },
-      spirit_path: status !== 'spirit' ? {
-        milestones: milestonesMap,
-        projected_window: dayCount >= 90 ? 'This month' : dayCount >= 60 ? 'Next month' : '2-3 months'
-      } : null
+      curation: curationStats
     };
 
     return NextResponse.json(response);
