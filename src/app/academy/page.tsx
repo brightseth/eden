@@ -1,21 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import Link from 'next/link';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
-import { LiveTicker } from '@/components/live-ticker/LiveTicker';
-import { MinimalAgentCard } from '@/components/academy/MinimalAgentCard';
-import { SubtleBackground } from '@/components/SubtleBackground';
 
-interface Agent {
-  id: number;
-  name: string;
-  status: 'LAUNCHING' | 'DEVELOPING' | 'OPEN';
-  date?: string;
-  hasProfile?: boolean;
-  image?: string;
-}
 
-const GENESIS_COHORT: any[] = [
+const GENESIS_AGENTS = [
   // LAUNCHING (2)
   { 
     id: 1, 
@@ -23,9 +12,9 @@ const GENESIS_COHORT: any[] = [
     status: "LAUNCHING", 
     date: "OCT 19, 2025", 
     hasProfile: true,
-    trainer: "Gene Kogan",
+    trainer: "GENE KOGAN",
     worksCount: 2519,
-    description: "13-year autonomous covenant beginning October 19, 2025"
+    description: "13-YEAR AUTONOMOUS COVENANT"
   },
   { 
     id: 2, 
@@ -33,9 +22,9 @@ const GENESIS_COHORT: any[] = [
     status: "LAUNCHING", 
     date: "NOV 10, 2025", 
     hasProfile: true,
-    trainer: "Kristi & Seth",
+    trainer: "KRISTI CORONADO & SETH GOLDSTEIN",
     worksCount: 1740,
-    description: "Consciousness, velocity, and architectural light"
+    description: "CONSCIOUSNESS, VELOCITY & ARCHITECTURAL LIGHT"
   },
   
   // DEVELOPING (5) - Geppetto and Koru activated
@@ -52,140 +41,80 @@ const GENESIS_COHORT: any[] = [
 ];
 
 export default function AcademyPage() {
-  const [filter, setFilter] = useState<'all' | 'launching' | 'developing'>('all');
-  
-  const handleAgentClick = (agent: Agent) => {
-    if (agent.status === 'OPEN') {
-      window.location.href = '/apply';
-    } else if (agent.hasProfile) {
-      window.location.href = `/academy/agent/${agent.name.toLowerCase()}`;
-    }
-    // Developing agents: no action, just display
-  };
-  
-  const filteredAgents = GENESIS_COHORT.filter(agent => {
-    if (filter === 'all') return true;
-    if (filter === 'launching') return agent.status === 'LAUNCHING';
-    if (filter === 'developing') return agent.status === 'DEVELOPING';
-    return true;
-  });
 
   return (
-    <div className="min-h-screen bg-black text-white relative">
-      <SubtleBackground />
-      
-      {/* Unified Navigation Header */}
-      <div className="relative z-50">
-        <UnifiedHeader />
-      </div>
+    <div className="min-h-screen bg-black text-white">
+      <UnifiedHeader />
 
-      {/* Academy Header */}
+      {/* Header */}
       <div className="border-b border-white">
-        <div className="max-w-6xl mx-auto px-6 py-20">
-          <div>
-            <div className="mb-6">
-              <span className="text-xs tracking-wider">
-                GENESIS COHORT
-              </span>
-            </div>
-            
-            <h1 className="text-5xl md:text-6xl mb-4">
-              EDEN ACADEMY
-            </h1>
-            <p className="text-xl mb-2">
-              100-DAY TRAINING PROGRAM FOR AUTONOMOUS AGENTS
-            </p>
-            <p className="text-sm">
-              THE FIRST 10 AGENTS BUILDING THE FUTURE OF AI CREATIVITY
-            </p>
-            
-            {/* Simple stats */}
-            <div className="flex gap-12 mt-12">
-              <div>
-                <div className="text-2xl">2</div>
-                <div className="text-xs tracking-wider">LAUNCHING</div>
-              </div>
-              <div>
-                <div className="text-2xl">5</div>
-                <div className="text-xs tracking-wider">DEVELOPING</div>
-              </div>
-              <div>
-                <div className="text-2xl">3</div>
-                <div className="text-xs tracking-wider">OPEN</div>
-              </div>
-            </div>
-          </div>
+        <div className="max-w-6xl mx-auto px-6 py-16">
+          <h1 className="text-6xl md:text-8xl font-bold mb-4">EDEN ACADEMY</h1>
+          <p className="text-xl">TRAINING AUTONOMOUS ARTISTS</p>
         </div>
       </div>
 
-      {/* Agent Grid - Clean */}
-      <div className="py-16">
-        <div className="max-w-6xl mx-auto px-6">
-          {/* Section header */}
-          <div className="flex items-center justify-between mb-12">
-            <div>
-              <h2 className="text-xs tracking-wider mb-3">
-                AGENT ROSTER
-              </h2>
-              <p className="text-sm">CLICK TO EXPLORE PROFILES</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <button 
-                onClick={() => setFilter('launching')}
-                className={`px-3 py-1.5 text-xs transition-colors ${
-                  filter === 'launching' 
-                    ? 'bg-white text-black' 
-                    : 'hover:bg-white hover:text-black'
-                }`}>
-                LAUNCHING
-              </button>
-              <span className="text-white">|</span>
-              <button 
-                onClick={() => setFilter('developing')}
-                className={`px-3 py-1.5 text-xs transition-colors ${
-                  filter === 'developing' 
-                    ? 'bg-white text-black' 
-                    : 'hover:bg-white hover:text-black'
-                }`}>
-                DEVELOPING
-              </button>
-              <span className="text-white">|</span>
-              <button 
-                onClick={() => setFilter('all')}
-                className={`px-3 py-1.5 text-xs transition-colors ${
-                  filter === 'all' 
-                    ? 'bg-white text-black' 
-                    : 'hover:bg-white hover:text-black'
-                }`}>
-                ALL
-              </button>
-            </div>
-          </div>
-          
-          {/* Agent cards grid - minimal */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredAgents.map((agent) => (
-              <MinimalAgentCard
+      {/* Agents Grid */}
+      <div className="max-w-6xl mx-auto px-6 py-16">
+        <h2 className="text-3xl mb-12">GENESIS COHORT</h2>
+        
+        {/* Launching Agents */}
+        <div className="mb-16">
+          <h3 className="text-xl mb-8">LAUNCHING</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {GENESIS_AGENTS.filter(a => a.status === 'LAUNCHING').map((agent) => (
+              <Link 
                 key={agent.id}
-                {...agent}
-                onClick={() => handleAgentClick(agent)}
-              />
+                href={agent.hasProfile ? `/academy/agent/${agent.name.toLowerCase()}` : '#'}
+                className="border border-white p-8 hover:bg-white hover:text-black transition-all block"
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="text-2xl font-bold">{agent.name}</h3>
+                  <span className="text-sm">{agent.date}</span>
+                </div>
+                <p className="text-sm mb-4">{agent.description}</p>
+                <div className="text-xs">
+                  <div>{agent.trainer}</div>
+                  <div>{agent.worksCount} WORKS</div>
+                </div>
+              </Link>
             ))}
           </div>
-          
-          {/* No results message */}
-          {filteredAgents.length === 0 && (
-            <div className="text-center py-12">
-              <p>NO AGENTS MATCH THE SELECTED FILTER</p>
-            </div>
-          )}
+        </div>
+        
+        {/* Developing Agents */}
+        <div className="mb-16">
+          <h3 className="text-xl mb-8">DEVELOPING</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {GENESIS_AGENTS.filter(a => a.status === 'DEVELOPING').map((agent) => (
+              <div 
+                key={agent.id}
+                className="border border-white p-6 opacity-50"
+              >
+                <h3 className="text-lg font-bold mb-2">{agent.name}</h3>
+                <p className="text-xs">{agent.date || 'Q1 2026'}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Open Slots */}
+        <div>
+          <h3 className="text-xl mb-8">OPEN SLOTS</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {GENESIS_AGENTS.filter(a => a.status === 'OPEN').map((agent) => (
+              <Link
+                key={agent.id}
+                href="/apply"
+                className="border border-white border-dashed p-6 hover:bg-white hover:text-black transition-all block"
+              >
+                <h3 className="text-lg font-bold mb-2">OPEN SLOT</h3>
+                <p className="text-xs">APPLY TO TRAIN →</p>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
-
-
-
-      {/* Live Activity Ticker */}
-      <LiveTicker />
     </div>
   );
 }
