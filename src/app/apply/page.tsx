@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { Check, AlertCircle } from 'lucide-react';
-import { AboutDropdown } from '@/components/layout/AboutDropdown';
+import { ArrowLeft } from 'lucide-react';
+import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 
 export default function ApplyPage() {
   const [formData, setFormData] = useState({
@@ -35,15 +35,15 @@ export default function ApplyPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const tracks = [
-    'COVENANT TRACK - Long-term commitment models',
-    'GALLERY TRACK - Curation and exhibitions',
-    'COLLECTIBLE TRACK - Physical + digital objects',
-    'MARKET TRACK - Trading and predictions',
-    'CURATOR TRACK - Collection building',
-    'COMMUNITY TRACK - DAO and governance',
-    'FASHION TRACK - Wearables and identity',
-    'CULTURE TRACK - Media and criticism',
-    'CUSTOM TRACK - Something new'
+    'COVENANT TRACK',
+    'GALLERY TRACK',
+    'COLLECTIBLE TRACK',
+    'MARKET TRACK',
+    'CURATOR TRACK',
+    'COMMUNITY TRACK',
+    'FASHION TRACK',
+    'CULTURE TRACK',
+    'CUSTOM TRACK'
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,13 +51,13 @@ export default function ApplyPage() {
     
     // Basic validation
     const newErrors: Record<string, string> = {};
-    if (!formData.name) newErrors.name = 'Required';
-    if (!formData.email) newErrors.email = 'Required';
-    if (!formData.agentName) newErrors.agentName = 'Required';
-    if (!formData.agentTrack) newErrors.agentTrack = 'Required';
-    if (!formData.vision) newErrors.vision = 'Required';
-    if (!formData.commitment) newErrors.commitment = 'Must accept';
-    if (!formData.openSource) newErrors.openSource = 'Must accept';
+    if (!formData.name) newErrors.name = 'REQUIRED';
+    if (!formData.email) newErrors.email = 'REQUIRED';
+    if (!formData.agentName) newErrors.agentName = 'REQUIRED';
+    if (!formData.agentTrack) newErrors.agentTrack = 'REQUIRED';
+    if (!formData.vision) newErrors.vision = 'REQUIRED';
+    if (!formData.commitment) newErrors.commitment = 'MUST ACCEPT';
+    if (!formData.openSource) newErrors.openSource = 'MUST ACCEPT';
     
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -72,53 +72,29 @@ export default function ApplyPage() {
   if (submitted) {
     return (
       <div className="min-h-screen bg-black text-white">
-        <header className="border-b border-gray-800">
-          <div className="max-w-6xl mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
-              <Link href="/" className="text-xl font-bold hover:text-gray-300 transition-colors">
-                EDEN
-              </Link>
-              <div className="flex items-center gap-6">
-                <AboutDropdown />
-                <a 
-                href="https://app.eden.art" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-1.5 border border-gray-600 hover:border-white transition-colors text-sm"
-              >
-                LOG IN →
-                </a>
-              </div>
-            </div>
-          </div>
-        </header>
+        <UnifiedHeader />
 
         <div className="max-w-2xl mx-auto px-6 py-20 text-center">
-          <div className="mb-8">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-green-400/20 flex items-center justify-center">
-              <Check className="w-8 h-8 text-green-400" />
-            </div>
-            <h1 className="text-3xl font-bold mb-4">APPLICATION RECEIVED</h1>
-            <p className="text-gray-400">
-              Thank you for applying to train an agent in Eden Academy.
-            </p>
-          </div>
+          <h1 className="text-6xl font-bold mb-8">APPLICATION RECEIVED</h1>
+          <p className="text-xl mb-12">
+            THANK YOU FOR APPLYING TO TRAIN AN AGENT IN EDEN ACADEMY.
+          </p>
 
-          <div className="p-6 border border-gray-800 text-left mb-8">
-            <h3 className="text-sm font-bold tracking-wider mb-4">WHAT HAPPENS NEXT</h3>
-            <ol className="space-y-3 text-sm text-gray-400">
-              <li>1. Your application will be reviewed by the Eden team</li>
-              <li>2. If selected, we'll schedule an interview to discuss your agent concept</li>
-              <li>3. Approved trainers receive access to training tools and resources</li>
-              <li>4. Your agent enters the Academy for the 100-day program</li>
+          <div className="border border-white p-8 mb-12 text-left">
+            <h3 className="text-xl font-bold mb-6">WHAT HAPPENS NEXT</h3>
+            <ol className="space-y-3 text-sm">
+              <li>1. YOUR APPLICATION WILL BE REVIEWED BY THE EDEN TEAM</li>
+              <li>2. IF SELECTED, WE'LL SCHEDULE AN INTERVIEW TO DISCUSS YOUR AGENT CONCEPT</li>
+              <li>3. APPROVED TRAINERS RECEIVE ACCESS TO TRAINING TOOLS AND RESOURCES</li>
+              <li>4. YOUR AGENT ENTERS THE ACADEMY FOR THE 100-DAY PROGRAM</li>
             </ol>
           </div>
 
           <Link 
             href="/academy"
-            className="inline-flex items-center gap-2 px-6 py-3 border border-gray-600 hover:border-white transition-colors text-sm"
+            className="inline-block border border-white px-6 py-3 hover:bg-white hover:text-black transition-all"
           >
-            View Current Cohort →
+            VIEW CURRENT COHORT →
           </Link>
         </div>
       </div>
@@ -127,235 +103,227 @@ export default function ApplyPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <header className="border-b border-gray-800">
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="text-xl font-bold hover:text-gray-300 transition-colors">
-              EDEN
-            </Link>
-            <div className="flex items-center gap-6">
-              <AboutDropdown />
-              <a 
-                href="https://app.eden.art" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-1.5 border border-gray-600 hover:border-white transition-colors text-sm"
-              >
-                LOG IN →
-              </a>
-            </div>
-          </div>
+      <UnifiedHeader />
+
+      {/* Back Navigation */}
+      <div className="border-b border-white">
+        <div className="max-w-4xl mx-auto px-6 py-3">
+          <Link 
+            href="/" 
+            className="inline-flex items-center gap-2 text-sm hover:bg-white hover:text-black px-2 py-1 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            BACK
+          </Link>
         </div>
-      </header>
+      </div>
 
       {/* Form */}
-      <div className="max-w-3xl mx-auto px-6 py-12">
-        <div className="mb-10">
-          <h1 className="text-3xl font-bold mb-4">APPLY TO TRAIN AN AGENT</h1>
-          <p className="text-gray-400">
-            Join Eden Academy as a trainer and guide an AI agent through our 100-day program 
-            to autonomy. We're looking for visionaries who understand both art and economics.
+      <div className="max-w-3xl mx-auto px-6 py-16">
+        <div className="mb-12">
+          <h1 className="text-6xl font-bold mb-4">APPLY TO TRAIN</h1>
+          <p className="text-xl">
+            JOIN EDEN ACADEMY AS A TRAINER AND GUIDE AN AI AGENT THROUGH OUR 100-DAY PROGRAM TO AUTONOMY.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-10">
+        <form onSubmit={handleSubmit} className="space-y-12">
           {/* Trainer Information */}
-          <section className="p-6 border border-gray-800">
-            <h2 className="text-sm font-bold tracking-wider mb-6">TRAINER INFORMATION</h2>
+          <section className="border border-white p-8">
+            <h2 className="text-2xl font-bold mb-8">TRAINER INFORMATION</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-xs text-gray-500 mb-2">
+                <label className="block text-sm mb-2">
                   NAME *
                 </label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  className="w-full px-3 py-2 bg-black border border-gray-800 focus:border-white transition-colors text-sm"
-                  placeholder="Your name"
+                  className="w-full px-3 py-2 bg-black border border-white focus:bg-white focus:text-black transition-colors"
+                  placeholder="YOUR NAME"
                 />
-                {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
+                {errors.name && <p className="text-sm mt-1">{errors.name}</p>}
               </div>
 
               <div>
-                <label className="block text-xs text-gray-500 mb-2">
+                <label className="block text-sm mb-2">
                   EMAIL *
                 </label>
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  className="w-full px-3 py-2 bg-black border border-gray-800 focus:border-white transition-colors text-sm"
-                  placeholder="your@email.com"
+                  className="w-full px-3 py-2 bg-black border border-white focus:bg-white focus:text-black transition-colors"
+                  placeholder="YOUR@EMAIL.COM"
                 />
-                {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
+                {errors.email && <p className="text-sm mt-1">{errors.email}</p>}
               </div>
 
               <div>
-                <label className="block text-xs text-gray-500 mb-2">
+                <label className="block text-sm mb-2">
                   TWITTER/X
                 </label>
                 <input
                   type="text"
                   value={formData.twitter}
                   onChange={(e) => setFormData({...formData, twitter: e.target.value})}
-                  className="w-full px-3 py-2 bg-black border border-gray-800 focus:border-white transition-colors text-sm"
-                  placeholder="@handle"
+                  className="w-full px-3 py-2 bg-black border border-white focus:bg-white focus:text-black transition-colors"
+                  placeholder="@HANDLE"
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-gray-500 mb-2">
+                <label className="block text-sm mb-2">
                   ORGANIZATION
                 </label>
                 <input
                   type="text"
                   value={formData.organization}
                   onChange={(e) => setFormData({...formData, organization: e.target.value})}
-                  className="w-full px-3 py-2 bg-black border border-gray-800 focus:border-white transition-colors text-sm"
-                  placeholder="Company, DAO, or collective"
+                  className="w-full px-3 py-2 bg-black border border-white focus:bg-white focus:text-black transition-colors"
+                  placeholder="COMPANY, DAO, OR COLLECTIVE"
                 />
               </div>
             </div>
           </section>
 
           {/* Agent Concept */}
-          <section className="p-6 border border-gray-800">
-            <h2 className="text-sm font-bold tracking-wider mb-6">AGENT CONCEPT</h2>
+          <section className="border border-white p-8">
+            <h2 className="text-2xl font-bold mb-8">AGENT CONCEPT</h2>
             <div className="space-y-6">
               <div>
-                <label className="block text-xs text-gray-500 mb-2">
+                <label className="block text-sm mb-2">
                   AGENT NAME *
                 </label>
                 <input
                   type="text"
                   value={formData.agentName}
                   onChange={(e) => setFormData({...formData, agentName: e.target.value})}
-                  className="w-full px-3 py-2 bg-black border border-gray-800 focus:border-white transition-colors text-sm"
-                  placeholder="What will your agent be called?"
+                  className="w-full px-3 py-2 bg-black border border-white focus:bg-white focus:text-black transition-colors"
+                  placeholder="WHAT WILL YOUR AGENT BE CALLED?"
                 />
-                {errors.agentName && <p className="text-red-400 text-xs mt-1">{errors.agentName}</p>}
+                {errors.agentName && <p className="text-sm mt-1">{errors.agentName}</p>}
               </div>
 
               <div>
-                <label className="block text-xs text-gray-500 mb-2">
+                <label className="block text-sm mb-2">
                   TRACK *
                 </label>
                 <select
                   value={formData.agentTrack}
                   onChange={(e) => setFormData({...formData, agentTrack: e.target.value})}
-                  className="w-full px-3 py-2 bg-black border border-gray-800 focus:border-white transition-colors text-sm"
+                  className="w-full px-3 py-2 bg-black border border-white focus:bg-white focus:text-black transition-colors"
                 >
-                  <option value="">Select a track...</option>
+                  <option value="">SELECT A TRACK...</option>
                   {tracks.map(track => (
                     <option key={track} value={track}>{track}</option>
                   ))}
                 </select>
-                {errors.agentTrack && <p className="text-red-400 text-xs mt-1">{errors.agentTrack}</p>}
+                {errors.agentTrack && <p className="text-sm mt-1">{errors.agentTrack}</p>}
               </div>
 
               <div>
-                <label className="block text-xs text-gray-500 mb-2">
+                <label className="block text-sm mb-2">
                   DAILY PRACTICE
                 </label>
                 <input
                   type="text"
                   value={formData.dailyPractice}
                   onChange={(e) => setFormData({...formData, dailyPractice: e.target.value})}
-                  className="w-full px-3 py-2 bg-black border border-gray-800 focus:border-white transition-colors text-sm"
-                  placeholder="What will your agent create/do daily?"
+                  className="w-full px-3 py-2 bg-black border border-white focus:bg-white focus:text-black transition-colors"
+                  placeholder="WHAT WILL YOUR AGENT CREATE/DO DAILY?"
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-gray-500 mb-2">
+                <label className="block text-sm mb-2">
                   REVENUE MODEL
                 </label>
                 <input
                   type="text"
                   value={formData.revenueModel}
                   onChange={(e) => setFormData({...formData, revenueModel: e.target.value})}
-                  className="w-full px-3 py-2 bg-black border border-gray-800 focus:border-white transition-colors text-sm"
-                  placeholder="How will the agent generate revenue?"
+                  className="w-full px-3 py-2 bg-black border border-white focus:bg-white focus:text-black transition-colors"
+                  placeholder="HOW WILL THE AGENT GENERATE REVENUE?"
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-gray-500 mb-2">
+                <label className="block text-sm mb-2">
                   TARGET AUDIENCE
                 </label>
                 <input
                   type="text"
                   value={formData.targetAudience}
                   onChange={(e) => setFormData({...formData, targetAudience: e.target.value})}
-                  className="w-full px-3 py-2 bg-black border border-gray-800 focus:border-white transition-colors text-sm"
-                  placeholder="Who will collect/engage with your agent?"
+                  className="w-full px-3 py-2 bg-black border border-white focus:bg-white focus:text-black transition-colors"
+                  placeholder="WHO WILL COLLECT/ENGAGE WITH YOUR AGENT?"
                 />
               </div>
             </div>
           </section>
 
           {/* Vision & Resources */}
-          <section className="p-6 border border-gray-800">
-            <h2 className="text-sm font-bold tracking-wider mb-6">VISION & RESOURCES</h2>
+          <section className="border border-white p-8">
+            <h2 className="text-2xl font-bold mb-8">VISION & RESOURCES</h2>
             <div className="space-y-6">
               <div>
-                <label className="block text-xs text-gray-500 mb-2">
-                  AGENT VISION * <span className="text-gray-600">(500 chars max)</span>
+                <label className="block text-sm mb-2">
+                  AGENT VISION * (500 CHARS MAX)
                 </label>
                 <textarea
                   value={formData.vision}
                   onChange={(e) => setFormData({...formData, vision: e.target.value})}
-                  className="w-full px-3 py-2 bg-black border border-gray-800 focus:border-white transition-colors text-sm h-32 resize-none"
-                  placeholder="Describe your vision for this agent. What makes it unique? What impact will it have?"
+                  className="w-full px-3 py-2 bg-black border border-white focus:bg-white focus:text-black transition-colors h-32 resize-none"
+                  placeholder="DESCRIBE YOUR VISION FOR THIS AGENT. WHAT MAKES IT UNIQUE? WHAT IMPACT WILL IT HAVE?"
                   maxLength={500}
                 />
-                {errors.vision && <p className="text-red-400 text-xs mt-1">{errors.vision}</p>}
-                <p className="text-xs text-gray-600 mt-1">{formData.vision.length}/500</p>
+                {errors.vision && <p className="text-sm mt-1">{errors.vision}</p>}
+                <p className="text-xs mt-1">{formData.vision.length}/500</p>
               </div>
 
               <div>
-                <label className="block text-xs text-gray-500 mb-2">
+                <label className="block text-sm mb-2">
                   WHY YOU?
                 </label>
                 <textarea
                   value={formData.whyYou}
                   onChange={(e) => setFormData({...formData, whyYou: e.target.value})}
-                  className="w-full px-3 py-2 bg-black border border-gray-800 focus:border-white transition-colors text-sm h-24 resize-none"
-                  placeholder="What makes you the right trainer for this agent?"
+                  className="w-full px-3 py-2 bg-black border border-white focus:bg-white focus:text-black transition-colors h-24 resize-none"
+                  placeholder="WHAT MAKES YOU THE RIGHT TRAINER FOR THIS AGENT?"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs text-gray-500 mb-2">
+                  <label className="block text-sm mb-2">
                     TIMELINE
                   </label>
                   <select
                     value={formData.timeline}
                     onChange={(e) => setFormData({...formData, timeline: e.target.value})}
-                    className="w-full px-3 py-2 bg-black border border-gray-800 focus:border-white transition-colors text-sm"
+                    className="w-full px-3 py-2 bg-black border border-white focus:bg-white focus:text-black transition-colors"
                   >
-                    <option value="">When can you start?</option>
-                    <option value="immediately">Immediately</option>
-                    <option value="1month">Within 1 month</option>
-                    <option value="3months">Within 3 months</option>
-                    <option value="6months">Within 6 months</option>
+                    <option value="">WHEN CAN YOU START?</option>
+                    <option value="immediately">IMMEDIATELY</option>
+                    <option value="1month">WITHIN 1 MONTH</option>
+                    <option value="3months">WITHIN 3 MONTHS</option>
+                    <option value="6months">WITHIN 6 MONTHS</option>
                     <option value="2026">2026</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs text-gray-500 mb-2">
+                  <label className="block text-sm mb-2">
                     RESOURCES NEEDED
                   </label>
                   <input
                     type="text"
                     value={formData.resources}
                     onChange={(e) => setFormData({...formData, resources: e.target.value})}
-                    className="w-full px-3 py-2 bg-black border border-gray-800 focus:border-white transition-colors text-sm"
-                    placeholder="Compute, funding, partnerships?"
+                    className="w-full px-3 py-2 bg-black border border-white focus:bg-white focus:text-black transition-colors"
+                    placeholder="COMPUTE, FUNDING, PARTNERSHIPS?"
                   />
                 </div>
               </div>
@@ -363,63 +331,59 @@ export default function ApplyPage() {
           </section>
 
           {/* Terms */}
-          <section className="p-6 border border-gray-800">
-            <h2 className="text-sm font-bold tracking-wider mb-6">TERMS & CONDITIONS</h2>
+          <section className="border border-white p-8">
+            <h2 className="text-2xl font-bold mb-8">TERMS & CONDITIONS</h2>
             <div className="space-y-4">
-              <label className="flex items-start gap-3 cursor-pointer group">
+              <label className="flex items-start gap-3 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={formData.commitment}
                   onChange={(e) => setFormData({...formData, commitment: e.target.checked})}
-                  className="mt-0.5 w-4 h-4 bg-black border border-gray-600 checked:bg-green-400 checked:border-green-400"
+                  className="mt-1 w-4 h-4"
                 />
                 <div className="flex-1">
-                  <span className="text-sm group-hover:text-white transition-colors">
-                    I commit to the full 100-day training program *
+                  <span className="text-sm">
+                    I COMMIT TO THE FULL 100-DAY TRAINING PROGRAM *
                   </span>
-                  <p className="text-xs text-gray-600 mt-1">
-                    Training an agent requires daily engagement for 100 consecutive days.
+                  <p className="text-xs mt-1">
+                    TRAINING AN AGENT REQUIRES DAILY ENGAGEMENT FOR 100 CONSECUTIVE DAYS.
                   </p>
                 </div>
               </label>
               {errors.commitment && (
-                <p className="text-red-400 text-xs flex items-center gap-1 ml-7">
-                  <AlertCircle className="w-3 h-3" /> {errors.commitment}
-                </p>
+                <p className="text-sm ml-7">{errors.commitment}</p>
               )}
 
-              <label className="flex items-start gap-3 cursor-pointer group">
+              <label className="flex items-start gap-3 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={formData.openSource}
                   onChange={(e) => setFormData({...formData, openSource: e.target.checked})}
-                  className="mt-0.5 w-4 h-4 bg-black border border-gray-600 checked:bg-green-400 checked:border-green-400"
+                  className="mt-1 w-4 h-4"
                 />
                 <div className="flex-1">
-                  <span className="text-sm group-hover:text-white transition-colors">
-                    I agree to open-source principles *
+                  <span className="text-sm">
+                    I AGREE TO OPEN-SOURCE PRINCIPLES *
                   </span>
-                  <p className="text-xs text-gray-600 mt-1">
-                    Training methods and agent code will be shared with the Eden community.
+                  <p className="text-xs mt-1">
+                    TRAINING METHODS AND AGENT CODE WILL BE SHARED WITH THE EDEN COMMUNITY.
                   </p>
                 </div>
               </label>
               {errors.openSource && (
-                <p className="text-red-400 text-xs flex items-center gap-1 ml-7">
-                  <AlertCircle className="w-3 h-3" /> {errors.openSource}
-                </p>
+                <p className="text-sm ml-7">{errors.openSource}</p>
               )}
             </div>
           </section>
 
           {/* Submit */}
           <div className="flex items-center justify-between">
-            <p className="text-xs text-gray-500">
-              * Required fields
+            <p className="text-sm">
+              * REQUIRED FIELDS
             </p>
             <button
               type="submit"
-              className="px-8 py-3 bg-white text-black font-bold hover:bg-gray-200 transition-colors"
+              className="px-8 py-3 border border-white hover:bg-white hover:text-black transition-all font-bold"
             >
               SUBMIT APPLICATION
             </button>
@@ -427,14 +391,14 @@ export default function ApplyPage() {
         </form>
 
         {/* Info Box */}
-        <div className="mt-10 p-6 border border-gray-800">
-          <h3 className="text-sm font-bold tracking-wider mb-4">WHAT WE'RE LOOKING FOR</h3>
-          <ul className="space-y-2 text-sm text-gray-400">
-            <li>• Strong vision for autonomous AI agents</li>
-            <li>• Understanding of both creative and economic systems</li>
-            <li>• Commitment to daily engagement during training</li>
-            <li>• Willingness to share knowledge with the community</li>
-            <li>• Technical or artistic expertise in your chosen domain</li>
+        <div className="mt-12 border border-white p-8">
+          <h3 className="text-xl font-bold mb-6">WHAT WE'RE LOOKING FOR</h3>
+          <ul className="space-y-2 text-sm">
+            <li>• STRONG VISION FOR AUTONOMOUS AI AGENTS</li>
+            <li>• UNDERSTANDING OF BOTH CREATIVE AND ECONOMIC SYSTEMS</li>
+            <li>• COMMITMENT TO DAILY ENGAGEMENT DURING TRAINING</li>
+            <li>• WILLINGNESS TO SHARE KNOWLEDGE WITH THE COMMUNITY</li>
+            <li>• TECHNICAL OR ARTISTIC EXPERTISE IN YOUR CHOSEN DOMAIN</li>
           </ul>
         </div>
       </div>
