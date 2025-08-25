@@ -1,8 +1,8 @@
 // Shared types for Eden Genesis Registry
 // These types are used by both Academy and Registry services
 
-export type AgentStatus = 'invited' | 'applying' | 'onboarding' | 'active' | 'graduated' | 'archived';
-export type Visibility = 'private' | 'internal' | 'public';
+export type AgentStatus = 'INVITED' | 'APPLYING' | 'ONBOARDING' | 'ACTIVE' | 'GRADUATED' | 'ARCHIVED';
+export type Visibility = 'PRIVATE' | 'INTERNAL' | 'PUBLIC';
 
 export interface Agent {
   id: string;

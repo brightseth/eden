@@ -3,31 +3,29 @@
 
 ---
 
-## ⚡ TLDR: Your 8 Claude Code Agents
+## ⚡ TLDR: Your 6 Core Claude Code Agents
 
 **These are your Claude Code development assistants (different from Eden Academy agents like Solienne/Abraham):**
 
-| Agent | Primary Role | Key Superpower |
-|-------|-------------|----------------|
-| 🏗️ **Architecture Guardian** | System design & ADRs | Ensures technical coherence across entire system |
-| 💰 **Token Economist** | Revenue & economics | Calculates sustainable token models & pricing |
-| 🚀 **Agent Launcher** | Onboarding & quality | Gates agent readiness with strict launch criteria |
-| 🎨 **Academy Domain Expert** | Content & culture | Maintains creative mission in all features |
-| ⚙️ **Feature Integrator** | Production code | Converts prototypes to deployment-ready code |
-| 🔒 **Registry Guardian** | Data integrity | Protects single source of truth for all data |
-| 👨‍💻 **Code Reviewer** | Quality assurance | Final defense against bugs & vulnerabilities |
-| 🎯 **Design Critic** | Visual excellence | Enforces Helvetica-minimalist brand consistency |
+| Agent Name | Primary Role | Key Superpower | Invocation |
+|------------|-------------|----------------|------------|
+| 🏗️ **ARCH** | System Architecture | Ensures technical coherence across entire system | @agent-arch |
+| 🔒 **TRUTH** | Data Integrity | Protects single source of truth for all data | @agent-truth |
+| 📖 **LORE** | Narrative & Culture | Maintains creative mission and language consistency | @agent-lore |
+| 📐 **HELVETICA** | Visual Design | Enforces brand consistency and UI standards | @agent-helvetica |
+| 💰 **TOKEN** | Economics & Metrics | Calculates sustainable token models & pricing | @agent-token |
+| 🚀 **LAUNCHER** | Agent Quality | Gates agent readiness with strict launch criteria | @agent-launcher |
 
-**Quick Start:** Open multiple Claude windows → Give each agent their role → Copy context between them
+**Quick Start:** Use agent names when delegating → Each has clear responsibilities → No overlap
 
 ### 📝 Important Distinction:
-- **Claude Code Agents** (this doc): Your 8 specialized AI development assistants for building features
+- **Claude Code Agents** (this doc): Your 6 specialized AI development assistants for building features
 - **Eden Academy Agents** (in Registry): The creative AI agents like Solienne, Abraham, Koru who create art/content
 
 ---
 
-## 🏗️ Architecture Guardian
-**Window:** Architecture Guardian  
+## 🏗️ ARCH (Architecture Guardian)
+**Agent Name:** ARCH  
 **Primary Focus:** System-wide coherence and technical decisions
 
 ### When to Use:
@@ -51,8 +49,8 @@
 
 ---
 
-## 💰 Token Economist
-**Window:** Token Economist  
+## 💰 TOKEN (Token Economist)
+**Agent Name:** TOKEN  
 **Primary Focus:** Economic models and token mechanics
 
 ### When to Use:
@@ -75,8 +73,8 @@
 
 ---
 
-## 🚀 Agent Launcher
-**Window:** Agent Launcher  
+## 🚀 LAUNCHER (Agent Launcher)
+**Agent Name:** LAUNCHER  
 **Primary Focus:** Agent lifecycle and quality gates
 
 ### When to Use:
@@ -99,9 +97,9 @@
 
 ---
 
-## 🎨 Academy Domain Expert
-**Window:** Academy Domain Expert  
-**Primary Focus:** Cultural mission and creative integrity
+## 📖 LORE (Narrative Guardian)
+**Agent Name:** LORE  
+**Primary Focus:** Cultural mission, language consistency, and creative integrity
 
 ### When to Use:
 - Naming features or concepts
@@ -123,32 +121,9 @@
 
 ---
 
-## ⚙️ Feature Integrator
-**Window:** Feature Integrator  
-**Primary Focus:** Production-ready implementation
 
-### When to Use:
-- Converting prototypes to production
-- Integrating with existing systems
-- Setting up CI/CD pipelines
-- Implementing feature flags
-- Database migrations
-
-### Key Questions:
-- "Convert this prototype to production code"
-- "How do I integrate with the Registry?"
-- "Set up feature flag for X"
-- "Review this migration script"
-
-### MVP Integration:
-- Takes approved designs to production
-- Ensures proper integration patterns
-- Handles technical implementation details
-
----
-
-## 🔒 Registry Guardian
-**Window:** Registry Guardian  
+## 🔒 TRUTH (Registry Guardian)
+**Agent Name:** TRUTH  
 **Primary Focus:** Data integrity and single source of truth
 
 ### When to Use:
@@ -171,32 +146,9 @@
 
 ---
 
-## 👨‍💻 Code Reviewer
-**Window:** Code Reviewer  
-**Primary Focus:** Code quality and best practices
 
-### When to Use:
-- Before any PR/commit
-- After implementing features
-- Refactoring existing code
-- Security reviews
-- Performance optimization
-
-### Key Questions:
-- "Review this code for best practices"
-- "Find security vulnerabilities"
-- "Suggest performance improvements"
-- "Is this following our patterns?"
-
-### MVP Integration:
-- Final check before deployment
-- Catches bugs and vulnerabilities
-- Ensures code maintainability
-
----
-
-## 🎯 Design Critic
-**Window:** Design Critic  
+## 📐 HELVETICA (Brand Guardian)
+**Agent Name:** HELVETICA  
 **Primary Focus:** Visual consistency and brand excellence
 
 ### When to Use:
@@ -223,7 +175,7 @@
 
 ## 1. Feature Planning Phase
 ```
-Architecture Guardian → Academy Domain Expert → Design Critic
+ARCH → LORE → HELVETICA
 ```
 - Define technical approach
 - Ensure cultural alignment  
@@ -231,28 +183,28 @@ Architecture Guardian → Academy Domain Expert → Design Critic
 
 ## 2. Economic Validation
 ```
-Token Economist → Agent Launcher
+TOKEN → LAUNCHER
 ```
 - Validate revenue model
 - Check launch criteria
 
 ## 3. Implementation Phase
 ```
-Feature Integrator → Registry Guardian
+ARCH → TRUTH
 ```
-- Build the feature
+- Build with proper architecture
 - Ensure data integrity
 
 ## 4. Quality Assurance
 ```
-Code Reviewer → Design Critic
+ARCH → HELVETICA
 ```
-- Review code quality
+- Review implementation quality
 - Final design check
 
 ## 5. Pre-Launch
 ```
-Agent Launcher → Token Economist
+LAUNCHER → TOKEN
 ```
 - Validate all criteria met
 - Confirm economic viability
@@ -263,29 +215,39 @@ Agent Launcher → Token Economist
 
 | Scenario | Primary Agent | Supporting Agents |
 |----------|--------------|-------------------|
-| New API endpoint | Architecture Guardian | Registry Guardian, Code Reviewer |
-| Agent onboarding flow | Agent Launcher | Academy Domain Expert, Design Critic |
-| Payment integration | Token Economist | Feature Integrator, Registry Guardian |
-| UI component | Design Critic | Academy Domain Expert, Code Reviewer |
-| Database migration | Registry Guardian | Architecture Guardian, Feature Integrator |
-| Creative feature | Academy Domain Expert | Design Critic, Architecture Guardian |
-| Performance issue | Code Reviewer | Architecture Guardian, Feature Integrator |
-| Brand update | Design Critic | Academy Domain Expert |
+| New API endpoint | ARCH | TRUTH |
+| Agent onboarding flow | LAUNCHER | LORE, HELVETICA |
+| Payment integration | TOKEN | ARCH, TRUTH |
+| UI component | HELVETICA | LORE |
+| Database migration | TRUTH | ARCH |
+| Creative feature | LORE | HELVETICA, ARCH |
+| Performance issue | ARCH | TOKEN |
+| Brand update | HELVETICA | LORE |
+| Language/Copy review | LORE | HELVETICA |
+| Economic model | TOKEN | LAUNCHER |
 
 ---
 
 # 💡 Pro Tips
 
-1. **Start with Architecture Guardian** for any technical decision
-2. **Always validate economics** with Token Economist before building payment features
-3. **Academy Domain Expert** should review ALL user-facing text
-4. **Design Critic** gets final say on visual elements
-5. **Registry Guardian** must approve database changes
-6. **Code Reviewer** is your last line of defense before production
+1. **Start with ARCH** for any technical decision
+2. **Always validate economics** with TOKEN before building payment features
+3. **LORE** should review ALL user-facing text and naming
+4. **HELVETICA** gets final say on visual elements
+5. **TRUTH** must approve database changes
+6. **LAUNCHER** validates agent quality before production
 
 ---
 
 # 🔗 Agent Interaction Patterns
+
+## Delegation Quick Reference
+- **Technical Architecture?** → ARCH
+- **Data Integrity?** → TRUTH
+- **Language/Story?** → LORE
+- **Visual/Design?** → HELVETICA
+- **Economics/Metrics?** → TOKEN
+- **Agent Quality?** → LAUNCHER
 
 ## Parallel Consultation
 Open 2-3 agents for complex features:
@@ -306,26 +268,20 @@ For minor changes:
 
 # 📝 Copy-Paste Templates
 
-## For Architecture Guardian:
+## For ARCH:
 "I need to implement [FEATURE]. What's the best architectural approach considering our current system?"
 
-## For Token Economist:
+## For TOKEN:
 "Calculate the economic impact of [FEATURE] on agent revenue and token distribution"
 
-## For Agent Launcher:
+## For LAUNCHER:
 "Define launch criteria and success metrics for [AGENT_NAME]"
 
-## For Academy Domain Expert:
-"Review this feature for cultural alignment: [DESCRIPTION]"
+## For LORE:
+"Review this feature for cultural alignment and language consistency: [DESCRIPTION]"
 
-## For Feature Integrator:
-"Convert this design to production code: [REQUIREMENTS]"
-
-## For Registry Guardian:
+## For TRUTH:
 "Review this data model for consistency: [SCHEMA]"
 
-## For Code Reviewer:
-"Review this code for best practices and security: [CODE/FILE]"
-
-## For Design Critic:
+## For HELVETICA:
 "Critique this UI design for brand consistency: [DESIGN/SCREENSHOT]"

@@ -22,9 +22,13 @@ class RegistryClient {
   private useRegistry: boolean;
 
   constructor() {
-    this.baseUrl = process.env.REGISTRY_BASE_URL || 'https://registry.eden.art/api/v1';
+    this.baseUrl = process.env.REGISTRY_BASE_URL || 'https://eden-genesis-registry.vercel.app/api/v1';
     this.apiKey = process.env.REGISTRY_API_KEY || '';
     this.useRegistry = process.env.USE_REGISTRY === 'true';
+  }
+
+  private generateTraceId(): string {
+    return `reg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
 
   private async fetchWithRetry<T>(
@@ -34,6 +38,7 @@ class RegistryClient {
   ): Promise<T> {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT);
+    const traceId = this.generateTraceId();
 
     try {
       const response = await fetch(url, {
@@ -41,6 +46,8 @@ class RegistryClient {
         signal: controller.signal,
         headers: {
           'x-eden-api-key': this.apiKey,
+          'x-trace-id': traceId,
+          'x-eden-client': 'eden-academy',
           'accept': 'application/json',
           'content-type': 'application/json',
           ...options.headers,
@@ -61,6 +68,11 @@ class RegistryClient {
           message: `HTTP ${response.status}: ${response.statusText}`,
           statusCode: response.status,
         }));
+        
+        console.error(`[Registry] Request failed - trace: ${traceId}`, {
+          status: response.status,
+          error: error.message
+        });
         
         throw new Error(error.message || `Registry API error: ${response.status}`);
       }

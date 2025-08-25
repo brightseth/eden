@@ -151,8 +151,8 @@ export class DataAdapter {
       handle: legacyAgent.handle || legacyAgent.name?.toLowerCase().replace(/\s+/g, '-'),
       displayName: legacyAgent.name,
       cohort: legacyAgent.cohort || 'genesis',
-      status: legacyAgent.status || 'active',
-      visibility: legacyAgent.visibility || 'public',
+      status: (legacyAgent.status || 'ACTIVE').toUpperCase() as Agent['status'],
+      visibility: (legacyAgent.visibility || 'PUBLIC').toUpperCase() as Agent['visibility'],
       createdAt: legacyAgent.created_at,
       updatedAt: legacyAgent.updated_at,
     };
