@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-sdk": "openapi-generator-cli generate -i ../eden-genesis-registry/openapi.yaml -g typescript-fetch -o src/lib/generated-sdk --additional-properties=typescriptThreePlus=true,withInterfaces=true,enumPropertyNaming=UPPERCASE"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.60.0",
@@ -40,12 +41,13 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@openapitools/openapi-generator-cli": "^2.23.1",
     "@types/node": "^20",
     "@types/node-cron": "^3.0.11",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
-    "typescript": "^5"
+    "typescript": "^5.9.2"
   }
 }

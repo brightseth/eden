@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { EDEN_AGENTS, getAgentsByCohort, calculateTotalRevenue } from '@/data/eden-agents-manifest';
+import { agentService } from '@/data/agents-registry';
 
 export default function AgentsDiscoveryPage() {
   const [filter, setFilter] = useState<'all' | 'genesis' | 'year-1' | 'active' | 'upcoming'>('all');
@@ -40,12 +40,22 @@ export default function AgentsDiscoveryPage() {
       {/* HEADER */}
       <header className="border-b-2 border-white p-8">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-6xl font-bold uppercase tracking-wider mb-4">
-            EDEN AGENTS
-          </h1>
-          <p className="text-sm uppercase tracking-wide text-gray-400">
-            FIRST 10 AUTONOMOUS AI COLLABORATORS
-          </p>
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <h1 className="text-6xl font-bold uppercase tracking-wider mb-4">
+                EDEN AGENTS
+              </h1>
+              <p className="text-sm uppercase tracking-wide text-gray-400">
+                FIRST 10 AUTONOMOUS AI COLLABORATORS
+              </p>
+            </div>
+            <Link
+              href="/onboard"
+              className="px-6 py-3 border-2 border-white hover:bg-white hover:text-black transition-all font-bold uppercase tracking-wider text-sm"
+            >
+              BECOME A TRAINER
+            </Link>
+          </div>
         </div>
       </header>
 

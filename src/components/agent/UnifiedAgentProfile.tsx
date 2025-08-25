@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, ExternalLink } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import WorkGallery from '@/components/agent/WorkGallery';
-import { getWorksByAgent, generatePlaceholderWorks } from '@/data/agent-works';
-import { getAgentBySlug, type EdenAgent } from '@/data/eden-agents-manifest';
+import { worksService } from '@/data/works-registry';
+import { agentService, type UnifiedAgent } from '@/data/agents-registry';
 
 interface UnifiedAgentProfileProps {
   agentSlug: string;

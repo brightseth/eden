@@ -1,7 +1,7 @@
 // Lightweight Registry Gateway for internal prototyping
 // Enforces UI → Gateway → Registry pattern and provides circuit breaker protection
 
-import { registryClient } from './client';
+import { createRegistryApiClient, RegistryApiClient } from '../generated-sdk';
 import type { 
   Agent, 
   AgentQuery, 

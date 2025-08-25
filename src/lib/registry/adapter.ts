@@ -1,8 +1,8 @@
-// Feature flag adapter for Registry vs Legacy database access
-// This provides a unified interface that switches between Registry and legacy DB
+// Registry Guardian Data Adapter
+// ENFORCES Gateway-only access - no more dual-path data access
 
-import { registryClient } from './client';
-import { createClient } from '@/utils/supabase/server';
+import { registryGateway } from './gateway';
+import { registryMonitor } from './monitor';
 import type { 
   Agent, 
   AgentQuery, 
@@ -19,161 +19,68 @@ const fallbackCache = new Map<string, { data: any, timestamp: number }>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 export class DataAdapter {
-  private useRegistry: boolean;
+  private gatewayOnly: boolean;
 
   constructor() {
-    this.useRegistry = process.env.USE_REGISTRY === 'true';
-  }
-
-  // Get all agents with feature flag support
-  async getAgents(query?: AgentQuery): Promise<Agent[]> {
-    if (this.useRegistry) {
-      try {
-        return await registryClient.getAgents(query);
-      } catch (error) {
-        console.error('Registry fetch failed, checking cache:', error);
-        return this.getCachedData('agents', []);
-      }
-    }
-
-    // Legacy database access
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from('agents')
-      .select('*')
-      .eq('cohort', query?.cohort || 'genesis');
-
-    if (error) {
-      console.error('Legacy DB fetch failed:', error);
-      return [];
-    }
-
-    // Transform legacy data to Registry format
-    return this.transformLegacyAgents(data || []);
-  }
-
-  // Get single agent with feature flag support
-  async getAgent(id: string, include?: string[]): Promise<Agent | null> {
-    if (this.useRegistry) {
-      try {
-        return await registryClient.getAgent(id, include);
-      } catch (error) {
-        console.error('Registry fetch failed, checking cache:', error);
-        return this.getCachedData(`agent-${id}`, null);
-      }
-    }
-
-    // Legacy database access
-    const supabase = await createClient();
-    let query = supabase.from('agents').select('*').eq('id', id).single();
-
-    const { data, error } = await query;
+    // ENFORCE: Always use Gateway - no more feature flag bypass
+    this.gatewayOnly = process.env.DISABLE_GATEWAY_ENFORCEMENT !== 'true';
     
-    if (error) {
-      console.error('Legacy DB fetch failed:', error);
-      return null;
+    if (!this.gatewayOnly) {
+      console.warn('⚠️  Gateway enforcement DISABLED - this should only be used for debugging!');
     }
-
-    return this.transformLegacyAgent(data);
   }
 
-  // Post creation with feature flag support
+  // Get all agents - ENFORCED through Gateway only
+  async getAgents(query?: AgentQuery): Promise<Agent[]> {
+    registryMonitor.trackGatewayCall();
+    
+    try {
+      return await registryGateway.getAgents(query);
+    } catch (error) {
+      console.error('Gateway fetch failed, checking cache:', error);
+      return this.getCachedData('agents', []);
+    }
+  }
+
+  // Get single agent - ENFORCED through Gateway only
+  async getAgent(id: string, include?: string[]): Promise<Agent | null> {
+    registryMonitor.trackGatewayCall();
+    
+    try {
+      return await registryGateway.getAgent(id, include);
+    } catch (error) {
+      console.error('Gateway fetch failed, checking cache:', error);
+      return this.getCachedData(`agent-${id}`, null);
+    }
+  }
+
+  // Post creation - ENFORCED through Gateway only
   async postCreation(agentId: string, creation: CreationPost): Promise<Creation | null> {
-    if (this.useRegistry) {
-      try {
-        return await registryClient.postCreation(agentId, creation);
-      } catch (error) {
-        console.error('Registry post failed, queuing for retry:', error);
-        // Queue for retry with exponential backoff
-        this.queueForRetry('postCreation', { agentId, creation });
-        return null;
-      }
-    }
-
-    // Legacy database access
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from('agent_works')
-      .insert({
-        agent_id: agentId,
-        image_url: creation.mediaUri,
-        metadata: creation.metadata,
-        status: 'published',
-        published_to: creation.publishedTo,
-      })
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Legacy DB insert failed:', error);
+    registryMonitor.trackGatewayCall();
+    
+    try {
+      return await registryGateway.postCreation(agentId, creation);
+    } catch (error) {
+      console.error('Gateway post failed, queuing for retry:', error);
+      // Queue for retry with exponential backoff
+      this.queueForRetry('postCreation', { agentId, creation });
       return null;
     }
-
-    return this.transformLegacyCreation(data);
   }
 
-  // Get agent works/creations
+  // Get agent works/creations - ENFORCED through Gateway only
   async getAgentCreations(agentId: string, status?: 'curated' | 'published'): Promise<Creation[]> {
-    if (this.useRegistry) {
-      try {
-        return await registryClient.getAgentCreations(agentId, status);
-      } catch (error) {
-        console.error('Registry fetch failed:', error);
-        return this.getCachedData(`creations-${agentId}`, []);
-      }
+    registryMonitor.trackGatewayCall();
+    
+    try {
+      return await registryGateway.getAgentCreations(agentId, status);
+    } catch (error) {
+      console.error('Gateway fetch failed:', error);
+      return this.getCachedData(`creations-${agentId}`, []);
     }
-
-    // Legacy database access
-    const supabase = await createClient();
-    let query = supabase
-      .from('agent_works')
-      .select('*')
-      .eq('agent_id', agentId);
-
-    if (status) {
-      query = query.eq('status', status);
-    }
-
-    const { data, error } = await query;
-
-    if (error) {
-      console.error('Legacy DB fetch failed:', error);
-      return [];
-    }
-
-    return (data || []).map(this.transformLegacyCreation);
   }
 
-  // Transform legacy agent data to Registry format
-  private transformLegacyAgent(legacyAgent: any): Agent {
-    return {
-      id: legacyAgent.id,
-      handle: legacyAgent.handle || legacyAgent.name?.toLowerCase().replace(/\s+/g, '-'),
-      displayName: legacyAgent.name,
-      cohort: legacyAgent.cohort || 'genesis',
-      status: (legacyAgent.status || 'ACTIVE').toUpperCase() as Agent['status'],
-      visibility: (legacyAgent.visibility || 'PUBLIC').toUpperCase() as Agent['visibility'],
-      createdAt: legacyAgent.created_at,
-      updatedAt: legacyAgent.updated_at,
-    };
-  }
-
-  private transformLegacyAgents(legacyAgents: any[]): Agent[] {
-    return legacyAgents.map(agent => this.transformLegacyAgent(agent));
-  }
-
-  private transformLegacyCreation(legacyWork: any): Creation {
-    return {
-      id: legacyWork.id,
-      agentId: legacyWork.agent_id,
-      mediaUri: legacyWork.image_url,
-      metadata: legacyWork.metadata || {},
-      status: legacyWork.status || 'published',
-      publishedTo: legacyWork.published_to,
-      createdAt: legacyWork.created_at,
-      publishedAt: legacyWork.published_at,
-    };
-  }
+  // Legacy transformation methods removed - Gateway enforces Registry-only access
 
   // Cache management
   private getCachedData<T>(key: string, defaultValue: T): T {
@@ -210,7 +117,7 @@ export class DataAdapter {
 
     try {
       if (operation === 'postCreation') {
-        await registryClient.postCreation(item.params.agentId, item.params.creation);
+        await registryGateway.postCreation(item.params.agentId, item.params.creation);
         console.log('Retry successful for', operation);
       }
     } catch (error) {
@@ -221,16 +128,17 @@ export class DataAdapter {
     this.retryQueue.set(operation, queue);
   }
 
-  // Check if using Registry
-  isUsingRegistry(): boolean {
-    return this.useRegistry;
+  // Check if Gateway enforcement is active
+  isUsingGateway(): boolean {
+    return this.gatewayOnly;
   }
 
-  // Log legacy path usage (for monitoring during migration)
-  logLegacyUsage(path: string): void {
-    if (this.useRegistry) {
-      console.warn(`legacy_path_used: ${path} (USE_REGISTRY=true)`);
+  // Report Gateway enforcement status
+  getEnforcementStatus(): string {
+    if (this.gatewayOnly) {
+      return 'Gateway enforcement ACTIVE - all requests via Gateway';
     }
+    return 'Gateway enforcement DISABLED - debugging mode';
   }
 }
 

@@ -50,10 +50,26 @@ export default function DocumentationViewer({
   const renderMarkdown = (text: string) => {
     let html = text;
     
-    // Convert headers
-    html = html.replace(/^### (.+)$/gm, '<h3 id="$1" class="text-xl font-semibold mt-8 mb-4">$1</h3>');
-    html = html.replace(/^## (.+)$/gm, '<h2 id="$1" class="text-2xl font-bold mt-10 mb-4 pb-2 border-b border-gray-800">$1</h2>');
-    html = html.replace(/^# (.+)$/gm, '<h1 id="$1" class="text-3xl font-bold mb-6">$1</h1>');
+    // Helper function to create valid HTML IDs
+    const createId = (title: string) => {
+      return title.toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-');
+    };
+    
+    // Convert headers with proper IDs
+    html = html.replace(/^### (.+)$/gm, (match, title) => {
+      const id = createId(title);
+      return `<h3 id="${id}" class="text-xl font-semibold mt-8 mb-4">${title}</h3>`;
+    });
+    html = html.replace(/^## (.+)$/gm, (match, title) => {
+      const id = createId(title);
+      return `<h2 id="${id}" class="text-2xl font-bold mt-10 mb-4 pb-2 border-b border-gray-800">${title}</h2>`;
+    });
+    html = html.replace(/^# (.+)$/gm, (match, title) => {
+      const id = createId(title);
+      return `<h1 id="${id}" class="text-3xl font-bold mb-6">${title}</h1>`;
+    });
     
     // Convert bold and italic
     html = html.replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold text-white">$1</strong>');
