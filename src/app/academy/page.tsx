@@ -132,8 +132,6 @@ export default function AcademyPage() {
             ))}
           </div>
         </div>
-        
-          </div>
         )}
         
         {/* Developing Agents */}
@@ -150,9 +148,6 @@ export default function AcademyPage() {
                 <p className="text-xs">{agent.date || 'Q1 2026'}</p>
               </div>
             ))}
-          </div>
-        </div>
-        
             </div>
           </div>
         )}
