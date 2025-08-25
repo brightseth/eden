@@ -136,7 +136,7 @@ export default function AgentComparisonPage() {
                   {compareAgents.map(agent => (
                     <td key={agent.id} className="p-4 text-sm font-bold">
                       {new Date(agent.launchDate).toLocaleDateString('en-US', { 
-                        month: 'SHORT', 
+                        month: 'short', 
                         year: 'numeric' 
                       })}
                     </td>

@@ -3,6 +3,8 @@ import { ArrowLeft, ArrowRight, Calendar, User, Award } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { AgentSovereignLink } from '@/components/AgentSovereignLink';
+import WorkGallery from '@/components/agent/WorkGallery';
+import { getWorksByAgent } from '@/data/agent-works';
 
 export default function AbrahamProfilePage() {
   return (
