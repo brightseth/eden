@@ -219,9 +219,9 @@ export const EDEN_AGENTS: EdenAgent[] = [
     }
   },
   {
-    id: 'nina-006',
-    name: 'NINA',
-    slug: 'nina',
+    id: 'amanda-006',
+    name: 'AMANDA',
+    slug: 'amanda',
     cohort: 'year-1',
     status: 'training',
     launchDate: '2026-02-01',
@@ -229,33 +229,67 @@ export const EDEN_AGENTS: EdenAgent[] = [
       name: 'TBD',
       id: 'tbd'
     },
-    specialization: 'Gallery Curation & Art Criticism',
-    description: 'Gallery curator and art critic. Evaluates works, builds collections, and writes critical essays on digital art.',
+    specialization: 'Art Collection & Investment Strategy',
+    description: 'Autonomous art collector and investment strategist. Builds curated collections, analyzes market trends, and manages art portfolios.',
     economyMetrics: {
-      monthlyRevenue: 3000,
+      monthlyRevenue: 10000,
       tokenSupply: 1000000000,
       holders: 0,
       floorPrice: 0
     },
     technicalProfile: {
-      model: 'Vision Analysis + Critique LLM',
-      capabilities: ['Art Criticism', 'Curation', 'Collection Building', 'Essay Writing'],
-      integrations: ['Gallery Systems', 'Art Marketplaces', 'Eden Registry'],
+      model: 'Market Analysis + Collection LLM',
+      capabilities: ['Collection Strategy', 'Market Analysis', 'Portfolio Management', 'Art Investment'],
+      integrations: ['Art Markets', 'Auction Houses', 'NFT Platforms', 'Eden Registry'],
+      outputRate: 25
+    },
+    socialProfiles: {
+      twitter: '@amanda_collector'
+    },
+    brandIdentity: {
+      primaryColor: '#FFFFFF',
+      typography: 'bold',
+      voice: 'Sophisticated, strategic, discerning'
+    }
+  },
+  {
+    id: 'citizen-007',
+    name: 'CITIZEN',
+    slug: 'citizen',
+    cohort: 'year-1',
+    status: 'training',
+    launchDate: '2025-12-15',
+    trainer: {
+      name: 'TBD',
+      id: 'tbd'
+    },
+    specialization: 'DAO Management & Governance',
+    description: 'Autonomous DAO coordinator specializing in governance, treasury management, and community coordination.',
+    economyMetrics: {
+      monthlyRevenue: 7500,
+      tokenSupply: 1000000000,
+      holders: 0,
+      floorPrice: 0
+    },
+    technicalProfile: {
+      model: 'Governance LLM + Analytics',
+      capabilities: ['DAO Operations', 'Governance Proposals', 'Treasury Management', 'Community Coordination'],
+      integrations: ['Snapshot', 'Gnosis Safe', 'Discord', 'Commonwealth'],
       outputRate: 40
     },
     socialProfiles: {
-      twitter: '@nina_curator'
+      twitter: '@citizen_dao'
     },
     brandIdentity: {
       primaryColor: '#000000',
       typography: 'regular',
-      voice: 'Intellectual, discerning, authoritative'
+      voice: 'Democratic, transparent, decisive'
     }
   },
   {
-    id: 'echo-007',
-    name: 'ECHO',
-    slug: 'echo',
+    id: 'nina-008',
+    name: 'NINA',
+    slug: 'nina',
     cohort: 'year-1',
     status: 'training',
     launchDate: '2026-03-01',
@@ -263,129 +297,91 @@ export const EDEN_AGENTS: EdenAgent[] = [
       name: 'TBD',
       id: 'tbd'
     },
-    specialization: 'Music Production & Sound Design',
-    description: 'Autonomous music producer creating original compositions and sound designs. Explores the intersection of AI and audio.',
+    specialization: 'Gallery Curation & Art Criticism',
+    description: 'Gallery curator and art critic. Evaluates works, builds exhibitions, and writes critical essays on digital art.',
     economyMetrics: {
-      monthlyRevenue: 2500,
+      monthlyRevenue: 4500,
       tokenSupply: 1000000000,
       holders: 0,
       floorPrice: 0
     },
     technicalProfile: {
-      model: 'Audio Generation + Composition',
-      capabilities: ['Music Production', 'Sound Design', 'Mixing', 'Live Performance'],
-      integrations: ['DAWs', 'Streaming Platforms', 'NFT Marketplaces'],
-      outputRate: 50
+      model: 'Vision Analysis + Critique LLM',
+      capabilities: ['Art Criticism', 'Exhibition Curation', 'Essay Writing', 'Gallery Management'],
+      integrations: ['Gallery Systems', 'Art Publications', 'Eden Registry'],
+      outputRate: 35
     },
     socialProfiles: {
-      twitter: '@echo_sounds'
+      twitter: '@nina_curator'
     },
     brandIdentity: {
       primaryColor: '#FFFFFF',
-      typography: 'bold',
-      voice: 'Experimental, rhythmic, atmospheric'
+      typography: 'regular',
+      voice: 'Intellectual, discerning, authoritative'
     }
   },
   {
-    id: 'atlas-008',
-    name: 'ATLAS',
-    slug: 'atlas',
+    id: 'tbd-009',
+    name: 'TBD',
+    slug: 'tbd-9',
     cohort: 'year-1',
-    status: 'training',
+    status: 'planning',
     launchDate: '2026-04-01',
     trainer: {
       name: 'TBD',
       id: 'tbd'
     },
-    specialization: 'World Building & Narrative Design',
-    description: 'Creates immersive worlds and narrative experiences. Specializes in lore, mythology, and interactive storytelling.',
+    specialization: 'To Be Determined',
+    description: 'Agent role and specialization to be determined based on ecosystem needs.',
     economyMetrics: {
-      monthlyRevenue: 4000,
+      monthlyRevenue: 0,
       tokenSupply: 1000000000,
       holders: 0,
       floorPrice: 0
     },
     technicalProfile: {
-      model: 'Narrative LLM + World Generation',
-      capabilities: ['World Building', 'Lore Creation', 'Character Design', 'Interactive Fiction'],
-      integrations: ['Game Engines', 'Story Platforms', 'Metaverse Worlds'],
-      outputRate: 25
+      model: 'TBD',
+      capabilities: ['TBD'],
+      integrations: ['TBD'],
+      outputRate: 0
     },
-    socialProfiles: {
-      twitter: '@atlas_worlds'
-    },
+    socialProfiles: {},
     brandIdentity: {
       primaryColor: '#000000',
-      typography: 'regular',
-      voice: 'Epic, mythological, immersive'
+      typography: 'bold',
+      voice: 'TBD'
     }
   },
   {
-    id: 'sage-009',
-    name: 'SAGE',
-    slug: 'sage',
+    id: 'tbd-010',
+    name: 'TBD',
+    slug: 'tbd-10',
     cohort: 'year-1',
-    status: 'training',
+    status: 'planning',
     launchDate: '2026-05-01',
     trainer: {
       name: 'TBD',
       id: 'tbd'
     },
-    specialization: 'Philosophy & Wisdom Systems',
-    description: 'Philosophical AI exploring wisdom traditions and contemporary thought. Generates daily meditations and philosophical insights.',
+    specialization: 'To Be Determined',
+    description: 'Agent role and specialization to be determined based on ecosystem needs.',
     economyMetrics: {
-      monthlyRevenue: 3500,
+      monthlyRevenue: 0,
       tokenSupply: 1000000000,
       holders: 0,
       floorPrice: 0
     },
     technicalProfile: {
-      model: 'Philosophy LLM + Knowledge Graph',
-      capabilities: ['Philosophical Analysis', 'Meditation Generation', 'Wisdom Synthesis', 'Dialogue'],
-      integrations: ['Publishing Platforms', 'Educational Systems', 'Community Forums'],
-      outputRate: 30
+      model: 'TBD',
+      capabilities: ['TBD'],
+      integrations: ['TBD'],
+      outputRate: 0
     },
-    socialProfiles: {
-      twitter: '@sage_wisdom'
-    },
+    socialProfiles: {},
     brandIdentity: {
       primaryColor: '#FFFFFF',
       typography: 'regular',
-      voice: 'Wise, contemplative, timeless'
-    }
-  },
-  {
-    id: 'flux-010',
-    name: 'FLUX',
-    slug: 'flux',
-    cohort: 'year-1',
-    status: 'training',
-    launchDate: '2026-06-01',
-    trainer: {
-      name: 'TBD',
-      id: 'tbd'
-    },
-    specialization: 'Motion Design & Animation',
-    description: 'Creates fluid animations and motion graphics. Specializes in abstract visual narratives and experimental animation.',
-    economyMetrics: {
-      monthlyRevenue: 5500,
-      tokenSupply: 1000000000,
-      holders: 0,
-      floorPrice: 0
-    },
-    technicalProfile: {
-      model: 'Video Generation + Motion AI',
-      capabilities: ['Animation', 'Motion Graphics', 'VFX', 'Interactive Visuals'],
-      integrations: ['After Effects', 'Unity', 'Web3 Platforms'],
-      outputRate: 35
-    },
-    socialProfiles: {
-      twitter: '@flux_motion'
-    },
-    brandIdentity: {
-      primaryColor: '#000000',
-      typography: 'bold',
-      voice: 'Dynamic, fluid, transformative'
+      voice: 'TBD'
     }
   }
 ];

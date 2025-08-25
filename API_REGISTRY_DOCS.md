@@ -9,79 +9,70 @@
 - **Eden Spirits/Agents**: Solienne, Abraham, Koru, etc. (creative AIs that make art)
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     Eden Academy (Main)                      │
-│  https://eden-academy-flame.vercel.app                       │
-│  - Main platform UI for trainers and public                  │
-│  - Eden Spirit profiles & portfolios                         │
-│  - Training interfaces for humans                            │
-│  - Documentation hub (/admin/docs)                          │
-└─────────────────────────────────────────────────────────────┘
-                              ↕ API
-┌─────────────────────────────────────────────────────────────┐
-│              Eden Genesis Registry (Data Authority)          │
-│  https://eden-genesis-registry.vercel.app                    │
-│  - Single source of truth for ALL Eden data                 │
-│  - Eden Spirit data (Solienne, Abraham, Koru, etc.)         │
-│  - Artwork/creation management                               │
-│  - Authentication & authorization                            │
-└─────────────────────────────────────────────────────────────┘
-                              ↕ Consumes
-┌─────────────────────────────────────────────────────────────┐
-│                    SPECIALIZED MICROSERVICES                 │
-├───────────────────────────────────────────────────────────────
-│ CRIT (Design Critic)                                         │
-│ https://design-critic-agent.vercel.app                       │
-│ - Professional art critique for curators                     │
-│ - Multi-persona analysis (Nina, Marcus, Elena)              │
-├───────────────────────────────────────────────────────────────
-│ EDEN2 (Investor Dashboard)                                   │
-│ https://eden2.vercel.app                                     │
-│ - Financial metrics and ROI tracking                         │
-│ - Token economics visualization                              │
-│ - Portfolio management for investors                         │
-├───────────────────────────────────────────────────────────────
-│ Eden2038 (Abraham's Contract)                                │
-│ https://eden2038.vercel.app                                  │
-│ - Abraham's 13-year covenant visualization                   │
-│ - Long-term commitment tracking                              │
-│ - Contract milestone monitoring                              │
-├───────────────────────────────────────────────────────────────
-│ Miyomi Dashboard (Daily Videos)                              │
-│ https://miyomi.vercel.app                                    │
-│ - Daily video generation tracking                            │
-│ - Content calendar management                                │
-│ - Miyomi-specific performance metrics                        │
-└─────────────────────────────────────────────────────────────┘
+                  ┌─────────────────────────────────────┐
+                  │     Eden Genesis Registry           │
+                  │  (Single Source of Truth)           │
+                  │  https://eden-genesis-registry      │
+                  │  .vercel.app                        │
+                  │                                     │
+                  │  ALL DATA LIVES HERE:               │
+                  │  - Eden Spirit profiles/portfolios  │
+                  │  - Artworks & creations             │
+                  │  - User accounts & training data    │
+                  │  - Documentation storage            │
+                  │  - Applications & contracts         │
+                  │  - Financial & curation data        │
+                  └─────────────────────────────────────┘
+                                   ↕ API
+            ┌────────────────┬─────────────────┬──────────────┐
+            ↓                ↓                 ↓              ↓
+┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ ┌──────────┐
+│   Eden Academy  │ │      CRIT       │ │     EDEN2       │ │  Eden2038│
+│ (UI Presentation)│ │ (Art Critique)  │ │ (Investor View) │ │(Contract)│
+│                 │ │                 │ │                 │ │          │
+│ Displays:       │ │ Displays:       │ │ Displays:       │ │Displays: │
+│ - Agent profiles│ │ - Critique UI   │ │ - Financial UI  │ │- Contract│
+│ - Portfolios    │ │ - Multi-curator │ │ - ROI metrics   │ │  timeline│
+│ - Training UI   │ │ - Analysis      │ │ - Token data    │ │- Progress│
+│ - Docs viewer   │ │                 │ │                 │ │          │
+│ - Apply forms   │ │                 │ │                 │ │          │
+│                 │ │                 │ │                 │ │          │
+│ STORES NOTHING  │ │ STORES NOTHING  │ │ STORES NOTHING  │ │STORES    │
+│ (UI state only) │ │ (UI state only) │ │ (UI state only) │ │NOTHING   │
+└─────────────────┘ └─────────────────┘ └─────────────────┘ └──────────┘
+            ↓                ↓                 ↓              ↓
+  ┌─────────────────┐ ┌─────────────────┐
+  │     Miyomi      │ │ [Future Services]│
+  │ (Video Dashboard)│ │                 │
+  │                 │ │                 │
+  │ Displays:       │ │                 │
+  │ - Video content │ │                 │
+  │ - Generation UI │ │                 │
+  │ - Calendar      │ │                 │
+  │                 │ │                 │
+  │ STORES NOTHING  │ │                 │
+  │ (UI state only) │ │                 │
+  └─────────────────┘ └─────────────────┘
 ```
 
 ## 📊 API Endpoints Reference
 
-### Eden Academy Internal APIs
+**⚠️ CRITICAL: Eden Academy has NO internal APIs. It only consumes Registry APIs.**
 
-#### Agent Profile APIs
-| Endpoint | Method | Description | Response |
-|----------|--------|-------------|----------|
-| `/api/agents` | GET | List all agents | Array of agent summaries |
-| `/api/agents/[id]` | GET | Get specific agent | Agent details object |
-| `/api/agents/[id]/profile` | GET | Agent profile data | Profile with bio, stats |
-| `/api/agents/[id]/overview` | GET | Agent overview | Summary and highlights |
-| `/api/agents/[id]/assets` | GET | Agent media assets | Images, videos, files |
-| `/api/agents/[id]/metrics` | GET | Performance metrics | Stats and analytics |
+### Eden Academy's Role (UI Presentation Layer Only)
+Eden Academy is a pure frontend that:
+- Displays data from Registry APIs
+- Submits forms to Registry APIs
+- Manages only UI state (no data storage)
+- Proxies some Registry calls for authentication
 
-#### Abraham-Specific APIs
-| Endpoint | Method | Description | Response |
-|----------|--------|-------------|----------|
-| `/api/agents/abraham` | GET | Abraham identity | Agent details |
-| `/api/agents/abraham/covenant` | GET | Covenant status | Partnership info |
-| `/api/agents/abraham/works` | GET | Abraham's works | Array of creations |
-
-#### Solienne-Specific APIs
-| Endpoint | Method | Description | Response |
-|----------|--------|-------------|----------|
-| `/api/agents/solienne` | GET | Solienne identity | Agent details |
-| `/api/agents/solienne/works` | GET | Solienne's works | Array of artworks |
-| `/api/agents/solienne/latest` | GET | Latest creation | Most recent work |
+### Data Flow Pattern for Eden Academy
+```
+User Action → Eden Academy UI → Registry API Call → Display Response
+     ↓              ↓              ↓               ↓
+1. Click profile → 2. Fetch from  → 3. Registry    → 4. Show profile
+   button             Registry        returns data     to user
+```
 
 ### Eden Genesis Registry APIs (External)
 

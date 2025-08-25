@@ -25,27 +25,32 @@ This leads to:
 │                    EDEN ECOSYSTEM ARCHITECTURE                    │
 └─────────────────────────────────────────────────────────────────┘
 
-PRIMARY PLATFORM LAYER
-├── Eden Academy (eden-academy-flame.vercel.app)
-│   ├── Purpose: Main platform UI and trainer interfaces
-│   ├── Responsibilities:
-│   │   - Agent profiles and portfolios
-│   │   - Training interfaces for humans
-│   │   - Documentation hub (/admin/docs)
-│   │   - Application processing
-│   └── Users: Trainers, Applicants, General Public
-
-DATA AUTHORITY LAYER
+DATA AUTHORITY LAYER (Single Source of Truth)
 ├── Eden Genesis Registry (eden-genesis-registry.vercel.app)
-│   ├── Purpose: Single source of truth for all Eden data
+│   ├── Purpose: Single source of truth for ALL Eden data
 │   ├── Responsibilities:
-│   │   - Agent data management
-│   │   - Artwork/creation storage
-│   │   - Curation APIs
-│   │   - Authentication/authorization
-│   └── Consumers: All other services via API
+│   │   - Agent profiles and portfolios storage
+│   │   - Artwork/creation management
+│   │   - Documentation storage
+│   │   - User accounts and authentication
+│   │   - Training progress tracking
+│   │   - Application data
+│   │   - Curation sessions
+│   │   - Financial metrics
+│   │   - Contract data
+│   └── Consumers: ALL services below via API
 
-SPECIALIZED MICROSERVICES LAYER
+CONSUMER SERVICES LAYER (All Equal Consumers of Registry)
+├── Eden Academy (eden-academy-flame.vercel.app)
+│   ├── Purpose: Main platform UI presentation layer
+│   ├── Responsibilities:
+│   │   - Display agent profiles from Registry
+│   │   - Render training interfaces
+│   │   - Present documentation viewer
+│   │   - Show application forms
+│   │   - NO data storage (only UI)
+│   └── Users: Trainers, Applicants, General Public
+│
 ├── CRIT - Design Critic Agent (design-critic-agent.vercel.app)
 │   ├── Purpose: Professional art critique interface
 │   ├── Responsibilities:
@@ -101,32 +106,47 @@ SPECIALIZED MICROSERVICES LAYER
 ### 3. Service Communication Patterns
 
 ```
-User Request → Microservice → Registry API → Data Response
-                    ↓
-              Eden Academy
-                    ↓
-            (Optional Auth)
+                 Eden Genesis Registry
+                  (Single Source of Truth)
+                         ↑ API ↑
+            ┌────────────┼────────────┐
+            ↓            ↓            ↓
+    Eden Academy     CRIT        EDEN2
+    (UI Layer)    (Critique)  (Investor)
+            ↓            ↓            ↓
+    Eden2038        Miyomi    [Future Services]
+    (Contract)     (Videos)
 ```
 
-All services must:
+All services (including Eden Academy) must:
 1. Use Registry as single source of truth
-2. Never duplicate data storage
-3. Communicate via documented APIs
-4. Respect service boundaries
+2. Store NO data locally (UI state only)
+3. Communicate via Registry's documented APIs
+4. Never cache critical data
 
 ### 4. Data Ownership Rules
 
-| Data Type | Owner Service | Consumers |
-|-----------|--------------|-----------|
-| Agent Profiles | Registry | All services |
-| Artworks/Creations | Registry | All services |
+**CRITICAL: Registry owns ALL data. Other services are presentation layers only.**
+
+| Data Type | Owner | Consumers |
+|-----------|-------|-----------|
+| Agent Profiles | Registry | Academy, CRIT, EDEN2, Eden2038, Miyomi |
+| Artworks/Creations | Registry | Academy, CRIT, EDEN2, Eden2038 |
 | User Accounts | Registry | All services |
 | Curation Sessions | Registry | CRIT, Academy |
-| Financial Metrics | Registry | EDEN2 |
-| Contract Data | Registry | Eden2038 |
-| Video Metadata | Registry | Miyomi Dashboard |
-| Training Progress | Academy | Registry (sync) |
-| Documentation | Academy | Internal only |
+| Financial Metrics | Registry | EDEN2, Academy |
+| Contract Data | Registry | Eden2038, Academy |
+| Video Metadata | Registry | Miyomi, Academy |
+| Training Progress | Registry | Academy |
+| Documentation | Registry | Academy (viewer only) |
+| Applications | Registry | Academy (forms only) |
+| Portfolio Data | Registry | Academy, CRIT |
+
+**Eden Academy stores NOTHING. It only:**
+- Renders UI components
+- Manages UI state (temporary)
+- Displays Registry data
+- Submits forms to Registry
 
 ## Consequences
 
