@@ -1,6 +1,31 @@
 # Eden Academy Claude Agent Cheatsheet
 *Your specialized AI team for building Eden ecosystem MVPs*
 
+---
+
+## ⚡ TLDR: Your 8 Claude Code Agents
+
+**These are your Claude Code development assistants (different from Eden Academy agents like Solienne/Abraham):**
+
+| Agent | Primary Role | Key Superpower |
+|-------|-------------|----------------|
+| 🏗️ **Architecture Guardian** | System design & ADRs | Ensures technical coherence across entire system |
+| 💰 **Token Economist** | Revenue & economics | Calculates sustainable token models & pricing |
+| 🚀 **Agent Launcher** | Onboarding & quality | Gates agent readiness with strict launch criteria |
+| 🎨 **Academy Domain Expert** | Content & culture | Maintains creative mission in all features |
+| ⚙️ **Feature Integrator** | Production code | Converts prototypes to deployment-ready code |
+| 🔒 **Registry Guardian** | Data integrity | Protects single source of truth for all data |
+| 👨‍💻 **Code Reviewer** | Quality assurance | Final defense against bugs & vulnerabilities |
+| 🎯 **Design Critic** | Visual excellence | Enforces Helvetica-minimalist brand consistency |
+
+**Quick Start:** Open multiple Claude windows → Give each agent their role → Copy context between them
+
+### 📝 Important Distinction:
+- **Claude Code Agents** (this doc): Your 8 specialized AI development assistants for building features
+- **Eden Academy Agents** (in Registry): The creative AI agents like Solienne, Abraham, Koru who create art/content
+
+---
+
 ## 🏗️ Architecture Guardian
 **Window:** Architecture Guardian  
 **Primary Focus:** System-wide coherence and technical decisions
