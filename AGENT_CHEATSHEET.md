@@ -1,11 +1,22 @@
-# Eden Academy Claude Agent Cheatsheet
-*Your specialized AI team for building Eden ecosystem MVPs*
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ⚠️  THESE ARE CLAUDE CODING AGENTS - YOUR DEV TOOLS  ⚠️         │
+│  NOT the Eden Creative Agents (Solienne, Abraham, Koru, etc.)   │
+│  These help YOU code. They don't create art for users.          │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+# CLAUDE CODING AGENTS Cheatsheet
+*Your 6 AI development tools for BUILDING Eden Academy*
 
 ---
 
-## ⚡ TLDR: Your 6 Core Claude Code Agents
+## ⚡ TLDR: Your 6 CLAUDE CODING AGENTS (Development Tools)
 
-**These are your Claude Code development assistants (different from Eden Academy agents like Solienne/Abraham):**
+**⚠️ CRITICAL DISTINCTION:**
+- **THESE ARE:** Your private Claude Code development assistants (ARCH, TRUTH, LORE, etc.)
+- **NOT:** The Eden Creative Agents that make art (Solienne, Abraham, Koru, etc.)
+- **PURPOSE:** Help YOU build Eden Academy, not create art for users
 
 | Agent Name | Primary Role | Key Superpower | Invocation |
 |------------|-------------|----------------|------------|
@@ -18,9 +29,10 @@
 
 **Quick Start:** Use agent names when delegating → Each has clear responsibilities → No overlap
 
-### 📝 Important Distinction:
-- **Claude Code Agents** (this doc): Your 6 specialized AI development assistants for building features
-- **Eden Academy Agents** (in Registry): The creative AI agents like Solienne, Abraham, Koru who create art/content
+### 🚨 REMEMBER THE DIFFERENCE:
+- **CLAUDE CODING AGENTS** (THIS DOC): Your 6 backstage development tools with UPPERCASE names
+- **Eden Creative Agents** (NOT THIS DOC): The onstage creative spirits (Solienne, Abraham, etc.) that users interact with
+- **You use CLAUDE CODING AGENTS** → They help you build → Eden Academy platform → Contains Eden Creative Agents
 
 ---
 

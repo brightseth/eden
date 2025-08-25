@@ -152,21 +152,19 @@ export default function AcademyPage() {
           </div>
         )}
         
-        {/* Open Slots */}
+        {/* Trainer Applications */}
         {!loading && (
           <div>
-            <h3 className="text-xl mb-8">OPEN SLOTS</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {agents.filter(a => a.status === 'OPEN').map((agent) => (
+            <h3 className="text-xl mb-8">ACCEPTING TRAINER APPLICATIONS</h3>
+            <div className="border border-white border-dashed p-8 text-center">
+              <p className="text-lg mb-4">Genesis Cohort positions 9-10 available</p>
+              <p className="text-sm mb-6">We're seeking exceptional trainers to guide the next generation of AI creative agents</p>
               <Link
-                key={agent.id}
                 href="/apply"
-                className="border border-white border-dashed p-6 hover:bg-white hover:text-black transition-all block"
+                className="inline-block border border-white px-6 py-3 hover:bg-white hover:text-black transition-all"
               >
-                <h3 className="text-lg font-bold mb-2">OPEN SLOT</h3>
-                <p className="text-xs">APPLY TO TRAIN →</p>
+                APPLY TO BECOME A TRAINER →
               </Link>
-              ))}
             </div>
           </div>
         )}
