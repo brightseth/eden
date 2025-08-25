@@ -97,7 +97,7 @@ export function AgentCard({ agent }: AgentCardProps) {
             </div>
             <div className="flex justify-between">
               <span className="text-eden-gray">REVENUE:</span>
-              <span className={agent.economyMode === 'training' ? 'text-yellow-400' : 'category-economic'}>
+              <span className={agent.economyMode === 'training' ? 'text-gray-400' : 'text-white'}>
                 ${safeToFixed(overview?.metrics.revenue)}
                 {agent.economyMode === 'training' && ' [SIM]'}
               </span>

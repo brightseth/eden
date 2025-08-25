@@ -23,8 +23,8 @@ const stageNames = {
 
 export function AgentHeader({ agent, overview }: AgentHeaderProps) {
   const readinessClass = 
-    overview.metrics.readinessScore >= 70 ? 'text-green-400' :
-    overview.metrics.readinessScore >= 40 ? 'text-yellow-400' : 'text-red-400';
+    overview.metrics.readinessScore >= 70 ? 'text-white' :
+    overview.metrics.readinessScore >= 40 ? 'text-gray-400' : 'text-gray-600';
 
   return (
     <div className="space-y-6">
