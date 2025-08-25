@@ -216,7 +216,7 @@ export default function AgentsDiscoveryPage() {
                 </div>
                 <div className="text-sm font-bold">
                   {new Date(agent.launchDate).toLocaleDateString('en-US', { 
-                    month: 'SHORT', 
+                    month: 'short', 
                     year: 'numeric' 
                   })}
                 </div>

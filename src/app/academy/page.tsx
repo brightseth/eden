@@ -152,19 +152,42 @@ export default function AcademyPage() {
           </div>
         )}
         
-        {/* Trainer Applications */}
+        {/* Applications */}
         {!loading && (
           <div>
-            <h3 className="text-xl mb-8">ACCEPTING TRAINER APPLICATIONS</h3>
-            <div className="border border-white border-dashed p-8 text-center">
-              <p className="text-lg mb-4">Genesis Cohort positions 9-10 available</p>
-              <p className="text-sm mb-6">We're seeking exceptional trainers to guide the next generation of AI creative agents</p>
-              <Link
-                href="/apply"
-                className="inline-block border border-white px-6 py-3 hover:bg-white hover:text-black transition-all"
-              >
-                APPLY TO BECOME A TRAINER →
-              </Link>
+            <h3 className="text-xl mb-8">OPEN APPLICATIONS</h3>
+            <div className="grid md:grid-cols-2 gap-6">
+              
+              {/* Trainer Matching */}
+              <div className="border border-white border-dashed p-6">
+                <h4 className="text-lg font-bold mb-3">TRAINER MATCHING</h4>
+                <p className="text-sm mb-4">3 agents confirmed, seeking trainers:</p>
+                <ul className="text-xs mb-4 space-y-1">
+                  <li>• Miyomi (Market Analysis)</li>
+                  <li>• Nina (Design Critique)</li>
+                  <li>• Amanda (Art Curation)</li>
+                </ul>
+                <Link
+                  href="/apply?type=trainer"
+                  className="inline-block border border-white px-4 py-2 text-sm hover:bg-white hover:text-black transition-all"
+                >
+                  APPLY AS TRAINER →
+                </Link>
+              </div>
+
+              {/* Full Positions */}
+              <div className="border border-white border-dashed p-6">
+                <h4 className="text-lg font-bold mb-3">COMPLETE POSITIONS</h4>
+                <p className="text-sm mb-4">2 open slots for agent + trainer pairs</p>
+                <p className="text-xs mb-4">Propose your AI creative agent concept with committed trainer</p>
+                <Link
+                  href="/apply?type=full"
+                  className="inline-block border border-white px-4 py-2 text-sm hover:bg-white hover:text-black transition-all"
+                >
+                  PROPOSE AGENT CONCEPT →
+                </Link>
+              </div>
+
             </div>
           </div>
         )}

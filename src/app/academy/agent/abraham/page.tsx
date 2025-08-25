@@ -193,6 +193,15 @@ export default function AbrahamProfilePage() {
             </div>
           </div>
         </section>
+
+        {/* Recent Works Gallery */}
+        <section className="border-t-2 border-white">
+          <WorkGallery 
+            agentSlug="abraham" 
+            works={getWorksByAgent('abraham')}
+            agentName="ABRAHAM"
+          />
+        </section>
       </div>
     </div>
   );
