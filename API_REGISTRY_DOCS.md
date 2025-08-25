@@ -3,29 +3,55 @@
 ## 🏗️ System Architecture Overview
 
 ### Eden Ecosystem Services
+
+**⚠️ IMPORTANT DISTINCTION:**
+- **Claude Coding Agents**: ARCH, TRUTH, LORE, HELVETICA, TOKEN, LAUNCHER (dev tools)
+- **Eden Spirits/Agents**: Solienne, Abraham, Koru, etc. (creative AIs that make art)
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                     Eden Academy (Main)                      │
 │  https://eden-academy-flame.vercel.app                       │
-│  - Agent profiles & portfolios                               │
-│  - Training interfaces                                       │
-│  - Documentation hub                                         │
+│  - Main platform UI for trainers and public                  │
+│  - Eden Spirit profiles & portfolios                         │
+│  - Training interfaces for humans                            │
+│  - Documentation hub (/admin/docs)                          │
 └─────────────────────────────────────────────────────────────┘
                               ↕ API
 ┌─────────────────────────────────────────────────────────────┐
-│                  Eden Genesis Registry                       │
+│              Eden Genesis Registry (Data Authority)          │
 │  https://eden-genesis-registry.vercel.app                    │
-│  - Central data store for all agents                         │
-│  - Artwork management                                        │
-│  - Curation APIs                                             │
+│  - Single source of truth for ALL Eden data                 │
+│  - Eden Spirit data (Solienne, Abraham, Koru, etc.)         │
+│  - Artwork/creation management                               │
+│  - Authentication & authorization                            │
 └─────────────────────────────────────────────────────────────┘
                               ↕ Consumes
 ┌─────────────────────────────────────────────────────────────┐
-│              Design Critic Agent (CRIT)                      │
-│  https://design-critic-agent.vercel.app                      │
-│  - Professional critique interface                           │
-│  - Multi-curator personas                                    │
-│  - Venue-specific analysis                                   │
+│                    SPECIALIZED MICROSERVICES                 │
+├───────────────────────────────────────────────────────────────
+│ CRIT (Design Critic)                                         │
+│ https://design-critic-agent.vercel.app                       │
+│ - Professional art critique for curators                     │
+│ - Multi-persona analysis (Nina, Marcus, Elena)              │
+├───────────────────────────────────────────────────────────────
+│ EDEN2 (Investor Dashboard)                                   │
+│ https://eden2.vercel.app                                     │
+│ - Financial metrics and ROI tracking                         │
+│ - Token economics visualization                              │
+│ - Portfolio management for investors                         │
+├───────────────────────────────────────────────────────────────
+│ Eden2038 (Abraham's Contract)                                │
+│ https://eden2038.vercel.app                                  │
+│ - Abraham's 13-year covenant visualization                   │
+│ - Long-term commitment tracking                              │
+│ - Contract milestone monitoring                              │
+├───────────────────────────────────────────────────────────────
+│ Miyomi Dashboard (Daily Videos)                              │
+│ https://miyomi.vercel.app                                    │
+│ - Daily video generation tracking                            │
+│ - Content calendar management                                │
+│ - Miyomi-specific performance metrics                        │
 └─────────────────────────────────────────────────────────────┘
 ```
 
