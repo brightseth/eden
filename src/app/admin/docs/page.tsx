@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { FileText, Users, Map, Book, Code, Database, Rocket, Info } from 'lucide-react';
+import { FileText, Users, Map, Book, Code, Database, Rocket, Info, Server, GitBranch } from 'lucide-react';
 
 const documentationSections = [
   {
@@ -10,10 +10,23 @@ const documentationSections = [
     featured: true,
   },
   {
+    title: 'API & Registry',
+    description: 'Complete API documentation and Registry integration',
+    href: '/admin/docs/api-registry',
+    icon: Server,
+    featured: true,
+  },
+  {
     title: 'Site Map',
     description: 'Complete overview of Eden Academy routes and pages',
     href: '/admin/docs/sitemap',
     icon: Map,
+  },
+  {
+    title: 'Worktree Setup',
+    description: 'Git worktree configuration for parallel development',
+    href: '/admin/docs/worktree',
+    icon: GitBranch,
   },
   {
     title: 'Architecture',
