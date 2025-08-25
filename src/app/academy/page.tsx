@@ -139,15 +139,43 @@ export default function AcademyPage() {
           <div className="mb-16">
             <h3 className="text-xl mb-8">DEVELOPING</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {agents.filter(a => a.status === 'DEVELOPING').map((agent) => (
-              <div 
-                key={agent.id}
-                className="border border-white p-6 opacity-50"
-              >
-                <h3 className="text-lg font-bold mb-2">{agent.name}</h3>
-                <p className="text-xs">{agent.date || 'Q1 2026'}</p>
-              </div>
-            ))}
+              {agents.filter(a => a.status === 'DEVELOPING').map((agent) => {
+                // Check if this agent has a dedicated page
+                const hasDetailPage = ['citizen', 'nina', 'amanda'].includes(agent.id.toLowerCase());
+                
+                if (hasDetailPage) {
+                  return (
+                    <Link
+                      key={agent.id}
+                      href={`/academy/agent/${agent.id.toLowerCase()}`}
+                      className="border border-white p-6 hover:bg-white hover:text-black transition-all block"
+                    >
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h3 className="text-lg font-bold mb-2">{agent.name}</h3>
+                          <p className="text-xs mb-2">{agent.date || 'Q1 2026'}</p>
+                        </div>
+                        <span className="text-xs bg-yellow-500 text-black px-2 py-1 rounded">
+                          SEEKING TRAINER
+                        </span>
+                      </div>
+                      <p className="text-xs hover:text-black">
+                        VIEW DETAILS & APPLY →
+                      </p>
+                    </Link>
+                  );
+                }
+                
+                return (
+                  <div 
+                    key={agent.id}
+                    className="border border-white p-6 opacity-50"
+                  >
+                    <h3 className="text-lg font-bold mb-2">{agent.name}</h3>
+                    <p className="text-xs">{agent.date || 'Q1 2026'}</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
