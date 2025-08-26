@@ -57,30 +57,42 @@ export default function GenesisCohortDashboard() {
       const registryUrl = process.env.NEXT_PUBLIC_REGISTRY_URL || 'https://eden-genesis-registry.vercel.app';
       console.log('Fetching from Registry:', `${registryUrl}/api/v1/genesis-cohort`);
       
-      const response = await fetch(`${registryUrl}/api/v1/genesis-cohort`, {
-        headers: {
-          'Accept': 'application/json',
-          'x-eden-client': 'academy-dashboard'
-        },
-        cache: 'no-store',
-        signal: AbortSignal.timeout(10000) // 10 second timeout
-      });
-
-      console.log('Registry response status:', response.status, response.statusText);
-
-      if (response.ok) {
-        const result: RegistryResponse = await response.json();
-        console.log('Registry data received:', { 
-          agentCount: result.agents?.length || 0,
-          hasApplications: !!result.applicationOpportunities,
-          hasSummary: !!result.summary 
+      // Create abort controller for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
+      try {
+        const response = await fetch(`${registryUrl}/api/v1/genesis-cohort`, {
+          headers: {
+            'Accept': 'application/json',
+            'x-eden-client': 'academy-dashboard'
+          },
+          cache: 'no-store',
+          signal: controller.signal
         });
         
-        setData(result);
-        setLastUpdate(new Date());
-        setIsLive(true);
-      } else {
-        console.error('Registry returned error:', response.status, await response.text());
+        clearTimeout(timeoutId);
+
+        console.log('Registry response status:', response.status, response.statusText);
+
+        if (response.ok) {
+          const result: RegistryResponse = await response.json();
+          console.log('Registry data received:', { 
+            agentCount: result.agents?.length || 0,
+            hasApplications: !!result.applicationOpportunities,
+            hasSummary: !!result.summary 
+          });
+          
+          setData(result);
+          setLastUpdate(new Date());
+          setIsLive(true);
+        } else {
+          console.error('Registry returned error:', response.status, await response.text());
+          setIsLive(false);
+        }
+      } catch (fetchError) {
+        clearTimeout(timeoutId);
+        console.error('Registry fetch error:', fetchError);
         setIsLive(false);
       }
     } catch (error) {

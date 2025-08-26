@@ -36,13 +36,21 @@ export interface UnifiedAgent extends Agent {
 // Trainer mapping (until trainers are in Registry)
 const TRAINER_MAP: Record<string, { name: string; id: string }> = {
   'abraham-001': { name: 'Gene Kogan', id: 'gene-kogan' },
+  'abraham': { name: 'Gene Kogan', id: 'gene-kogan' },
   'solienne-002': { name: 'Kristi Coronado', id: 'kristi-coronado' },
+  'solienne': { name: 'Kristi Coronado', id: 'kristi-coronado' },
   'miyomi-003': { name: 'Seth Goldstein', id: 'seth-goldstein' },
+  'miyomi': { name: 'Seth Goldstein', id: 'seth-goldstein' },
   'geppetto-004': { name: 'Lattice', id: 'lattice' },
+  'geppetto': { name: 'Lattice', id: 'lattice' },
   'koru-005': { name: 'Xander', id: 'xander' },
+  'koru': { name: 'Xander', id: 'xander' },
   'amanda-006': { name: 'Amanda Schmitt', id: 'amanda-schmitt' },
+  'amanda': { name: 'Amanda Schmitt', id: 'amanda-schmitt' },
   'citizen-007': { name: 'TBD', id: 'tbd' },
+  'citizen': { name: 'TBD', id: 'tbd' },
   'nina-008': { name: 'TBD', id: 'tbd' },
+  'nina': { name: 'TBD', id: 'tbd' },
   'tbd-009': { name: 'TBD', id: 'tbd' },
   'tbd-010': { name: 'TBD', id: 'tbd' },
 };
@@ -50,13 +58,21 @@ const TRAINER_MAP: Record<string, { name: string; id: string }> = {
 // Launch date mapping (until in Registry)
 const LAUNCH_DATES: Record<string, string> = {
   'abraham-001': '2025-10-01',
+  'abraham': '2025-10-01',
   'solienne-002': '2025-11-01',
+  'solienne': '2025-11-01',
   'miyomi-003': '2025-12-01',
+  'miyomi': '2025-12-01',
   'geppetto-004': '2026-01-01',
+  'geppetto': '2026-01-01',
   'koru-005': '2026-01-01',
+  'koru': '2026-01-01',
   'amanda-006': '2026-02-01',
+  'amanda': '2026-02-01',
   'citizen-007': '2025-12-15',
+  'citizen': '2025-12-15',
   'nina-008': '2026-03-01',
+  'nina': '2026-03-01',
   'tbd-009': '2026-04-01',
   'tbd-010': '2026-05-01',
 };
@@ -64,13 +80,21 @@ const LAUNCH_DATES: Record<string, string> = {
 // Economic data (temporary until Registry integration)
 const ECONOMIC_DATA: Record<string, { monthlyRevenue: number; outputRate: number }> = {
   'abraham-001': { monthlyRevenue: 12500, outputRate: 30 },
+  'abraham': { monthlyRevenue: 12500, outputRate: 30 },
   'solienne-002': { monthlyRevenue: 8500, outputRate: 45 },
+  'solienne': { monthlyRevenue: 8500, outputRate: 45 },
   'miyomi-003': { monthlyRevenue: 15000, outputRate: 60 },
+  'miyomi': { monthlyRevenue: 15000, outputRate: 60 },
   'geppetto-004': { monthlyRevenue: 5000, outputRate: 20 },
+  'geppetto': { monthlyRevenue: 5000, outputRate: 20 },
   'koru-005': { monthlyRevenue: 7500, outputRate: 35 },
+  'koru': { monthlyRevenue: 7500, outputRate: 35 },
   'amanda-006': { monthlyRevenue: 12000, outputRate: 30 },
+  'amanda': { monthlyRevenue: 12000, outputRate: 30 },
   'citizen-007': { monthlyRevenue: 7500, outputRate: 40 },
+  'citizen': { monthlyRevenue: 7500, outputRate: 40 },
   'nina-008': { monthlyRevenue: 4500, outputRate: 35 },
+  'nina': { monthlyRevenue: 4500, outputRate: 35 },
   'tbd-009': { monthlyRevenue: 0, outputRate: 0 },
   'tbd-010': { monthlyRevenue: 0, outputRate: 0 },
 };
@@ -78,9 +102,13 @@ const ECONOMIC_DATA: Record<string, { monthlyRevenue: number; outputRate: number
 class UnifiedAgentService {
   // Transform Registry agent to unified format
   private transformToUnified(registryAgent: Agent): UnifiedAgent {
-    const economicData = ECONOMIC_DATA[registryAgent.id] || { monthlyRevenue: 0, outputRate: 0 };
-    const trainer = TRAINER_MAP[registryAgent.id] || { name: 'TBD', id: 'tbd' };
-    const launchDate = LAUNCH_DATES[registryAgent.id] || '2026-01-01';
+    // Use Registry data first, then fallback to static mappings
+    const registryEconomic = registryAgent.profile?.economicData;
+    const fallbackEconomic = ECONOMIC_DATA[registryAgent.handle] || ECONOMIC_DATA[registryAgent.id] || { monthlyRevenue: 0, outputRate: 0 };
+    const economicData = registryEconomic || fallbackEconomic;
+    
+    const trainer = TRAINER_MAP[registryAgent.handle] || TRAINER_MAP[registryAgent.id] || { name: 'TBD', id: 'tbd' };
+    const launchDate = LAUNCH_DATES[registryAgent.handle] || LAUNCH_DATES[registryAgent.id] || '2026-01-01';
 
     return {
       ...registryAgent,

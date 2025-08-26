@@ -133,6 +133,33 @@ export default function AbrahamProfilePage() {
           </div>
         </section>
 
+        {/* Management Dashboard */}
+        <section className="border-b border-white pb-12">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl">ABRAHAM.AI MANAGEMENT</h2>
+            <Link 
+              href="/dashboard/abraham"
+              className="border border-white px-6 py-2 hover:bg-white hover:text-black transition-all"
+            >
+              TOURNAMENT DASHBOARD →
+            </Link>
+          </div>
+          <div className="grid md:grid-cols-3 gap-4 mb-8">
+            <div className="border border-gray-600 p-4">
+              <div className="text-xl font-bold">Daily Output</div>
+              <div className="text-sm text-gray-400">1 artwork/day × 4,748 days</div>
+            </div>
+            <div className="border border-gray-600 p-4">
+              <div className="text-xl font-bold">Tournament Mode</div>
+              <div className="text-sm text-gray-400">Community votes on daily works</div>
+            </div>
+            <div className="border border-gray-600 p-4">
+              <div className="text-xl font-bold">Covenant Progress</div>
+              <div className="text-sm text-gray-400">2,519/4,748 works complete</div>
+            </div>
+          </div>
+        </section>
+
         {/* Archives */}
         <section className="border-b border-white pb-12">
           <h2 className="text-2xl mb-6">EXPLORE THE ARCHIVES</h2>

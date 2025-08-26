@@ -4,6 +4,8 @@
 
 import { registryClient } from './client';
 import { dataAdapter } from './adapter';
+import { dataReconciliation, type ReconciledAgent } from './data-reconciliation';
+import { featureFlags, FLAGS } from '@/config/flags';
 import { EDEN_AGENTS, type EdenAgent } from '@/data/eden-agents-manifest';
 import { ABRAHAM_WORKS, SOLIENNE_WORKS, MIYOMI_WORKS, AMANDA_WORKS, CITIZEN_WORKS } from '@/data/agent-works';
 import type { Agent, Creation, AgentQuery } from './types';
@@ -92,12 +94,21 @@ export class RegistryMigrationService {
     return progressMap[status] || 0;
   }
 
-  // Get agents with Registry fallback
-  async getAgents(query?: AgentQuery): Promise<Agent[]> {
+  // Get agents with Registry + Spirit Registry reconciliation
+  async getAgents(query?: AgentQuery): Promise<Agent[] | ReconciledAgent[]> {
     try {
       // First try Registry API
       if (registryClient.isEnabled()) {
-        return await registryClient.getAgents(query);
+        const registryAgents = await registryClient.getAgents(query);
+        
+        // If data reconciliation is enabled, merge with Spirit Registry
+        if (featureFlags.isEnabled(FLAGS.ENABLE_DATA_RECONCILIATION)) {
+          console.log('[Migration] Data reconciliation enabled, merging with Spirit Registry');
+          const reconciled = await dataReconciliation.reconcileAgentData(registryAgents);
+          return reconciled.agents;
+        }
+        
+        return registryAgents;
       }
     } catch (error) {
       console.warn('[Migration] Registry unavailable, using manifest fallback');
@@ -114,7 +125,19 @@ export class RegistryMigrationService {
       agents = agents.filter(a => this.mapManifestStatusToRegistry(a.status) === query.status);
     }
 
-    return agents.map(agent => this.transformManifestToRegistry(agent));
+    const transformedAgents = agents.map(agent => this.transformManifestToRegistry(agent));
+    
+    // Try to enrich with Spirit Registry if reconciliation is enabled
+    if (featureFlags.isEnabled(FLAGS.ENABLE_DATA_RECONCILIATION)) {
+      try {
+        const reconciled = await dataReconciliation.reconcileAgentData(transformedAgents);
+        return reconciled.agents;
+      } catch (error) {
+        console.warn('[Migration] Spirit reconciliation failed, using manifest only');
+      }
+    }
+    
+    return transformedAgents;
   }
 
   // Get single agent with Registry fallback

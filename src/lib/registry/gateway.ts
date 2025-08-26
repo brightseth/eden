@@ -4,7 +4,7 @@
 import { createRegistryApiClient, RegistryApiClient } from '../generated-sdk';
 import { registryAuth, authenticateRequest } from './auth';
 import { registryCache, cacheGet, cacheSet, cacheInvalidate } from './cache';
-import { auditLogger } from './audit';
+// import { auditLogger } from './audit';
 import { idempotencyManager } from './idempotency';
 import type { 
   Agent, 
@@ -164,16 +164,16 @@ class RegistryGateway {
         const responseTime = Date.now() - startTime;
         
         // Audit failed auth
-        await auditLogger.auditGatewayCall({
-          operation,
-          endpoint: `/${operation}`,
-          method: 'POST',
-          headers: headers || {},
-          responseStatus: 401,
-          responseTime,
-          error: authResult.error,
-          traceId
-        });
+        // await auditLogger.auditGatewayCall({
+        //   operation,
+        //   endpoint: `/${operation}`,
+        //   method: 'POST',
+        //   headers: headers || {},
+        //   responseStatus: 401,
+        //   responseTime,
+        //   error: authResult.error,
+        //   traceId
+        // });
         
         throw new Error(`Authentication failed: ${authResult.error}`);
       }
@@ -189,17 +189,17 @@ class RegistryGateway {
         const responseTime = Date.now() - startTime;
         
         // Audit cache hit
-        await auditLogger.auditGatewayCall({
-          operation,
-          endpoint: `/${operation}`,
-          method: 'GET',
-          headers: headers || {},
-          responseStatus: 200,
-          responseTime,
-          userId: authUser?.userId,
-          userEmail: authUser?.email,
-          traceId,
-        });
+        // await auditLogger.auditGatewayCall({
+        //   operation,
+        //   endpoint: `/${operation}`,
+        //   method: 'GET',
+        //   headers: headers || {},
+        //   responseStatus: 200,
+        //   responseTime,
+        //   userId: authUser?.userId,
+        //   userEmail: authUser?.email,
+        //   traceId,
+        // });
         
         return cached;
       }
@@ -220,17 +220,17 @@ class RegistryGateway {
       }
 
       // Audit successful operation
-      await auditLogger.auditGatewayCall({
-        operation,
-        endpoint: `/${operation}`,
-        method: requireAuth ? 'POST' : 'GET',
-        headers: headers || {},
-        responseStatus: 200,
-        responseTime,
-        userId: authUser?.userId,
-        userEmail: authUser?.email,
-        traceId
-      });
+      // await auditLogger.auditGatewayCall({
+      //   operation,
+      //   endpoint: `/${operation}`,
+      //   method: requireAuth ? 'POST' : 'GET',
+      //   headers: headers || {},
+      //   responseStatus: 200,
+      //   responseTime,
+      //   userId: authUser?.userId,
+      //   userEmail: authUser?.email,
+      //   traceId
+      // });
 
       return result;
     } catch (error) {
@@ -239,18 +239,18 @@ class RegistryGateway {
       console.error(`[Gateway] ${operation} failed - trace: ${traceId}`, error);
       
       // Audit failed operation
-      await auditLogger.auditGatewayCall({
-        operation,
-        endpoint: `/${operation}`,
-        method: requireAuth ? 'POST' : 'GET',
-        headers: headers || {},
-        responseStatus: 500,
-        responseTime,
-        userId: authUser?.userId,
-        userEmail: authUser?.email,
-        error: error instanceof Error ? error.message : 'Unknown error',
-        traceId
-      });
+      // await auditLogger.auditGatewayCall({
+      //   operation,
+      //   endpoint: `/${operation}`,
+      //   method: requireAuth ? 'POST' : 'GET',
+      //   headers: headers || {},
+      //   responseStatus: 500,
+      //   responseTime,
+      //   userId: authUser?.userId,
+      //   userEmail: authUser?.email,
+      //   error: error instanceof Error ? error.message : 'Unknown error',
+      //   traceId
+      // });
       
       this.handleFailure(error as Error);
       throw error; // This won't be reached due to handleFailure throwing

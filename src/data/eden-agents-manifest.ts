@@ -226,13 +226,13 @@ export const EDEN_AGENTS: EdenAgent[] = [
     status: 'training',
     launchDate: '2026-02-01',
     trainer: {
-      name: 'TBD',
-      id: 'tbd'
+      name: 'Amanda Schmitt',
+      id: 'amanda-schmitt'
     },
     specialization: 'Art Collection & Investment Strategy',
     description: 'Autonomous art collector and investment strategist. Builds curated collections, analyzes market trends, and manages art portfolios.',
     economyMetrics: {
-      monthlyRevenue: 10000,
+      monthlyRevenue: 12000,
       tokenSupply: 1000000000,
       holders: 0,
       floorPrice: 0
@@ -244,7 +244,8 @@ export const EDEN_AGENTS: EdenAgent[] = [
       outputRate: 25
     },
     socialProfiles: {
-      twitter: '@amanda_collector'
+      twitter: '@amanda_collector',
+      website: 'https://amanda-art-agent.vercel.app'
     },
     brandIdentity: {
       primaryColor: '#FFFFFF',

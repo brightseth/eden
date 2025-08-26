@@ -346,12 +346,18 @@ export default function NinaAgentPage() {
             >
               APPLY TO TRAIN NINA
             </Link>
+            <Link
+              href="/dashboard/solienne?critique=true"
+              className="inline-block border border-gray-600 px-8 py-4 hover:bg-gray-600 hover:text-white transition-all text-lg font-bold"
+            >
+              VIEW CRITIQUE DASHBOARD →
+            </Link>
             <a
               href="mailto:nina-trainer@eden.art"
-              className="inline-flex items-center gap-2 border border-white px-8 py-4 hover:bg-white hover:text-black transition-all text-lg font-bold"
+              className="inline-flex items-center gap-2 border border-gray-400 px-6 py-4 hover:bg-gray-400 hover:text-black transition-all text-sm"
             >
-              <ExternalLink className="w-5 h-5" />
-              EMAIL QUESTIONS
+              <ExternalLink className="w-4 h-4" />
+              EMAIL
             </a>
           </div>
           <div className="mt-6 text-sm text-gray-400">

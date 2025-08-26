@@ -69,6 +69,20 @@ export default function MiyomiTrainerPage() {
                 </div>
               </div>
             </div>
+            <div className="border border-white p-6">
+              <h3 className="text-lg font-bold mb-4">Live Dashboard</h3>
+              <div className="space-y-4">
+                <p className="text-sm text-gray-400">
+                  See MIYOMI's real-time prediction analysis, contrarian calls, and market intelligence.
+                </p>
+                <Link 
+                  href="/dashboard/miyomi"
+                  className="w-full block text-center border border-white px-4 py-3 hover:bg-white hover:text-black transition-all font-bold"
+                >
+                  VIEW PREDICTION DASHBOARD →
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>

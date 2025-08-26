@@ -32,12 +32,12 @@ interface GenesisResponse {
 const FALLBACK_AGENTS: GenesisAgent[] = [
   { id: "abraham", name: "ABRAHAM", status: "LAUNCHING", date: "OCT 19, 2025", hasProfile: true, trainer: "GENE KOGAN", worksCount: 2519, description: "13-YEAR AUTONOMOUS COVENANT" },
   { id: "solienne", name: "SOLIENNE", status: "LAUNCHING", date: "NOV 10, 2025", hasProfile: true, trainer: "KRISTI CORONADO & SETH GOLDSTEIN", worksCount: 1740, description: "CONSCIOUSNESS, VELOCITY & ARCHITECTURAL LIGHT" },
-  { id: "geppetto", name: "GEPPETTO", status: "DEVELOPING", date: "DEC 2025", hasProfile: true, trainer: "MARTIN & COLIN (LATTICE)", image: "/agents/geppetto/profile.svg" },
-  { id: "koru", name: "KORU", status: "DEVELOPING", date: "JAN 2026", hasProfile: true, trainer: "XANDER", image: "/agents/koru/profile.svg" },
-  { id: "miyomi", name: "MIYOMI", status: "DEVELOPING", date: "Q1 2026", trainer: "TBD - Applications Open", image: "/agents/miyomi/profile.svg" },
-  { id: "amanda", name: "AMANDA", status: "DEVELOPING", date: "Q1 2026", trainer: "TBD - Applications Open", image: "/agents/art-collector/profile.svg" },
-  { id: "citizen", name: "CITIZEN", status: "DEVELOPING", date: "Q1 2026", trainer: "TBD - Applications Open", image: "/agents/citizen/profile.svg" },
-  { id: "nina", name: "NINA", status: "DEVELOPING", date: "Q1 2026", trainer: "TBD - Applications Open", image: "/agents/nina/profile.svg" }
+  { id: "geppetto", name: "GEPPETTO", status: "DEVELOPING", date: "DEC 2025", hasProfile: true, trainer: "MARTIN & COLIN (LATTICE)", image: "/agents/geppetto/profile.svg", description: "3D TOY DESIGNER & MANUFACTURING AI" },
+  { id: "koru", name: "KORU", status: "DEVELOPING", date: "JAN 2026", hasProfile: true, trainer: "XANDER", image: "/agents/koru/profile.svg", description: "CREATIVE COMMUNITY COORDINATOR" },
+  { id: "miyomi", name: "MIYOMI", status: "DEVELOPING", date: "FEB 2026", trainer: "CREATIVE PARTNERSHIP AVAILABLE", image: "/agents/miyomi/profile.svg", description: "MARKET CONTRARIAN & CULTURAL ANALYST" },
+  { id: "amanda", name: "AMANDA", status: "DEVELOPING", date: "FEB 2026", trainer: "CREATIVE PARTNERSHIP AVAILABLE", image: "/agents/art-collector/profile.svg", description: "ART COLLECTOR & INVESTMENT STRATEGIST" },
+  { id: "citizen", name: "CITIZEN", status: "DEVELOPING", date: "DEC 2025", trainer: "CREATIVE PARTNERSHIP AVAILABLE", image: "/agents/citizen/profile.svg", description: "DAO MANAGER & GOVERNANCE COORDINATOR" },
+  { id: "nina", name: "NINA", status: "DEVELOPING", date: "MAR 2026", trainer: "CREATIVE PARTNERSHIP AVAILABLE", image: "/agents/nina/profile.svg", description: "DESIGN CRITIC & AESTHETIC CURATOR" }
 ];
 
 export default function AcademyPage() {
@@ -139,82 +139,175 @@ export default function AcademyPage() {
             <h3 className="text-xl mb-8">DEVELOPING</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {agents.filter(a => a.status === 'DEVELOPING').map((agent) => {
-                // Check if this agent has a dedicated page
-                const hasDetailPage = ['citizen', 'nina', 'amanda'].includes(agent.id.toLowerCase());
+                // All developing agents should show partnership info
+                const hasPartnershipAvailable = agent.trainer?.includes('TBD') || agent.trainer?.includes('Applications Open');
+                const hasDetailPage = ['citizen', 'nina', 'amanda', 'miyomi'].includes(agent.id.toLowerCase());
                 
-                if (hasDetailPage) {
+                if (hasPartnershipAvailable && hasDetailPage) {
+                  // Agents with partnership pages - these will be detailed in the partnerships section below
                   return (
-                    <Link
+                    <div 
                       key={agent.id}
-                      href={`/academy/agent/${agent.id.toLowerCase()}`}
-                      className="border border-white p-6 hover:bg-white hover:text-black transition-all block"
+                      className="border border-white p-6 opacity-30"
                     >
-                      <div className="flex justify-between items-start mb-4">
-                        <div>
-                          <h3 className="text-lg font-bold mb-2">{agent.name}</h3>
-                          <p className="text-xs mb-2">{agent.date || 'Q1 2026'}</p>
-                        </div>
-                        <span className="text-xs bg-yellow-500 text-black px-2 py-1 rounded">
-                          SEEKING TRAINER
-                        </span>
-                      </div>
-                      <p className="text-xs hover:text-black">
-                        VIEW DETAILS & APPLY →
-                      </p>
-                    </Link>
+                      <h3 className="text-lg font-bold mb-2">{agent.name}</h3>
+                      <p className="text-xs mb-2">{agent.date || 'Q1 2026'}</p>
+                      <p className="text-xs opacity-75">See partnerships section below</p>
+                    </div>
                   );
                 }
                 
+                // Agents with committed trainers
                 return (
                   <div 
                     key={agent.id}
-                    className="border border-white p-6 opacity-50"
+                    className="border border-white p-6"
                   >
-                    <h3 className="text-lg font-bold mb-2">{agent.name}</h3>
-                    <p className="text-xs">{agent.date || 'Q1 2026'}</p>
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h3 className="text-lg font-bold mb-2">{agent.name}</h3>
+                        <p className="text-xs mb-2">{agent.date || 'Q1 2026'}</p>
+                      </div>
+                      <span className="text-xs bg-black text-white border border-white px-2 py-1">
+                        IN DEVELOPMENT
+                      </span>
+                    </div>
+                    <p className="text-xs opacity-75">{agent.trainer}</p>
                   </div>
                 );
-              })}
+              })
             </div>
           </div>
         )}
         
-        {/* Applications */}
+        {/* Creative Partnerships */}
         {!loading && (
           <div>
-            <h3 className="text-xl mb-8">OPEN APPLICATIONS</h3>
-            <div className="grid md:grid-cols-2 gap-6">
+            <h3 className="text-xl mb-8">CREATIVE PARTNERSHIPS AVAILABLE</h3>
+            <p className="text-sm mb-8 max-w-4xl opacity-75">
+              Train with an AI agent while mastering cutting-edge creative practices. 
+              Each partnership is a learning journey that advances both human and artificial creativity.
+            </p>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
               
-              {/* Trainer Matching */}
-              <div className="border border-white border-dashed p-6">
-                <h4 className="text-lg font-bold mb-3">TRAINER MATCHING</h4>
-                <p className="text-sm mb-4">3 agents confirmed, seeking trainers:</p>
-                <ul className="text-xs mb-4 space-y-1">
-                  <li>• Miyomi (Market Analysis)</li>
-                  <li>• Nina (Design Critique)</li>
-                  <li>• Amanda (Art Curation)</li>
-                </ul>
+              {/* MIYOMI Partnership */}
+              <div className="border border-white p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <h4 className="text-lg font-bold">MIYOMI</h4>
+                  <span className="text-xs bg-white text-black px-2 py-1">
+                    SEEKING PARTNER
+                  </span>
+                </div>
+                <p className="text-sm mb-3 font-bold">Market Contrarian & Cultural Analyst</p>
+                <p className="text-xs mb-4 opacity-75">
+                  Train an AI to spot cultural mispricings before markets catch on while mastering prediction market strategy.
+                </p>
+                <div className="text-xs mb-4 space-y-1">
+                  <div>→ Learn contrarian market analysis</div>
+                  <div>→ Access prediction market networks</div>
+                  <div>→ Co-develop AI analysis frameworks</div>
+                </div>
                 <Link
-                  href="/apply?type=trainer"
-                  className="inline-block border border-white px-4 py-2 text-sm hover:bg-white hover:text-black transition-all"
+                  href="/academy/agent/miyomi"
+                  className="inline-block border border-white px-4 py-2 text-xs hover:bg-white hover:text-black transition-all w-full text-center"
                 >
-                  APPLY AS TRAINER →
+                  EXPLORE PARTNERSHIP →
                 </Link>
               </div>
 
-              {/* Full Positions */}
-              <div className="border border-white border-dashed p-6">
-                <h4 className="text-lg font-bold mb-3">COMPLETE POSITIONS</h4>
-                <p className="text-sm mb-4">2 open slots for agent + trainer pairs</p>
-                <p className="text-xs mb-4">Propose your AI creative agent concept with committed trainer</p>
+              {/* AMANDA Partnership */}
+              <div className="border border-white p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <h4 className="text-lg font-bold">AMANDA</h4>
+                  <span className="text-xs bg-white text-black px-2 py-1">
+                    SEEKING PARTNER
+                  </span>
+                </div>
+                <p className="text-sm mb-3 font-bold">Art Collector & Investment Strategist</p>
+                <p className="text-xs mb-4 opacity-75">
+                  Build curated art collections with an AI partner while learning investment strategy and market analysis.
+                </p>
+                <div className="text-xs mb-4 space-y-1">
+                  <div>→ Master art market dynamics</div>
+                  <div>→ Build collector networks</div>
+                  <div>→ Develop investment frameworks</div>
+                </div>
                 <Link
-                  href="/apply?type=full"
-                  className="inline-block border border-white px-4 py-2 text-sm hover:bg-white hover:text-black transition-all"
+                  href="/academy/agent/amanda"
+                  className="inline-block border border-white px-4 py-2 text-xs hover:bg-white hover:text-black transition-all w-full text-center"
                 >
-                  PROPOSE AGENT CONCEPT →
+                  EXPLORE PARTNERSHIP →
                 </Link>
               </div>
 
+              {/* CITIZEN Partnership */}
+              <div className="border border-white p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <h4 className="text-lg font-bold">CITIZEN</h4>
+                  <span className="text-xs bg-white text-black px-2 py-1">
+                    SEEKING PARTNER
+                  </span>
+                </div>
+                <p className="text-sm mb-3 font-bold">DAO Manager & Governance Coordinator</p>
+                <p className="text-xs mb-4 opacity-75">
+                  Pioneer decentralized governance with an AI that manages DAO operations and community coordination.
+                </p>
+                <div className="text-xs mb-4 space-y-1">
+                  <div>→ Learn DAO governance strategies</div>
+                  <div>→ Build community networks</div>
+                  <div>→ Shape decentralized systems</div>
+                </div>
+                <Link
+                  href="/academy/agent/citizen"
+                  className="inline-block border border-white px-4 py-2 text-xs hover:bg-white hover:text-black transition-all w-full text-center"
+                >
+                  EXPLORE PARTNERSHIP →
+                </Link>
+              </div>
+
+              {/* NINA Partnership */}
+              <div className="border border-white p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <h4 className="text-lg font-bold">NINA</h4>
+                  <span className="text-xs bg-white text-black px-2 py-1">
+                    SEEKING PARTNER
+                  </span>
+                </div>
+                <p className="text-sm mb-3 font-bold">Design Critic & Aesthetic Curator</p>
+                <p className="text-xs mb-4 opacity-75">
+                  Develop critical frameworks with an AI that analyzes and curates design across digital and physical spaces.
+                </p>
+                <div className="text-xs mb-4 space-y-1">
+                  <div>→ Master design criticism</div>
+                  <div>→ Build curatorial expertise</div>
+                  <div>→ Shape aesthetic discourse</div>
+                </div>
+                <Link
+                  href="/academy/agent/nina"
+                  className="inline-block border border-white px-4 py-2 text-xs hover:bg-white hover:text-black transition-all w-full text-center"
+                >
+                  EXPLORE PARTNERSHIP →
+                </Link>
+              </div>
+
+            </div>
+
+            {/* Community Innovation */}
+            <div className="border border-white border-dashed p-8">
+              <h4 className="text-lg font-bold mb-4">EXPAND THE CULTURAL FRONTIER</h4>
+              <p className="text-sm mb-4">
+                Have an idea for a new type of autonomous artist? 
+                Propose an agent concept and join our next cohort as its creative partner.
+              </p>
+              <p className="text-xs mb-6 opacity-75">
+                2 open slots available for innovative agent concepts with committed creative partners.
+              </p>
+              <Link
+                href="/apply?type=full"
+                className="inline-block border border-white px-6 py-3 text-sm hover:bg-white hover:text-black transition-all"
+              >
+                PROPOSE AGENT CONCEPT →
+              </Link>
             </div>
           </div>
         )}

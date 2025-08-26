@@ -1,146 +1,139 @@
-/**
- * Feature Flag Configuration for Eden Academy
- * 
- * Hierarchical flag system for safe rollout of creative pipeline features
- * Aligned with existing Eden Academy architecture patterns
- */
+// Feature Flags Configuration
+// All new features ship behind flags with rollback plans
 
 export interface FeatureFlag {
   key: string;
   description: string;
   defaultValue: boolean;
   rolloutStrategy: 'off' | 'dev' | 'beta' | 'gradual' | 'full';
-  dependencies?: string[];
-  culturalImpact: string;
+  culturalImpact?: string;
+  rollbackPlan?: string;
 }
 
-export interface CreativePipelineFlags {
-  ENABLE_CREATIVE_PIPELINE: boolean;        // Master switch
-  CREATIVE_PIPELINE_ASSESSMENT: boolean;    // Assessment system
-  CREATOR_AGENT_ECONOMICS: boolean;         // Revenue sharing
-  CREATOR_AGENT_LAUNCH: boolean;           // Agent spawning
-  CREATIVE_PIPELINE_FULL: boolean;         // End-to-end pipeline
-}
+export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
+  ENABLE_SPIRIT_REGISTRY: {
+    key: 'ENABLE_SPIRIT_REGISTRY',
+    description: 'Enable onchain data integration from spirit-registry',
+    defaultValue: process.env.NODE_ENV === 'development',
+    rolloutStrategy: 'dev',
+    culturalImpact: 'Provides onchain verification for agent authenticity',
+    rollbackPlan: 'Disable flag, fallback to Registry-only data'
+  },
 
-export const CREATIVE_PIPELINE_FLAGS: Record<keyof CreativePipelineFlags, FeatureFlag> = {
-  ENABLE_CREATIVE_PIPELINE: {
-    key: 'ENABLE_CREATIVE_PIPELINE',
-    description: 'Enable creator onboarding and assessment pipeline',
-    defaultValue: false,
-    rolloutStrategy: 'gradual',
-    culturalImpact: 'Introduces new creator pathway while maintaining Academy cultural values'
-  },
-  CREATIVE_PIPELINE_ASSESSMENT: {
-    key: 'CREATIVE_PIPELINE_ASSESSMENT',
-    description: 'Enable AI-assisted creative assessment system',
+  ENABLE_ONCHAIN_BADGES: {
+    key: 'ENABLE_ONCHAIN_BADGES', 
+    description: 'Show onchain verification badges on agent cards',
     defaultValue: false,
     rolloutStrategy: 'beta',
-    dependencies: ['ENABLE_CREATIVE_PIPELINE'],
-    culturalImpact: 'Provides supportive growth-oriented assessment aligned with Academy mission'
+    culturalImpact: 'Visual indicator of agent blockchain deployment',
+    rollbackPlan: 'Remove badges, no data impact'
   },
-  CREATOR_AGENT_ECONOMICS: {
-    key: 'CREATOR_AGENT_ECONOMICS',
-    description: 'Enable creator revenue sharing and economic validation',
+
+  ENABLE_TOKEN_ECONOMICS: {
+    key: 'ENABLE_TOKEN_ECONOMICS',
+    description: 'Enable token economics calculations and displays',
     defaultValue: false,
-    rolloutStrategy: 'beta',
-    dependencies: ['CREATIVE_PIPELINE_ASSESSMENT'],
-    culturalImpact: 'Ensures fair creator compensation within Eden ecosystem'
+    rolloutStrategy: 'off',
+    culturalImpact: 'Shows economic viability of agents',
+    rollbackPlan: 'Hide economics UI, preserve underlying data'
   },
-  CREATOR_AGENT_LAUNCH: {
-    key: 'CREATOR_AGENT_LAUNCH',
-    description: 'Enable automated agent launching for qualified creators',
-    defaultValue: false,
-    rolloutStrategy: 'beta',
-    dependencies: ['CREATOR_AGENT_ECONOMICS'],
-    culturalImpact: 'Enables creator agent spawning with economic validation'
+
+  ENABLE_LAUNCH_CRITERIA: {
+    key: 'ENABLE_LAUNCH_CRITERIA',
+    description: 'Enable agent launch criteria and quality gates',
+    defaultValue: true,
+    rolloutStrategy: 'full',
+    culturalImpact: 'Ensures only viable agents launch',
+    rollbackPlan: 'Manual launch approval process'
   },
-  CREATIVE_PIPELINE_FULL: {
-    key: 'CREATIVE_PIPELINE_FULL',
-    description: 'Enable complete end-to-end creator pipeline',
-    defaultValue: false,
-    rolloutStrategy: 'beta',
-    dependencies: ['CREATOR_AGENT_LAUNCH'],
-    culturalImpact: 'Complete creator journey from submission to agent launch'
+
+  ENABLE_DATA_RECONCILIATION: {
+    key: 'ENABLE_DATA_RECONCILIATION',
+    description: 'Enable automatic data reconciliation between Registry and Spirit Registry',
+    defaultValue: process.env.NODE_ENV === 'development',
+    rolloutStrategy: 'dev',
+    culturalImpact: 'Maintains data consistency across systems',
+    rollbackPlan: 'Use Registry data only, disable Spirit integration'
   }
 };
 
-/**
- * Feature Flag Evaluation with Environment Variable Override
- */
-export class FeatureFlagService {
-  private static instance: FeatureFlagService;
+class FeatureFlagManager {
   private flags: Map<string, boolean> = new Map();
 
-  private constructor() {
-    this.initializeFlags();
-  }
-
-  static getInstance(): FeatureFlagService {
-    if (!FeatureFlagService.instance) {
-      FeatureFlagService.instance = new FeatureFlagService();
-    }
-    return FeatureFlagService.instance;
-  }
-
-  private initializeFlags(): void {
-    // Load from environment variables with fallbacks
-    Object.entries(CREATIVE_PIPELINE_FLAGS).forEach(([key, config]) => {
-      const envValue = process.env[config.key];
-      const isEnabled = envValue === 'true' || 
-        (process.env.NODE_ENV === 'development' && config.defaultValue);
-      
-      this.flags.set(config.key, isEnabled);
+  constructor() {
+    // Initialize with default values
+    Object.values(FEATURE_FLAGS).forEach(flag => {
+      this.flags.set(flag.key, flag.defaultValue);
     });
+
+    // Override with environment variables
+    this.loadFromEnvironment();
   }
 
-  isEnabled(flagKey: keyof CreativePipelineFlags): boolean {
-    const flag = CREATIVE_PIPELINE_FLAGS[flagKey];
-    
-    // Check dependencies first
-    if (flag.dependencies) {
-      const dependenciesEnabled = flag.dependencies.every(
-        dep => this.flags.get(dep) === true
-      );
-      if (!dependenciesEnabled) {
-        return false;
+  private loadFromEnvironment(): void {
+    Object.keys(FEATURE_FLAGS).forEach(key => {
+      const envValue = process.env[key];
+      if (envValue !== undefined) {
+        this.flags.set(key, envValue.toLowerCase() === 'true');
       }
-    }
-
-    return this.flags.get(flag.key) || false;
-  }
-
-  getFlagStatus(): Record<string, boolean> {
-    const status: Record<string, boolean> = {};
-    Object.keys(CREATIVE_PIPELINE_FLAGS).forEach(key => {
-      status[key] = this.isEnabled(key as keyof CreativePipelineFlags);
     });
-    return status;
   }
 
-  async validateRolloutSafety(): Promise<{ safe: boolean; warnings: string[] }> {
-    const warnings: string[] = [];
-    const currentFlags = this.getFlagStatus();
-    
-    // Check for unsafe flag combinations
-    if (currentFlags.CREATIVE_PIPELINE_FULL && !currentFlags.CREATOR_AGENT_ECONOMICS) {
-      warnings.push('Full pipeline enabled without economics validation - revenue sharing may fail');
-    }
-    
-    if (currentFlags.CREATOR_AGENT_LAUNCH && !currentFlags.CREATIVE_PIPELINE_ASSESSMENT) {
-      warnings.push('Agent launching enabled without assessment system - quality control compromised');
-    }
+  isEnabled(flagKey: string): boolean {
+    return this.flags.get(flagKey) || false;
+  }
 
-    return {
-      safe: warnings.length === 0,
-      warnings
-    };
+  enable(flagKey: string): void {
+    this.flags.set(flagKey, true);
+    console.log(`[FeatureFlags] Enabled: ${flagKey}`);
+  }
+
+  disable(flagKey: string): void {
+    this.flags.set(flagKey, false);
+    console.log(`[FeatureFlags] Disabled: ${flagKey}`);
+  }
+
+  getFlag(flagKey: string): FeatureFlag | undefined {
+    return FEATURE_FLAGS[flagKey];
+  }
+
+  getAllFlags(): Record<string, { enabled: boolean; config: FeatureFlag }> {
+    const result: Record<string, { enabled: boolean; config: FeatureFlag }> = {};
+    
+    Object.entries(FEATURE_FLAGS).forEach(([key, config]) => {
+      result[key] = {
+        enabled: this.isEnabled(key),
+        config
+      };
+    });
+
+    return result;
+  }
+
+  // Runtime flag updates (for testing)
+  setFlag(flagKey: string, enabled: boolean): void {
+    if (FEATURE_FLAGS[flagKey]) {
+      this.flags.set(flagKey, enabled);
+      console.log(`[FeatureFlags] Set ${flagKey} = ${enabled}`);
+    } else {
+      console.warn(`[FeatureFlags] Unknown flag: ${flagKey}`);
+    }
   }
 }
 
-// Singleton instance export
-export const featureFlags = FeatureFlagService.getInstance();
+// Export singleton
+export const featureFlags = new FeatureFlagManager();
 
 // Helper function for components
-export function useFeatureFlag(flagKey: keyof CreativePipelineFlags): boolean {
+export function useFeatureFlag(flagKey: string): boolean {
   return featureFlags.isEnabled(flagKey);
 }
+
+// Export flag keys for type safety
+export const FLAGS = {
+  ENABLE_SPIRIT_REGISTRY: 'ENABLE_SPIRIT_REGISTRY',
+  ENABLE_ONCHAIN_BADGES: 'ENABLE_ONCHAIN_BADGES', 
+  ENABLE_TOKEN_ECONOMICS: 'ENABLE_TOKEN_ECONOMICS',
+  ENABLE_LAUNCH_CRITERIA: 'ENABLE_LAUNCH_CRITERIA',
+  ENABLE_DATA_RECONCILIATION: 'ENABLE_DATA_RECONCILIATION',
+} as const;

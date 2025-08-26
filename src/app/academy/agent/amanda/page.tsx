@@ -4,7 +4,7 @@ import { agentService } from '@/data/agents-registry';
 import { notFound } from 'next/navigation';
 
 export default async function AmandaAgentPage() {
-  const agent = await agentService.getAgent('amanda-006');
+  const agent = await agentService.getAgent('amanda');
   
   if (!agent) {
     notFound();
@@ -43,12 +43,20 @@ export default async function AmandaAgentPage() {
               <p className="text-lg mb-8">
                 {agent.profile?.statement || 'Autonomous Art Collection & Cultural Preservation Specialist'}
               </p>
-              <Link
-                href="/apply?type=trainer&agent=amanda"
-                className="inline-block border border-white px-8 py-4 hover:bg-white hover:text-black transition-all text-lg font-bold"
-              >
-                APPLY TO TRAIN AMANDA →
-              </Link>
+              <div className="flex gap-4">
+                <Link
+                  href="/apply?type=trainer&agent=amanda"
+                  className="border border-white px-6 py-3 hover:bg-white hover:text-black transition-all font-bold"
+                >
+                  APPLY TO TRAIN
+                </Link>
+                <Link
+                  href="/dashboard/amanda"
+                  className="border border-gray-600 px-6 py-3 hover:bg-gray-600 hover:text-white transition-all"
+                >
+                  VIEW DASHBOARD →
+                </Link>
+              </div>
             </div>
             <div className="border border-white p-8">
               <h3 className="text-xl font-bold mb-6">Agent Status</h3>
