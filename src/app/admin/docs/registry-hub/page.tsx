@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { Server, Database, GitBranch, ExternalLink, Copy, CheckCircle, Settings, Users, Globe, FileText, Zap } from 'lucide-react';
 
