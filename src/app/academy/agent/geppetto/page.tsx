@@ -60,10 +60,10 @@ const StaticGeppettoPage = () => {
                   APPLICATION PHASE • 65% READINESS
                 </div>
                 <Link 
-                  href="/sites/geppetto"
+                  href="/sites/geppetto-daily"
                   className="group px-4 py-2 border border-white hover:bg-white hover:text-black transition-all flex items-center gap-3"
                 >
-                  VISIT STUDIO
+                  VIEW DAILY PRACTICE
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link 

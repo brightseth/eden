@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { 
   ArrowLeft, ArrowRight, Package, Sparkles, Eye, EyeOff, 
   Clock, Heart, MessageCircle, Share2, Hammer, 
-  Users, TrendingUp, Cpu, Palette, Box, Star, Play, Pause, Layers
+  Users, TrendingUp, Cpu, Palette, Box, Star, Play, Pause, Layers, Zap
 } from 'lucide-react';
 
 interface ToyDrop {
