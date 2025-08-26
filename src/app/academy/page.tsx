@@ -175,7 +175,7 @@ export default function AcademyPage() {
                     <p className="text-xs opacity-75">{agent.trainer}</p>
                   </div>
                 );
-              })
+              })}
             </div>
           </div>
         )}
