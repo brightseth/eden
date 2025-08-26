@@ -300,25 +300,35 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
         )}
         
         <div className="relative z-10 text-center px-6">
-          <h1 className={`font-bold tracking-wider ${
-            agent.id === 'amanda' 
-              ? 'text-4xl md:text-6xl mb-3' 
-              : 'text-6xl md:text-8xl mb-4'
-          }`}>
-            {agent.name.toUpperCase()}
-          </h1>
-          <h2 className="text-3xl md:text-5xl font-light mb-8">
-            {agent.tagline}
-          </h2>
-          <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
-            {agent.description}
-          </p>
-          
-          {latestWork && (
-            <div className="mt-12">
-              <p className="text-sm text-gray-500 mb-2">LATEST CREATION</p>
-              <p className="text-sm italic">{latestWork.title}</p>
+          {agent.id === 'amanda' ? (
+            <div className="flex items-center justify-center gap-4">
+              <h1 className="text-3xl md:text-4xl font-bold tracking-wider">
+                {agent.name.toUpperCase()}
+              </h1>
+              <div className="text-2xl md:text-3xl text-gray-400">•</div>
+              <h2 className="text-2xl md:text-3xl font-light">
+                {agent.tagline}
+              </h2>
             </div>
+          ) : (
+            <>
+              <h1 className="text-6xl md:text-8xl font-bold mb-4 tracking-wider">
+                {agent.name.toUpperCase()}
+              </h1>
+              <h2 className="text-3xl md:text-5xl font-light mb-8">
+                {agent.tagline}
+              </h2>
+              <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
+                {agent.description}
+              </p>
+              
+              {latestWork && (
+                <div className="mt-12">
+                  <p className="text-sm text-gray-500 mb-2">LATEST CREATION</p>
+                  <p className="text-sm italic">{latestWork.title}</p>
+                </div>
+              )}
+            </>
           )}
         </div>
 
