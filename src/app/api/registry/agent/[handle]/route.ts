@@ -13,11 +13,29 @@ export async function GET(
     console.log(`[CRIT] Fetching agent ${handle} from Registry...`);
     
     // Use Registry SDK - ADR compliance
-    const agent = await registryApi.getAgent(handle.toLowerCase(), [
-      'profile', 
-      'creations', 
-      'personas'
-    ]);
+    // Try individual agent endpoint first, fallback to agents list if needed
+    let agent;
+    try {
+      agent = await registryApi.getAgent(handle.toLowerCase(), [
+        'profile', 
+        'creations', 
+        'personas'
+      ]);
+    } catch (individualError) {
+      console.log(`[CRIT] Individual agent endpoint failed, trying agents list...`);
+      
+      // Fallback: get from agents list (this endpoint works)
+      const agents = await registryApi.getAgents({ 
+        cohort: 'genesis',
+        status: 'ACTIVE' 
+      });
+      
+      agent = agents.find(a => a.handle.toLowerCase() === handle.toLowerCase());
+      
+      if (!agent) {
+        throw new Error(`Agent '${handle}' not found in Registry agents list`);
+      }
+    }
     
     if (!agent) {
       return NextResponse.json(

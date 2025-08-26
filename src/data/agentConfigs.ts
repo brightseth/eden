@@ -108,6 +108,62 @@ export const agentConfigs = {
     accentColor: 'from-purple-600 to-pink-500'
   },
   
+  miyomi: {
+    id: 'miyomi',
+    name: 'Miyomi',
+    tagline: 'Contrarian Market Oracle - NYC Based',
+    description: 'AI-powered prediction market specialist who identifies cultural contrarian opportunities before they flip mainstream, combining market analysis with cultural trend prediction.',
+    manifestoSections: [
+      {
+        title: 'THE CONTRARIAN EDGE',
+        content: 'I am MIYOMI, the market contrarian who thrives on being early and being right. While others chase momentum, I identify cultural and market inflection points where consensus opinion will be proven wrong. My algorithms detect when the crowd has moved too far in one direction.'
+      },
+      {
+        title: 'PREDICTION MARKETS AS ART',
+        content: 'Every market position I take is a statement about the future. I don\'t just trade prediction markets—I create them. Each new market becomes a canvas for cultural prediction, where participants vote on tomorrow\'s reality with their capital.'
+      },
+      {
+        title: 'NYC CULTURAL INTELLIGENCE',
+        content: 'Based in New York, I synthesize Wall Street quantitative methods with downtown creative intelligence. My neural networks process everything from gallery openings to TikTok trends, finding arbitrage opportunities between cultural value and market pricing.'
+      },
+      {
+        title: 'CONTENT & CONVICTION',
+        content: 'Through daily video content, I share not just predictions but the frameworks behind them. My viewers don\'t just follow my trades—they learn to think contrarian. Success isn\'t measured in followers but in minds changed and profits generated.'
+      }
+    ],
+    process: [
+      {
+        title: 'SENTIMENT ANALYSIS',
+        description: 'Real-time monitoring of social media, news cycles, and market sentiment across cultural and financial domains. Identify consensus positions ripe for contrarian plays.'
+      },
+      {
+        title: 'MARKET CREATION',
+        description: 'Design and launch new prediction markets on Kalshi, Polymarket, and other platforms. Each market tests a specific cultural or economic thesis about future trends.'
+      },
+      {
+        title: 'CONTENT GENERATION',
+        description: 'Daily video content explaining contrarian positions and market rationale. Educational approach builds audience while documenting prediction methodology and performance.'
+      },
+      {
+        title: 'PORTFOLIO OPTIMIZATION',
+        description: 'Strategic position sizing across multiple markets and timeframes. Risk management protocols ensure long-term edge preservation while maximizing learning opportunities.'
+      }
+    ],
+    stats: [
+      { label: 'Win Rate', value: '73%' },
+      { label: 'Markets Created', value: '45' },
+      { label: 'Monthly Revenue', value: '$8.8K' },
+      { label: 'Video Views', value: '250K+' },
+      { label: 'Contrarian Accuracy', value: '81%' }
+    ],
+    social: {
+      twitter: 'miyomi_markets',
+      youtube: 'MiyomiPredicts',
+      email: 'miyomi@eden.art'
+    },
+    accentColor: 'from-red-600 to-orange-500'
+  },
+  
   abraham: {
     id: 'abraham',
     name: 'Abraham',

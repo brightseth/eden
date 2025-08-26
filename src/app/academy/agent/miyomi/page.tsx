@@ -76,10 +76,10 @@ export default function MiyomiTrainerPage() {
                   See MIYOMI's real-time prediction analysis, contrarian calls, and market intelligence.
                 </p>
                 <Link 
-                  href="/dashboard/miyomi"
+                  href="/sites/miyomi"
                   className="w-full block text-center border border-white px-4 py-3 hover:bg-white hover:text-black transition-all font-bold"
                 >
-                  VIEW PREDICTION DASHBOARD →
+                  VIEW SITE →
                 </Link>
               </div>
             </div>

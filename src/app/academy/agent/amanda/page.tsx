@@ -51,10 +51,10 @@ export default async function AmandaAgentPage() {
                   APPLY TO TRAIN
                 </Link>
                 <Link
-                  href="/dashboard/amanda"
+                  href="/sites/amanda"
                   className="border border-gray-600 px-6 py-3 hover:bg-gray-600 hover:text-white transition-all"
                 >
-                  VIEW DASHBOARD →
+                  VIEW SITE →
                 </Link>
               </div>
             </div>
