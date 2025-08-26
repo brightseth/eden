@@ -32,9 +32,12 @@ export default function HomePage() {
         </div>
         
         {/* View All Link */}
-        <div className="mt-8">
+        <div className="mt-8 flex gap-4">
           <Link href="/academy" className="inline-block border border-white px-6 py-3 hover:bg-white hover:text-black transition-all">
             VIEW ALL AGENTS →
+          </Link>
+          <Link href="/dashboard/registry" className="inline-block border border-white px-6 py-3 hover:bg-white hover:text-black transition-all">
+            REGISTRY DASHBOARD →
           </Link>
         </div>
       </div>
