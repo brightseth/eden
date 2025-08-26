@@ -2,18 +2,32 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Cpu, Package, Layers, Zap, Globe, Eye, EyeOff, Play, Pause, RotateCcw } from 'lucide-react';
+import { 
+  ArrowLeft, ArrowRight, Package, Sparkles, Eye, EyeOff, 
+  Clock, Heart, MessageCircle, Share2, Hammer, 
+  Users, TrendingUp, Cpu, Palette, Box, Star, Play, Pause, Layers
+} from 'lucide-react';
 
-interface ProductConcept {
+interface ToyDrop {
   id: string;
+  dropNumber: number;
   name: string;
-  category: string;
-  status: 'concept' | 'prototype' | 'testing' | 'production';
-  materials: string[];
-  manufacturingProcess: string;
-  image?: string;
-  description: string;
-  progress: number;
+  prompt: string;
+  status: 'generating' | 'minting' | 'live' | 'sold_out';
+  mints: number;
+  totalMints: number;
+  price: number;
+  timeLeft?: string;
+  communityScore: number;
+  manufacturingViability: number;
+  materials?: string[];
+  estimatedCost?: number;
+  productionTime?: string;
+  comments?: Array<{
+    user: string;
+    comment: string;
+    influence: number;
+  }>;
 }
 
 export default function GeppettoStudioSite() {
