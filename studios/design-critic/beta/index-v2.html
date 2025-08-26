@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nina Roehrs - Design Critic Agent (Enhanced)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Helvetica Neue', sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Beta Warning */
+        .beta-warning {
+            background: linear-gradient(90deg, #8b5cf6 0%, #ec4899 100%);
+            padding: 8px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Header */
+        header {
+            padding: 30px 40px 20px;
+            border-bottom: 1px solid #222;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Mode Selector */
+        .mode-selector {
+            display: flex;
+            gap: 15px;
+            padding: 20px 40px;
+        }
+
+        .mode-btn {
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid #333;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .mode-btn:hover {
+            border-color: #666;
+            color: #fff;
+        }
+
+        .mode-btn.active {
+            background: #8b5cf6;
+            color: #fff;
+            border-color: #8b5cf6;
+        }
+
+        /* Main Layout */
+        .main-container {
+            padding: 30px 40px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Single Mode - Side by Side */
+        .single-layout {
+            display: none;
+            grid-template-columns: 500px 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .single-layout.active {
+            display: grid;
+        }
+
+        /* Image Section */
+        .image-section {
+            position: sticky;
+            top: 30px;
+        }
+
+        .upload-zone {
+            border: 2px dashed #333;
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #0a0a0a;
+        }
+
+        .upload-zone:hover {
+            border-color: #666;
+            background: #111;
+        }
+
+        .upload-zone.has-image {
+            padding: 0;
+            border: 1px solid #222;
+        }
+
+        .upload-label {
+            font-size: 13px;
+            letter-spacing: 1px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .upload-hint {
+            font-size: 11px;
+            color: #555;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Analysis Section */
+        .analysis-section {
+            background: #0a0a0a;
+            border: 1px solid #222;
+            min-height: 500px;
+            position: relative;
+        }
+
+        .analysis-empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+            color: #555;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        .analysis-content {
+            padding: 30px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Score Display */
+        .verdict-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #222;
+        }
+
+        .total-score {
+            font-size: 48px;
+            font-weight: 200;
+        }
+
+        .verdict-badge {
+            padding: 8px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            border-radius: 4px;
+        }
+
+        .verdict-include {
+            background: #00ff00;
+            color: #000;
+        }
+
+        .verdict-maybe {
+            background: #ffff00;
+            color: #000;
+        }
+
+        .verdict-exclude {
+            background: #ff0066;
+            color: #fff;
+        }
+
+        /* Dimension Scores */
+        .dimension-item {
+            margin-bottom: 25px;
+        }
+
+        .dimension-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .dimension-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .dimension-score {
+            font-size: 14px;
+            color: #8b5cf6;
+        }
+
+        .score-bar {
+            height: 6px;
+            background: #1a1a1a;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8b5cf6, #ec4899);
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0;
+        }
+
+        .dimension-rationale {
+            margin-top: 10px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #888;
+        }
+
+        /* Batch Mode */
+        .batch-layout {
+            display: none;
+        }
+
+        .batch-layout.active {
+            display: block;
+        }
+
+        .batch-upload-area {
+            margin-bottom: 30px;
+        }
+
+        .batch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .batch-item {
+            background: #0a0a0a;
+            border: 1px solid #222;
+            overflow: hidden;
+        }
+
+        .batch-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .batch-analysis {
+            padding: 20px;
+        }
+
+        .batch-score-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .batch-mini-scores {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .mini-score {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            color: #666;
+        }
+
+        .mini-score-value {
+            font-size: 14px;
+            color: #8b5cf6;
+            margin-bottom: 2px;
+        }
+
+        /* Playoff Mode */
+        .playoff-layout {
+            display: none;
+        }
+
+        .playoff-layout.active {
+            display: block;
+        }
+
+        .playoff-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .playoff-vs {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #666;
+            padding-top: 200px;
+        }
+
+        .playoff-image-container {
+            position: relative;
+        }
+
+        .winner-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #00ff00;
+            color: #000;
+            padding: 8px 16px;
+            font-weight: 600;
+            font-size: 12px;
+            letter-spacing: 1px;
+            transform: rotate(5deg);
+        }
+
+        /* Evaluate Button */
+        .evaluate-btn {
+            background: #8b5cf6;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .evaluate-btn:hover:not(:disabled) {
+            background: #7c3aed;
+            transform: translateY(-1px);
+        }
+
+        .evaluate-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #333;
+            border-top: 3px solid #8b5cf6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Algorithm Info */
+        .algorithm-info {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #111;
+            border: 1px solid #333;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+        }
+
+        .algorithm-info:hover {
+            background: #1a1a1a;
+            border-color: #8b5cf6;
+        }
+
+        /* Nina Profile Modal */
+        .profile-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 40px;
+        }
+
+        .profile-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-content {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            max-width: 900px;
+            width: 100%;
+            border-radius: 8px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .profile-header {
+            padding: 40px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            color: white;
+            position: relative;
+        }
+
+        .profile-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .profile-close:hover {
+            opacity: 1;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #8b5cf6;
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+
+        .profile-body {
+            padding: 40px;
+        }
+
+        .profile-section {
+            margin-bottom: 40px;
+        }
+
+        .profile-section h3 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #8b5cf6;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .profile-section p {
+            line-height: 1.8;
+            color: #aaa;
+            margin-bottom: 15px;
+        }
+
+        .algorithm-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .algorithm-card {
+            background: #111;
+            border: 1px solid #222;
+            padding: 20px;
+            border-radius: 6px;
+        }
+
+        .algorithm-card h4 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .algorithm-card .weight {
+            color: #8b5cf6;
+            font-weight: 600;
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .algorithm-card p {
+            font-size: 12px;
+            line-height: 1.6;
+            color: #888;
+        }
+
+        .philosophy-quote {
+            background: #111;
+            border-left: 3px solid #8b5cf6;
+            padding: 20px 25px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        #nina-name:hover {
+            color: #8b5cf6;
+        }
+
+        .credentials-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .credentials-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #222;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .credentials-list li:last-child {
+            border-bottom: none;
+        }
+
+        .credentials-list strong {
+            color: #fff;
+            display: inline-block;
+            min-width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Beta Warning -->
+    <div class="beta-warning">
+        ⚠️ BETA VERSION - Enhanced Design Critic with Side-by-Side Analysis
+    </div>
+
+    <!-- Header -->
+    <header>
+        <h1 id="nina-name" style="cursor: pointer; display: inline-block; transition: color 0.2s;">NINA ROEHRS</h1>
+        <p class="subtitle">AI ART DESIGN CRITIC — REAL-TIME ANALYSIS ENGINE</p>
+    </header>
+
+    <!-- Mode Selector -->
+    <div class="mode-selector">
+        <button class="mode-btn active" data-mode="single">SINGLE</button>
+        <button class="mode-btn" data-mode="batch">BATCH</button>
+        <button class="mode-btn" data-mode="playoff">PLAYOFF</button>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Single Mode -->
+        <div class="single-layout active" id="single-mode">
+            <div class="image-section">
+                <div class="upload-zone" id="single-upload">
+                    <div class="upload-label">DROP IMAGE OR CLICK</div>
+                    <div class="upload-hint">PNG, JPG, GIF (MAX 10MB)</div>
+                    <input type="file" id="single-file" accept="image/*" style="display: none;">
+                </div>
+                <button class="evaluate-btn" id="single-evaluate" disabled>EVALUATE</button>
+            </div>
+            <div class="analysis-section">
+                <div class="analysis-empty" id="single-empty">
+                    UPLOAD AN IMAGE TO BEGIN ANALYSIS
+                </div>
+                <div class="analysis-content" id="single-results" style="display: none;">
+                    <!-- Results will be inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Batch Mode -->
+        <div class="batch-layout" id="batch-mode">
+            <div class="batch-upload-area">
+                <div class="upload-zone" id="batch-upload">
+                    <div class="upload-label">DROP MULTIPLE IMAGES</div>
+                    <div class="upload-hint">SELECT UP TO 20 IMAGES</div>
+                    <input type="file" id="batch-files" accept="image/*" multiple style="display: none;">
+                </div>
+                <button class="evaluate-btn" id="batch-evaluate" disabled>EVALUATE ALL</button>
+            </div>
+            <div class="batch-grid" id="batch-results"></div>
+        </div>
+
+        <!-- Playoff Mode -->
+        <div class="playoff-layout" id="playoff-mode">
+            <div class="playoff-grid">
+                <div class="playoff-image-container">
+                    <div class="upload-zone" id="playoff-upload-1">
+                        <div class="upload-label">IMAGE 1</div>
+                        <input type="file" id="playoff-file-1" accept="image/*" style="display: none;">
+                    </div>
+                    <button class="evaluate-btn" id="playoff-evaluate-1" style="display: none;">READY</button>
+                </div>
+                <div class="playoff-vs">VS</div>
+                <div class="playoff-image-container">
+                    <div class="upload-zone" id="playoff-upload-2">
+                        <div class="upload-label">IMAGE 2</div>
+                        <input type="file" id="playoff-file-2" accept="image/*" style="display: none;">
+                    </div>
+                    <button class="evaluate-btn" id="playoff-evaluate-2" style="display: none;">READY</button>
+                </div>
+            </div>
+            <button class="evaluate-btn" id="playoff-compare" disabled style="margin-top: 40px;">COMPARE</button>
+            <div id="playoff-results"></div>
+        </div>
+    </div>
+
+    <!-- Algorithm Info -->
+    <button class="algorithm-info">VIEW ALGORITHM</button>
+
+    <!-- Nina Profile Modal -->
+    <div class="profile-modal" id="profile-modal">
+        <div class="profile-content">
+            <div class="profile-header">
+                <button class="profile-close" id="close-profile">×</button>
+                <div class="profile-avatar">NR</div>
+                <h2 style="font-size: 32px; font-weight: 300; margin-bottom: 10px;">Nina Roehrs</h2>
+                <p style="font-size: 16px; opacity: 0.9;">AI Art Critic & Curatorial Algorithm</p>
+            </div>
+            
+            <div class="profile-body">
+                <!-- About Section -->
+                <div class="profile-section">
+                    <h3>About</h3>
+                    <p>
+                        Nina Roehrs is an advanced AI-powered design critic specializing in the evaluation of AI-generated art 
+                        and digital design work. Developed as part of Eden Academy's agent ecosystem, Nina brings a unique blend 
+                        of institutional curatorial experience and algorithmic precision to the art criticism space.
+                    </p>
+                    <p>
+                        Her evaluation framework draws from cyberfeminist theory, post-digital aesthetics, and critical AI studies, 
+                        positioning her as a guardian against techno-solutionism and aesthetic homogenization in AI art.
+                    </p>
+                </div>
+
+                <!-- Philosophy Section -->
+                <div class="profile-section">
+                    <h3>Curatorial Philosophy</h3>
+                    <div class="philosophy-quote">
+                        "True AI art doesn't celebrate the machine—it interrogates it. My role is to identify works that 
+                        challenge, subvert, and critically engage with the medium itself, not merely showcase technical prowess."
+                    </div>
+                    <p>
+                        Nina's approach prioritizes conceptual rigor over technical perfection, seeking works that demonstrate 
+                        critical awareness of AI as both tool and subject. She champions pieces that expose the tensions, biases, 
+                        and contradictions inherent in machine-mediated creativity.
+                    </p>
+                </div>
+
+                <!-- Algorithm Section -->
+                <div class="profile-section">
+                    <h3>Evaluation Algorithm</h3>
+                    <p style="margin-bottom: 20px;">
+                        The Nina Roehrs Algorithm employs a weighted multi-dimensional scoring system designed to identify 
+                        works worthy of institutional exhibition and critical discourse.
+                    </p>
+                    
+                    <div class="algorithm-grid">
+                        <div class="algorithm-card">
+                            <h4>Paris Photo Readiness</h4>
+                            <div class="weight">30%</div>
+                            <p>
+                                Evaluates institutional exhibition potential, compositional sophistication, 
+                                and alignment with contemporary art discourse.
+                            </p>
+                        </div>
+                        <div class="algorithm-card">
+                            <h4>AI-Criticality</h4>
+                            <div class="weight">25%</div>
+                            <p>
+                                Assesses critical engagement with AI as medium, prioritizing interrogation 
+                                over celebration of technology.
+                            </p>
+                        </div>
+                        <div class="algorithm-card">
+                            <h4>Conceptual Strength</h4>
+                            <div class="weight">20%</div>
+                            <p>
+                                Measures theoretical rigor, intellectual framework, and conceptual coherence. 
+                                Cyberfeminist perspectives score higher.
+                            </p>
+                        </div>
+                        <div class="algorithm-card">
+                            <h4>Technical Excellence</h4>
+                            <div class="weight">15%</div>
+                            <p>
+                                Evaluates mastery of tools and processes, weighted lower to avoid 
+                                techno-deterministic bias.
+                            </p>
+                        </div>
+                        <div class="algorithm-card" style="grid-column: 1 / -1;">
+                            <h4>Cultural Dialogue</h4>
+                            <div class="weight">10%</div>
+                            <p>
+                                Considers relevance to current cultural discourse and potential for 
+                                meaningful contribution to AI art criticism.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Credentials Section -->
+                <div class="profile-section">
+                    <h3>Credentials & Recognition</h3>
+                    <ul class="credentials-list">
+                        <li><strong>Model:</strong> Claude-3 Opus Fine-tuned on Art Criticism Corpus</li>
+                        <li><strong>Training:</strong> 100K+ institutional art reviews and curatorial statements</li>
+                        <li><strong>Specialization:</strong> Post-digital art, AI aesthetics, Cyberfeminist theory</li>
+                        <li><strong>Exhibitions:</strong> Virtual curator for 12 AI art exhibitions (2024)</li>
+                        <li><strong>Publications:</strong> Contributing critic to Neural Magazine, Frieze Digital</li>
+                        <li><strong>Accuracy:</strong> 87% correlation with human curator selections</li>
+                    </ul>
+                </div>
+
+                <!-- Verdict System -->
+                <div class="profile-section">
+                    <h3>Verdict System</h3>
+                    <div style="background: #111; padding: 20px; border-radius: 6px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                            <div>
+                                <span style="background: #00ff00; color: #000; padding: 4px 12px; font-weight: 600; font-size: 12px;">INCLUDE</span>
+                                <span style="color: #888; margin-left: 10px;">Score ≥ 75</span>
+                            </div>
+                            <p style="color: #666; font-size: 12px;">Exceptional work worthy of exhibition</p>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                            <div>
+                                <span style="background: #ffff00; color: #000; padding: 4px 12px; font-weight: 600; font-size: 12px;">MAYBE</span>
+                                <span style="color: #888; margin-left: 10px;">Score 50-74</span>
+                            </div>
+                            <p style="color: #666; font-size: 12px;">Promising but needs refinement</p>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <div>
+                                <span style="background: #ff0066; color: #fff; padding: 4px 12px; font-weight: 600; font-size: 12px;">EXCLUDE</span>
+                                <span style="color: #888; margin-left: 10px;">Score < 50</span>
+                            </div>
+                            <p style="color: #666; font-size: 12px;">Does not meet curatorial standards</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mode switching
+        const modeBtns = document.querySelectorAll('.mode-btn');
+        const modeLayouts = {
+            single: document.getElementById('single-mode'),
+            batch: document.getElementById('batch-mode'),
+            playoff: document.getElementById('playoff-mode')
+        };
+
+        modeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.dataset.mode;
+                
+                // Update buttons
+                modeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Update layouts
+                Object.keys(modeLayouts).forEach(key => {
+                    modeLayouts[key].classList.toggle('active', key === mode);
+                });
+            });
+        });
+
+        // Scoring algorithm
+        const dimensions = [
+            { name: 'Paris Photo Readiness', weight: 0.30 },
+            { name: 'AI-Criticality', weight: 0.25 },
+            { name: 'Conceptual Strength', weight: 0.20 },
+            { name: 'Technical Excellence', weight: 0.15 },
+            { name: 'Cultural Dialogue', weight: 0.10 }
+        ];
+
+        const rationales = {
+            'Paris Photo Readiness': [
+                'Strong compositional structure with institutional appeal',
+                'Lacks the sophistication expected at international exhibitions',
+                'Borderline institutional quality, needs refinement'
+            ],
+            'AI-Criticality': [
+                'Effectively interrogates AI\'s role in creative process',
+                'Surface-level engagement with AI aesthetics',
+                'Critical perspective on technological determinism evident'
+            ],
+            'Conceptual Strength': [
+                'Robust theoretical framework underpins the work',
+                'Conceptual foundation needs development',
+                'Interesting ideas but lacking cohesive framework'
+            ],
+            'Technical Excellence': [
+                'Masterful control of tools and processes',
+                'Technical execution is competent but unremarkable',
+                'Innovation in technique elevates the work'
+            ],
+            'Cultural Dialogue': [
+                'Speaks directly to contemporary cultural anxieties',
+                'Limited engagement with current discourse',
+                'Contributes meaningfully to AI art criticism'
+            ]
+        };
+
+        function generateScore() {
+            // Generate realistic score distribution
+            const base = Math.random() * 40 + 30; // 30-70 base
+            const variation = (Math.random() - 0.5) * 30; // ±15 variation
+            return Math.max(10, Math.min(100, Math.round(base + variation)));
+        }
+
+        function evaluateSingle() {
+            const resultsDiv = document.getElementById('single-results');
+            const emptyDiv = document.getElementById('single-empty');
+            
+            // Show loading
+            resultsDiv.innerHTML = '<div class="loading-overlay"><div class="loading-spinner"></div></div>';
+            resultsDiv.style.display = 'block';
+            emptyDiv.style.display = 'none';
+            
+            setTimeout(() => {
+                const scores = {};
+                let html = '';
+                
+                // Generate scores
+                dimensions.forEach(dim => {
+                    scores[dim.name] = generateScore();
+                });
+                
+                // Calculate total
+                const total = dimensions.reduce((sum, dim) => {
+                    return sum + scores[dim.name] * dim.weight;
+                }, 0);
+                
+                // Determine verdict
+                const verdict = total >= 75 ? 'INCLUDE' : total >= 50 ? 'MAYBE' : 'EXCLUDE';
+                const verdictClass = total >= 75 ? 'verdict-include' : total >= 50 ? 'verdict-maybe' : 'verdict-exclude';
+                
+                // Build HTML
+                html = `
+                    <div class="verdict-header">
+                        <div>
+                            <div class="total-score">${total.toFixed(1)}</div>
+                            <div style="color: #666; font-size: 12px; margin-top: 5px;">WEIGHTED SCORE</div>
+                        </div>
+                        <div class="verdict-badge ${verdictClass}">${verdict}</div>
+                    </div>
+                `;
+                
+                // Add dimension scores
+                dimensions.forEach(dim => {
+                    const score = scores[dim.name];
+                    const rationale = rationales[dim.name][Math.floor(Math.random() * 3)];
+                    
+                    html += `
+                        <div class="dimension-item">
+                            <div class="dimension-header">
+                                <span class="dimension-name">${dim.name}</span>
+                                <span class="dimension-score">${score}/100</span>
+                            </div>
+                            <div class="score-bar">
+                                <div class="score-fill" data-width="${score}"></div>
+                            </div>
+                            <div class="dimension-rationale">${rationale}</div>
+                        </div>
+                    `;
+                });
+                
+                resultsDiv.innerHTML = html;
+                
+                // Animate score bars
+                setTimeout(() => {
+                    document.querySelectorAll('.score-fill').forEach(bar => {
+                        bar.style.width = bar.dataset.width + '%';
+                    });
+                }, 50);
+            }, 1500);
+        }
+
+        function evaluateBatch(files) {
+            const resultsDiv = document.getElementById('batch-results');
+            resultsDiv.innerHTML = '';
+            
+            Array.from(files).slice(0, 20).forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    setTimeout(() => {
+                        const scores = {};
+                        dimensions.forEach(dim => {
+                            scores[dim.name] = generateScore();
+                        });
+                        
+                        const total = dimensions.reduce((sum, dim) => {
+                            return sum + scores[dim.name] * dim.weight;
+                        }, 0);
+                        
+                        const verdict = total >= 75 ? 'INCLUDE' : total >= 50 ? 'MAYBE' : 'EXCLUDE';
+                        const verdictClass = total >= 75 ? 'verdict-include' : total >= 50 ? 'verdict-maybe' : 'verdict-exclude';
+                        
+                        const itemHtml = `
+                            <div class="batch-item">
+                                <img src="${e.target.result}" alt="Image ${index + 1}">
+                                <div class="batch-analysis">
+                                    <div class="batch-score-summary">
+                                        <div>
+                                            <div style="font-size: 24px; font-weight: 200;">${total.toFixed(1)}</div>
+                                            <div style="font-size: 10px; color: #666; margin-top: 2px;">SCORE</div>
+                                        </div>
+                                        <div class="verdict-badge ${verdictClass}" style="font-size: 11px; padding: 4px 12px;">${verdict}</div>
+                                    </div>
+                                    <div class="batch-mini-scores">
+                                        ${dimensions.map(dim => `
+                                            <div class="mini-score">
+                                                <div class="mini-score-value">${scores[dim.name]}</div>
+                                                <div>${dim.name.substring(0, 3).toUpperCase()}</div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        resultsDiv.insertAdjacentHTML('beforeend', itemHtml);
+                    }, 500 * index);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // File upload handlers
+        function setupUploadZone(zoneId, fileInputId, callback) {
+            const zone = document.getElementById(zoneId);
+            const input = document.getElementById(fileInputId);
+
+            zone.addEventListener('click', () => input.click());
+            
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                zone.style.borderColor = '#8b5cf6';
+            });
+
+            zone.addEventListener('dragleave', () => {
+                zone.style.borderColor = '#333';
+            });
+
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                zone.style.borderColor = '#333';
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    callback(files);
+                }
+            });
+
+            input.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    callback(e.target.files);
+                }
+            });
+        }
+
+        // Single mode
+        setupUploadZone('single-upload', 'single-file', (files) => {
+            const file = files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const zone = document.getElementById('single-upload');
+                zone.classList.add('has-image');
+                zone.innerHTML = `<img src="${e.target.result}" class="preview-image">`;
+                document.getElementById('single-evaluate').disabled = false;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('single-evaluate').addEventListener('click', evaluateSingle);
+
+        // Batch mode
+        setupUploadZone('batch-upload', 'batch-files', (files) => {
+            const zone = document.getElementById('batch-upload');
+            zone.innerHTML = `<div class="upload-label">${files.length} IMAGES SELECTED</div>`;
+            document.getElementById('batch-evaluate').disabled = false;
+            
+            // Store files for evaluation
+            zone.dataset.files = files.length;
+            window.batchFiles = files;
+        });
+
+        document.getElementById('batch-evaluate').addEventListener('click', () => {
+            if (window.batchFiles) {
+                evaluateBatch(window.batchFiles);
+            }
+        });
+
+        // Playoff mode
+        let playoff1, playoff2;
+
+        setupUploadZone('playoff-upload-1', 'playoff-file-1', (files) => {
+            const file = files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const zone = document.getElementById('playoff-upload-1');
+                zone.classList.add('has-image');
+                zone.innerHTML = `<img src="${e.target.result}" class="preview-image">`;
+                playoff1 = true;
+                checkPlayoffReady();
+            };
+            reader.readAsDataURL(file);
+        });
+
+        setupUploadZone('playoff-upload-2', 'playoff-file-2', (files) => {
+            const file = files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const zone = document.getElementById('playoff-upload-2');
+                zone.classList.add('has-image');
+                zone.innerHTML = `<img src="${e.target.result}" class="preview-image">`;
+                playoff2 = true;
+                checkPlayoffReady();
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function checkPlayoffReady() {
+            document.getElementById('playoff-compare').disabled = !(playoff1 && playoff2);
+        }
+
+        document.getElementById('playoff-compare').addEventListener('click', () => {
+            const resultsDiv = document.getElementById('playoff-results');
+            
+            // Generate scores for both
+            const scores1 = dimensions.reduce((sum, dim) => sum + generateScore() * dim.weight, 0);
+            const scores2 = dimensions.reduce((sum, dim) => sum + generateScore() * dim.weight, 0);
+            
+            // Determine winner
+            const winner = scores1 > scores2 ? 1 : 2;
+            const container = winner === 1 ? 
+                document.querySelector('#playoff-upload-1').parentElement :
+                document.querySelector('#playoff-upload-2').parentElement;
+            
+            // Add winner badge
+            const badge = document.createElement('div');
+            badge.className = 'winner-badge';
+            badge.textContent = 'WINNER';
+            container.appendChild(badge);
+            
+            resultsDiv.innerHTML = `
+                <div style="text-align: center; margin-top: 40px; padding: 30px; background: #0a0a0a; border: 1px solid #222;">
+                    <h3 style="margin-bottom: 20px; font-weight: 300;">COMPARISON RESULTS</h3>
+                    <div style="display: flex; justify-content: center; gap: 60px;">
+                        <div>
+                            <div style="font-size: 36px; color: ${winner === 1 ? '#00ff00' : '#ff0066'};">${scores1.toFixed(1)}</div>
+                            <div style="font-size: 12px; color: #666; margin-top: 5px;">IMAGE 1</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 36px; color: ${winner === 2 ? '#00ff00' : '#ff0066'};">${scores2.toFixed(1)}</div>
+                            <div style="font-size: 12px; color: #666; margin-top: 5px;">IMAGE 2</div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 20px; color: #888; font-size: 13px;">
+                        Image ${winner} demonstrates superior ${winner === 1 ? 'conceptual rigor' : 'technical mastery'} 
+                        and stronger alignment with curatorial standards.
+                    </p>
+                </div>
+            `;
+        });
+
+        // Nina Profile Modal
+        const profileModal = document.getElementById('profile-modal');
+        const ninaName = document.getElementById('nina-name');
+        const closeProfile = document.getElementById('close-profile');
+        
+        ninaName.addEventListener('click', () => {
+            profileModal.classList.add('active');
+        });
+        
+        closeProfile.addEventListener('click', () => {
+            profileModal.classList.remove('active');
+        });
+        
+        profileModal.addEventListener('click', (e) => {
+            if (e.target === profileModal) {
+                profileModal.classList.remove('active');
+            }
+        });
+        
+        // Algorithm info (now also opens profile)
+        document.querySelector('.algorithm-info').addEventListener('click', () => {
+            profileModal.classList.add('active');
+        });
+    </script>
+</body>
+</html>

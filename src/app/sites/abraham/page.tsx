@@ -25,17 +25,19 @@ export default function AbrahamSite() {
   const [isClient, setIsClient] = useState(false);
   const [actualWorks, setActualWorks] = useState<DailyWork[]>([]);
   const [loadingWorks, setLoadingWorks] = useState(false);
+  const [covenantData, setCovenantData] = useState<any>(null);
+  const [statusData, setStatusData] = useState<any>(null);
 
-  // Calculate covenant progress
+  // Calculate covenant progress (with Registry data override)
   const covenantStartDate = new Date('2025-10-19');
   const covenantEndDate = new Date('2038-10-19');
   const today = new Date();
   const totalDays = 4748; // 13 years
   
-  // Safe date calculations with fallbacks
-  const daysElapsed = Math.max(0, Math.floor((today.getTime() - covenantStartDate.getTime()) / (1000 * 60 * 60 * 24))) || 0;
-  const daysRemaining = Math.max(0, totalDays - daysElapsed);
-  const progressPercentage = Math.min(100, Math.max(0, Math.round((daysElapsed / totalDays) * 100))) || 0;
+  // Use Registry data if available, otherwise calculate
+  const daysElapsed = covenantData?.progress?.current_day || Math.max(0, Math.floor((today.getTime() - covenantStartDate.getTime()) / (1000 * 60 * 60 * 24))) || 0;
+  const daysRemaining = covenantData?.progress?.days_remaining || Math.max(0, totalDays - daysElapsed);
+  const progressPercentage = covenantData?.progress?.percentage || Math.min(100, Math.max(0, Math.round((daysElapsed / totalDays) * 100))) || 0;
 
   // Recent covenant works
   const recentWorks: DailyWork[] = [
@@ -126,6 +128,58 @@ export default function AbrahamSite() {
     fetchActualWorks();
   }, [isClient]);
 
+  // Fetch covenant data from Registry-integrated API
+  useEffect(() => {
+    if (!isClient) return;
+    
+    const fetchCovenantData = async () => {
+      try {
+        const response = await fetch('/api/agents/abraham/covenant');
+        const data = await response.json();
+        setCovenantData(data);
+        
+        // Update current work number from covenant data
+        if (data.metrics?.totalWorks) {
+          setCurrentWorkNumber(data.metrics.totalWorks);
+        }
+      } catch (error) {
+        console.error('Failed to fetch Abraham covenant data:', error);
+      }
+    };
+
+    fetchCovenantData();
+    
+    // Refresh covenant data every 30 seconds
+    const interval = setInterval(fetchCovenantData, 30000);
+    return () => clearInterval(interval);
+  }, [isClient]);
+
+  // Fetch real-time status from Registry-integrated API
+  useEffect(() => {
+    if (!isClient) return;
+    
+    const fetchStatusData = async () => {
+      try {
+        const response = await fetch('/api/agents/abraham/status');
+        const data = await response.json();
+        setStatusData(data);
+        
+        // Update live metrics
+        if (data.liveMetrics?.viewers) {
+          setLiveViewers(data.liveMetrics.viewers);
+        }
+      } catch (error) {
+        console.error('Failed to fetch Abraham status data:', error);
+      }
+    };
+
+    fetchStatusData();
+    
+    // Refresh status every 10 seconds for real-time updates
+    const interval = setInterval(fetchStatusData, 10000);
+    return () => clearInterval(interval);
+  }, [isClient]);
+
   // Helper function to format dates
   const formatWorkDate = (dateStr: string) => {
     if (!dateStr) return 'TODAY';
@@ -151,21 +205,26 @@ export default function AbrahamSite() {
         return Math.max(0, current + change); // Ensure non-negative
       });
       
-      // Update countdown
+      // Update countdown - use Registry data if available
       try {
-        const now = new Date();
-        const tomorrow = new Date(now);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        tomorrow.setHours(0, 0, 0, 0);
-        const diff = tomorrow.getTime() - now.getTime();
-        
-        if (diff > 0) {
-          const hours = Math.floor(diff / (1000 * 60 * 60));
-          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-          setTimeUntilNext(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+        if (statusData?.nextWork?.timeUntil) {
+          setTimeUntilNext(statusData.nextWork.timeUntil);
         } else {
-          setTimeUntilNext('00:00:00');
+          // Fallback to local calculation
+          const now = new Date();
+          const tomorrow = new Date(now);
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          tomorrow.setHours(0, 0, 0, 0);
+          const diff = tomorrow.getTime() - now.getTime();
+          
+          if (diff > 0) {
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            setTimeUntilNext(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+          } else {
+            setTimeUntilNext('00:00:00');
+          }
         }
       } catch (error) {
         console.error('Countdown calculation error:', error);
@@ -173,7 +232,7 @@ export default function AbrahamSite() {
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [isClient]);
+  }, [isClient, statusData]);
 
   return (
     <div className="min-h-screen bg-black text-white font-mono">
@@ -212,6 +271,9 @@ export default function AbrahamSite() {
             <div className="text-2xl font-bold flex items-center justify-center gap-1">
               <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
               {isClient ? (liveViewers || 847) : 847}
+              {statusData?.source === 'registry' && (
+                <span className="text-xs opacity-30">R</span>
+              )}
             </div>
             <div className="text-xs">WATCHING NOW</div>
           </div>
@@ -259,7 +321,12 @@ export default function AbrahamSite() {
                   <div className="text-sm opacity-75">STATUS</div>
                   <div className="text-lg flex items-center gap-2">
                     <Activity className="w-4 h-4" />
-                    {daysElapsed > 0 ? 'COVENANT ACTIVE' : 'LAUNCHING OCT 19'}
+                    {covenantData?.status === 'ACTIVE' ? 'COVENANT ACTIVE' : 
+                     covenantData?.status === 'LAUNCHING' ? 'LAUNCHING OCT 19' :
+                     daysElapsed > 0 ? 'COVENANT ACTIVE' : 'LAUNCHING OCT 19'}
+                    {(covenantData?.source === 'registry' || statusData?.source === 'registry') && (
+                      <span className="text-xs opacity-50">● REGISTRY</span>
+                    )}
                   </div>
                 </div>
                 <div>

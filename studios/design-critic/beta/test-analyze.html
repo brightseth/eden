@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Critic - Test Analyze Function</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            padding: 20px;
+            background: #111;
+            color: #fff;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #000;
+            color: #fff;
+            border: 1px solid #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #222;
+        }
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            background: #1a1a1a;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Design Critic Analyze Button Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Check if Main Page Loads</h2>
+        <button onclick="testMainPage()">Test Main Page</button>
+        <div id="status1" class="status">Ready to test...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Simulate Single Mode Evaluation</h2>
+        <button onclick="testSingleMode()">Test Single Mode</button>
+        <div id="status2" class="status">Ready to test...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Check Console for Errors</h2>
+        <button onclick="checkConsole()">Check Console</button>
+        <div id="status3" class="status">Ready to test...</div>
+    </div>
+
+    <script>
+        function testMainPage() {
+            const status = document.getElementById('status1');
+            status.innerHTML = 'Opening main page in iframe to test...';
+            
+            const iframe = document.createElement('iframe');
+            iframe.src = './index.html';
+            iframe.style.width = '100%';
+            iframe.style.height = '400px';
+            iframe.style.border = '1px solid #666';
+            iframe.onload = () => {
+                status.innerHTML = '✅ Main page loaded successfully. Check if EVALUATE button works in the iframe below:';
+            };
+            status.after(iframe);
+        }
+
+        function testSingleMode() {
+            const status = document.getElementById('status2');
+            status.innerHTML = 'Testing single mode evaluation logic...';
+            
+            // Simulate the evaluation logic from the main page
+            const mockEvaluateSingle = () => {
+                console.log('Evaluate clicked - TEST');
+                
+                // Mock image
+                const mockImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+                
+                // Generate scores
+                const scores = {
+                    'Paris Photo Readiness': Math.floor(Math.random() * 100),
+                    'AI-Criticality': Math.floor(Math.random() * 100),
+                    'Conceptual Strength': Math.floor(Math.random() * 100),
+                    'Technical Excellence': Math.floor(Math.random() * 100),
+                    'Cultural Dialogue': Math.floor(Math.random() * 100)
+                };
+                
+                // Calculate weighted total
+                const weights = [0.30, 0.25, 0.20, 0.15, 0.10];
+                const total = Object.values(scores).reduce((sum, score, i) => sum + score * weights[i], 0);
+                
+                // Determine verdict
+                const verdict = total >= 75 ? 'INCLUDE' : total >= 50 ? 'MAYBE' : 'EXCLUDE';
+                
+                status.innerHTML = `
+                    ✅ Evaluation logic works!<br>
+                    Scores: ${JSON.stringify(scores)}<br>
+                    Total: ${total.toFixed(1)}<br>
+                    Verdict: ${verdict}
+                `;
+            };
+            
+            mockEvaluateSingle();
+        }
+
+        function checkConsole() {
+            const status = document.getElementById('status3');
+            status.innerHTML = `
+                Open Developer Console (F12 or Cmd+Option+I) and:<br>
+                1. Click the EVALUATE button on the main Design Critic page<br>
+                2. You should see "Evaluate clicked" in the console<br>
+                3. If you see errors, paste them here for debugging
+            `;
+        }
+    </script>
+</body>
+</html>

@@ -63,6 +63,24 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
     rolloutStrategy: 'gradual',
     culturalImpact: 'Enables Registry as single source of truth for agent configurations',
     rollbackPlan: 'Set ENABLE_REGISTRY_SYNC=false, agents revert to local operation'
+  },
+
+  ENABLE_ABRAHAM_REGISTRY_INTEGRATION: {
+    key: 'ENABLE_ABRAHAM_REGISTRY_INTEGRATION',
+    description: 'Enable full Registry integration for Abraham site with real-time features',
+    defaultValue: process.env.NODE_ENV === 'development',
+    rolloutStrategy: 'dev',
+    culturalImpact: 'Abraham site displays actual Registry data instead of mocks',
+    rollbackPlan: 'Disable flag, fallback to current Supabase + mock data pattern'
+  },
+
+  ENABLE_SOLIENNE_REGISTRY_INTEGRATION: {
+    key: 'ENABLE_SOLIENNE_REGISTRY_INTEGRATION',
+    description: 'Enable Registry-first architecture for Solienne site and embed components',
+    defaultValue: process.env.NODE_ENV === 'development',
+    rolloutStrategy: 'dev',
+    culturalImpact: 'Solienne site displays consciousness streams from Registry, not legacy archives',
+    rollbackPlan: 'Disable flag, fallback to direct Supabase queries to agent_archives table'
   }
 };
 
@@ -146,4 +164,6 @@ export const FLAGS = {
   ENABLE_LAUNCH_CRITERIA: 'ENABLE_LAUNCH_CRITERIA',
   ENABLE_DATA_RECONCILIATION: 'ENABLE_DATA_RECONCILIATION',
   ENABLE_REGISTRY_SYNC: 'ENABLE_REGISTRY_SYNC',
+  ENABLE_ABRAHAM_REGISTRY_INTEGRATION: 'ENABLE_ABRAHAM_REGISTRY_INTEGRATION',
+  ENABLE_SOLIENNE_REGISTRY_INTEGRATION: 'ENABLE_SOLIENNE_REGISTRY_INTEGRATION',
 } as const;

@@ -5,13 +5,13 @@ import Link from 'next/link';
 import { Camera, Sparkles, Clock, CheckCircle, ArrowRight, Activity, Eye, Heart, TrendingUp } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
 
-interface ConsciousnessStream {
+interface SolienneWork {
   id: string;
   number: number;
   date: string;
   title: string;
   theme: string;
-  status: 'completed' | 'generating' | 'upcoming';
+  status: 'completed' | 'creating' | 'upcoming'; // Using canonical status terms
   views?: number;
   likes?: number;
   collected?: boolean;

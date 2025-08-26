@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { registryApi } from '@/lib/generated-sdk';
+import { featureFlags, FLAGS } from '@/config/flags';
 
 export async function GET(request: NextRequest) {
   try {
@@ -9,56 +11,101 @@ export async function GET(request: NextRequest) {
     const sort = searchParams.get('sort') || 'date_desc';
     const search = searchParams.get('search');
 
-    // Use Registry API instead of direct Supabase query
-    const registryUrl = process.env.REGISTRY_URL || 'http://localhost:3005';
-    const params = new URLSearchParams({
-      limit: limit.toString(),
-      offset: offset.toString()
+    // Feature flag check for Registry integration
+    if (!featureFlags.isEnabled(FLAGS.ENABLE_SOLIENNE_REGISTRY_INTEGRATION)) {
+      // Fallback to empty response when feature is disabled
+      console.log('[Solienne] Registry integration disabled, returning empty works');
+      return NextResponse.json({
+        works: [],
+        total: 0,
+        limit,
+        offset,
+        filters: { tags },
+        sort,
+        message: 'Registry integration disabled'
+      });
+    }
+
+    // Use generated SDK - Following ADR-019 Registry Integration Pattern
+    const agent = await registryApi.getAgent('solienne', ['creations', 'profile']);
+    
+    if (!agent.creations) {
+      return NextResponse.json({
+        works: [],
+        total: 0,
+        limit,
+        offset,
+        filters: { tags },
+        sort
+      });
+    }
+
+    // Apply client-side filtering and sorting until Registry API supports query params
+    let works = agent.creations.filter(creation => 
+      creation.status === 'PUBLISHED' || creation.status === 'CURATED'
+    );
+
+    // Apply search filter
+    if (search) {
+      const searchLower = search.toLowerCase();
+      works = works.filter(work => 
+        work.title.toLowerCase().includes(searchLower) ||
+        (work.metadata?.description?.toLowerCase() || '').includes(searchLower)
+      );
+    }
+
+    // Apply sorting
+    const [sortField, sortOrder] = sort.split('_');
+    works.sort((a, b) => {
+      let aVal, bVal;
+      switch (sortField) {
+        case 'date':
+          aVal = new Date(a.createdAt || '').getTime();
+          bVal = new Date(b.createdAt || '').getTime();
+          break;
+        case 'number':
+          aVal = a.metadata?.dayNumber || 0;
+          bVal = b.metadata?.dayNumber || 0;
+          break;
+        default:
+          aVal = a.title;
+          bVal = b.title;
+      }
+      
+      if (sortOrder === 'desc') {
+        return aVal < bVal ? 1 : -1;
+      }
+      return aVal > bVal ? 1 : -1;
     });
 
-    // Add search filter if present
-    if (search) {
-      params.append('search', search);
-    }
+    // Apply pagination
+    const paginatedWorks = works.slice(offset, offset + limit);
 
-    // Convert sort format from Academy to Registry format
-    const [sortField, sortOrder] = sort.split('_');
-    const registrySortParam = sortField === 'date' ? 'createdAt' : 
-                             sortField === 'number' ? 'dayNumber' : 'title';
-    params.append('sort', registrySortParam);
-    params.append('order', sortOrder === 'desc' ? 'desc' : 'asc');
+    const registryData = { works: paginatedWorks, total: works.length };
 
-    const response = await fetch(`${registryUrl}/api/v1/agents/solienne/works?${params}`);
-
-    if (!response.ok) {
-      throw new Error(`Registry API error: ${response.status}`);
-    }
-
-    const registryData = await response.json();
-
-    // Transform Registry works to match Academy Archive interface
-    const transformedWorks = registryData.works.map((work: any) => ({
-      id: work.id,
+    // Transform Registry Creations to Academy Works interface
+    // Using canonical domain terms: Creation -> Work (ADR-023)
+    const transformedWorks = registryData.works.map((creation: any) => ({
+      id: creation.id,
       agent_id: 'solienne',
-      archive_type: 'generation',
-      title: work.title || 'Untitled',
-      description: work.description,
-      image_url: work.imageUrl || work.mediaUri,
-      thumbnail_url: work.imageUrl || work.mediaUri,
-      created_date: work.createdAt,
-      archive_number: work.metadata?.dayNumber || null,
+      archive_type: 'work', // Using canonical term "work" not "generation"
+      title: creation.title || 'Untitled Work',
+      description: creation.metadata?.description,
+      image_url: creation.mediaUri,
+      thumbnail_url: creation.mediaUri,
+      created_date: creation.createdAt,
+      archive_number: creation.metadata?.dayNumber || null,
       tags: [
-        work.theme,
-        work.style, 
-        work.medium,
-        ...(work.metadata?.tags || [])
+        creation.metadata?.theme,
+        creation.metadata?.style,
+        creation.metadata?.medium,
+        ...(creation.metadata?.tags || [])
       ].filter(Boolean),
       metadata: {
-        ...work.metadata,
-        tags: [work.theme, work.style, work.medium].filter(Boolean),
-        themes: work.theme,
-        style: work.style,
-        medium: work.medium
+        ...creation.metadata,
+        theme: creation.metadata?.theme,
+        style: creation.metadata?.style,
+        medium: creation.metadata?.medium
       },
       trainer_id: null
     }));
@@ -73,11 +120,17 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error fetching from Registry API:', error);
+    const traceId = `solienne-works-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    console.error(`[Registry] Failed to fetch Solienne works - trace: ${traceId}`, {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    });
+    
     return NextResponse.json(
       { 
         error: 'Failed to fetch works from Registry',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error.message : 'Unknown error',
+        traceId
       },
       { status: 500 }
     );

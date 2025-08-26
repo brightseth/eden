@@ -1,51 +1,99 @@
 import { NextResponse } from 'next/server';
+import { registryApi } from '@/lib/generated-sdk';
+import { featureFlags, FLAGS } from '@/config/flags';
+
+// Calculate current covenant day from start date
+function calculateCovenantDay(): number {
+  const covenantStartDate = new Date('2025-10-19');
+  const today = new Date();
+  
+  if (today < covenantStartDate) {
+    return 0; // Covenant hasn't started yet
+  }
+  
+  const diffTime = today.getTime() - covenantStartDate.getTime();
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  return Math.max(0, diffDays + 1); // Day 1 is the start date
+}
+
+// Calculate progress percentage
+function calculateProgress(): number {
+  const totalDays = 4748; // 13 years
+  const currentDay = calculateCovenantDay();
+  return Math.min(100, Math.max(0, Math.round((currentDay / totalDays) * 100)));
+}
 
 export async function GET() {
-  const covenantStart = new Date('2017-06-15T00:00:00Z');
-  const covenantEnd = new Date('2030-10-19T00:00:00Z');
-  const now = new Date();
+  const useRegistry = featureFlags.isEnabled(FLAGS.ENABLE_ABRAHAM_REGISTRY_INTEGRATION);
+  
+  const covenantStartDate = new Date('2025-10-19');
+  const covenantEndDate = new Date('2038-10-19');
+  const today = new Date();
+  const totalDays = 4748;
+  const currentDay = calculateCovenantDay();
+  const progress = calculateProgress();
+  const daysRemaining = Math.max(0, totalDays - currentDay);
   
   // Calculate time remaining
-  const msRemaining = covenantEnd.getTime() - now.getTime();
-  const daysRemaining = Math.floor(msRemaining / (1000 * 60 * 60 * 24));
+  const msRemaining = covenantEndDate.getTime() - today.getTime();
   const yearsRemaining = Math.floor(daysRemaining / 365);
   const daysInYear = daysRemaining % 365;
   const hoursRemaining = Math.floor((msRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutesRemaining = Math.floor((msRemaining % (1000 * 60 * 60)) / (1000 * 60));
   const secondsRemaining = Math.floor((msRemaining % (1000 * 60)) / 1000);
   
-  // Calculate progress
-  const totalMs = covenantEnd.getTime() - covenantStart.getTime();
-  const elapsedMs = now.getTime() - covenantStart.getTime();
-  const progressPercentage = (elapsedMs / totalMs) * 100;
-  
-  // Calculate current week and expected works
-  const weeksElapsed = Math.floor(elapsedMs / (1000 * 60 * 60 * 24 * 7));
-  const currentWeek = weeksElapsed + 1;
-  const expectedWorks = weeksElapsed * 6; // 6 works per week
-  
-  // Get current day of week
-  const dayOfWeek = now.getDay();
-  const isSabbath = dayOfWeek === 0; // Sunday
-  
+  let metrics = {
+    totalWorks: 2519, // Known early works count
+    covenantWorks: Math.max(0, currentDay),
+    avgViews: 2500,
+    collectors: 142,
+  };
+
+  if (useRegistry) {
+    try {
+      console.log('[Abraham Covenant API] Using Registry integration');
+      
+      // Get Abraham's profile and metrics from Registry
+      const profile = await registryApi.getAgentProfile('abraham');
+      const creations = await registryApi.getAgentCreations('abraham', 'PUBLISHED');
+      
+      // Calculate metrics from actual Registry data
+      const covenantWorks = creations.filter(creation => 
+        creation.metadata?.dayNumber && creation.metadata.dayNumber > 2519
+      );
+      
+      metrics = {
+        totalWorks: creations.length,
+        covenantWorks: covenantWorks.length,
+        avgViews: Math.floor(creations.reduce((acc, creation) => 
+          acc + (creation.metadata?.views || 0), 0
+        ) / Math.max(1, creations.length)),
+        collectors: creations.reduce((acc, creation) => 
+          acc + (creation.metadata?.collectors || 0), 0
+        ),
+      };
+      
+    } catch (error) {
+      console.error('[Abraham Covenant API] Registry fetch failed, using defaults:', error);
+    }
+  }
+
   const covenant = {
-    status: "ACTIVE",
-    is_sabbath: isSabbath,
-    current_day: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek],
+    status: today >= covenantStartDate ? 'ACTIVE' : 'LAUNCHING',
+    phase: currentDay === 0 ? 'preparation' : currentDay <= 100 ? 'foundation' : 'execution',
     
     timeline: {
-      start: covenantStart.toISOString(),
-      end: covenantEnd.toISOString(),
-      current: now.toISOString()
+      start: covenantStartDate.toISOString(),
+      end: covenantEndDate.toISOString(),
+      current: today.toISOString()
     },
     
     progress: {
-      percentage: progressPercentage.toFixed(2),
-      current_year: Math.floor(elapsedMs / (1000 * 60 * 60 * 24 * 365)) + 1,
-      current_week: currentWeek,
-      weeks_remaining: Math.floor(daysRemaining / 7),
-      expected_total_works: Math.floor((totalMs / (1000 * 60 * 60 * 24 * 7)) * 6),
-      expected_works_to_date: expectedWorks
+      percentage: progress,
+      current_day: currentDay,
+      days_remaining: daysRemaining,
+      total_days: totalDays,
+      years_remaining: yearsRemaining
     },
     
     countdown: {
@@ -59,28 +107,23 @@ export async function GET() {
     },
     
     rules: {
-      creations_per_week: 6,
-      sabbath_day: "Sunday",
-      work_days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+      commitment: "13-year daily autonomous creation",
+      frequency: "Every day without exception",
+      focus: "Knowledge synthesis and collective intelligence",
+      output: "Visual artifacts documenting human understanding"
     },
     
     milestones: {
-      next_sabbath: getNextSunday(),
-      year_8_begins: "2025-06-15T00:00:00Z",
-      halfway_point: "2023-12-17T00:00:00Z", // Already passed
-      final_work_date: "2030-10-18T23:59:59Z", // Last Saturday before end
-      covenant_completion: "2030-10-19T00:00:00Z"
-    }
+      covenant_launch: "2025-10-19T00:00:00Z",
+      first_year_complete: "2026-10-19T00:00:00Z",
+      halfway_point: "2031-10-19T00:00:00Z",
+      final_work: "2038-10-18T23:59:59Z",
+      covenant_completion: "2038-10-19T00:00:00Z"
+    },
+    
+    metrics,
+    source: useRegistry ? 'registry' : 'calculated'
   };
   
   return NextResponse.json(covenant);
-}
-
-function getNextSunday() {
-  const now = new Date();
-  const daysUntilSunday = (7 - now.getDay()) % 7 || 7;
-  const nextSunday = new Date(now);
-  nextSunday.setDate(now.getDate() + daysUntilSunday);
-  nextSunday.setHours(0, 0, 0, 0);
-  return nextSunday.toISOString();
 }

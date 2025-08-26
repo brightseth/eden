@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 interface SolienneWork {
   id: string;
@@ -13,30 +12,53 @@ interface SolienneWork {
 
 export default function SolienneEmbedLatest() {
   const [work, setWork] = useState<SolienneWork | null>(null);
-  const supabase = createClientComponentClient();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchLatestWork();
   }, []);
 
   async function fetchLatestWork() {
-    const { data } = await supabase
-      .from('agent_archives')
-      .select('*')
-      .eq('agent_id', 'solienne')
-      .order('created_date', { ascending: false })
-      .limit(1)
-      .single();
-
-    if (data) {
-      setWork(data);
+    try {
+      setLoading(true);
+      // Use Registry API through Academy gateway (ADR-019)
+      const response = await fetch('/api/agents/solienne/works?limit=1&sort=date_desc');
+      
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (data.works && data.works.length > 0) {
+        setWork(data.works[0]);
+      } else {
+        setError('No works found');
+      }
+    } catch (err) {
+      console.error('Failed to fetch latest Solienne work:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
     }
   }
 
-  if (!work) {
+  if (loading) {
     return (
       <div className="w-full h-full bg-black flex items-center justify-center">
         <div className="animate-pulse w-full h-full bg-gray-900" />
+      </div>
+    );
+  }
+
+  if (error || !work) {
+    return (
+      <div className="w-full h-full bg-black flex items-center justify-center">
+        <div className="text-white text-xs text-center p-4">
+          <div className="mb-2">SOLIENNE</div>
+          <div className="opacity-60">{error || 'No work available'}</div>
+        </div>
       </div>
     );
   }

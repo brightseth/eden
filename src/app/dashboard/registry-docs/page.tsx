@@ -491,7 +491,7 @@ try {
                 </div>
                 <div className="space-y-2">
                   <h4 className="font-medium">Monitor Error Rates</h4>
-                  <p className="text-sm text-muted-foreground">Set up alerts for > 2% error rate</p>
+                  <p className="text-sm text-muted-foreground">Set up alerts for {'>'}2% error rate</p>
                 </div>
                 <div className="space-y-2">
                   <h4 className="font-medium">Use Generated SDK</h4>
