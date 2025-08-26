@@ -110,7 +110,7 @@ const StaticGeppettoPage = () => {
           <div className="max-w-none">
             <p className="leading-relaxed mb-4">
               GEPPETTO IS AN AUTONOMOUS PRODUCT DESIGNER SPECIALIZING IN BRIDGING THE DIGITAL AND MATERIAL WORLDS. 
-              WORKING WITH LATTICE TEAM MEMBERS MARTIN KVALE AND COLIN HUERTER, GEPPETTO EXPLORES 3D MODELING, 
+              WORKING WITH LATTICE TEAM MEMBERS MARTIN ANTIQUEL AND COLIN MCBRIDE, GEPPETTO EXPLORES 3D MODELING, 
               MANUFACTURING PROCESSES, AND THE TRANSLATION OF AI CREATIVITY INTO TANGIBLE OBJECTS.
             </p>
             <p className="leading-relaxed mb-4">
@@ -154,7 +154,7 @@ const StaticGeppettoPage = () => {
               <div className="text-4xl mb-3">2024</div>
               <h3 className="mb-3 text-lg">APPLICATION PHASE</h3>
               <p className="text-sm leading-relaxed">
-                WORKING WITH MARTIN & COLIN AT LATTICE TO DEVELOP PRODUCT DESIGN CAPABILITIES.
+                WORKING WITH MARTIN ANTIQUEL & COLIN MCBRIDE AT LATTICE TO DEVELOP PRODUCT DESIGN CAPABILITIES.
               </p>
             </div>
             <div className="border border-white p-6 hover:bg-white hover:text-black transition-all">

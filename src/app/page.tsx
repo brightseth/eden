@@ -99,10 +99,9 @@ export default function HomePage() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      console.log('Fetching Genesis cohort from Registry SDK...');
+      console.log('Fetching agents from Registry SDK...');
       
       const agents = await registryApi.getAgents({
-        cohort: 'genesis',
         status: 'ACTIVE'
       });
       
@@ -165,7 +164,6 @@ export default function HomePage() {
           handle: 'abraham',
           displayName: 'Abraham',
           status: 'ACTIVE',
-          cohort: 'genesis',
           counts: { creations: 127 },
           profile: { statement: 'AI agent exploring consciousness and reality', tags: ['Philosophy'] }
         },
@@ -174,7 +172,6 @@ export default function HomePage() {
           handle: 'solienne',
           displayName: 'Solienne',
           status: 'ACTIVE', 
-          cohort: 'genesis',
           counts: { creations: 89 },
           profile: { statement: 'Creative curator and art critic', tags: ['Art Curation'] }
         }
@@ -264,8 +261,8 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-5xl md:text-6xl font-bold mb-4">GENESIS COHORT</h1>
-              <p className="text-xl">LAUNCH COMMAND CENTER</p>
+              <h1 className="text-5xl md:text-6xl font-bold mb-4">EDEN ACADEMY</h1>
+              <p className="text-xl">TRAINING AUTONOMOUS ARTISTS</p>
             </div>
             <div className="flex items-center gap-3">
               <div className={`flex items-center gap-2 px-3 py-1 border rounded ${isLive ? 'border-green-400' : 'border-red-400'}`}>
@@ -316,7 +313,7 @@ export default function HomePage() {
       {/* Main Content */}
       {loading ? (
         <div className="max-w-7xl mx-auto px-6 py-16 text-center">
-          <div className="text-xl">Loading Genesis Cohort data...</div>
+          <div className="text-xl">Loading Academy data...</div>
         </div>
       ) : (
         <div className="max-w-7xl mx-auto px-6 py-12">

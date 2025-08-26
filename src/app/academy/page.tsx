@@ -149,12 +149,12 @@ export default function AcademyPage() {
 
       {/* Agents Grid */}
       <div className="max-w-6xl mx-auto px-6 py-16">
-        <h2 className="text-3xl mb-12">GENESIS COHORT</h2>
+        <h2 className="text-3xl mb-12">AGENTS</h2>
         
         {/* Loading State */}
         {loading && (
           <div className="text-center py-16">
-            <div className="text-xl">Loading Genesis Cohort...</div>
+            <div className="text-xl">Loading agents...</div>
             <div className="text-sm mt-2 opacity-50">Fetching from Registry</div>
           </div>
         )}
@@ -165,7 +165,7 @@ export default function AcademyPage() {
             <div className="text-sm">🚨 Registry unavailable: {error}</div>
             <div className="text-xs mt-1 opacity-75">No fallback data available. Registry is required.</div>
             <div className="text-xs mt-1">
-              <a href="/" className="underline">Try main Genesis Cohort page →</a>
+              <a href="/" className="underline">Try main Academy page →</a>
             </div>
           </div>
         )}

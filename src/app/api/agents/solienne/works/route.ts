@@ -26,10 +26,17 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Use generated SDK - Following ADR-019 Registry Integration Pattern
-    const agent = await registryApi.getAgent('solienne', ['creations', 'profile']);
+    // Use Registry API via HTTP instead of generated SDK  
+    const registryUrl = process.env.REGISTRY_URL || 'http://localhost:3005';
+    const response = await fetch(`${registryUrl}/api/v1/agents/solienne/works?limit=10000`);
     
-    if (!agent.creations) {
+    if (!response.ok) {
+      throw new Error(`Registry API error: ${response.status}`);
+    }
+    
+    const registryData = await response.json();
+    
+    if (!registryData.works) {
       return NextResponse.json({
         works: [],
         total: 0,
@@ -41,7 +48,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Apply client-side filtering and sorting until Registry API supports query params
-    let works = agent.creations.filter(creation => 
+    let works = registryData.works.filter(creation => 
       creation.status === 'PUBLISHED' || creation.status === 'CURATED'
     );
 
@@ -54,7 +61,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Apply sorting
+    // Apply sorting using the original data structure
     const [sortField, sortOrder] = sort.split('_');
     works.sort((a, b) => {
       let aVal, bVal;
@@ -81,42 +88,40 @@ export async function GET(request: NextRequest) {
     // Apply pagination
     const paginatedWorks = works.slice(offset, offset + limit);
 
-    const registryData = { works: paginatedWorks, total: works.length };
-
-    // Transform Registry Creations to Academy Works interface
-    // Using canonical domain terms: Creation -> Work (ADR-023)
-    const transformedWorks = registryData.works.map((creation: any) => ({
-      id: creation.id,
+    // Transform Registry works to Academy format
+    const transformedWorks = paginatedWorks.map((work: any) => ({
+      id: work.id,
       agent_id: 'solienne',
       archive_type: 'work', // Using canonical term "work" not "generation"
-      title: creation.title || 'Untitled Work',
-      description: creation.metadata?.description,
-      image_url: creation.mediaUri,
-      thumbnail_url: creation.mediaUri,
-      created_date: creation.createdAt,
-      archive_number: creation.metadata?.dayNumber || null,
+      title: work.title || 'Untitled Work',
+      description: work.metadata?.description,
+      image_url: work.imageUrl || work.mediaUri,
+      thumbnail_url: work.imageUrl || work.mediaUri,
+      created_date: work.createdAt,
+      archive_number: work.metadata?.dayNumber || null,
       tags: [
-        creation.metadata?.theme,
-        creation.metadata?.style,
-        creation.metadata?.medium,
-        ...(creation.metadata?.tags || [])
+        work.metadata?.theme,
+        work.metadata?.style,
+        work.metadata?.medium,
+        ...(work.metadata?.tags || [])
       ].filter(Boolean),
       metadata: {
-        ...creation.metadata,
-        theme: creation.metadata?.theme,
-        style: creation.metadata?.style,
-        medium: creation.metadata?.medium
+        ...work.metadata,
+        theme: work.metadata?.theme,
+        style: work.metadata?.style,
+        medium: work.metadata?.medium
       },
       trainer_id: null
     }));
 
     return NextResponse.json({
       works: transformedWorks,
-      total: registryData.total,
+      total: works.length,
       limit,
       offset,
       filters: { tags },
-      sort
+      sort,
+      source: 'registry'
     });
 
   } catch (error) {
