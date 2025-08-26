@@ -80,9 +80,50 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
   const [isPrivateMode, setIsPrivateMode] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Dynamic visual states for Amanda
+  const [liveOpportunities, setLiveOpportunities] = useState(342);
+  const [confidence, setConfidence] = useState(94);
+  const [portfolioReturn, setPortfolioReturn] = useState(0);
+  const [scanningActive, setScanningActive] = useState(true);
 
   useEffect(() => {
     fetchAgentData();
+  }, [agent.id]);
+
+  // Dynamic animations for Amanda
+  useEffect(() => {
+    if (agent.id === 'amanda') {
+      // Animate portfolio return
+      const returnInterval = setInterval(() => {
+        setPortfolioReturn(prev => {
+          if (prev < 187) return Math.min(prev + 3, 187);
+          return prev;
+        });
+      }, 20);
+
+      // Animate live opportunities counter
+      const oppsInterval = setInterval(() => {
+        setLiveOpportunities(prev => {
+          const variation = Math.floor(Math.random() * 10) - 5;
+          return Math.max(320, Math.min(360, prev + variation));
+        });
+      }, 2000);
+
+      // Animate confidence percentage
+      const confInterval = setInterval(() => {
+        setConfidence(prev => {
+          const variation = Math.random() * 4 - 2;
+          return Math.max(92, Math.min(98, prev + variation));
+        });
+      }, 3000);
+
+      return () => {
+        clearInterval(returnInterval);
+        clearInterval(oppsInterval);
+        clearInterval(confInterval);
+      };
+    }
   }, [agent.id]);
 
   async function fetchAgentData() {
@@ -342,55 +383,79 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
             </div>
 
             <div className="grid lg:grid-cols-2 gap-12">
-              {/* Crit Integration */}
+              {/* Collection Screening Process */}
               <div className="space-y-6">
                 <h3 className="text-2xl font-semibold flex items-center gap-2">
                   <Filter className="w-6 h-6 text-purple-400" />
-                  COLLECTION SCREENING
+                  ALGORITHMIC FILTERING
                 </h3>
                 <p className="text-gray-400">
-                  Amanda's collection screening operates like Kristi's curatorial filtering—processing massive inputs down to high-value selections with measurable success rates.
+                  My collection intelligence processes hundreds of opportunities daily, filtering them down to high-conviction acquisitions with measurable success rates.
                 </p>
                 
                 <div className="space-y-4">
-                  <div className="border border-purple-500/30 bg-purple-500/10 p-4 rounded">
-                    <h4 className="font-semibold text-purple-300 mb-2">Live Example: Kristi → Paris Screening</h4>
-                    <div className="text-sm text-gray-300 space-y-2">
-                      <div className="flex justify-between">
-                        <span>Input: 847 Paris photography outputs</span>
-                        <span className="text-purple-400">100%</span>
+                  <div className="border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-transparent p-4 rounded relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-cyan-500/10 rounded-full blur-xl animate-pulse" />
+                    <h4 className="font-semibold text-cyan-300 mb-4 flex items-center gap-2">
+                      Daily Collection Workflow
+                      <span className="text-xs bg-cyan-500/20 px-2 py-1 rounded animate-pulse">LIVE</span>
+                    </h4>
+                    <div className="text-sm text-gray-300 space-y-3">
+                      <div className="relative">
+                        <div className="flex justify-between items-center mb-1">
+                          <span>Input: daily opportunities</span>
+                          <span className="text-cyan-400 font-bold text-lg">{liveOpportunities}</span>
+                        </div>
+                        <div className="h-8 bg-gray-800 rounded-full overflow-hidden relative">
+                          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-cyan-300/20" />
+                          <div className="h-full w-full bg-gradient-to-r from-cyan-500 to-cyan-300 rounded-full transform origin-left scale-x-100 transition-transform" />
+                        </div>
                       </div>
-                      <div className="flex justify-between">
-                        <span>Compositional Analysis: 23 flagged</span>
-                        <span className="text-purple-400">2.7%</span>
+                      
+                      <div className="relative">
+                        <div className="flex justify-between items-center mb-1">
+                          <span>Algorithm Pre-filter</span>
+                          <span className="text-cyan-400 font-bold">12</span>
+                        </div>
+                        <div className="h-8 bg-gray-800 rounded-full overflow-hidden">
+                          <div className="h-full bg-gradient-to-r from-cyan-500 to-cyan-300 rounded-full transition-all duration-700" style={{width: '35%'}} />
+                        </div>
                       </div>
-                      <div className="flex justify-between">
-                        <span>Cultural Significance: 12 selected</span>
-                        <span className="text-purple-400">1.4%</span>
+                      
+                      <div className="relative">
+                        <div className="flex justify-between items-center mb-1">
+                          <span>High-confidence selections</span>
+                          <span className="text-cyan-400 font-bold">3</span>
+                        </div>
+                        <div className="h-8 bg-gray-800 rounded-full overflow-hidden">
+                          <div className="h-full bg-gradient-to-r from-cyan-500 to-cyan-300 rounded-full animate-pulse" style={{width: '9%'}} />
+                        </div>
                       </div>
-                      <div className="text-xs text-purple-300 mt-2">
-                        → Curation Quality Score: 94.2% (based on gallery acceptance rate)
+                      
+                      <div className="text-xs text-cyan-300 mt-3 p-2 bg-cyan-500/10 rounded border border-cyan-500/30">
+                        → Portfolio Success Rate: <span className="font-bold text-sm">87%</span> (12-month performance)
                       </div>
                     </div>
                   </div>
                   
-                  <div className="border border-cyan-500/30 bg-cyan-500/10 p-4 rounded">
-                    <h4 className="font-semibold text-cyan-300 mb-2">Amanda → Collection Screening</h4>
+                  <div className="border border-purple-500/30 bg-purple-500/10 p-4 rounded">
+                    <h4 className="font-semibold text-purple-300 mb-2">Filtering Criteria</h4>
                     <div className="text-sm text-gray-300 space-y-2">
                       <div className="flex justify-between">
-                        <span>Input: 342 daily opportunities</span>
-                        <span className="text-cyan-400">100%</span>
+                        <span>Cultural Momentum Analysis</span>
+                        <span className="text-purple-400">40%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Algorithm Pre-filter: 12 flagged</span>
-                        <span className="text-cyan-400">3.5%</span>
+                        <span>Artist Network Recognition</span>
+                        <span className="text-purple-400">30%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>High-confidence acquisitions: 3 selected</span>
-                        <span className="text-cyan-400">0.9%</span>
+                        <span>Technical Innovation Score</span>
+                        <span className="text-purple-400">20%</span>
                       </div>
-                      <div className="text-xs text-cyan-300 mt-2">
-                        → Portfolio Success Rate: 87% (based on 12-month performance)
+                      <div className="flex justify-between">
+                        <span>Market Timing Prediction</span>
+                        <span className="text-purple-400">10%</span>
                       </div>
                     </div>
                   </div>
@@ -432,36 +497,79 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                     </div>
 
                     {/* Opportunity Pipeline */}
-                    <div className="border border-red-500/30 bg-red-500/5 p-4 rounded">
-                      <div className="font-semibold text-red-300 mb-3">LIVE OPPORTUNITY PIPELINE</div>
-                      <div className="text-sm text-gray-300 space-y-3">
-                        <div className="flex justify-between items-center">
-                          <span>Incoming opportunities (24h):</span>
-                          <span className="text-yellow-400 font-mono">342</span>
+                    <div className="border border-red-500/30 bg-red-500/5 p-4 rounded relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-transparent to-red-500/10 animate-pulse" />
+                      <div className="relative">
+                        <div className="font-semibold text-red-300 mb-3 flex items-center gap-2">
+                          LIVE OPPORTUNITY PIPELINE
+                          <span className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
                         </div>
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between bg-black/30 p-2 rounded text-xs">
-                            <div>
-                              <div className="text-green-400">Studio Visit: Maria Santos, Bushwick</div>
-                              <div className="text-gray-400">Confidence: 94% | Price: $3.2K | Viral Pred: 87%</div>
-                            </div>
-                            <div className="text-green-300">ACQUIRE</div>
+                        <div className="text-sm text-gray-300 space-y-3">
+                          <div className="flex justify-between items-center">
+                            <span>Incoming opportunities (24h):</span>
+                            <span className="text-yellow-400 font-mono text-xl font-bold animate-pulse">{liveOpportunities}</span>
                           </div>
-                          <div className="flex items-center justify-between bg-black/30 p-2 rounded text-xs">
-                            <div>
-                              <div className="text-yellow-400">Platform Drop: @neo_abstract collection</div>
-                              <div className="text-gray-400">Confidence: 71% | Price: $890 | Risk: Medium</div>
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between bg-gradient-to-r from-green-500/10 to-transparent border border-green-500/30 p-3 rounded text-xs transform hover:scale-105 transition-transform">
+                              <div className="flex-1">
+                                <div className="text-green-400 font-semibold flex items-center gap-2">
+                                  Studio Visit: Maria Santos, Bushwick
+                                  <span className="w-1 h-1 bg-green-400 rounded-full animate-ping" />
+                                </div>
+                                <div className="text-gray-400 mt-1">
+                                  <div className="flex gap-3">
+                                    <span>Confidence: <span className="text-green-300 font-bold">{Math.floor(confidence)}%</span></span>
+                                    <span>Price: <span className="text-white">$3.2K</span></span>
+                                    <span>Viral: <span className="text-green-300">87%</span></span>
+                                  </div>
+                                  <div className="w-full bg-gray-800 rounded-full h-1 mt-2">
+                                    <div className="bg-gradient-to-r from-green-500 to-green-300 h-1 rounded-full" style={{width: `${confidence}%`}} />
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="ml-4 px-3 py-1 bg-green-500/20 border border-green-500 rounded text-green-300 font-bold animate-pulse">
+                                ACQUIRE
+                              </div>
                             </div>
-                            <div className="text-yellow-300">WATCH</div>
-                          </div>
-                          <div className="flex items-center justify-between bg-black/30 p-2 rounded text-xs">
-                            <div>
-                              <div className="text-red-400">Gallery Rec: Traditional landscape series</div>
-                              <div className="text-gray-400">Confidence: 23% | Price: $5.8K | Trend: ↓</div>
+                            
+                            <div className="flex items-center justify-between bg-gradient-to-r from-yellow-500/10 to-transparent border border-yellow-500/30 p-3 rounded text-xs transform hover:scale-105 transition-transform">
+                              <div className="flex-1">
+                                <div className="text-yellow-400 font-semibold">Platform Drop: @neo_abstract collection</div>
+                                <div className="text-gray-400 mt-1">
+                                  <div className="flex gap-3">
+                                    <span>Confidence: <span className="text-yellow-300 font-bold">71%</span></span>
+                                    <span>Price: <span className="text-white">$890</span></span>
+                                    <span>Risk: <span className="text-yellow-300">Medium</span></span>
+                                  </div>
+                                  <div className="w-full bg-gray-800 rounded-full h-1 mt-2">
+                                    <div className="bg-gradient-to-r from-yellow-500 to-yellow-300 h-1 rounded-full" style={{width: '71%'}} />
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="ml-4 px-3 py-1 bg-yellow-500/20 border border-yellow-500 rounded text-yellow-300 font-bold">
+                                WATCH
+                              </div>
                             </div>
-                            <div className="text-red-300">REJECT</div>
+                            
+                            <div className="flex items-center justify-between bg-gradient-to-r from-red-500/10 to-transparent border border-red-500/30 p-3 rounded text-xs transform hover:scale-105 transition-transform opacity-60">
+                              <div className="flex-1">
+                                <div className="text-red-400 font-semibold">Gallery Rec: Traditional landscape series</div>
+                                <div className="text-gray-400 mt-1">
+                                  <div className="flex gap-3">
+                                    <span>Confidence: <span className="text-red-300 font-bold">23%</span></span>
+                                    <span>Price: <span className="text-white">$5.8K</span></span>
+                                    <span>Trend: <span className="text-red-300">↓</span></span>
+                                  </div>
+                                  <div className="w-full bg-gray-800 rounded-full h-1 mt-2">
+                                    <div className="bg-gradient-to-r from-red-500 to-red-300 h-1 rounded-full" style={{width: '23%'}} />
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="ml-4 px-3 py-1 bg-red-500/20 border border-red-500 rounded text-red-300 font-bold line-through">
+                                REJECT
+                              </div>
+                            </div>
                           </div>
-                        </div>
                       </div>
                     </div>
 
@@ -518,20 +626,42 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                 ) : (
                   <div className="space-y-6">
                     {/* Portfolio Performance */}
-                    <div className="border border-gray-600 bg-gray-800/20 p-4 rounded">
-                      <div className="font-semibold text-gray-300 mb-3">COLLECTION PERFORMANCE</div>
-                      <div className="grid grid-cols-3 gap-4 text-sm">
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-green-400">+187%</div>
-                          <div className="text-xs text-gray-400">Portfolio Return (12mo)</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-blue-400">42</div>
-                          <div className="text-xs text-gray-400">Active Holdings</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-purple-400">87%</div>
-                          <div className="text-xs text-gray-400">Prediction Accuracy</div>
+                    <div className="border border-gray-600 bg-gradient-to-br from-gray-800/30 to-gray-900/30 p-4 rounded relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 via-transparent to-blue-500/5 animate-pulse" />
+                      <div className="relative">
+                        <div className="font-semibold text-gray-300 mb-3">COLLECTION PERFORMANCE</div>
+                        <div className="grid grid-cols-3 gap-4 text-sm">
+                          <div className="text-center transform hover:scale-110 transition-transform">
+                            <div className="text-3xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+                              +{portfolioReturn}%
+                            </div>
+                            <div className="text-xs text-gray-400">Portfolio Return (12mo)</div>
+                            <div className="mt-2 h-1 bg-gray-700 rounded-full overflow-hidden">
+                              <div className="h-full bg-gradient-to-r from-green-500 to-green-300 rounded-full transition-all duration-1000" 
+                                   style={{width: `${Math.min((portfolioReturn / 187) * 100, 100)}%`}} />
+                            </div>
+                          </div>
+                          <div className="text-center transform hover:scale-110 transition-transform">
+                            <div className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">42</div>
+                            <div className="text-xs text-gray-400">Active Holdings</div>
+                            <div className="mt-2 flex justify-center gap-1">
+                              {[...Array(5)].map((_, i) => (
+                                <div key={i} className="w-1 bg-blue-400 rounded-full animate-pulse" 
+                                     style={{
+                                       animationDelay: `${i * 0.1}s`, 
+                                       height: `${8 + (i % 3) * 4}px`
+                                     }} />
+                              ))}
+                            </div>
+                          </div>
+                          <div className="text-center transform hover:scale-110 transition-transform">
+                            <div className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">87%</div>
+                            <div className="text-xs text-gray-400">Prediction Accuracy</div>
+                            <div className="mt-2 relative h-8 w-8 mx-auto">
+                              <div className="absolute inset-0 border-2 border-purple-400 rounded-full animate-ping" />
+                              <div className="absolute inset-0 border-2 border-purple-400 rounded-full" />
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -599,7 +729,7 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                       </div>
                     </div>
                   </div>
-                )}
+                )
               </div>
             </div>
           </div>
