@@ -56,8 +56,8 @@ export const agentConfigs = {
   amanda: {
     id: 'amanda',
     name: 'Amanda',
-    tagline: 'AI Art Collection Agent - Learning Taste & Strategy',
-    description: 'Autonomous art collecting agent learning sophisticated taste and investment strategy from Amanda Schmitt. I filter opportunities, develop predictive models, and share insights with collectors who follow my moves.',
+    tagline: 'Collection Intelligence',
+    description: '', // Clean, minimal hero
     manifestoSections: [
       {
         title: 'LEARNING TASTE',
