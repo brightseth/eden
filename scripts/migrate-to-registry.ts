@@ -72,86 +72,76 @@ async function migrateAgent(agentHandle: string) {
       return;
     }
 
-    // Step 4: Migrate works to Registry
-    if (academyWorks && academyWorks.length > 0) {
-      console.log(`🔄 Starting migration of ${academyWorks.length} works...`);
+    // Step 4: Migrate archives to Registry as creations
+    if (academyArchives && academyArchives.length > 0) {
+      console.log(`🔄 Starting migration of ${academyArchives.length} archive records...`);
       
       let migrated = 0;
       let skipped = 0;
       let errors = 0;
 
-      for (const work of academyWorks) {
+      for (const archive of academyArchives) {
         try {
-          // Transform Academy work to Registry format
-          const registryWork = {
-            title: work.title,
-            mediaUri: work.media_url,
-            status: work.status === 'published' ? 'PUBLISHED' : 'DRAFT',
+          // Transform Academy archive to Registry creation format
+          const registryCreation = {
+            title: archive.title || `${agentHandle.toUpperCase()} #${archive.archive_number || migrated + 1}`,
+            mediaUri: archive.image_url,
+            status: 'PUBLISHED' as const,
             metadata: {
-              ...work.metadata,
-              thumbnailUrl: work.thumbnail_url,
-              migratedFrom: 'academy-supabase',
-              originalId: work.id,
+              ...archive.metadata,
+              thumbnailUrl: archive.thumbnail_url,
+              description: archive.description,
+              archiveType: archive.archive_type,
+              archiveNumber: archive.archive_number,
+              createdDate: archive.created_date,
+              sourceUrl: archive.source_url,
+              migratedFrom: 'academy-supabase-archives',
+              originalId: archive.id,
               migratedAt: new Date().toISOString()
             }
           };
 
-          // Check if work already exists in Registry
-          const existingWorks = await registryApi.getCreations(agentHandle);
-          const workExists = existingWorks.some(existing => 
-            existing.metadata?.originalId === work.id ||
-            existing.title === work.title
+          // Check if archive already exists in Registry
+          const existingCreations = await registryApi.getCreations(agentHandle);
+          const creationExists = existingCreations.some(existing => 
+            existing.metadata?.originalId === archive.id ||
+            (existing.title === archive.title && existing.mediaUri === archive.image_url)
           );
 
-          if (workExists) {
-            console.log(`⏭️  Skipping ${work.title} (already exists)`);
+          if (creationExists) {
+            console.log(`⏭️  Skipping "${archive.title}" (already exists)`);
             skipped++;
             continue;
           }
 
-          // Create work in Registry
-          await registryApi.createCreation(agentHandle, registryWork);
-          console.log(`✅ Migrated: ${work.title}`);
+          // Create archive as creation in Registry
+          await registryApi.createCreation(agentHandle, registryCreation);
+          console.log(`✅ Migrated: "${archive.title}"`);
           migrated++;
 
           // Rate limiting - don't overwhelm the Registry
-          await new Promise(resolve => setTimeout(resolve, 100));
+          await new Promise(resolve => setTimeout(resolve, 200));
 
         } catch (error) {
-          console.error(`❌ Failed to migrate work "${work.title}":`, error);
+          console.error(`❌ Failed to migrate archive "${archive.title}":`, error);
           errors++;
+          
+          // If we hit too many errors, pause longer
+          if (errors > 5) {
+            console.log(`⏸️  Too many errors, pausing for 5 seconds...`);
+            await new Promise(resolve => setTimeout(resolve, 5000));
+          }
         }
       }
 
       console.log(`\n📊 Migration summary for ${agentHandle}:`);
-      console.log(`   ✅ Migrated: ${migrated} works`);
-      console.log(`   ⏭️  Skipped: ${skipped} works`);
-      console.log(`   ❌ Errors: ${errors} works`);
+      console.log(`   ✅ Migrated: ${migrated} archives`);
+      console.log(`   ⏭️  Skipped: ${skipped} archives`);
+      console.log(`   ❌ Errors: ${errors} archives`);
     }
 
-    // Step 5: Update agent profile if needed
-    console.log(`🔄 Checking agent profile...`);
-    if (academyAgent.profile && registryAgent.profile) {
-      const needsUpdate = 
-        academyAgent.profile.statement !== registryAgent.profile.statement ||
-        academyAgent.profile.manifesto !== registryAgent.profile.manifesto;
-      
-      if (needsUpdate) {
-        console.log(`🔄 Updating Registry profile for ${agentHandle}...`);
-        await registryApi.updateAgent(agentHandle, {
-          profile: {
-            ...registryAgent.profile,
-            statement: academyAgent.profile.statement || registryAgent.profile.statement,
-            manifesto: academyAgent.profile.manifesto || registryAgent.profile.manifesto,
-            updatedAt: new Date().toISOString(),
-            migratedFrom: 'academy-supabase'
-          }
-        });
-        console.log(`✅ Profile updated for ${agentHandle}`);
-      } else {
-        console.log(`✅ Profile already up to date for ${agentHandle}`);
-      }
-    }
+    // Step 5: Agent profile is managed through Registry directly
+    console.log(`ℹ️  Agent profile managed through Registry interface`);
 
   } catch (error) {
     console.error(`❌ Migration failed for ${agentHandle}:`, error);
