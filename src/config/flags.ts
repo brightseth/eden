@@ -54,6 +54,15 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
     rolloutStrategy: 'dev',
     culturalImpact: 'Maintains data consistency across systems',
     rollbackPlan: 'Use Registry data only, disable Spirit integration'
+  },
+
+  ENABLE_REGISTRY_SYNC: {
+    key: 'ENABLE_REGISTRY_SYNC',
+    description: 'Enable Registry synchronization for agents and dynamic prototypes',
+    defaultValue: process.env.ENABLE_REGISTRY_SYNC === 'true',
+    rolloutStrategy: 'gradual',
+    culturalImpact: 'Enables Registry as single source of truth for agent configurations',
+    rollbackPlan: 'Set ENABLE_REGISTRY_SYNC=false, agents revert to local operation'
   }
 };
 
@@ -136,4 +145,5 @@ export const FLAGS = {
   ENABLE_TOKEN_ECONOMICS: 'ENABLE_TOKEN_ECONOMICS',
   ENABLE_LAUNCH_CRITERIA: 'ENABLE_LAUNCH_CRITERIA',
   ENABLE_DATA_RECONCILIATION: 'ENABLE_DATA_RECONCILIATION',
+  ENABLE_REGISTRY_SYNC: 'ENABLE_REGISTRY_SYNC',
 } as const;

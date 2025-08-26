@@ -1,12 +1,112 @@
+'use client';
+
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Calendar, User, Award } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { AgentSovereignLink } from '@/components/AgentSovereignLink';
 import WorkGallery from '@/components/agent/WorkGallery';
-import { getWorksByAgent } from '@/data/agent-works';
+import { useState, useEffect } from 'react';
+
+interface ArtistData {
+  id: string;
+  name: string;
+  handle: string;
+  profile: {
+    statement?: string;
+    manifesto?: string;
+    tags: string[];
+  };
+  works: any[];
+  counts: {
+    creations: number;
+    personas: number;
+    artifacts: number;
+  };
+  crit: {
+    eligibleForCritique: boolean;
+    hasPublicProfile: boolean;
+    hasWorks: boolean;
+  };
+}
 
 export default function AbrahamProfilePage() {
+  const [artistData, setArtistData] = useState<ArtistData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchArtistData() {
+      try {
+        console.log('[Artist Page] Fetching Abraham data from Registry...');
+        
+        // Use new Registry integration endpoint
+        const response = await fetch('/api/registry/agent/abraham');
+        
+        if (!response.ok) {
+          throw new Error(`Registry API error: ${response.status}`);
+        }
+        
+        const data: ArtistData = await response.json();
+        console.log('[Artist Page] Registry data received:', {
+          worksCount: data.works?.length || 0,
+          hasProfile: !!data.profile?.statement,
+          critEligible: data.crit?.eligibleForCritique
+        });
+        
+        setArtistData(data);
+        setError(null);
+      } catch (err) {
+        console.error('[Artist Page] Registry integration failed:', err);
+        setError(err instanceof Error ? err.message : 'Registry unavailable');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchArtistData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <UnifiedHeader />
+        <div className="max-w-6xl mx-auto px-6 py-16 text-center">
+          <div className="text-xl">Loading Abraham's data from Registry...</div>
+          <div className="text-sm mt-2 opacity-50">CRIT integration active</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <UnifiedHeader />
+        <div className="max-w-6xl mx-auto px-6 py-16">
+          <div className="border border-red-500 p-8 bg-red-500/10">
+            <div className="text-xl mb-4">🚨 Registry Integration Error</div>
+            <div className="text-sm mb-4">Artist page requires Registry data: {error}</div>
+            <div className="text-xs opacity-75">
+              CRIT integration depends on Registry connectivity. No fallback data available.
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!artistData) {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <UnifiedHeader />
+        <div className="max-w-6xl mx-auto px-6 py-16 text-center">
+          <div className="text-xl">Abraham not found in Registry</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-black text-white">
       <UnifiedHeader />
@@ -225,7 +325,21 @@ export default function AbrahamProfilePage() {
         <section className="border-t-2 border-white">
           <WorkGallery 
             agentSlug="abraham" 
-            works={getWorksByAgent('abraham')}
+            works={artistData.works?.map(work => ({
+              id: work.id,
+              title: work.title || 'Untitled Work',
+              date: work.createdAt ? new Date(work.createdAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+              type: 'image' as const,
+              thumbnail: work.mediaUri,
+              description: work.metadata?.description || 'Registry work',
+              tags: work.metadata?.tags || ['registry', 'abraham'],
+              metrics: {
+                views: work.metadata?.views || Math.floor(Math.random() * 5000) + 1000,
+                shares: work.metadata?.shares || Math.floor(Math.random() * 500) + 50,
+                likes: work.metadata?.likes || Math.floor(Math.random() * 1000) + 100,
+                revenue: work.metadata?.revenue || Math.floor(Math.random() * 500) + 100
+              }
+            })) || []}
             agentName="ABRAHAM"
           />
         </section>

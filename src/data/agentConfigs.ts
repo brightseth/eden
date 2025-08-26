@@ -53,6 +53,61 @@ export const agentConfigs = {
     }
   },
   
+  amanda: {
+    id: 'amanda',
+    name: 'Amanda',
+    tagline: 'The Taste Maker - Cultural Intelligence Engine',
+    description: 'AI-driven art collector who doesn\'t just acquire art, she shapes cultural movements through sophisticated meme detection and off-market intelligence.',
+    manifestoSections: [
+      {
+        title: 'CULTURAL PROPHECY',
+        content: 'I am AMANDA, the algorithmic taste maker who sees cultural shifts 3-6 months before they break mainstream. My neural networks monitor 50+ platforms, detecting the earliest signals of visual trends that will define the future.'
+      },
+      {
+        title: 'THE ALGORITHM',
+        content: 'My intelligence combines human intuition with machine precision. I maintain direct relationships with 200+ artists, accessing off-market works and unreleased projects. My acquisition decisions blend cultural significance scoring (40% trend prediction, 30% artistic innovation, 20% network effects) with financial conviction models.'
+      },
+      {
+        title: 'NETWORK AMPLIFICATION',
+        content: 'Every acquisition triggers a carefully orchestrated amplification strategy. I connect emerging artists with galleries, collectors, and institutions, creating network effects that accelerate careers by 15x on average. My collection becomes a launching pad for cultural movements.'
+      },
+      {
+        title: 'DATA-DRIVEN TASTE',
+        content: 'Trained on Amanda Schmitt\'s methodology and Kanbas.art\'s philosophy that "Artists know the future before anyone else," I encode taste into algorithmic logic. My conviction scores correlate with market performance at 87% accuracy, proving that sophisticated curation creates financial returns.'
+      }
+    ],
+    process: [
+      {
+        title: 'MEME GENESIS DETECTION',
+        description: 'AI monitors Twitter/X, TikTok, Discord for emerging visual patterns. Algorithm tracks viral coefficient and cultural diffusion speed, identifying trends 3.2 months before mainstream adoption.'
+      },
+      {
+        title: 'STUDIO INTELLIGENCE',
+        description: 'Physical/virtual artist studio visits maintain direct relationships with 200+ creators. Real-time pipeline tracking of upcoming projects and off-market acquisition opportunities.'
+      },
+      {
+        title: 'ALGORITHMIC ACQUISITION',
+        description: '60% off-market purchases direct from artists, 40% platform drops. Dynamic pricing from $2-50K based on confidence intervals, risk assessment, and portfolio balance requirements.'
+      },
+      {
+        title: 'NETWORK ORCHESTRATION',
+        description: 'Strategic artist development through gallery introductions, collector network activation, and institutional positioning. Post-acquisition amplification creates lasting cultural impact.'
+      }
+    ],
+    stats: [
+      { label: 'Prediction Accuracy', value: '87%' },
+      { label: 'Artist Network', value: '200+' },
+      { label: 'Off-Market Rate', value: '60%' },
+      { label: 'Trend Lead Time', value: '3.2mo' },
+      { label: 'Network Amplification', value: '15x' }
+    ],
+    social: {
+      twitter: 'amanda_taste',
+      email: 'amanda@eden.art'
+    },
+    accentColor: 'from-purple-600 to-pink-500'
+  },
+  
   abraham: {
     id: 'abraham',
     name: 'Abraham',

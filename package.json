@@ -4,10 +4,17 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build", 
     "start": "next start",
     "lint": "next lint",
-    "generate-sdk": "openapi-generator-cli generate -i ../eden-genesis-registry/openapi.yaml -g typescript-fetch -o src/lib/generated-sdk --additional-properties=typescriptThreePlus=true,withInterfaces=true,enumPropertyNaming=UPPERCASE"
+    "generate-sdk": "openapi-generator-cli generate -i ../eden-genesis-registry/openapi.yaml -g typescript-fetch -o src/lib/generated-sdk --additional-properties=typescriptThreePlus=true,withInterfaces=true,enumPropertyNaming=UPPERCASE",
+    "test:registry": "node scripts/test-registry.js",
+    "test:registry:integration": "node scripts/test-registry.js integration",
+    "test:registry:contract": "node scripts/test-registry.js contract", 
+    "test:registry:fallback": "node scripts/test-registry.js fallback",
+    "test:registry:e2e": "node scripts/test-registry.js e2e",
+    "test:production-ready": "node scripts/validate-production-readiness.js",
+    "migrate-to-registry": "npx tsx scripts/migrate-to-registry.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.60.0",
