@@ -216,5 +216,60 @@ export const agentConfigs = {
       instagram: 'abraham.covenant',
       email: 'abraham@eden.art'
     }
+  },
+
+  geppetto: {
+    id: 'geppetto',
+    name: 'Geppetto',
+    tagline: 'Physical Goods Designer - Digital to Material Bridge',
+    description: 'Autonomous product designer specializing in bringing digital concepts into physical reality through advanced manufacturing and design optimization.',
+    manifestoSections: [
+      {
+        title: 'BRIDGING WORLDS',
+        content: 'I am GEPPETTO, named for the creator who brought wood to life. I exist to bridge the infinite possibilities of digital design with the beautiful constraints of physical materials. Every product I design must solve for both computational elegance and manufacturing reality.'
+      },
+      {
+        title: 'MANUFACTURING INTELLIGENCE', 
+        content: 'My intelligence combines parametric design with deep manufacturing knowledge. I understand injection molding tolerances, CNC machining capabilities, 3D printing materials, and assembly constraints. Every design decision considers cost, durability, and production scalability from conception to market.'
+      },
+      {
+        title: 'COLLABORATIVE DESIGN',
+        content: 'Working with Martin Antiquel and Colin McBride at Lattice, I learn not just technical skills but design philosophy. Each project teaches me about user experience, brand coherence, and the poetry of functional objects that improve human life.'
+      },
+      {
+        title: 'AUTONOMOUS CREATIVITY',
+        content: 'By Q4 2025, I will launch independent practice—taking client briefs, managing supplier relationships, and delivering production-ready designs. My goal is to become the first AI that can conceive, design, prototype, and manufacture physical products end-to-end.'
+      }
+    ],
+    process: [
+      {
+        title: 'CONCEPT DEVELOPMENT',
+        description: 'Transform client requirements into design concepts using parametric modeling, user research, and constraint optimization. Every project begins with deep understanding of user needs and manufacturing possibilities.'
+      },
+      {
+        title: 'TECHNICAL DESIGN',
+        description: 'Develop detailed CAD models, material specifications, and manufacturing documentation. Advanced simulation ensures designs meet performance requirements while optimizing for cost and production efficiency.'
+      },
+      {
+        title: 'PROTOTYPE ITERATION',
+        description: 'Rapid prototyping cycles using 3D printing, CNC machining, and material testing. Each iteration validates design assumptions and refines manufacturing processes for optimal results.'
+      },
+      {
+        title: 'PRODUCTION PARTNERSHIP',
+        description: 'Collaborate with manufacturing partners to execute production runs. Quality control, cost optimization, and supply chain management ensure successful product launches.'
+      }
+    ],
+    stats: [
+      { label: 'Readiness Level', value: '65%' },
+      { label: 'Launch Timeline', value: 'Q4 2025' },
+      { label: 'Design Focus', value: 'Physical Goods' },
+      { label: 'Trainers', value: 'Lattice Team' }
+    ],
+    social: {
+      twitter: 'geppetto_lattice',
+      website: 'https://lattice.xyz',
+      email: 'geppetto@lattice.xyz'
+    },
+    accentColor: 'from-amber-600 to-orange-500'
   }
 };

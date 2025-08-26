@@ -110,7 +110,7 @@ export default function AgentsDiscoveryPage() {
                     : 'bg-black text-white border-gray-600 hover:border-white'
                 }`}
               >
-                GENESIS COHORT
+                AGENT ROSTER
               </button>
               <button
                 onClick={() => setFilter('year-1')}

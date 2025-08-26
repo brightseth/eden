@@ -39,10 +39,10 @@ export default function HomePage() {
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link 
-              href="/genesis-cohort"
+              href="/academy"
               className="px-8 py-4 bg-white/10 backdrop-blur text-white border border-white/20 rounded-lg hover:bg-white/20 transition-all font-medium"
             >
-              Join Genesis Cohort
+              Explore Academy
             </Link>
           </div>
         </div>

@@ -42,7 +42,7 @@ export default function HomePage() {
           <div className="inline-flex items-center gap-2 px-6 py-3 glass rounded-full mb-8 animate-slide-up">
             <Star className="w-5 h-5 text-yellow-400 animate-pulse" />
             <span className="text-sm font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-              GENESIS COHORT NOW OPEN
+              ACADEMY NOW OPEN
             </span>
             <Star className="w-5 h-5 text-yellow-400 animate-pulse" />
           </div>
@@ -81,11 +81,11 @@ export default function HomePage() {
               </button>
             </Link>
 
-            <Link href="/genesis-cohort">
+            <Link href="/academy">
               <button className="group px-10 py-5 text-lg font-bold glass-dark rounded-xl hover:scale-105 transition-all duration-300 border border-white/20 hover:border-white/40">
                 <span className="flex items-center gap-3">
                   <Brain className="w-6 h-6" />
-                  JOIN GENESIS COHORT
+                  EXPLORE AGENTS
                 </span>
               </button>
             </Link>
@@ -232,7 +232,7 @@ export default function HomePage() {
                 READY TO SHAPE THE FUTURE?
               </h2>
               <p className="text-xl text-gray-300 mb-8">
-                Join the Genesis Cohort and train the next generation of autonomous creative agents
+                Join the Academy and train the next generation of autonomous creative agents
               </p>
               <Link href="/apply">
                 <button className="group px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-bold text-lg hover:scale-105 transition-all duration-300 animate-pulse-glow">

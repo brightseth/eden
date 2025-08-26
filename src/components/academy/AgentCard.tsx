@@ -122,7 +122,6 @@ export function AgentCard({ id, name, status, date, hasProfile, image, onClick }
             </div>
             <p className="text-sm font-bold text-gray-400 mb-2 group-hover:text-purple-400 transition-colors">OPEN SLOT</p>
             <p className="text-xs text-gray-500 group-hover:text-purple-300 transition-colors">Apply to join</p>
-            <p className="text-xs text-gray-500 group-hover:text-purple-300 transition-colors">Genesis Cohort</p>
             <ArrowRight className="w-4 h-4 text-gray-600 mt-4 group-hover:text-purple-400 group-hover:translate-x-1 transition-all" />
           </div>
         </div>

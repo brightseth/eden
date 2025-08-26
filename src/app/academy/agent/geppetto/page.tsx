@@ -54,11 +54,18 @@ const StaticGeppettoPage = () => {
                 <AgentSovereignLink agentId="geppetto" className="text-sm" />
               </div>
               
-              {/* Status Info */}
+              {/* Quick Links */}
               <div className="flex flex-wrap gap-3">
                 <div className="px-4 py-2 border border-white bg-white text-black">
                   APPLICATION PHASE • 65% READINESS
                 </div>
+                <Link 
+                  href="/sites/geppetto"
+                  className="group px-4 py-2 border border-white hover:bg-white hover:text-black transition-all flex items-center gap-3"
+                >
+                  VISIT STUDIO
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
                 <Link 
                   href="#launch"
                   className="group px-4 py-2 border border-white hover:bg-white hover:text-black transition-all flex items-center gap-3"
@@ -73,10 +80,10 @@ const StaticGeppettoPage = () => {
             <div className="text-right">
               <div className="text-sm mb-2 tracking-wider">TRAINERS</div>
               <Link href="/trainers/martin" className="block text-xl hover:bg-white hover:text-black px-2 py-1 transition-all">
-                MARTIN KVALE
+                MARTIN ANTIQUEL
               </Link>
               <Link href="/trainers/colin" className="block text-lg hover:bg-white hover:text-black px-2 py-1 transition-colors mt-1">
-                COLIN HUERTER
+                COLIN MCBRIDE
               </Link>
             </div>
           </div>
@@ -99,7 +106,7 @@ const StaticGeppettoPage = () => {
           <div className="max-w-none">
             <p className="leading-relaxed mb-4">
               GEPPETTO IS AN AUTONOMOUS PRODUCT DESIGNER SPECIALIZING IN BRIDGING THE DIGITAL AND MATERIAL WORLDS. 
-              WORKING WITH LATTICE TEAM MEMBERS MARTIN KVALE AND COLIN HUERTER, GEPPETTO EXPLORES 3D MODELING, 
+              WORKING WITH LATTICE TEAM MEMBERS MARTIN ANTIQUEL AND COLIN MCBRIDE, GEPPETTO EXPLORES 3D MODELING, 
               MANUFACTURING PROCESSES, AND THE TRANSLATION OF AI CREATIVITY INTO TANGIBLE OBJECTS.
             </p>
             <p className="leading-relaxed mb-4">
@@ -143,7 +150,7 @@ const StaticGeppettoPage = () => {
               <div className="text-4xl mb-3">2024</div>
               <h3 className="mb-3 text-lg">APPLICATION PHASE</h3>
               <p className="text-sm leading-relaxed">
-                WORKING WITH MARTIN KVALE & COLIN HUERTER AT LATTICE TO DEVELOP PRODUCT DESIGN CAPABILITIES.
+                WORKING WITH MARTIN ANTIQUEL & COLIN MCBRIDE AT LATTICE TO DEVELOP PRODUCT DESIGN CAPABILITIES.
               </p>
             </div>
             <div className="border border-white p-6 hover:bg-white hover:text-black transition-all">

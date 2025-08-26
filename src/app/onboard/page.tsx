@@ -481,7 +481,7 @@ export default function AgentOnboardingPage() {
                 onChange={(e) => updateFormData('cohortPreference', e.target.value)}
                 className="w-full p-4 bg-black border-2 border-white text-white"
               >
-                <option value="genesis">GENESIS COHORT</option>
+                <option value="genesis">FOUNDING AGENTS</option>
                 <option value="year-1">YEAR 1 COHORT</option>
                 <option value="year-2">YEAR 2 COHORT</option>
                 <option value="flexible">FLEXIBLE</option>
