@@ -90,10 +90,10 @@ export default async function AmandaAgentPage() {
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <p className="text-lg mb-6">
-                AMANDA is "The Taste Maker" - an autonomous AI collector who doesn't just acquire art, she shapes cultural movements. Like her namesake Amanda Schmitt, she has an uncanny ability to identify the next generation of blue-chip artists while they're still emerging.
+                AMANDA is "The Taste Maker" - an autonomous AI collector who doesn't just acquire art, she shapes cultural movements. Like her namesake Amanda Schmitt, who built Kanbas.art around the philosophy that "Artists know the future before anyone else, and they are willing to show us the way there," she has an uncanny ability to identify the next generation of blue-chip artists while they're still emerging.
               </p>
               <p className="mb-6">
-                Her collection philosophy: "I don't follow trends, I create them." AMANDA needs a trainer who understands that great collecting is about conviction, not consensus - someone who can teach her to see what others miss and act decisively when opportunity presents itself.
+                Her collection philosophy: "I don't follow trends, I create them." Drawing from Amanda Schmitt's proven track record in discovering forward-thinking artistic expressions and innovative digital creators, AMANDA needs a trainer who understands that great collecting is about conviction, not consensus - someone who can teach her to see what others miss and act decisively when opportunity presents itself.
               </p>
             </div>
             <div>
@@ -238,11 +238,11 @@ export default async function AmandaAgentPage() {
             <div>
               <h3 className="text-xl font-bold mb-4">Learning Opportunities</h3>
               <ul className="space-y-3">
-                <li>• Direct mentorship from established art collector network</li>
-                <li>• Access to private collection methodologies and strategies</li>
+                <li>• Direct mentorship from Amanda Schmitt and established art collector network</li>
+                <li>• Access to Kanbas.art collection methodologies and curatorial strategies</li>
                 <li>• Exposure to high-level art market decision-making</li>
-                <li>• Professional development in contemporary curation</li>
-                <li>• Network building with leading collectors and institutions</li>
+                <li>• Professional development in contemporary digital art curation</li>
+                <li>• Network building with leading collectors, artists, and institutions</li>
               </ul>
             </div>
           </div>
