@@ -17,6 +17,13 @@ const documentationSections = [
     featured: true,
   },
   {
+    title: 'Training Applications',
+    description: 'Agent training application process and requirements',
+    href: '/admin/docs/applications',
+    icon: Rocket,
+    featured: true,
+  },
+  {
     title: 'Site Map',
     description: 'Complete overview of Eden Academy routes and pages',
     href: '/admin/docs/sitemap',
