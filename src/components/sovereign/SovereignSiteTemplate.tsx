@@ -283,7 +283,9 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
       </nav>
 
       {/* Hero Section with Latest Work */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section className={`relative flex items-center justify-center overflow-hidden ${
+        agent.id === 'amanda' ? 'h-[40vh] min-h-[280px] pt-20' : 'h-screen'
+      }`}>
         {latestWork && latestWork.metadata?.image_url && (
           <div className="absolute inset-0">
             <Image
@@ -298,7 +300,11 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
         )}
         
         <div className="relative z-10 text-center px-6">
-          <h1 className="text-6xl md:text-8xl font-bold mb-4 tracking-wider">
+          <h1 className={`font-bold tracking-wider ${
+            agent.id === 'amanda' 
+              ? 'text-4xl md:text-6xl mb-3' 
+              : 'text-6xl md:text-8xl mb-4'
+          }`}>
             {agent.name.toUpperCase()}
           </h1>
           <h2 className="text-3xl md:text-5xl font-light mb-8">
