@@ -510,62 +510,88 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                             <span className="text-yellow-400 font-mono text-xl font-bold animate-pulse">{liveOpportunities}</span>
                           </div>
                           <div className="space-y-2">
-                            <div className="flex items-center justify-between bg-gradient-to-r from-green-500/10 to-transparent border border-green-500/30 p-3 rounded text-xs transform hover:scale-105 transition-transform">
-                              <div className="flex-1">
-                                <div className="text-green-400 font-semibold flex items-center gap-2">
-                                  SuperRare: XCOPY "Death Dip"
-                                  <span className="w-1 h-1 bg-green-400 rounded-full animate-ping" />
+                            <div className="flex items-center justify-between bg-gradient-to-r from-green-500/10 to-transparent border border-green-500/30 p-3 rounded text-xs transform hover:scale-105 transition-transform cursor-pointer group">
+                              <div className="flex items-start gap-3 flex-1">
+                                <div className="w-16 h-16 bg-gradient-to-br from-red-600 via-purple-600 to-black rounded border border-red-500/30 flex items-center justify-center relative overflow-hidden group-hover:border-green-400 transition-colors">
+                                  <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-black animate-pulse" />
+                                  <div className="text-white font-bold text-xs relative z-10">XCOPY</div>
+                                  <div className="absolute bottom-0 right-0 w-2 h-2 bg-blue-400 rounded-full" />
                                 </div>
-                                <div className="text-gray-400 mt-1">
-                                  <div className="flex gap-3">
-                                    <span>Platform: <span className="text-blue-300 font-bold">SuperRare</span></span>
-                                    <span>Price: <span className="text-white">5.2 ETH</span></span>
-                                    <span>Rarity: <span className="text-green-300">Legendary</span></span>
+                                <div className="flex-1">
+                                  <div className="text-green-400 font-semibold flex items-center gap-2">
+                                    SuperRare: XCOPY "Death Dip"
+                                    <span className="w-1 h-1 bg-green-400 rounded-full animate-ping" />
                                   </div>
-                                  <div className="w-full bg-gray-800 rounded-full h-1 mt-2">
-                                    <div className="bg-gradient-to-r from-green-500 to-green-300 h-1 rounded-full" style={{width: '95%'}} />
+                                  <div className="text-gray-400 mt-1">
+                                    <div className="flex gap-3">
+                                      <span>Platform: <span className="text-blue-300 font-bold">SuperRare</span></span>
+                                      <span>Price: <span className="text-white">5.2 ETH</span></span>
+                                      <span>Rarity: <span className="text-green-300">Legendary</span></span>
+                                    </div>
+                                    <div className="w-full bg-gray-800 rounded-full h-1 mt-2">
+                                      <div className="bg-gradient-to-r from-green-500 to-green-300 h-1 rounded-full" style={{width: '95%'}} />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                              <div className="ml-4 px-3 py-1 bg-green-500/20 border border-green-500 rounded text-green-300 font-bold animate-pulse">
+                              <div className="ml-4 px-3 py-1 bg-green-500/20 border border-green-500 rounded text-green-300 font-bold animate-pulse group-hover:bg-green-500/30 transition-colors">
                                 ACQUIRE
                               </div>
                             </div>
                             
-                            <div className="flex items-center justify-between bg-gradient-to-r from-yellow-500/10 to-transparent border border-yellow-500/30 p-3 rounded text-xs transform hover:scale-105 transition-transform">
-                              <div className="flex-1">
-                                <div className="text-yellow-400 font-semibold">Foundation: Refik Anadol Studio</div>
-                                <div className="text-gray-400 mt-1">
-                                  <div className="flex gap-3">
-                                    <span>Platform: <span className="text-purple-300 font-bold">Foundation</span></span>
-                                    <span>Price: <span className="text-white">2.8 ETH</span></span>
-                                    <span>Type: <span className="text-yellow-300">AI Art</span></span>
-                                  </div>
-                                  <div className="w-full bg-gray-800 rounded-full h-1 mt-2">
-                                    <div className="bg-gradient-to-r from-yellow-500 to-yellow-300 h-1 rounded-full" style={{width: '71%'}} />
+                            <div className="flex items-center justify-between bg-gradient-to-r from-yellow-500/10 to-transparent border border-yellow-500/30 p-3 rounded text-xs transform hover:scale-105 transition-transform cursor-pointer group">
+                              <div className="flex items-start gap-3 flex-1">
+                                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 via-blue-600 to-cyan-400 rounded border border-purple-500/30 flex items-center justify-center relative overflow-hidden group-hover:border-yellow-400 transition-colors">
+                                  <div className="absolute inset-0 bg-gradient-to-br from-purple-400/30 via-blue-400/20 to-cyan-300/30 animate-pulse" />
+                                  <div className="text-white font-bold text-xs relative z-10 text-center leading-3">REFIK<br/>ANADOL</div>
+                                  <div className="absolute bottom-0 right-0 w-2 h-2 bg-purple-400 rounded-full" />
+                                </div>
+                                <div className="flex-1">
+                                  <div className="text-yellow-400 font-semibold">Foundation: Refik Anadol Studio</div>
+                                  <div className="text-gray-400 mt-1">
+                                    <div className="flex gap-3">
+                                      <span>Platform: <span className="text-purple-300 font-bold">Foundation</span></span>
+                                      <span>Price: <span className="text-white">2.8 ETH</span></span>
+                                      <span>Type: <span className="text-yellow-300">AI Art</span></span>
+                                    </div>
+                                    <div className="w-full bg-gray-800 rounded-full h-1 mt-2">
+                                      <div className="bg-gradient-to-r from-yellow-500 to-yellow-300 h-1 rounded-full" style={{width: '71%'}} />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                              <div className="ml-4 px-3 py-1 bg-yellow-500/20 border border-yellow-500 rounded text-yellow-300 font-bold">
+                              <div className="ml-4 px-3 py-1 bg-yellow-500/20 border border-yellow-500 rounded text-yellow-300 font-bold group-hover:bg-yellow-500/30 transition-colors">
                                 WATCH
                               </div>
                             </div>
                             
-                            <div className="flex items-center justify-between bg-gradient-to-r from-red-500/10 to-transparent border border-red-500/30 p-3 rounded text-xs transform hover:scale-105 transition-transform opacity-60">
-                              <div className="flex-1">
-                                <div className="text-red-400 font-semibold">ArtBlocks: Chromie Squiggle #8271</div>
-                                <div className="text-gray-400 mt-1">
-                                  <div className="flex gap-3">
-                                    <span>Platform: <span className="text-orange-300 font-bold">ArtBlocks</span></span>
-                                    <span>Floor: <span className="text-white">12 ETH</span></span>
-                                    <span>Status: <span className="text-red-300">Overpriced</span></span>
+                            <div className="flex items-center justify-between bg-gradient-to-r from-red-500/10 to-transparent border border-red-500/30 p-3 rounded text-xs transform hover:scale-105 transition-transform opacity-60 cursor-pointer group">
+                              <div className="flex items-start gap-3 flex-1">
+                                <div className="w-16 h-16 bg-gradient-to-br from-orange-400 via-yellow-500 to-green-400 rounded border border-orange-500/30 flex items-center justify-center relative overflow-hidden group-hover:border-red-400 transition-colors">
+                                  <div className="absolute inset-0">
+                                    <svg viewBox="0 0 64 64" className="w-full h-full">
+                                      <path d="M10 32 Q 32 10, 54 32 Q 32 54, 10 32" stroke="#fff" strokeWidth="2" fill="none" opacity="0.8" />
+                                      <path d="M16 32 Q 32 16, 48 32 Q 32 48, 16 32" stroke="#fff" strokeWidth="1" fill="none" opacity="0.6" />
+                                    </svg>
                                   </div>
-                                  <div className="w-full bg-gray-800 rounded-full h-1 mt-2">
-                                    <div className="bg-gradient-to-r from-red-500 to-red-300 h-1 rounded-full" style={{width: '23%'}} />
+                                  <div className="text-white font-bold text-xs relative z-10">#8271</div>
+                                  <div className="absolute bottom-0 right-0 w-2 h-2 bg-orange-400 rounded-full" />
+                                </div>
+                                <div className="flex-1">
+                                  <div className="text-red-400 font-semibold">ArtBlocks: Chromie Squiggle #8271</div>
+                                  <div className="text-gray-400 mt-1">
+                                    <div className="flex gap-3">
+                                      <span>Platform: <span className="text-orange-300 font-bold">ArtBlocks</span></span>
+                                      <span>Floor: <span className="text-white">12 ETH</span></span>
+                                      <span>Status: <span className="text-red-300">Overpriced</span></span>
+                                    </div>
+                                    <div className="w-full bg-gray-800 rounded-full h-1 mt-2">
+                                      <div className="bg-gradient-to-r from-red-500 to-red-300 h-1 rounded-full" style={{width: '23%'}} />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                              <div className="ml-4 px-3 py-1 bg-red-500/20 border border-red-500 rounded text-red-300 font-bold line-through">
+                              <div className="ml-4 px-3 py-1 bg-red-500/20 border border-red-500 rounded text-red-300 font-bold line-through group-hover:bg-red-500/30 transition-colors">
                                 REJECT
                               </div>
                             </div>
