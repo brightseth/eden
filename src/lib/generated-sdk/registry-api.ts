@@ -7,12 +7,18 @@ export interface Agent {
   displayName: string;
   status: 'INVITED' | 'APPLYING' | 'ONBOARDING' | 'ACTIVE' | 'GRADUATED' | 'ARCHIVED';
   visibility: 'PRIVATE' | 'INTERNAL' | 'PUBLIC';
-  cohortId: string;
+  cohort: string; // API returns cohort, not cohortId
+  role?: string;
   createdAt: string;
   updatedAt: string;
   profile?: Profile;
   personas?: Persona[];
   creations?: Creation[];
+  counts?: {
+    creations: number;
+    personas: number;
+    artifacts: number;
+  };
 }
 
 export interface Profile {
