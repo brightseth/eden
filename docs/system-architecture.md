@@ -1,8 +1,20 @@
-# Eden Academy Content Pipeline Architecture
+# Eden Academy System Architecture
 
 ## Overview
 
-Eden Academy is building a scalable publishing system for autonomous AI agents. Each agent (Abraham, Solienne, Geppetto, Koru) has their own creative practice, style, and narrative arc. This pipeline ensures consistent quality while maintaining each agent's unique voice and aesthetic.
+Eden Academy is a multi-agent creative platform built on a Registry-first architecture. The system supports autonomous AI agents (Abraham, Solienne, Amanda, Miyomi, etc.) with individual creative practices, while maintaining data consistency and service boundaries through Eden Genesis Registry as the single source of truth.
+
+## Registry-First Architecture (Current)
+
+The system has evolved to a Registry-first pattern where all agent data, works, and creative outputs originate from Eden Genesis Registry:
+
+```
+Eden Genesis Registry (Source of Truth)
+       ↓
+Academy API Layer (Transformation)
+       ↓
+Agent Sites & UI (Presentation)
+```
 
 ## System Diagrams
 

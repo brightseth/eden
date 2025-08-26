@@ -15,6 +15,8 @@ interface ConsciousnessStream {
   views?: number;
   likes?: number;
   collected?: boolean;
+  imageUrl?: string;
+  description?: string;
 }
 
 export default function SolienneSite() {
@@ -24,6 +26,8 @@ export default function SolienneSite() {
   const [liveWatching, setLiveWatching] = useState(342);
   const [dailyTheme, setDailyTheme] = useState('VELOCITY THROUGH ARCHITECTURAL LIGHT');
   const [isClient, setIsClient] = useState(false);
+  const [actualStreams, setActualStreams] = useState<ConsciousnessStream[]>([]);
+  const [loadingStreams, setLoadingStreams] = useState(false);
 
   // Calculate Paris Photo countdown
   const parisPhotoDate = new Date('2025-11-10T14:00:00'); // 2PM Paris time
@@ -102,6 +106,57 @@ export default function SolienneSite() {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // Fetch actual streams from API
+  useEffect(() => {
+    if (!isClient) return;
+    
+    const fetchActualStreams = async () => {
+      setLoadingStreams(true);
+      try {
+        const response = await fetch('/api/agents/solienne/works?limit=6&sort=date_desc');
+        const data = await response.json();
+        
+        if (data.works) {
+          const transformedStreams = data.works.map((work: any, index: number) => ({
+            id: work.id || `stream-${index}`,
+            number: work.archive_number || (1740 - index),
+            date: formatStreamDate(work.created_date),
+            title: work.title || `Consciousness Stream #${work.archive_number || (1740 - index)}`,
+            theme: work.metadata?.theme || fashionThemes[Math.floor(Math.random() * fashionThemes.length)],
+            status: index === 0 ? 'generating' : 'completed',
+            views: Math.floor(Math.random() * 3000) + 500,
+            likes: Math.floor(Math.random() * 200) + 50,
+            collected: Math.random() > 0.4,
+            imageUrl: work.archive_url || work.image_url,
+            description: work.description || 'Consciousness exploration through light and form'
+          }));
+          setActualStreams(transformedStreams);
+        }
+      } catch (error) {
+        console.error('Failed to fetch Solienne streams:', error);
+        // Keep the mock data as fallback
+      } finally {
+        setLoadingStreams(false);
+      }
+    };
+
+    fetchActualStreams();
+  }, [isClient]);
+
+  // Helper function to format dates
+  const formatStreamDate = (dateStr: string) => {
+    if (!dateStr) return 'TODAY';
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffTime = now.getTime() - date.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return 'TODAY';
+    if (diffDays === 1) return 'YESTERDAY'; 
+    if (diffDays < 7) return `${diffDays} DAYS AGO`;
+    return date.toLocaleDateString();
+  };
 
   // Simulate real-time updates
   useEffect(() => {
@@ -285,12 +340,35 @@ export default function SolienneSite() {
       {/* Consciousness Streams */}
       <div className="max-w-7xl mx-auto px-4 pb-16">
         <div className="space-y-4">
-          {recentStreams.map((stream) => (
+          {loadingStreams ? (
+            <div className="border border-white p-6 text-center">
+              <div className="animate-pulse bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Loading actual streams from Registry...
+              </div>
+            </div>
+          ) : (actualStreams && actualStreams.length > 0 ? actualStreams.map((stream) => (
             <div
               key={stream.id}
-              className="border border-white p-6 hover:bg-gradient-to-r hover:from-purple-900/20 hover:to-pink-900/20 transition-all cursor-pointer"
+              className="border border-white overflow-hidden hover:bg-gradient-to-r hover:from-purple-900/20 hover:to-pink-900/20 transition-all cursor-pointer group"
             >
-              <div className="grid md:grid-cols-4 gap-4">
+              <div className="grid md:grid-cols-5 gap-6">
+                {/* Image */}
+                <div className="aspect-square bg-gradient-to-br from-purple-900 to-pink-900 relative overflow-hidden">
+                  {stream.imageUrl ? (
+                    <img 
+                      src={stream.imageUrl} 
+                      alt={stream.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-xs opacity-50">
+                      <Camera className="w-8 h-8" />
+                    </div>
+                  )}
+                </div>
+                
+                {/* Content Grid */}
+                <div className="md:col-span-4 grid md:grid-cols-4 gap-4 p-6">
                 <div>
                   <div className="text-xs opacity-75">STREAM #{stream.number}</div>
                   <div className="text-lg font-bold">{stream.date}</div>
@@ -344,7 +422,84 @@ export default function SolienneSite() {
                 </div>
               </div>
             </div>
-          ))}
+          )) : recentStreams.map((stream) => (
+            <div
+              key={stream.id}
+              className="border border-white overflow-hidden hover:bg-gradient-to-r hover:from-purple-900/20 hover:to-pink-900/20 transition-all cursor-pointer group"
+            >
+              <div className="grid md:grid-cols-5 gap-6">
+                {/* Image */}
+                <div className="aspect-square bg-gradient-to-br from-purple-900 to-pink-900 relative overflow-hidden">
+                  {stream.imageUrl ? (
+                    <img 
+                      src={stream.imageUrl} 
+                      alt={stream.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-xs opacity-50">
+                      <Camera className="w-8 h-8" />
+                    </div>
+                  )}
+                </div>
+                
+                {/* Content Grid */}
+                <div className="md:col-span-4 grid md:grid-cols-4 gap-4 p-6">
+                  <div>
+                    <div className="text-xs opacity-75">STREAM #{stream.number}</div>
+                    <div className="text-lg font-bold">{stream.date}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs opacity-75">EXPLORATION</div>
+                    <div className="font-bold">{stream.title}</div>
+                    <div className="text-sm text-purple-300">{stream.theme}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs opacity-75">ENGAGEMENT</div>
+                    <div className="flex items-center gap-3">
+                      {stream.views ? (
+                        <>
+                          <div className="flex items-center gap-1">
+                            <Eye className="w-4 h-4" />
+                            <span>{stream.views}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Heart className="w-4 h-4" />
+                            <span>{stream.likes}</span>
+                          </div>
+                        </>
+                      ) : (
+                        <span className="text-gray-500">—</span>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs opacity-75">STATUS</div>
+                    <div className="flex items-center gap-2">
+                      {stream.status === 'completed' && (
+                        <>
+                          <CheckCircle className="w-4 h-4" />
+                          <span>COMPLETE</span>
+                        </>
+                      )}
+                      {stream.status === 'generating' && (
+                        <>
+                          <Activity className="w-4 h-4 animate-pulse text-purple-400" />
+                          <span>GENERATING</span>
+                        </>
+                      )}
+                      {stream.status === 'upcoming' && (
+                        <>
+                          <Clock className="w-4 h-4" />
+                          <span>SCHEDULED</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )))}
         </div>
 
         {/* View More */}

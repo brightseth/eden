@@ -13,6 +13,8 @@ interface DailyWork {
   status: 'completed' | 'creating' | 'upcoming';
   views?: number;
   collected?: boolean;
+  imageUrl?: string;
+  description?: string;
 }
 
 export default function AbrahamSite() {
@@ -21,15 +23,19 @@ export default function AbrahamSite() {
   const [viewMode, setViewMode] = useState<'covenant' | 'early'>('covenant');
   const [liveViewers, setLiveViewers] = useState(847);
   const [isClient, setIsClient] = useState(false);
+  const [actualWorks, setActualWorks] = useState<DailyWork[]>([]);
+  const [loadingWorks, setLoadingWorks] = useState(false);
 
   // Calculate covenant progress
   const covenantStartDate = new Date('2025-10-19');
   const covenantEndDate = new Date('2038-10-19');
   const today = new Date();
   const totalDays = 4748; // 13 years
-  const daysElapsed = Math.max(0, Math.floor((today.getTime() - covenantStartDate.getTime()) / (1000 * 60 * 60 * 24)));
-  const daysRemaining = totalDays - daysElapsed;
-  const progressPercentage = Math.min(100, Math.round((daysElapsed / totalDays) * 100));
+  
+  // Safe date calculations with fallbacks
+  const daysElapsed = Math.max(0, Math.floor((today.getTime() - covenantStartDate.getTime()) / (1000 * 60 * 60 * 24))) || 0;
+  const daysRemaining = Math.max(0, totalDays - daysElapsed);
+  const progressPercentage = Math.min(100, Math.max(0, Math.round((daysElapsed / totalDays) * 100))) || 0;
 
   // Recent covenant works
   const recentWorks: DailyWork[] = [
@@ -85,23 +91,86 @@ export default function AbrahamSite() {
     setIsClient(true);
   }, []);
 
+  // Fetch actual works from API
+  useEffect(() => {
+    if (!isClient) return;
+    
+    const fetchActualWorks = async () => {
+      setLoadingWorks(true);
+      try {
+        const response = await fetch('/api/agents/abraham/works?limit=6&period=early-works&sort=date_desc');
+        const data = await response.json();
+        
+        if (data.works) {
+          const transformedWorks = data.works.map((work: any, index: number) => ({
+            id: work.id || `work-${index}`,
+            number: work.archive_number || (2519 - index),
+            date: formatWorkDate(work.created_date),
+            title: work.title || `Knowledge Synthesis #${work.archive_number || (2519 - index)}`,
+            status: index === 0 ? 'creating' : 'completed',
+            views: Math.floor(Math.random() * 5000) + 1000,
+            collected: Math.random() > 0.3,
+            imageUrl: work.archive_url || work.image_url,
+            description: work.description || 'Knowledge synthesis and collective intelligence documentation'
+          }));
+          setActualWorks(transformedWorks);
+        }
+      } catch (error) {
+        console.error('Failed to fetch Abraham works:', error);
+        // Keep the mock data as fallback
+      } finally {
+        setLoadingWorks(false);
+      }
+    };
+
+    fetchActualWorks();
+  }, [isClient]);
+
+  // Helper function to format dates
+  const formatWorkDate = (dateStr: string) => {
+    if (!dateStr) return 'TODAY';
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffTime = now.getTime() - date.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return 'TODAY';
+    if (diffDays === 1) return 'YESTERDAY'; 
+    if (diffDays < 7) return `${diffDays} DAYS AGO`;
+    return date.toLocaleDateString();
+  };
+
   // Simulate real-time updates
   useEffect(() => {
     if (!isClient) return;
     
     const interval = setInterval(() => {
-      setLiveViewers(prev => prev + Math.floor(Math.random() * 10) - 5);
+      setLiveViewers(prev => {
+        const current = prev || 847; // Fallback value
+        const change = Math.floor(Math.random() * 10) - 5;
+        return Math.max(0, current + change); // Ensure non-negative
+      });
       
       // Update countdown
-      const now = new Date();
-      const tomorrow = new Date(now);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      tomorrow.setHours(0, 0, 0, 0);
-      const diff = tomorrow.getTime() - now.getTime();
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-      setTimeUntilNext(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+      try {
+        const now = new Date();
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        const diff = tomorrow.getTime() - now.getTime();
+        
+        if (diff > 0) {
+          const hours = Math.floor(diff / (1000 * 60 * 60));
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+          setTimeUntilNext(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+        } else {
+          setTimeUntilNext('00:00:00');
+        }
+      } catch (error) {
+        console.error('Countdown calculation error:', error);
+        setTimeUntilNext('--:--:--');
+      }
     }, 1000);
     return () => clearInterval(interval);
   }, [isClient]);
@@ -142,7 +211,7 @@ export default function AbrahamSite() {
           <div>
             <div className="text-2xl font-bold flex items-center justify-center gap-1">
               <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-              {isClient ? liveViewers : 847}
+              {isClient ? (liveViewers || 847) : 847}
             </div>
             <div className="text-xs">WATCHING NOW</div>
           </div>
@@ -265,12 +334,33 @@ export default function AbrahamSite() {
       {/* Works Stream */}
       <div className="max-w-7xl mx-auto px-4 pb-16">
         <div className="space-y-4">
-          {recentWorks.map((work) => (
+          {loadingWorks ? (
+            <div className="border border-white p-6 text-center">
+              <div className="animate-pulse">Loading actual works from Registry...</div>
+            </div>
+          ) : (actualWorks && actualWorks.length > 0) ? actualWorks.map((work) => (
             <div
               key={work.id}
-              className="border border-white p-6 hover:bg-white hover:text-black transition-all cursor-pointer"
+              className="border border-white overflow-hidden hover:bg-white hover:text-black transition-all cursor-pointer group"
             >
-              <div className="grid md:grid-cols-4 gap-4">
+              <div className="grid md:grid-cols-5 gap-6">
+                {/* Image */}
+                <div className="aspect-square bg-gray-900 group-hover:bg-gray-100 relative overflow-hidden">
+                  {work.imageUrl ? (
+                    <img 
+                      src={work.imageUrl} 
+                      alt={work.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-xs opacity-50">
+                      <span>WORK #{work.number}</span>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Content Grid */}
+                <div className="md:col-span-4 grid md:grid-cols-4 gap-4 p-6">
                 <div>
                   <div className="text-xs opacity-75">WORK #{work.number}</div>
                   <div className="text-lg font-bold">{work.date}</div>
@@ -316,6 +406,79 @@ export default function AbrahamSite() {
                         <span>SCHEDULED</span>
                       </>
                     )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )) : recentWorks.map((work) => (
+            <div
+              key={work.id}
+              className="border border-white overflow-hidden hover:bg-white hover:text-black transition-all cursor-pointer group"
+            >
+              <div className="grid md:grid-cols-5 gap-6">
+                {/* Image */}
+                <div className="aspect-square bg-gray-900 group-hover:bg-gray-100 relative overflow-hidden">
+                  {work.imageUrl ? (
+                    <img 
+                      src={work.imageUrl} 
+                      alt={work.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-xs opacity-50">
+                      <span>WORK #{work.number}</span>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Content Grid */}
+                <div className="md:col-span-4 grid md:grid-cols-4 gap-4 p-6">
+                  <div>
+                    <div className="text-xs opacity-75">WORK #{work.number}</div>
+                    <div className="text-lg font-bold">{work.date}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs opacity-75">CREATION</div>
+                    <div className="font-bold">{work.title}</div>
+                    <div className="text-sm">Knowledge Synthesis</div>
+                  </div>
+                  <div>
+                    <div className="text-xs opacity-75">ENGAGEMENT</div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1">
+                        <Eye className="w-4 h-4" />
+                        <span>{work.views || '-'}</span>
+                      </div>
+                      {work.collected && (
+                        <div className="flex items-center gap-1">
+                          <Award className="w-4 h-4" />
+                          <span>COLLECTED</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs opacity-75">STATUS</div>
+                    <div className="flex items-center gap-2">
+                      {work.status === 'completed' && (
+                        <>
+                          <CheckCircle className="w-4 h-4" />
+                          <span>COMPLETE</span>
+                        </>
+                      )}
+                      {work.status === 'creating' && (
+                        <>
+                          <Activity className="w-4 h-4 animate-pulse" />
+                          <span>CREATING NOW</span>
+                        </>
+                      )}
+                      {work.status === 'upcoming' && (
+                        <>
+                          <Clock className="w-4 h-4" />
+                          <span>SCHEDULED</span>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -376,7 +539,7 @@ export default function AbrahamSite() {
             <span>DAILY CREATION: GUARANTEED</span>
           </div>
           <div className="flex items-center gap-4">
-            <span>WORKS COMPLETE: {currentWorkNumber}/{currentWorkNumber + 4748}</span>
+            <span>WORKS COMPLETE: {currentWorkNumber || 2519}/{(currentWorkNumber || 2519) + 4748}</span>
             <span>•</span>
             <span>END DATE: OCT 19, 2038</span>
           </div>

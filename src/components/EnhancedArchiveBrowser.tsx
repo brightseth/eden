@@ -87,72 +87,81 @@ export function EnhancedArchiveBrowser({
   }, [page, searchTerm, sortBy, sortOrder]); // Removed selectedTags until column is added
   
   async function fetchAvailableTags() {
-    // Get unique tags from metadata
-    const { data } = await supabase
-      .from('agent_archives')
-      .select('metadata')
-      .eq('agent_id', agentId)
-      .not('metadata->tags', 'is', null);
+    try {
+      // Get unique tags via Academy API
+      const response = await fetch(`/api/agents/${agentId}/works?limit=1000`);
       
-    const tagSet = new Set<string>();
-    data?.forEach(item => {
-      if (item.metadata?.tags && Array.isArray(item.metadata.tags)) {
-        item.metadata.tags.forEach((tag: string) => {
-          if (typeof tag === 'string') {
-            tagSet.add(tag);
+      if (response.ok) {
+        const data = await response.json();
+        const tagSet = new Set<string>();
+        
+        data.works?.forEach((work: any) => {
+          // Extract tags from work metadata
+          if (work.metadata?.tags && Array.isArray(work.metadata.tags)) {
+            work.metadata.tags.forEach((tag: string) => {
+              if (typeof tag === 'string' && tag.trim()) {
+                tagSet.add(tag);
+              }
+            });
+          }
+          
+          // Also extract from tags array if present
+          if (work.tags && Array.isArray(work.tags)) {
+            work.tags.forEach((tag: string) => {
+              if (typeof tag === 'string' && tag.trim()) {
+                tagSet.add(tag);
+              }
+            });
           }
         });
+        
+        const sortedTags = Array.from(tagSet).sort();
+        setAvailableTags(sortedTags.length > 0 ? sortedTags : SOLIENNE_TAGS);
+      } else {
+        // Fallback to predefined tags
+        setAvailableTags(SOLIENNE_TAGS);
       }
-    });
-    
-    const sortedTags = Array.from(tagSet).sort();
-    // Use predefined tags if no tags found in metadata
-    setAvailableTags(sortedTags.length > 0 ? sortedTags : SOLIENNE_TAGS);
+    } catch (error) {
+      console.error('Error fetching tags via Academy API:', error);
+      setAvailableTags(SOLIENNE_TAGS);
+    }
   }
   
   async function fetchArchives() {
     setLoading(true);
     
-    let query = supabase
-      .from('agent_archives')
-      .select('*', { count: 'exact' })
-      .eq('agent_id', agentId)
-      .eq('archive_type', archiveType);
-    
-    // Apply search filter
-    if (searchTerm) {
-      query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
-    }
-    
-    // Apply tag filters using metadata->tags
-    if (selectedTags.length > 0) {
-      // Filter by tags in metadata
-      selectedTags.forEach(tag => {
-        query = query.contains('metadata->>tags', [tag]);
+    try {
+      // Use Academy API which proxies to Registry
+      const params = new URLSearchParams({
+        limit: itemsPerPage.toString(),
+        offset: ((page - 1) * itemsPerPage).toString()
       });
-    }
-    
-    // Apply sorting
-    const orderColumn = sortBy === 'number' ? 'archive_number' : 
-                        sortBy === 'date' ? 'created_date' : 'title';
-    query = query.order(orderColumn, { ascending: sortOrder === 'asc' });
-    
-    // Pagination
-    const start = (page - 1) * itemsPerPage;
-    query = query.range(start, start + itemsPerPage - 1);
-    
-    const { data, count, error } = await query;
-    
-    if (error) {
-      console.error('Error fetching archives:', error);
+      
+      // Add search filter if present
+      if (searchTerm) {
+        params.append('search', searchTerm);
+      }
+      
+      // Add sorting in Academy format
+      const sortParam = `${sortBy}_${sortOrder}`;
+      params.append('sort', sortParam);
+      
+      const response = await fetch(`/api/agents/${agentId}/works?${params}`);
+      
+      if (!response.ok) {
+        throw new Error(`Academy API error: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      console.log(`Fetched ${data.works?.length || 0} works via Academy API, total: ${data.total}`);
+      setArchives(data.works || []);
+      setTotalCount(data.total || 0);
+      
+    } catch (error) {
+      console.error('Error fetching from Registry API:', error);
       setArchives([]);
       setTotalCount(0);
-    } else {
-      // Ensure we're replacing, not concatenating
-      const uniqueData = data || [];
-      console.log(`Fetched ${uniqueData.length} items, total count: ${count}`);
-      setArchives(uniqueData);
-      setTotalCount(count || 0);
     }
     
     setLoading(false);
