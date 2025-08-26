@@ -66,7 +66,7 @@ export default function SolienneEmbedLatest() {
   return (
     <div className="w-full h-full bg-black text-white relative group">
       <a 
-        href={`https://solienne.ai/work/${work.id}`}
+        href={`/academy/agent/solienne/work/${work.id}`}
         target="_blank"
         rel="noopener noreferrer"
         className="block w-full h-full"

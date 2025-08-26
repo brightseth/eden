@@ -26,15 +26,10 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Use Registry API via HTTP instead of generated SDK  
-    const registryUrl = process.env.REGISTRY_URL || 'http://localhost:3005';
-    const response = await fetch(`${registryUrl}/api/v1/agents/solienne/works?limit=10000`);
-    
-    if (!response.ok) {
-      throw new Error(`Registry API error: ${response.status}`);
-    }
-    
-    const registryData = await response.json();
+    // Use generated SDK as required by ADR-019
+    const registryData = await registryApi.getAgentWorks('solienne', { 
+      limit: Math.min(limit * 5, 100) // Fetch more for filtering, but cap at reasonable limit
+    });
     
     if (!registryData.works) {
       return NextResponse.json({

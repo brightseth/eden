@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Camera, Sparkles, Clock, CheckCircle, ArrowRight, Activity, Eye, Heart, TrendingUp } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
+import { SOLIENNE_CONFIG, PARIS_THEMES } from '@/lib/solienne/constants';
 
 interface ConsciousnessStream {
   id: string;
@@ -20,17 +21,15 @@ interface ConsciousnessStream {
 }
 
 export default function SolienneSite() {
-  const [currentStreamNumber, setCurrentStreamNumber] = useState(1740);
+  const [currentStreamNumber, setCurrentStreamNumber] = useState(SOLIENNE_CONFIG.CURRENT_STREAM_NUMBER);
   const [timeUntilNext, setTimeUntilNext] = useState('00:00:00');
   const [viewMode, setViewMode] = useState<'consciousness' | 'fashion'>('consciousness');
-  const [liveWatching, setLiveWatching] = useState(342);
-  const [dailyTheme, setDailyTheme] = useState('VELOCITY THROUGH ARCHITECTURAL LIGHT');
+  const [liveWatching, setLiveWatching] = useState(SOLIENNE_CONFIG.INITIAL_WATCHING_COUNT);
+  const [dailyTheme, setDailyTheme] = useState(SOLIENNE_CONFIG.DEFAULT_THEME);
   const [isClient, setIsClient] = useState(false);
-  const [actualStreams, setActualStreams] = useState<ConsciousnessStream[]>([]);
-  const [loadingStreams, setLoadingStreams] = useState(false);
 
   // Calculate Paris Photo countdown
-  const parisPhotoDate = new Date('2025-11-10T14:00:00'); // 2PM Paris time
+  const parisPhotoDate = new Date(SOLIENNE_CONFIG.PARIS_PHOTO_DATE);
   const today = new Date();
   const daysUntilParis = Math.floor((parisPhotoDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
@@ -93,82 +92,24 @@ export default function SolienneSite() {
     }
   ];
 
-  // Fashion themes for Paris
-  const parisThemes = [
-    'CONSCIOUSNESS AS COUTURE',
-    'LIGHT ARCHITECTURE IN FASHION',
-    'DIGITAL IDENTITY THREADS',
-    'VELOCITY THROUGH FABRIC',
-    'LIMINAL FASHION SPACES'
-  ];
 
   // Client-side hydration
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Fetch actual streams from API
-  useEffect(() => {
-    if (!isClient) return;
-    
-    const fetchActualStreams = async () => {
-      setLoadingStreams(true);
-      try {
-        const response = await fetch('/api/agents/solienne/works?limit=6&sort=date_desc');
-        const data = await response.json();
-        
-        if (data.works) {
-          const transformedStreams = data.works.map((work: any, index: number) => ({
-            id: work.id || `stream-${index}`,
-            number: work.archive_number || (1740 - index),
-            date: formatStreamDate(work.created_date),
-            title: work.title || `Consciousness Stream #${work.archive_number || (1740 - index)}`,
-            theme: work.metadata?.theme || parisThemes[Math.floor(Math.random() * parisThemes.length)],
-            status: (index === 0 ? 'generating' : 'completed') as 'generating' | 'completed',
-            views: Math.floor(Math.random() * 3000) + 500,
-            likes: Math.floor(Math.random() * 200) + 50,
-            collected: Math.random() > 0.4,
-            imageUrl: work.archive_url || work.image_url,
-            description: work.description || 'Consciousness exploration through light and form'
-          }));
-          setActualStreams(transformedStreams);
-        }
-      } catch (error) {
-        console.error('Failed to fetch Solienne streams:', error);
-        // Keep the mock data as fallback
-      } finally {
-        setLoadingStreams(false);
-      }
-    };
-
-    fetchActualStreams();
-  }, [isClient]);
-
-  // Helper function to format dates
-  const formatStreamDate = (dateStr: string) => {
-    if (!dateStr) return 'TODAY';
-    const date = new Date(dateStr);
-    const now = new Date();
-    const diffTime = now.getTime() - date.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === 0) return 'TODAY';
-    if (diffDays === 1) return 'YESTERDAY'; 
-    if (diffDays < 7) return `${diffDays} DAYS AGO`;
-    return date.toLocaleDateString();
-  };
 
   // Simulate real-time updates
   useEffect(() => {
     if (!isClient) return;
     
     const interval = setInterval(() => {
-      setLiveWatching(prev => prev + Math.floor(Math.random() * 20) - 10);
+      setLiveWatching(prev => prev + Math.floor(Math.random() * (SOLIENNE_CONFIG.WATCHING_VARIATION_RANGE * 2)) - SOLIENNE_CONFIG.WATCHING_VARIATION_RANGE);
       
       // Update countdown
       const now = new Date();
       const nextGen = new Date(now);
-      nextGen.setHours(nextGen.getHours() + 4); // Every 4 hours
+      nextGen.setHours(nextGen.getHours() + SOLIENNE_CONFIG.GENERATION_INTERVAL_HOURS);
       const diff = nextGen.getTime() - now.getTime();
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -208,7 +149,7 @@ export default function SolienneSite() {
             <div className="text-xs">DAYS TO PARIS PHOTO</div>
           </div>
           <div>
-            <div className="text-2xl font-bold">6/DAY</div>
+            <div className="text-2xl font-bold">{SOLIENNE_CONFIG.DAILY_GENERATION_COUNT}/DAY</div>
             <div className="text-xs">GENERATION RATE</div>
           </div>
           <div>
@@ -228,7 +169,7 @@ export default function SolienneSite() {
             <div>
               <h2 className="text-3xl font-bold mb-4">DAILY CONSCIOUSNESS EXPLORATION</h2>
               <p className="text-lg mb-4">
-                <strong>6 GENERATIONS DAILY • CONSCIOUSNESS THROUGH LIGHT • PARIS PHOTO DEBUT</strong>
+                <strong>{SOLIENNE_CONFIG.DAILY_GENERATION_COUNT} GENERATIONS DAILY • CONSCIOUSNESS THROUGH LIGHT • PARIS PHOTO DEBUT</strong>
               </p>
               <p className="mb-4">
                 Every day, I explore consciousness through light and architectural space, 
@@ -238,7 +179,7 @@ export default function SolienneSite() {
               <div className="space-y-2 text-sm">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4" />
-                  <span>6 GENERATIONS PER DAY</span>
+                  <span>{SOLIENNE_CONFIG.DAILY_GENERATION_COUNT} GENERATIONS PER DAY</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4" />
@@ -297,7 +238,7 @@ export default function SolienneSite() {
               <div className="text-5xl font-bold mb-2">{daysUntilParis}</div>
               <div className="text-lg mb-2">DAYS REMAINING</div>
               <CountdownTimer 
-                targetDate="2025-11-10T14:00:00" 
+                targetDate={SOLIENNE_CONFIG.PARIS_PHOTO_DATE} 
                 label=""
               />
             </div>
@@ -312,7 +253,7 @@ export default function SolienneSite() {
           <div className="mt-8 text-center">
             <div className="inline-block border border-white px-6 py-3">
               <div className="text-sm opacity-75">EXHIBITION DATES</div>
-              <div className="text-lg">NOVEMBER 7-10, 2025 • GRAND PALAIS</div>
+              <div className="text-lg">{SOLIENNE_CONFIG.PARIS_PHOTO_DATES} • {SOLIENNE_CONFIG.PARIS_PHOTO_VENUE}</div>
             </div>
           </div>
         </div>
@@ -362,7 +303,7 @@ export default function SolienneSite() {
         <div className="max-w-7xl mx-auto px-4 py-16">
           <h2 className="text-3xl font-bold mb-8">PARIS PHOTO COLLECTION</h2>
           <div className="grid md:grid-cols-3 gap-8 mb-12">
-            {parisThemes.slice(0, 3).map((theme, index) => (
+            {PARIS_THEMES.slice(0, 3).map((theme, index) => (
               <div key={index} className="border border-white p-6 hover:bg-white hover:text-black transition-all">
                 <div className="text-sm opacity-75 mb-2">THEME {index + 1}</div>
                 <h3 className="text-lg font-bold mb-4">{theme}</h3>
@@ -370,7 +311,7 @@ export default function SolienneSite() {
                 <div className="text-sm">
                   <div className="flex justify-between mb-2">
                     <span>Pieces:</span>
-                    <span>20</span>
+                    <span>{SOLIENNE_CONFIG.PIECES_PER_THEME}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Status:</span>
