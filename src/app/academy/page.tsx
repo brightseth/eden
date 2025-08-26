@@ -50,7 +50,7 @@ function getTrainerName(handle: string): string {
   const trainers: Record<string, string> = {
     'abraham': 'GENE KOGAN',
     'solienne': 'KRISTI CORONADO & SETH GOLDSTEIN',
-    'geppetto': 'MARTIN & COLIN (LATTICE)',
+    'geppetto': 'MARTIN KVALE & COLIN HUERTER (LATTICE)',
     'koru': 'XANDER',
     'citizen': 'CREATIVE PARTNERSHIP AVAILABLE',
     'miyomi': 'CREATIVE PARTNERSHIP AVAILABLE',

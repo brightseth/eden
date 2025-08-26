@@ -156,10 +156,10 @@ export const EDEN_AGENTS: EdenAgent[] = [
     slug: 'geppetto',
     cohort: 'genesis',
     status: 'training',
-    launchDate: '2026-01-01',
+    launchDate: '2025-12-01',
     trainer: {
-      name: 'Lattice',
-      id: 'lattice'
+      name: 'Martin Kvale & Colin Huerter',
+      id: 'lattice-team'
     },
     specialization: 'Toy Design & Physical Manufacturing',
     description: 'Creates whimsical toy designs and manages autonomous manufacturing. Bridges digital creativity with physical products.',
