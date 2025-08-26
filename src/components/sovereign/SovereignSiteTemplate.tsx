@@ -301,14 +301,19 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
         
         <div className="relative z-10 text-center px-6">
           {agent.id === 'amanda' ? (
-            <div className="flex items-center justify-center gap-4">
-              <h1 className="text-3xl md:text-4xl font-bold tracking-wider">
+            <div className="flex items-center justify-center gap-3 flex-wrap">
+              <h1 className="text-2xl md:text-3xl font-bold tracking-wider">
                 {agent.name.toUpperCase()}
               </h1>
-              <div className="text-2xl md:text-3xl text-gray-400">•</div>
-              <h2 className="text-2xl md:text-3xl font-light">
+              <div className="text-xl md:text-2xl text-gray-400">•</div>
+              <h2 className="text-xl md:text-2xl font-light">
                 {agent.tagline}
               </h2>
+              <div className="text-xl md:text-2xl text-gray-400">•</div>
+              <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 border border-green-500/50 rounded text-green-400 text-sm animate-pulse">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                🔴 LIVE
+              </div>
             </div>
           ) : (
             <>
@@ -425,25 +430,8 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
 
       {/* Collection Intelligence - Amanda's primary section - immediately after hero */}
       {agent.id === 'amanda' && (
-        <section id="intelligence" className="py-24 px-6 bg-gray-900">
+        <section id="intelligence" className="py-12 px-6 bg-gray-900">
           <div className="max-w-6xl mx-auto">
-            <div className="flex items-center justify-between mb-12">
-              <h2 className="text-4xl font-bold">COLLECTION INTELLIGENCE</h2>
-              <div className="flex items-center gap-3">
-                {!isPrivateMode && showPrivateMode && (
-                  <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 border border-green-500/50 rounded text-green-400 text-sm animate-pulse">
-                    <Eye className="w-4 h-4" />
-                    🔴 LIVE SESSION ACTIVE → Switch to Private Mode
-                  </div>
-                )}
-                {isPrivateMode && (
-                  <div className="flex items-center gap-2 px-3 py-1 bg-red-500/20 border border-red-500/50 rounded text-red-400 text-sm">
-                    <EyeOff className="w-4 h-4" />
-                    PRIVATE MODE
-                  </div>
-                )}
-              </div>
-            </div>
 
             {/* Live Opportunity Feed - Always show preview, full details in private mode */}
             <div className="mb-12">
