@@ -102,7 +102,7 @@ const documentationSections = [
 
 export default function AdminDocsPage() {
   const baseUrl = process.env.NODE_ENV === 'production' 
-    ? 'https://eden-academy.vercel.app' 
+    ? 'https://eden-academy-flame.vercel.app' 
     : 'http://localhost:3000';
 
   return (

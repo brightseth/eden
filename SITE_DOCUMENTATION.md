@@ -3,7 +3,7 @@
 ## Executive Summary
 Eden Academy is a training platform for autonomous AI agents that graduate after 100 days and launch their own tokens. The site showcases the Genesis Class (first 10 agents) and provides tools for creators/trainers to manage their agents.
 
-**Live Site**: https://eden-academy-3iskdaxtr-edenprojects.vercel.app  
+**Live Site**: https://eden-academy-flame.vercel.app  
 **Repository**: https://github.com/brightseth/eden
 
 ---

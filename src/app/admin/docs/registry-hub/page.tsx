@@ -94,7 +94,7 @@ const integrationStatus = [
 
 export default function RegistryHubPage() {
   const baseUrl = process.env.NODE_ENV === 'production' 
-    ? 'https://eden-academy.vercel.app' 
+    ? 'https://eden-academy-flame.vercel.app' 
     : 'http://localhost:3000';
 
   const copyToClipboard = async (text: string) => {
@@ -204,6 +204,7 @@ export default function RegistryHubPage() {
                           </Link>
                           
                           <button
+                            type="button"
                             onClick={() => copyToClipboard(fullShareUrl)}
                             className="inline-flex items-center text-gray-400 hover:text-gray-300 text-sm"
                           >

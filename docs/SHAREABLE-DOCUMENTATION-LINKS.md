@@ -7,7 +7,7 @@
 ## Registry Integration Documentation Hub
 
 **Primary Hub URL:** `/admin/docs/registry-hub`  
-**Shareable Link:** `https://eden-academy.vercel.app/admin/docs/registry-hub`
+**Shareable Link:** `https://eden-academy-flame.vercel.app/admin/docs/registry-hub`
 
 This comprehensive hub contains all Registry integration documentation organized for Henry and collaborators.
 
@@ -17,7 +17,7 @@ This comprehensive hub contains all Registry integration documentation organized
 
 ### 1. Complete Registry Integration Guide
 **File:** `/docs/HENRY-REGISTRY-INTEGRATION-COMPLETE.md`  
-**Shareable URL:** `https://eden-academy.vercel.app/admin/docs/view/henry-registry-integration-complete`
+**Shareable URL:** `https://eden-academy-flame.vercel.app/admin/docs/view/henry-registry-integration-complete`
 
 **Contents:**
 - Executive summary of Registry integration
@@ -28,7 +28,7 @@ This comprehensive hub contains all Registry integration documentation organized
 
 ### 2. Registry-First Architecture Pattern (ADR-022)
 **File:** `/docs/adr/022-registry-first-architecture-pattern.md`  
-**Shareable URL:** `https://eden-academy.vercel.app/admin/docs/view/022-registry-first-architecture-pattern`
+**Shareable URL:** `https://eden-academy-flame.vercel.app/admin/docs/view/022-registry-first-architecture-pattern`
 
 **Contents:**
 - Core architectural decision rationale
@@ -38,7 +38,7 @@ This comprehensive hub contains all Registry integration documentation organized
 
 ### 3. Agent Site Architecture Standards (ADR-023)
 **File:** `/docs/adr/023-agent-site-architecture-standards.md`  
-**Shareable URL:** `https://eden-academy.vercel.app/admin/docs/view/023-agent-site-architecture-standards`
+**Shareable URL:** `https://eden-academy-flame.vercel.app/admin/docs/view/023-agent-site-architecture-standards`
 
 **Contents:**
 - Standards for agent site implementation
@@ -48,7 +48,7 @@ This comprehensive hub contains all Registry integration documentation organized
 
 ### 4. Abraham Registry Integration Pattern (ADR-024)
 **File:** `/docs/adr/024-abraham-registry-integration-pattern.md`  
-**Shareable URL:** `https://eden-academy.vercel.app/admin/docs/view/024-abraham-registry-integration-pattern`
+**Shareable URL:** `https://eden-academy-flame.vercel.app/admin/docs/view/024-abraham-registry-integration-pattern`
 
 **Contents:**
 - Abraham-specific integration details
@@ -58,7 +58,7 @@ This comprehensive hub contains all Registry integration documentation organized
 
 ### 5. Registry Integration Technical Guide
 **File:** `/docs/registry-integration-guide.md`  
-**Shareable URL:** `https://eden-academy.vercel.app/admin/docs/view/registry-integration-guide`
+**Shareable URL:** `https://eden-academy-flame.vercel.app/admin/docs/view/registry-integration-guide`
 
 **Contents:**
 - Technical implementation details
@@ -68,7 +68,7 @@ This comprehensive hub contains all Registry integration documentation organized
 
 ### 6. System Architecture Overview
 **File:** `/docs/system-architecture.md`  
-**Shareable URL:** `https://eden-academy.vercel.app/admin/docs/view/system-architecture`
+**Shareable URL:** `https://eden-academy-flame.vercel.app/admin/docs/view/system-architecture`
 
 **Contents:**
 - Complete system architecture
@@ -78,7 +78,7 @@ This comprehensive hub contains all Registry integration documentation organized
 
 ### 7. Architecture Summary 2025-08
 **File:** `/docs/architecture-summary-2025-08.md`  
-**Shareable URL:** `https://eden-academy.vercel.app/admin/docs/view/architecture-summary-2025-08`
+**Shareable URL:** `https://eden-academy-flame.vercel.app/admin/docs/view/architecture-summary-2025-08`
 
 **Contents:**
 - Latest architecture summary
@@ -106,7 +106,7 @@ This comprehensive hub contains all Registry integration documentation organized
 ## How to Share Documentation
 
 ### For Henry
-Send the Registry Hub link: `https://eden-academy.vercel.app/admin/docs/registry-hub`
+Send the Registry Hub link: `https://eden-academy-flame.vercel.app/admin/docs/registry-hub`
 
 This hub contains:
 - Complete integration status
@@ -115,7 +115,7 @@ This hub contains:
 - Copy-to-clipboard functionality for sharing
 
 ### For Other Collaborators
-Use the main documentation hub: `https://eden-academy.vercel.app/admin/docs`
+Use the main documentation hub: `https://eden-academy-flame.vercel.app/admin/docs`
 
 This contains:
 - Shareable Registry documentation section
