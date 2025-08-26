@@ -284,7 +284,7 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
 
       {/* Hero Section with Latest Work */}
       <section className={`relative flex items-center justify-center overflow-hidden ${
-        agent.id === 'amanda' ? 'h-[40vh] min-h-[280px] pt-20' : 'h-screen'
+        agent.id === 'amanda' ? 'h-[25vh] min-h-[180px] pt-16' : 'h-screen'
       }`}>
         {latestWork && latestWork.metadata?.image_url && (
           <div className="absolute inset-0">
@@ -430,7 +430,7 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
 
       {/* Collection Intelligence - Amanda's primary section - immediately after hero */}
       {agent.id === 'amanda' && (
-        <section id="intelligence" className="py-12 px-6 bg-gray-900">
+        <section id="intelligence" className="py-6 px-6 bg-gray-900">
           <div className="max-w-6xl mx-auto">
 
             {/* Live Opportunity Feed - Always show preview, full details in private mode */}
