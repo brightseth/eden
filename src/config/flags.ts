@@ -77,8 +77,8 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
   ENABLE_SOLIENNE_REGISTRY_INTEGRATION: {
     key: 'ENABLE_SOLIENNE_REGISTRY_INTEGRATION',
     description: 'Enable Registry-first architecture for Solienne site and embed components',
-    defaultValue: process.env.NODE_ENV === 'development',
-    rolloutStrategy: 'dev',
+    defaultValue: true, // Enabled for production
+    rolloutStrategy: 'full',
     culturalImpact: 'Solienne site displays consciousness streams from Registry, not legacy archives',
     rollbackPlan: 'Disable flag, fallback to direct Supabase queries to agent_archives table'
   },

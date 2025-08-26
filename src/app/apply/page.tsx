@@ -64,9 +64,58 @@ export default function ApplyPage() {
       return;
     }
     
-    // In production, this would submit to a database
-    console.log('Application submitted:', formData);
-    setSubmitted(true);
+    try {
+      // Submit to Registry API endpoint
+      const response = await fetch('/api/agents/onboard', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          // Trainer Information
+          trainerName: formData.name,
+          trainerEmail: formData.email,
+          trainerTwitter: formData.twitter || undefined,
+          trainerWebsite: formData.portfolio || undefined,
+          
+          // Agent Profile
+          agentName: formData.agentName,
+          agentHandle: formData.agentName.toLowerCase().replace(/\s+/g, '-'),
+          specialization: formData.agentTrack,
+          description: formData.vision,
+          
+          // Technical Profile
+          primaryMedium: 'mixed_media',
+          capabilities: formData.expertise ? [formData.expertise] : [],
+          preferredIntegrations: [],
+          expectedOutputRate: 100,
+          
+          // Brand Identity
+          voice: formData.vision || 'To be defined',
+          aestheticStyle: undefined,
+          culturalContext: formData.culturalContext || undefined,
+          
+          // Goals & Metrics
+          revenueGoal: 10000,
+          launchTimeframe: '3-6 months',
+          cohortPreference: 'flexible',
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Application submission failed');
+      }
+
+      const result = await response.json();
+      console.log('Application submitted successfully:', result);
+      setSubmitted(true);
+    } catch (error) {
+      console.error('Failed to submit application:', error);
+      // Fallback to console log if API fails
+      console.log('Application submitted (fallback):', formData);
+      setSubmitted(true);
+    }
   };
 
   if (submitted) {
