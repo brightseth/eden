@@ -165,7 +165,7 @@ export default function AcademyPage() {
             <div className="text-sm">🚨 Registry unavailable: {error}</div>
             <div className="text-xs mt-1 opacity-75">No fallback data available. Registry is required.</div>
             <div className="text-xs mt-1">
-              <a href="/genesis-cohort" className="underline">Try Genesis Cohort dashboard →</a>
+              <a href="/" className="underline">Try main Genesis Cohort page →</a>
             </div>
           </div>
         )}

@@ -19,12 +19,6 @@ export function UnifiedHeader() {
             <AgentSwitcher />
           </div>
           <div className="flex items-center gap-6">
-            <Link 
-              href="/genesis-cohort"
-              className={`text-sm hover:text-gray-300 transition-colors ${pathname === '/genesis-cohort' ? 'text-white font-bold' : ''}`}
-            >
-              GENESIS COHORT
-            </Link>
             <AboutDropdown />
             <a 
               href="https://app.eden.art" 
