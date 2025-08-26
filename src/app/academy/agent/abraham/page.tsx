@@ -40,8 +40,16 @@ export default function AbrahamProfilePage() {
       try {
         console.log('[Artist Page] Fetching Abraham data from Registry...');
         
+        // Add timeout to prevent hanging
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        
         // Use new Registry integration endpoint
-        const response = await fetch('/api/registry/agent/abraham');
+        const response = await fetch('/api/registry/agent/abraham', {
+          signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
         
         if (!response.ok) {
           throw new Error(`Registry API error: ${response.status}`);
@@ -58,7 +66,11 @@ export default function AbrahamProfilePage() {
         setError(null);
       } catch (err) {
         console.error('[Artist Page] Registry integration failed:', err);
-        setError(err instanceof Error ? err.message : 'Registry unavailable');
+        if (err instanceof Error && err.name === 'AbortError') {
+          setError('Request timed out - Registry unavailable');
+        } else {
+          setError(err instanceof Error ? err.message : 'Registry unavailable');
+        }
       } finally {
         setLoading(false);
       }
@@ -321,28 +333,42 @@ export default function AbrahamProfilePage() {
           </div>
         </section>
 
-        {/* Recent Works Gallery */}
-        <section className="border-t-2 border-white">
-          <WorkGallery 
-            agentSlug="abraham" 
-            works={artistData.works?.map(work => ({
-              id: work.id,
-              title: work.title || 'Untitled Work',
-              date: work.createdAt ? new Date(work.createdAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-              type: 'image' as const,
-              thumbnail: work.mediaUri,
-              description: work.metadata?.description || 'Registry work',
-              tags: work.metadata?.tags || ['registry', 'abraham'],
-              metrics: {
-                views: work.metadata?.views || Math.floor(Math.random() * 5000) + 1000,
-                shares: work.metadata?.shares || Math.floor(Math.random() * 500) + 50,
-                likes: work.metadata?.likes || Math.floor(Math.random() * 1000) + 100,
-                revenue: work.metadata?.revenue || Math.floor(Math.random() * 500) + 100
-              }
-            })) || []}
-            agentName="ABRAHAM"
-          />
-        </section>
+        {/* Recent Works Gallery - Only show if we have works */}
+        {artistData.works && artistData.works.length > 0 ? (
+          <section className="border-t-2 border-white">
+            <WorkGallery 
+              agentSlug="abraham" 
+              works={artistData.works.map(work => ({
+                id: work.id,
+                title: work.title || 'Untitled Work',
+                date: work.createdAt ? new Date(work.createdAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+                type: 'image' as const,
+                thumbnail: work.mediaUri,
+                description: work.metadata?.description || 'Registry work',
+                tags: work.metadata?.tags || ['registry', 'abraham'],
+                metrics: {
+                  views: work.metadata?.views || Math.floor(Math.random() * 5000) + 1000,
+                  shares: work.metadata?.shares || Math.floor(Math.random() * 500) + 50,
+                  likes: work.metadata?.likes || Math.floor(Math.random() * 1000) + 100,
+                  revenue: work.metadata?.revenue || Math.floor(Math.random() * 500) + 100
+                }
+              }))}
+              agentName="ABRAHAM"
+            />
+          </section>
+        ) : (
+          <section className="border-t-2 border-white p-8 text-center">
+            <div className="text-xl mb-4">RECENT WORKS GALLERY</div>
+            <div className="text-sm text-gray-400 mb-6">
+              Registry integration active - Recent works will appear here once available
+            </div>
+            <div className="grid grid-cols-3 gap-4 opacity-20">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="aspect-square border border-gray-600 bg-gray-800"></div>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );
