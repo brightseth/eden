@@ -3,7 +3,7 @@ import { Agent, AgentOverview } from '@/types';
 
 export async function getAgents(): Promise<Agent[]> {
   // Return mock data if Supabase is not configured
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('mock')) {
+  if (!supabase || !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('mock')) {
     return getMockAgents();
   }
 
@@ -38,7 +38,7 @@ export async function getAgents(): Promise<Agent[]> {
 
 export async function getAgent(id: string): Promise<Agent | null> {
   // Return mock data if Supabase is not configured
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('mock')) {
+  if (!supabase || !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('mock')) {
     const agents = getMockAgents();
     return agents.find(a => a.id === id) || null;
   }
@@ -78,7 +78,7 @@ export async function getAgent(id: string): Promise<Agent | null> {
 
 export async function getAgentOverview(agentId: string): Promise<AgentOverview | null> {
   // Return mock data if Supabase is not configured
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('mock')) {
+  if (!supabase || !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('mock')) {
     return getMockAgentOverview(agentId);
   }
 
