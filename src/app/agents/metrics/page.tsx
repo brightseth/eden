@@ -4,6 +4,9 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { EDEN_AGENTS, calculateTotalRevenue, calculateAverageOutputRate } from '@/data/eden-agents-manifest';
 
+// Force dynamic rendering to avoid build issues
+export const dynamic = 'force-dynamic';
+
 export default function AgentMetricsDashboard() {
   const [timeframe, setTimeframe] = useState<'24h' | '7d' | '30d' | '90d'>('30d');
   const [metric, setMetric] = useState<'revenue' | 'output' | 'holders' | 'engagement'>('revenue');

@@ -10,7 +10,7 @@ export interface EdenAgent {
   name: string;
   slug: string;
   cohort: 'genesis' | 'year-1' | 'year-2';
-  status: 'training' | 'academy' | 'graduated' | 'launching';
+  status: 'training' | 'academy' | 'graduated' | 'launching' | 'planning';
   launchDate: string;
   trainer: {
     name: string;
@@ -423,5 +423,4 @@ export function calculateAverageOutputRate(): number {
   return Math.round(total / EDEN_AGENTS.length);
 }
 
-// Export types
-export type { EdenAgent };
+// Export types (already exported inline above)

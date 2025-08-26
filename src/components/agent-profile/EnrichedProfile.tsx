@@ -223,39 +223,39 @@ export function EnrichedProfile({ agentId }: EnrichedProfileProps) {
             <div className="bg-gray-950 border border-gray-800 rounded-lg p-6">
               <div className="flex items-start gap-4 mb-4">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gradient-to-br from-purple-600 to-pink-600">
-                  {agent.trainer.avatar && agent.trainer.avatar !== '/images/trainers/placeholder.svg' ? (
+                  {agent.trainer.avatarUrl && agent.trainer.avatarUrl !== '/images/trainers/placeholder.svg' ? (
                     <Image
-                      src={agent.trainer.avatar}
-                      alt={agent.trainer.display}
+                      src={agent.trainer.avatarUrl}
+                      alt={agent.trainer.displayName}
                       fill
                       className="object-cover"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-sm font-bold">
-                      {agent.trainer.display.split(' ').map(n => n[0]).join('')}
+                      {agent.trainer.displayName.split(' ').map(n => n[0]).join('')}
                     </div>
                   )}
                 </div>
                 <div>
-                  <h3 className="font-bold">{agent.trainer.display}</h3>
+                  <h3 className="font-bold">{agent.trainer.displayName}</h3>
                   <p className="text-sm text-gray-400">Trainer & Guide</p>
                 </div>
               </div>
               <div className="flex gap-2">
-                {agent.trainer.links.x && (
-                  <a href={`https://x.com/${agent.trainer.links.x}`} target="_blank" rel="noopener noreferrer" 
+                {agent.trainer.socials?.x && (
+                  <a href={`https://x.com/${agent.trainer.socials.x}`} target="_blank" rel="noopener noreferrer" 
                      className="p-2 bg-gray-800 rounded hover:bg-gray-700">
                     <Twitter className="w-4 h-4" />
                   </a>
                 )}
-                {agent.trainer.links.site && (
-                  <a href={agent.trainer.links.site} target="_blank" rel="noopener noreferrer"
+                {agent.trainer.socials?.site && (
+                  <a href={agent.trainer.socials.site} target="_blank" rel="noopener noreferrer"
                      className="p-2 bg-gray-800 rounded hover:bg-gray-700">
                     <Globe className="w-4 h-4" />
                   </a>
                 )}
-                {agent.trainer.links.instagram && (
-                  <a href={`https://instagram.com/${agent.trainer.links.instagram}`} target="_blank" rel="noopener noreferrer"
+                {agent.trainer.socials?.instagram && (
+                  <a href={`https://instagram.com/${agent.trainer.socials.instagram}`} target="_blank" rel="noopener noreferrer"
                      className="p-2 bg-gray-800 rounded hover:bg-gray-700">
                     <Instagram className="w-4 h-4" />
                   </a>
@@ -302,13 +302,13 @@ export function EnrichedProfile({ agentId }: EnrichedProfileProps) {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {highlights.map((work) => (
                 <div 
-                  key={work.work_id}
+                  key={work.id}
                   className="relative group cursor-pointer"
                   onClick={() => setSelectedWork(work)}
                 >
                   <div className="aspect-square relative bg-gray-900 rounded-lg overflow-hidden">
                     <Image
-                      src={work.thumb_url}
+                      src={work.imageUrl}
                       alt={work.title}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform"
@@ -317,7 +317,7 @@ export function EnrichedProfile({ agentId }: EnrichedProfileProps) {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
                       <div className="absolute bottom-0 left-0 right-0 p-3">
                         <p className="text-sm font-bold">{work.title}</p>
-                        <p className="text-xs text-gray-400">{work.collect_count} collected</p>
+                        <p className="text-xs text-gray-400">{work.trainerId ? 'Curated' : 'Highlighted'}</p>
                       </div>
                     </div>
                     <div className="absolute top-2 right-2">
@@ -361,24 +361,31 @@ export function EnrichedProfile({ agentId }: EnrichedProfileProps) {
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400">Print Ready</span>
-                  <span className="font-mono">{(curation.gate.print_pass_rate * 100).toFixed(0)}%</span>
+                  <span className="font-mono">{(curation.includeRate * 100).toFixed(0)}%</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400">Low Artifact</span>
-                  <span className="font-mono">{(curation.gate.artifact_low_rate * 100).toFixed(0)}%</span>
+                  <span className="font-mono">{((curation.include / (curation.include + curation.maybe + curation.exclude)) * 100).toFixed(0)}%</span>
                 </div>
               </div>
             </div>
 
-            {/* Recent Rationales */}
+            {/* Curation Stats */}
             <div className="bg-gray-950 border border-gray-800 rounded-lg p-6">
-              <h3 className="font-bold mb-4">Recent Feedback</h3>
+              <h3 className="font-bold mb-4">Curation Stats</h3>
               <div className="space-y-2">
-                {curation.recent_rationales.slice(0, 3).map((rationale, i) => (
-                  <p key={i} className="text-sm text-gray-400 line-clamp-1">
-                    • {rationale}
-                  </p>
-                ))}
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">Included</span>
+                  <span className="font-mono">{curation.include}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">Maybe</span>
+                  <span className="font-mono">{curation.maybe}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">Excluded</span>
+                  <span className="font-mono">{curation.exclude}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -390,21 +397,16 @@ export function EnrichedProfile({ agentId }: EnrichedProfileProps) {
           <div className="bg-gray-950 border border-gray-800 rounded-lg p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-2xl font-bold">{social.collect_total}</h3>
-                <p className="text-sm text-gray-400">Total Collections</p>
+                <h3 className="text-2xl font-bold">{social.collectors || 0}</h3>
+                <p className="text-sm text-gray-400">Total Collectors</p>
               </div>
               <div>
-                <h3 className="text-2xl font-bold">{social.follower_count}</h3>
+                <h3 className="text-2xl font-bold">{social.followers || 0}</h3>
                 <p className="text-sm text-gray-400">Followers</p>
               </div>
               <div className="flex -space-x-2">
-                {social.recent_collectors.map((collector, i) => (
-                  <div key={i} className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 border-2 border-black flex items-center justify-center">
-                    <span className="text-xs">{collector.slice(0, 2)}</span>
-                  </div>
-                ))}
                 <div className="w-8 h-8 rounded-full bg-gray-800 border-2 border-black flex items-center justify-center">
-                  <span className="text-xs">+</span>
+                  <Users className="w-4 h-4" />
                 </div>
               </div>
             </div>

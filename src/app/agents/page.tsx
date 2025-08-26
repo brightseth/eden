@@ -3,6 +3,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { agentService } from '@/data/agents-registry';
+import { EDEN_AGENTS, getAgentsByCohort, calculateTotalRevenue } from '@/data/eden-agents-manifest';
+
+// Force dynamic rendering to avoid build issues
+export const dynamic = 'force-dynamic';
 
 export default function AgentsDiscoveryPage() {
   const [filter, setFilter] = useState<'all' | 'genesis' | 'year-1' | 'active' | 'upcoming'>('all');

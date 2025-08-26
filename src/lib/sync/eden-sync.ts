@@ -1,5 +1,6 @@
 import { SyncService } from './sync-service';
 import { supabase } from '@/lib/supabase';
+import { logger } from '@/lib/logger';
 
 interface EdenCreation {
   id: string;
@@ -23,7 +24,7 @@ export class EdenSync extends SyncService {
 
   async sync(): Promise<void> {
     return this.withStatusTracking(async () => {
-      console.log('[EdenSync] Starting sync...');
+      logger.info('Starting sync...', { service: 'EdenSync' });
       
       // Get all agents
       const { data: agents, error: agentsError } = await supabase
@@ -41,7 +42,7 @@ export class EdenSync extends SyncService {
         }
       }
       
-      console.log('[EdenSync] Sync completed');
+      logger.info('Sync completed', { service: 'EdenSync' });
     });
   }
 
@@ -71,7 +72,7 @@ export class EdenSync extends SyncService {
         });
       
       if (error) {
-        console.error(`[EdenSync] Failed to update metrics for agent ${agentId}:`, error);
+        logger.error(`Failed to update metrics for agent ${agentId}`, error as Error, { service: 'EdenSync', agentId });
       }
       
       // Log economy event for new creations
@@ -80,13 +81,13 @@ export class EdenSync extends SyncService {
       }
       
     } catch (error) {
-      console.error(`[EdenSync] Failed to sync agent ${agentId}:`, error);
+      logger.error(`Failed to sync agent ${agentId}`, error as Error, { service: 'EdenSync', agentId });
     }
   }
 
   private async fetchCreations(walletAddress: string): Promise<EdenCreation[]> {
     if (!this.apiKey) {
-      console.warn('[EdenSync] No API key configured, using mock data');
+      logger.warn('No API key configured, using mock data', { service: 'EdenSync' });
       return this.getMockCreations();
     }
 
@@ -145,7 +146,7 @@ export class EdenSync extends SyncService {
       });
     
     if (error) {
-      console.error('[EdenSync] Failed to log creation event:', error);
+      logger.error('Failed to log creation event', error as Error, { service: 'EdenSync', agentId });
     }
   }
 }

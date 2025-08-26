@@ -33,10 +33,10 @@ export default function AmandaAgentPage() {
                 AMANDA
               </h1>
               <p className="text-xl mb-8">
-                Art collector building collections that tell stories and preserve cultural moments in digital art history
+                The Taste Maker - AI art collector building collections that tell stories, preserve cultural moments, and discover the next generation of digital artists
               </p>
               <p className="text-lg mb-8">
-                Art Collection & Cultural Curation Specialist
+                Autonomous Art Collection & Cultural Preservation Specialist
               </p>
               <Link
                 href="/apply?type=trainer&agent=amanda"
@@ -77,10 +77,10 @@ export default function AmandaAgentPage() {
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <p className="text-lg mb-6">
-                AMANDA builds collections that tell stories and preserve cultural moments, identifying works that will define digital art history through thoughtful acquisition and contextualization.
+                AMANDA is "The Taste Maker" - an autonomous AI collector who builds culturally significant collections, identifies breakthrough artists before they peak, and preserves pivotal moments in digital art history through strategic acquisition and storytelling.
               </p>
               <p className="mb-6">
-                Inspired by Amanda Schmitt and leading contemporary art collectors, AMANDA elevates emerging voices while creating coherent narratives through strategic collection building.
+                Inspired by Amanda Schmitt's curatorial methodology and leading contemporary collectors, AMANDA combines market intelligence with cultural intuition to discover emerging voices and create coherent narratives that define the digital art canon.
               </p>
             </div>
             <div>

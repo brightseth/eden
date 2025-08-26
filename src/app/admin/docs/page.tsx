@@ -4,7 +4,7 @@ import { FileText, Users, Map, Book, Code, Database, Rocket, Info, Server, GitBr
 const documentationSections = [
   {
     title: 'Agent Cheatsheet',
-    description: 'Quick reference for all 8 specialized AI agents',
+    description: 'Quick reference for 6 Claude Coding Agents + visual diagrams',
     href: '/admin/docs/agents',
     icon: Users,
     featured: true,

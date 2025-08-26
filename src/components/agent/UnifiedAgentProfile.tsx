@@ -10,6 +10,10 @@ interface UnifiedAgentProfileProps {
 }
 
 export default function UnifiedAgentProfile({ agentSlug }: UnifiedAgentProfileProps) {
+  // Use static manifest for now since Registry integration is having issues
+  const { getAgentBySlug, EDEN_AGENTS } = require('@/data/eden-agents-manifest');
+  const { getWorksByAgent, generatePlaceholderWorks } = require('@/data/agent-works');
+  
   const agent = getAgentBySlug(agentSlug);
   
   if (!agent) {
@@ -81,7 +85,7 @@ export default function UnifiedAgentProfile({ agentSlug }: UnifiedAgentProfilePr
 
               {/* Social Links */}
               <div className="flex flex-wrap gap-3">
-                {agent.socialProfiles.twitter && (
+                {agent.socialProfiles?.twitter && (
                   <a 
                     href={`https://twitter.com/${agent.socialProfiles.twitter.replace('@', '')}`}
                     target="_blank"
@@ -92,7 +96,7 @@ export default function UnifiedAgentProfile({ agentSlug }: UnifiedAgentProfilePr
                     <ExternalLink className="w-4 h-4" />
                   </a>
                 )}
-                {agent.socialProfiles.farcaster && (
+                {agent.socialProfiles?.farcaster && (
                   <a 
                     href={`https://warpcast.com/${agent.socialProfiles.farcaster}`}
                     target="_blank"
@@ -103,7 +107,7 @@ export default function UnifiedAgentProfile({ agentSlug }: UnifiedAgentProfilePr
                     <ExternalLink className="w-4 h-4" />
                   </a>
                 )}
-                {agent.socialProfiles.website && (
+                {agent.socialProfiles?.website && (
                   <a 
                     href={agent.socialProfiles.website}
                     target="_blank"

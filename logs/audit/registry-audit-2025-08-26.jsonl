@@ -1,0 +1,2 @@
+{"timestamp":"2025-08-26T02:29:02.729Z","traceId":"audit-1756175342729-yx2r9ae8n","operation":"test","method":"GET","endpoint":"/test","requestHeaders":{},"responseStatus":200,"responseTime":100,"metadata":{"source":"gateway"}}
+{"timestamp":"2025-08-26T02:29:06.477Z","traceId":"gw-1756175342730-1","operation":"getAgents","method":"GET","endpoint":"/getAgents","requestHeaders":{},"responseStatus":500,"responseTime":3745,"error":"HTTP 500: Internal Server Error","metadata":{"source":"gateway"}}

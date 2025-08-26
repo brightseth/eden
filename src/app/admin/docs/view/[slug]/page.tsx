@@ -9,12 +9,13 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function ViewDocumentPage({ params }: { params: { slug: string } }) {
+export default async function ViewDocumentPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   // Convert slug back to filename
   const possibleFilenames = [
-    `${params.slug.toUpperCase().replace(/-/g, '_')}.md`,
-    `${params.slug.replace(/-/g, '_')}.md`,
-    `${params.slug}.md`,
+    `${slug.toUpperCase().replace(/-/g, '_')}.md`,
+    `${slug.replace(/-/g, '_')}.md`,
+    `${slug}.md`,
   ];
   
   let doc = null;

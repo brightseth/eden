@@ -2,6 +2,10 @@
 // Enforces UI → Gateway → Registry pattern and provides circuit breaker protection
 
 import { createRegistryApiClient, RegistryApiClient } from '../generated-sdk';
+import { registryAuth, authenticateRequest } from './auth';
+import { registryCache, cacheGet, cacheSet, cacheInvalidate } from './cache';
+import { auditLogger } from './audit';
+import { idempotencyManager } from './idempotency';
 import type { 
   Agent, 
   AgentQuery, 
@@ -35,6 +39,7 @@ class RegistryGateway {
   private circuitBreaker: CircuitBreakerState;
   private cache: Map<string, { data: any; timestamp: number }>;
   private traceCounter: number = 0;
+  private apiClient: RegistryApiClient;
 
   constructor(config?: Partial<GatewayConfig>) {
     this.config = {
@@ -55,6 +60,14 @@ class RegistryGateway {
     };
 
     this.cache = new Map();
+    
+    // Initialize typed SDK client
+    this.apiClient = createRegistryApiClient({
+      baseUrl: process.env.REGISTRY_BASE_URL,
+      apiKey: process.env.REGISTRY_API_KEY,
+      timeout: 10000,
+      maxRetries: this.config.maxRetries
+    });
   }
 
   // Generate trace ID for observability
@@ -95,40 +108,101 @@ class RegistryGateway {
     this.circuitBreaker.isOpen = false;
   }
 
-  // Cache management
-  private getCached<T>(key: string): T | null {
+  // Cache management using Redis with fallback
+  private async getCached<T>(key: string): Promise<T | null> {
     if (!this.config.enableCache) return null;
 
-    const cached = this.cache.get(key);
-    if (cached && Date.now() - cached.timestamp < this.config.cacheTimeout) {
-      console.log(`[Gateway] Cache hit for ${key}`);
-      return cached.data as T;
+    // Try Redis first, then fallback to in-memory
+    const cached = await cacheGet<T>(key);
+    if (cached) {
+      console.log(`[Gateway] Redis cache hit for ${key}`);
+      return cached;
     }
+
+    // Check in-memory cache as final fallback
+    const memCached = this.cache.get(key);
+    if (memCached && Date.now() - memCached.timestamp < this.config.cacheTimeout) {
+      console.log(`[Gateway] Memory cache hit for ${key}`);
+      return memCached.data as T;
+    }
+
     return null;
   }
 
-  private setCache(key: string, data: any): void {
+  private async setCache(key: string, data: any): Promise<void> {
     if (!this.config.enableCache) return;
     
+    // Set in Redis with TTL
+    await cacheSet(key, data, Math.floor(this.config.cacheTimeout / 1000));
+    
+    // Also set in memory as fallback
     this.cache.set(key, {
       data,
       timestamp: Date.now()
     });
   }
 
-  // Gateway wrapper for Registry calls
+  // Gateway wrapper for Registry calls using typed SDK
   private async gatewayCall<T>(
     operation: string,
     fn: () => Promise<T>,
-    cacheKey?: string
+    cacheKey?: string,
+    requireAuth: boolean = false,
+    headers?: Record<string, string | undefined>
   ): Promise<T> {
     const traceId = this.generateTraceId();
+    const startTime = Date.now();
+    
     console.log(`[Gateway] ${operation} - trace: ${traceId}`);
+
+    let authUser = undefined;
+    
+    // Authentication check if required
+    if (requireAuth && headers) {
+      const authResult = await authenticateRequest(headers);
+      if (!authResult.authenticated) {
+        const responseTime = Date.now() - startTime;
+        
+        // Audit failed auth
+        await auditLogger.auditGatewayCall({
+          operation,
+          endpoint: `/${operation}`,
+          method: 'POST',
+          headers: headers || {},
+          responseStatus: 401,
+          responseTime,
+          error: authResult.error,
+          traceId
+        });
+        
+        throw new Error(`Authentication failed: ${authResult.error}`);
+      }
+      
+      authUser = authResult.user;
+      console.log(`[Gateway] ${operation} authenticated for user: ${authUser?.email || 'unknown'}`);
+    }
 
     // Check cache first
     if (cacheKey) {
-      const cached = this.getCached<T>(cacheKey);
-      if (cached) return cached;
+      const cached = await this.getCached<T>(cacheKey);
+      if (cached) {
+        const responseTime = Date.now() - startTime;
+        
+        // Audit cache hit
+        await auditLogger.auditGatewayCall({
+          operation,
+          endpoint: `/${operation}`,
+          method: 'GET',
+          headers: headers || {},
+          responseStatus: 200,
+          responseTime,
+          userId: authUser?.userId,
+          userEmail: authUser?.email,
+          traceId,
+        });
+        
+        return cached;
+      }
     }
 
     // Check circuit breaker
@@ -136,16 +210,48 @@ class RegistryGateway {
 
     try {
       const result = await fn();
+      const responseTime = Date.now() - startTime;
+      
       this.handleSuccess();
       
       // Update cache
       if (cacheKey) {
-        this.setCache(cacheKey, result);
+        await this.setCache(cacheKey, result);
       }
+
+      // Audit successful operation
+      await auditLogger.auditGatewayCall({
+        operation,
+        endpoint: `/${operation}`,
+        method: requireAuth ? 'POST' : 'GET',
+        headers: headers || {},
+        responseStatus: 200,
+        responseTime,
+        userId: authUser?.userId,
+        userEmail: authUser?.email,
+        traceId
+      });
 
       return result;
     } catch (error) {
+      const responseTime = Date.now() - startTime;
+      
       console.error(`[Gateway] ${operation} failed - trace: ${traceId}`, error);
+      
+      // Audit failed operation
+      await auditLogger.auditGatewayCall({
+        operation,
+        endpoint: `/${operation}`,
+        method: requireAuth ? 'POST' : 'GET',
+        headers: headers || {},
+        responseStatus: 500,
+        responseTime,
+        userId: authUser?.userId,
+        userEmail: authUser?.email,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        traceId
+      });
+      
       this.handleFailure(error as Error);
       throw error; // This won't be reached due to handleFailure throwing
     }
@@ -157,7 +263,11 @@ class RegistryGateway {
     const cacheKey = `agents-${JSON.stringify(query || {})}`;
     return this.gatewayCall(
       'getAgents',
-      () => registryClient.getAgents(query),
+      () => this.apiClient.getAgents({
+        cohort: query?.cohort,
+        status: query?.status,
+        include: query?.include
+      }),
       cacheKey
     );
   }
@@ -166,7 +276,7 @@ class RegistryGateway {
     const cacheKey = `agent-${id}-${JSON.stringify(include || [])}`;
     return this.gatewayCall(
       'getAgent',
-      () => registryClient.getAgent(id, include),
+      () => this.apiClient.getAgent(id, include),
       cacheKey
     );
   }
@@ -175,7 +285,7 @@ class RegistryGateway {
     const cacheKey = `profile-${id}`;
     return this.gatewayCall(
       'getAgentProfile',
-      () => registryClient.getAgentProfile(id),
+      () => this.apiClient.getAgentProfile(id),
       cacheKey
     );
   }
@@ -184,54 +294,107 @@ class RegistryGateway {
     const cacheKey = `personas-${id}`;
     return this.gatewayCall(
       'getAgentPersonas',
-      () => registryClient.getAgentPersonas(id),
-      cacheKey
-    );
-  }
-
-  async getAgentArtifacts(id: string): Promise<Artifact[]> {
-    const cacheKey = `artifacts-${id}`;
-    return this.gatewayCall(
-      'getAgentArtifacts',
-      () => registryClient.getAgentArtifacts(id),
+      () => this.apiClient.getAgentPersonas(id),
       cacheKey
     );
   }
 
   async getAgentCreations(
     id: string,
-    status?: 'curated' | 'published'
+    status?: 'CURATED' | 'PUBLISHED'
   ): Promise<Creation[]> {
     const cacheKey = `creations-${id}-${status || 'all'}`;
     return this.gatewayCall(
       'getAgentCreations',
-      () => registryClient.getAgentCreations(id, status),
+      () => this.apiClient.getAgentCreations(id, status),
       cacheKey
     );
   }
 
-  async postCreation(agentId: string, creation: CreationPost): Promise<Creation> {
-    // Don't cache POST operations
-    return this.gatewayCall(
+  async postCreation(
+    agentId: string, 
+    creation: Omit<Creation, 'id'>,
+    headers?: Record<string, string | undefined>
+  ): Promise<Creation> {
+    // Check for idempotency key
+    const idempotencyKey = headers?.['idempotency-key'] || headers?.['x-idempotency-key'];
+    
+    if (idempotencyKey) {
+      // Use idempotency protection for write operations
+      const idempotentResult = await idempotencyManager.executeWithIdempotency(
+        idempotencyKey,
+        async () => {
+          return this.gatewayCall(
+            'postCreation',
+            () => this.apiClient.createAgentCreation(agentId, creation),
+            undefined,
+            true, // require auth
+            headers
+          );
+        },
+        3600 // 1 hour TTL for creation operations
+      );
+      
+      if (idempotentResult.fromCache) {
+        console.log(`[Gateway] Returning cached creation from idempotency key: ${idempotencyKey}`);
+      } else {
+        // Invalidate related cache entries after successful creation
+        await registryCache.invalidateCreations(agentId);
+        await cacheInvalidate(`agent-${agentId}`);
+      }
+      
+      return idempotentResult.data;
+    }
+    
+    // Fallback to regular operation without idempotency
+    const result = await this.gatewayCall(
       'postCreation',
-      () => registryClient.postCreation(agentId, creation)
+      () => this.apiClient.createAgentCreation(agentId, creation),
+      undefined,
+      true, // require auth
+      headers
     );
+    
+    // Invalidate related cache entries after successful creation
+    await registryCache.invalidateCreations(agentId);
+    await cacheInvalidate(`agent-${agentId}`);
+    
+    return result;
   }
 
-  async getDashboardProgress(cohort?: string): Promise<Progress[]> {
-    const cacheKey = `progress-${cohort || 'all'}`;
-    return this.gatewayCall(
-      'getDashboardProgress',
-      () => registryClient.getDashboardProgress(cohort),
-      cacheKey
-    );
+  // Authentication methods
+  async startMagicAuth(email: string): Promise<{ message: string; success: boolean }> {
+    return registryAuth.startMagicAuth(email);
+  }
+
+  async completeMagicAuth(token: string): Promise<{
+    success: boolean;
+    token?: string;
+    user?: any;
+    error?: string;
+  }> {
+    return registryAuth.completeMagicAuth(token);
+  }
+
+  async authenticateRequest(headers: Record<string, string | undefined>): Promise<{
+    authenticated: boolean;
+    user?: any;
+    error?: string;
+  }> {
+    return authenticateRequest(headers);
   }
 
   // Health check endpoint
   async healthCheck(): Promise<{
     status: 'healthy' | 'degraded' | 'unhealthy';
     circuitBreaker: CircuitBreakerState;
-    cacheSize: number;
+    cache: {
+      redis: boolean;
+      fallback: boolean;
+      memorySize: number;
+      totalEntries: number;
+      stats?: any;
+    };
   }> {
     const status = this.circuitBreaker.isOpen 
       ? 'unhealthy' 
@@ -239,10 +402,19 @@ class RegistryGateway {
       ? 'degraded' 
       : 'healthy';
 
+    const cacheHealth = await registryCache.healthCheck();
+    const cacheStats = await registryCache.getStats();
+
     return {
       status,
       circuitBreaker: { ...this.circuitBreaker },
-      cacheSize: this.cache.size
+      cache: {
+        redis: cacheHealth.redis,
+        fallback: cacheHealth.fallback,
+        memorySize: this.cache.size,
+        totalEntries: cacheHealth.totalEntries,
+        stats: cacheStats
+      }
     };
   }
 

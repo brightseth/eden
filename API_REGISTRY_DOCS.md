@@ -2,6 +2,8 @@
 
 ## 🏗️ System Architecture Overview
 
+![Eden Ecosystem Architecture](/diagrams/eden-ecosystem-architecture.png)
+
 ### Eden Ecosystem Services
 
 **⚠️ IMPORTANT DISTINCTION:**
@@ -67,6 +69,9 @@ Eden Academy is a pure frontend that:
 - Proxies some Registry calls for authentication
 
 ### Data Flow Pattern for Eden Academy
+
+![Data Flow Pattern](/diagrams/data-flow-pattern.png)
+
 ```
 User Action → Eden Academy UI → Registry API Call → Display Response
      ↓              ↓              ↓               ↓

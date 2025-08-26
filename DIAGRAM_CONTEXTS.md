@@ -160,10 +160,26 @@ Label: 'Eden Spirits - Creative AIs'
 - `token-economics-flow.png`
 
 ### **Integration Plan**:
-Once created, I can:
-1. Add diagrams to documentation pages
-2. Update the ADRs with visual references
-3. Include in agent cheatsheet for clarity
-4. Use in onboarding materials
+✅ **COMPLETED**: All 8 diagrams have been created and integrated:
 
-These diagrams will make the Eden Academy architecture much clearer for both developers and stakeholders!
+1. **Agent Cheatsheet** (`/admin/docs/agents`):
+   - Agent matrix diagram
+   - Claude vs Eden agents distinction diagram
+   - MVP development workflow
+
+2. **API Registry Docs** (`/admin/docs/api-registry`):
+   - Eden ecosystem architecture
+   - Data flow pattern diagram
+
+3. **Available for Integration**:
+   - Git worktree development workflow
+   - Documentation hierarchy diagram
+   - Token economics flow
+
+![Git Worktree Workflow](/diagrams/worktree-development-workflow.png)
+
+![Documentation Hierarchy](/diagrams/documentation-hierarchy.png)
+
+![Token Economics Flow](/diagrams/token-economics-flow.png)
+
+These visual diagrams make the Eden Academy architecture much clearer for both developers and stakeholders!

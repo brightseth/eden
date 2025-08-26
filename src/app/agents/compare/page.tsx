@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { EDEN_AGENTS } from '@/data/eden-agents-manifest';
 import Link from 'next/link';
 
+// Force dynamic rendering to avoid build issues
+export const dynamic = 'force-dynamic';
+
 export default function AgentComparisonPage() {
   const [selectedAgents, setSelectedAgents] = useState<string[]>([
     'abraham-001',

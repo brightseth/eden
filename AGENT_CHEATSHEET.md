@@ -9,9 +9,13 @@
 # CLAUDE CODING AGENTS Cheatsheet
 *Your 6 AI development tools for BUILDING Eden Academy*
 
+![Agent Cheatsheet Matrix](/diagrams/agent-cheatsheet-matrix.png)
+
 ---
 
 ## ⚡ TLDR: Your 6 CLAUDE CODING AGENTS (Development Tools)
+
+![Claude vs Eden Agents](/diagrams/claude-vs-eden-agents.png)
 
 **⚠️ CRITICAL DISTINCTION:**
 - **THESE ARE:** Your private Claude Code development assistants (ARCH, TRUTH, LORE, etc.)
@@ -184,6 +188,8 @@
 ---
 
 # 🔄 Recommended Workflow for MVP Development
+
+![MVP Development Phases](/diagrams/mvp-development-phases.png)
 
 ## 1. Feature Planning Phase
 ```
