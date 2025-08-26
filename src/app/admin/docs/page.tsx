@@ -3,25 +3,23 @@
 import Link from 'next/link';
 import { FileText, Users, Map, Book, Code, Database, Rocket, Info, Server, GitBranch, ExternalLink, Share2, Globe } from 'lucide-react';
 
-// Shareable Documentation Categories for Henry & Collaborators
+// Shareable Documentation Categories for Collaborators
 const shareableLinks = [
   {
     title: 'Registry Integration Hub',
-    description: 'Complete Registry documentation hub for Henry and collaborators',
+    description: 'Complete Registry documentation hub for developers and collaborators',
     href: '/admin/docs/registry-hub',
     shareUrl: '/admin/docs/registry-hub',
     icon: Server,
     featured: true,
-    forHenry: true,
   },
   {
     title: 'Registry Integration Complete Guide',
-    description: 'Comprehensive guide for Henry Registry API integration',
-    href: '/admin/docs/view/henry-registry-integration-complete',
-    shareUrl: '/admin/docs/view/henry-registry-integration-complete',
+    description: 'Comprehensive guide for Registry API integration',
+    href: '/admin/docs/view/registry-integration-complete',
+    shareUrl: '/admin/docs/view/registry-integration-complete',
     icon: FileText,
     featured: true,
-    forHenry: true,
   },
   {
     title: 'Registry-First Architecture ADR',
@@ -30,7 +28,6 @@ const shareableLinks = [
     shareUrl: '/admin/docs/view/022-registry-first-architecture-pattern',
     icon: Database,
     featured: true,
-    forHenry: true,
   },
 ];
 
@@ -115,7 +112,7 @@ export default function AdminDocsPage() {
           </p>
         </div>
 
-        {/* Shareable Links Section for Henry */}
+        {/* Shareable Links Section */}
         <div className="mb-12">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold flex items-center">
@@ -124,7 +121,7 @@ export default function AdminDocsPage() {
             </h2>
             <div className="text-sm text-gray-400 flex items-center">
               <Globe className="w-4 h-4 mr-1" />
-              For Henry & Collaborators
+              For Developers & Collaborators
             </div>
           </div>
           
@@ -145,11 +142,6 @@ export default function AdminDocsPage() {
                       <div className="flex-1">
                         <h3 className="text-xl font-semibold mb-2 flex items-center">
                           {doc.title}
-                          {doc.forHenry && (
-                            <span className="ml-2 text-xs px-2 py-1 bg-green-500/20 text-green-400 rounded">
-                              FOR HENRY
-                            </span>
-                          )}
                         </h3>
                         <p className="text-gray-400 text-sm mb-3">
                           {doc.description}
@@ -242,7 +234,7 @@ export default function AdminDocsPage() {
                 <ul className="text-sm text-gray-300 space-y-1">
                   <li>• All Registry documentation is shareable via public URLs</li>
                   <li>• Copy links directly from the documentation cards above</li>
-                  <li>• Links work for external collaborators like Henry</li>
+                  <li>• Links work for external collaborators and developers</li>
                   <li>• No authentication required for documentation viewing</li>
                 </ul>
               </div>
