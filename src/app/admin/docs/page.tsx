@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { FileText, Users, Map, Book, Code, Database, Rocket, Info, Server, GitBranch, ExternalLink, Share2, Globe } from 'lucide-react';
 
@@ -14,7 +16,7 @@ const shareableLinks = [
   },
   {
     title: 'Registry Integration Complete Guide',
-    description: 'Comprehensive guide for Henry\\'s Registry API integration',
+    description: 'Comprehensive guide for Henry Registry API integration',
     href: '/admin/docs/view/henry-registry-integration-complete',
     shareUrl: '/admin/docs/view/henry-registry-integration-complete',
     icon: FileText,

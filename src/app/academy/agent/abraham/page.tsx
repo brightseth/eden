@@ -37,12 +37,18 @@ export default function AbrahamProfilePage() {
 
   useEffect(() => {
     async function fetchArtistData() {
+      console.log('[Artist Page] Starting to fetch Abraham data...');
+      setLoading(true);
+      
       try {
         console.log('[Artist Page] Fetching Abraham data from Registry...');
         
         // Add timeout to prevent hanging
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+        const timeoutId = setTimeout(() => {
+          console.log('[Artist Page] Request timeout - aborting...');
+          controller.abort();
+        }, 5000); // 5 second timeout
         
         // Use new Registry integration endpoint
         const response = await fetch('/api/registry/agent/abraham', {
@@ -64,7 +70,7 @@ export default function AbrahamProfilePage() {
         
         setArtistData(data);
         setError(null);
-      } catch (err) {
+      } catch (err: any) {
         console.error('[Artist Page] Registry integration failed:', err);
         
         // Create fallback data instead of showing error
@@ -90,8 +96,9 @@ export default function AbrahamProfilePage() {
         };
         
         setArtistData(fallbackData);
-        console.log('[Artist Page] Using fallback data due to Registry error');
+        console.log('[Artist Page] Using fallback data due to Registry error:', err.message || err);
       } finally {
+        console.log('[Artist Page] Setting loading to false');
         setLoading(false);
       }
     }
