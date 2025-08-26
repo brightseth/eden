@@ -81,6 +81,15 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
     rolloutStrategy: 'dev',
     culturalImpact: 'Solienne site displays consciousness streams from Registry, not legacy archives',
     rollbackPlan: 'Disable flag, fallback to direct Supabase queries to agent_archives table'
+  },
+
+  ENABLE_GEPPETTO_REGISTRY_INTEGRATION: {
+    key: 'ENABLE_GEPPETTO_REGISTRY_INTEGRATION',
+    description: 'Enable Registry-first architecture for Geppetto agent page with validated profile data',
+    defaultValue: process.env.NODE_ENV === 'development',
+    rolloutStrategy: 'dev',
+    culturalImpact: 'Geppetto page displays Agent Launcher validated data from Registry',
+    rollbackPlan: 'Disable flag, fallback to static page content with basic profile info'
   }
 };
 
@@ -166,4 +175,5 @@ export const FLAGS = {
   ENABLE_REGISTRY_SYNC: 'ENABLE_REGISTRY_SYNC',
   ENABLE_ABRAHAM_REGISTRY_INTEGRATION: 'ENABLE_ABRAHAM_REGISTRY_INTEGRATION',
   ENABLE_SOLIENNE_REGISTRY_INTEGRATION: 'ENABLE_SOLIENNE_REGISTRY_INTEGRATION',
+  ENABLE_GEPPETTO_REGISTRY_INTEGRATION: 'ENABLE_GEPPETTO_REGISTRY_INTEGRATION',
 } as const;

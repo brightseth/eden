@@ -428,51 +428,52 @@ export default function AbrahamSite() {
                 
                 {/* Content Grid */}
                 <div className="md:col-span-4 grid md:grid-cols-4 gap-4 p-6">
-                <div>
-                  <div className="text-xs opacity-75">WORK #{work.number}</div>
-                  <div className="text-lg font-bold">{work.date}</div>
-                </div>
-                <div>
-                  <div className="text-xs opacity-75">CREATION</div>
-                  <div className="font-bold">{work.title}</div>
-                  <div className="text-sm">Knowledge Synthesis</div>
-                </div>
-                <div>
-                  <div className="text-xs opacity-75">ENGAGEMENT</div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-1">
-                      <Eye className="w-4 h-4" />
-                      <span>{work.views || '-'}</span>
-                    </div>
-                    {work.collected && (
-                      <div className="flex items-center gap-1">
-                        <Award className="w-4 h-4" />
-                        <span>COLLECTED</span>
-                      </div>
-                    )}
+                  <div>
+                    <div className="text-xs opacity-75">WORK #{work.number}</div>
+                    <div className="text-lg font-bold">{work.date}</div>
                   </div>
-                </div>
-                <div>
-                  <div className="text-xs opacity-75">STATUS</div>
-                  <div className="flex items-center gap-2">
-                    {work.status === 'completed' && (
-                      <>
-                        <CheckCircle className="w-4 h-4" />
-                        <span>COMPLETE</span>
-                      </>
-                    )}
-                    {work.status === 'creating' && (
-                      <>
-                        <Activity className="w-4 h-4 animate-pulse" />
-                        <span>CREATING NOW</span>
-                      </>
-                    )}
-                    {work.status === 'upcoming' && (
-                      <>
-                        <Clock className="w-4 h-4" />
-                        <span>SCHEDULED</span>
-                      </>
-                    )}
+                  <div>
+                    <div className="text-xs opacity-75">CREATION</div>
+                    <div className="font-bold">{work.title}</div>
+                    <div className="text-sm">Knowledge Synthesis</div>
+                  </div>
+                  <div>
+                    <div className="text-xs opacity-75">ENGAGEMENT</div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1">
+                        <Eye className="w-4 h-4" />
+                        <span>{work.views || '-'}</span>
+                      </div>
+                      {work.collected && (
+                        <div className="flex items-center gap-1">
+                          <Award className="w-4 h-4" />
+                          <span>COLLECTED</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs opacity-75">STATUS</div>
+                    <div className="flex items-center gap-2">
+                      {work.status === 'completed' && (
+                        <>
+                          <CheckCircle className="w-4 h-4" />
+                          <span>COMPLETE</span>
+                        </>
+                      )}
+                      {work.status === 'creating' && (
+                        <>
+                          <Activity className="w-4 h-4 animate-pulse" />
+                          <span>CREATING NOW</span>
+                        </>
+                      )}
+                      {work.status === 'upcoming' && (
+                        <>
+                          <Clock className="w-4 h-4" />
+                          <span>SCHEDULED</span>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

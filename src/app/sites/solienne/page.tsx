@@ -26,8 +26,8 @@ export default function SolienneSite() {
   const [liveWatching, setLiveWatching] = useState(342);
   const [dailyTheme, setDailyTheme] = useState('VELOCITY THROUGH ARCHITECTURAL LIGHT');
   const [isClient, setIsClient] = useState(false);
-  const [actualStreams, setActualStreams] = useState<ConsciousnessStream[]>([]);
-  const [loadingStreams, setLoadingStreams] = useState(false);
+  const [actualWorks, setActualWorks] = useState<SolienneWork[]>([]);
+  const [loadingWorks, setLoadingWorks] = useState(false);
 
   // Calculate Paris Photo countdown
   const parisPhotoDate = new Date('2025-11-10T14:00:00'); // 2PM Paris time
@@ -346,7 +346,7 @@ export default function SolienneSite() {
                 Loading actual streams from Registry...
               </div>
             </div>
-          ) : (actualStreams && actualStreams.length > 0 ? actualStreams.map((stream) => (
+          ) : actualStreams && actualStreams.length > 0 ? actualStreams.map((stream) => (
             <div
               key={stream.id}
               className="border border-white overflow-hidden hover:bg-gradient-to-r hover:from-purple-900/20 hover:to-pink-900/20 transition-all cursor-pointer group"
@@ -499,7 +499,7 @@ export default function SolienneSite() {
                 </div>
               </div>
             </div>
-          )))}
+          ))}
         </div>
 
         {/* View More */}

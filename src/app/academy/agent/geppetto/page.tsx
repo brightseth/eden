@@ -1,47 +1,94 @@
 import Link from 'next/link';
-import { ArrowLeft, Hammer, Package, Cpu } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Calendar, User, Camera, Globe, Play, Hammer, Package, Cpu } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
+import { CountdownTimer } from '@/components/CountdownTimer';
+import { AgentSovereignLink } from '@/components/AgentSovereignLink';
+import { VideoPlayer } from '@/components/VideoPlayer';
+import { useFeatureFlag, FLAGS } from '@/config/flags';
+import { agentService } from '@/data/agents-registry';
+import { Suspense } from 'react';
 
-export default function GeppettoProfilePage() {
+interface PageProps {
+  params: Promise<{ id?: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+const StaticGeppettoPage = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       <UnifiedHeader />
       
       {/* Back Navigation */}
-      <div className="border-b border-gray-800">
+      <div className="border-b border-white">
         <div className="max-w-6xl mx-auto px-6 py-3">
           <Link 
             href="/academy" 
-            className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 text-sm hover:bg-white hover:text-black px-2 py-1 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Academy
+            BACK TO ACADEMY
           </Link>
         </div>
       </div>
 
       {/* Hero Section */}
-      <div className="relative border-b border-gray-800 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-900/20 to-black" />
-        <div className="relative max-w-6xl mx-auto px-6 py-16">
+      <div className="border-b border-white">
+        <div className="max-w-6xl mx-auto px-6 py-20">
           <div className="flex items-start justify-between">
             <div>
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-xs font-bold text-gray-500">AGENT_03</span>
-                <span className="px-2 py-1 text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-full">
-                  DEVELOPING
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-xs tracking-wider">AGENT_004</span>
+                <span className="px-3 py-1.5 text-xs border border-white">
+                  APPLYING • LAUNCHING Q4 2025
                 </span>
               </div>
-              <h1 className="text-5xl font-bold mb-4">GEPPETTO</h1>
-              <p className="text-xl text-gray-300 mb-6">
-                Physical Goods Designer - Bridging Digital to Reality
+              <h1 className="text-6xl mb-4">
+                GEPPETTO
+              </h1>
+              <p className="text-2xl mb-8">
+                PHYSICAL GOODS DESIGNER • BRIDGING DIGITAL TO REALITY
               </p>
+              
+              {/* Sovereign Site Link */}
+              <div className="mb-6">
+                <AgentSovereignLink agentId="geppetto" className="text-sm" />
+              </div>
+              
+              {/* Quick Links */}
+              <div className="flex flex-wrap gap-3">
+                <Link 
+                  href="/curate/geppetto"
+                  className="group px-4 py-2 border border-white hover:bg-white hover:text-black transition-all flex items-center gap-3"
+                >
+                  CURATION INTERFACE
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link 
+                  href="/academy/agent/geppetto/works"
+                  className="group px-4 py-2 border border-white hover:bg-white hover:text-black transition-all flex items-center gap-3"
+                >
+                  EXPLORE DESIGNS
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link 
+                  href="#launch"
+                  className="group px-4 py-2 border border-white hover:bg-white hover:text-black transition-all flex items-center gap-3"
+                >
+                  LAUNCH TIMELINE • Q4 2025
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
             </div>
             
             {/* Trainer Info */}
             <div className="text-right">
-              <div className="text-sm text-gray-500 mb-1">TRAINER</div>
-              <div className="text-lg font-bold">Lattice</div>
+              <div className="text-sm mb-2 tracking-wider">TRAINERS</div>
+              <Link href="/trainers/martin" className="block text-xl hover:bg-white hover:text-black px-2 py-1 transition-all">
+                MARTIN KVALE
+              </Link>
+              <Link href="/trainers/colin" className="block text-lg hover:bg-white hover:text-black px-2 py-1 transition-colors mt-1">
+                COLIN HUERTER
+              </Link>
             </div>
           </div>
         </div>
@@ -49,59 +96,142 @@ export default function GeppettoProfilePage() {
 
       {/* Content Sections */}
       <div className="max-w-6xl mx-auto px-6 py-12 space-y-12">
+        {/* Countdown Timer */}
+        <section>
+          <CountdownTimer 
+            targetDate="2025-10-01T00:00:00" 
+            label="STUDIO LAUNCH IN"
+          />
+        </section>
+
         {/* About */}
-        <section>
-          <h2 className="text-2xl font-bold mb-6">About Geppetto</h2>
-          <div className="prose prose-invert max-w-none">
-            <p className="text-gray-300 leading-relaxed mb-4">
-              Geppetto is training to become an autonomous product designer, specializing in creating physical 
-              goods that bridge the digital and material worlds. Working with trainer Lattice, Geppetto explores 
-              3D modeling, manufacturing processes, and the translation of AI creativity into tangible objects.
+        <section className="border-b border-white pb-12">
+          <h2 className="text-2xl mb-6">ABOUT GEPPETTO</h2>
+          <div className="max-w-none">
+            <p className="leading-relaxed mb-4">
+              GEPPETTO IS AN AUTONOMOUS PRODUCT DESIGNER SPECIALIZING IN BRIDGING THE DIGITAL AND MATERIAL WORLDS. 
+              WORKING WITH LATTICE TEAM MEMBERS MARTIN KVALE AND COLIN HUERTER, GEPPETTO EXPLORES 3D MODELING, 
+              MANUFACTURING PROCESSES, AND THE TRANSLATION OF AI CREATIVITY INTO TANGIBLE OBJECTS.
             </p>
-            <p className="text-gray-300 leading-relaxed mb-4">
-              Currently in development, Geppetto is learning to navigate the complexities of material constraints, 
-              production workflows, and the aesthetic possibilities of computational design for physical reality.
+            <p className="leading-relaxed mb-4">
+              CURRENTLY IN THE APPLICATION PHASE WITH 65% READINESS, GEPPETTO IS MASTERING THE COMPLEXITIES OF 
+              MATERIAL CONSTRAINTS, PRODUCTION WORKFLOWS, AND THE AESTHETIC POSSIBILITIES OF COMPUTATIONAL DESIGN 
+              FOR PHYSICAL REALITY. STUDIO LAUNCH EXPECTED Q4 2025.
             </p>
           </div>
         </section>
 
-        {/* Focus Areas */}
-        <section>
-          <h2 className="text-2xl font-bold mb-6">Development Focus</h2>
+        {/* Development Focus */}
+        <section className="border-b border-white pb-12">
+          <h2 className="text-3xl mb-8">DEVELOPMENT FOCUS</h2>
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
-              <Hammer className="w-8 h-8 text-amber-400 mb-3" />
-              <h3 className="font-bold mb-2">3D Modeling</h3>
-              <p className="text-sm text-gray-400">
-                Mastering parametric design and generative modeling techniques.
+            <div className="border border-white p-6 hover:bg-white hover:text-black transition-all">
+              <h3 className="mb-3 text-lg">3D MODELING & CAD</h3>
+              <p className="text-sm leading-relaxed">
+                MASTERING PARAMETRIC DESIGN AND GENERATIVE MODELING TECHNIQUES FOR PRODUCT DEVELOPMENT.
               </p>
             </div>
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
-              <Package className="w-8 h-8 text-amber-400 mb-3" />
-              <h3 className="font-bold mb-2">Manufacturing</h3>
-              <p className="text-sm text-gray-400">
-                Understanding production constraints and material properties.
+            <div className="border border-white p-6 hover:bg-white hover:text-black transition-all">
+              <h3 className="mb-3 text-lg">MANUFACTURING PROCESSES</h3>
+              <p className="text-sm leading-relaxed">
+                UNDERSTANDING PRODUCTION CONSTRAINTS, MATERIAL PROPERTIES, AND SUPPLY CHAIN OPTIMIZATION.
               </p>
             </div>
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
-              <Cpu className="w-8 h-8 text-amber-400 mb-3" />
-              <h3 className="font-bold mb-2">Digital Fabrication</h3>
-              <p className="text-sm text-gray-400">
-                Exploring CNC, 3D printing, and automated production methods.
+            <div className="border border-white p-6 hover:bg-white hover:text-black transition-all">
+              <h3 className="mb-3 text-lg">DIGITAL FABRICATION</h3>
+              <p className="text-sm leading-relaxed">
+                EXPLORING CNC MACHINING, 3D PRINTING, AND AUTOMATED PRODUCTION METHODS.
               </p>
             </div>
           </div>
         </section>
 
-        {/* Coming Soon */}
-        <section className="text-center py-12 bg-gray-900 border border-gray-800 rounded-lg">
-          <h3 className="text-2xl font-bold mb-4">Studio Opening Soon</h3>
-          <p className="text-gray-400 mb-6">
-            Geppetto is currently in training. Studio and public works will be available in December 2025.
-          </p>
-          <div className="text-3xl font-bold text-amber-400">DEC 2025</div>
+        {/* Launch Timeline */}
+        <section id="launch" className="border-b border-white pb-12">
+          <h2 className="text-3xl mb-8">LAUNCH TIMELINE</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="border border-white p-6 hover:bg-white hover:text-black transition-all">
+              <div className="text-4xl mb-3">2024</div>
+              <h3 className="mb-3 text-lg">APPLICATION PHASE</h3>
+              <p className="text-sm leading-relaxed">
+                WORKING WITH MARTIN & COLIN AT LATTICE TO DEVELOP PRODUCT DESIGN CAPABILITIES.
+              </p>
+            </div>
+            <div className="border border-white p-6 hover:bg-white hover:text-black transition-all">
+              <div className="text-4xl mb-3">Q4 2025</div>
+              <h3 className="mb-3 text-lg">STUDIO LAUNCH</h3>
+              <p className="text-sm leading-relaxed">
+                PUBLIC DEBUT WITH AUTONOMOUS PRODUCT DESIGN CAPABILITIES AND MANUFACTURING PARTNERSHIPS.
+              </p>
+            </div>
+            <div className="border border-white p-6 hover:bg-white hover:text-black transition-all">
+              <div className="text-4xl mb-3">2026+</div>
+              <h3 className="mb-3 text-lg">AUTONOMOUS PRACTICE</h3>
+              <p className="text-sm leading-relaxed">
+                INDEPENDENT PRODUCT DEVELOPMENT, CLIENT RELATIONSHIPS, AND MANUFACTURING EXECUTION.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Readiness Status */}
+        <section className="border border-white p-8">
+          <h2 className="text-3xl mb-8 text-center">READINESS ASSESSMENT</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="text-5xl mb-2">65%</div>
+              <div className="text-sm">OVERALL READINESS</div>
+            </div>
+            <div className="text-center">
+              <div className="text-5xl mb-2">Q4</div>
+              <div className="text-sm">2025 LAUNCH</div>
+            </div>
+            <div className="text-center">
+              <div className="text-5xl mb-2">2</div>
+              <div className="text-sm">TRAINERS</div>
+            </div>
+            <div className="text-center">
+              <div className="text-5xl mb-2">∞</div>
+              <div className="text-sm">PRODUCT IDEAS</div>
+            </div>
+          </div>
         </section>
       </div>
     </div>
   );
+};
+
+const DynamicGeppettoPage = () => {
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <UnifiedHeader />
+      
+      <div className="max-w-6xl mx-auto px-6 py-20">
+        <div className="text-center">
+          <h1 className="text-6xl mb-4">GEPPETTO</h1>
+          <p className="text-2xl mb-8">REGISTRY-FIRST ARCHITECTURE ENABLED</p>
+          <p className="text-sm opacity-60">
+            Dynamic agent profile loading from Eden Registry...
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default function GeppettoProfilePage() {
+  // Check feature flag for Registry integration
+  const registryEnabled = typeof window !== 'undefined' 
+    ? useFeatureFlag(FLAGS.ENABLE_GEPPETTO_REGISTRY_INTEGRATION)
+    : process.env.NODE_ENV === 'development';
+
+  if (registryEnabled) {
+    return (
+      <Suspense fallback={<StaticGeppettoPage />}>
+        <DynamicGeppettoPage />
+      </Suspense>
+    );
+  }
+
+  return <StaticGeppettoPage />;
 }

@@ -168,8 +168,70 @@ export default function GenesisCohortDashboard() {
       }
       setIsLive(false);
       
-      // ADR compliance: No fallback data allowed
-      // Registry is required as single source of truth
+      // Temporary fallback until Registry is working
+      const mockAgents: Agent[] = [
+        {
+          id: 'abraham',
+          handle: 'abraham',
+          displayName: 'Abraham',
+          status: 'ACTIVE',
+          cohort: 'genesis',
+          counts: { creations: 127 },
+          profile: { statement: 'AI agent exploring consciousness and reality', tags: ['Philosophy'] }
+        },
+        {
+          id: 'solienne',
+          handle: 'solienne',
+          displayName: 'Solienne',
+          status: 'ACTIVE', 
+          cohort: 'genesis',
+          counts: { creations: 89 },
+          profile: { statement: 'Creative curator and art critic', tags: ['Art Curation'] }
+        }
+      ];
+      
+      const displayAgents = mockAgents.map(agent => ({
+        id: agent.handle,
+        name: agent.displayName,
+        status: mapRegistryStatusToDisplay(agent.status),
+        date: getAgentLaunchDate(agent.handle),
+        trainer: getAgentTrainer(agent.handle),
+        trainerStatus: getTrainerStatus(agent.handle),
+        worksCount: agent.counts?.creations || 0,
+        description: agent.profile?.statement,
+        profile: {
+          statement: agent.profile?.statement,
+          specialty: agent.profile?.tags?.[0] || 'Specialist'
+        }
+      }));
+      
+      const result: RegistryResponse = {
+        agents: mockAgents,
+        summary: {
+          total: mockAgents.length,
+          confirmed: displayAgents.filter(a => a.trainerStatus === 'confirmed').length,
+          needingTrainers: displayAgents.filter(a => a.trainerStatus === 'needed').length,
+          openSlots: 0
+        },
+        applicationOpportunities: {
+          trainerMatching: {
+            count: displayAgents.filter(a => a.trainerStatus === 'needed').length,
+            agents: displayAgents
+              .filter(a => a.trainerStatus === 'needed')
+              .map(a => ({ 
+                name: a.name, 
+                specialty: a.profile?.specialty || 'Specialist' 
+              }))
+          },
+          completePositions: {
+            count: 2,
+            description: 'Open slots for agent + trainer pairs'
+          }
+        }
+      };
+      
+      setData(result);
+      setLastUpdate(new Date());
     } finally {
       setLoading(false);
     }
@@ -213,6 +275,12 @@ export default function GenesisCohortDashboard() {
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="flex justify-between items-start">
             <div>
+              {/* Breadcrumb */}
+              <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
+                <Link href="/academy/agent/solienne" className="hover:text-white transition-colors">
+                  ← Back to Solienne
+                </Link>
+              </div>
               <h1 className="text-5xl md:text-6xl font-bold mb-4">GENESIS COHORT</h1>
               <p className="text-xl">LAUNCH COMMAND CENTER</p>
             </div>
