@@ -52,6 +52,7 @@ interface RegistryResponse {
 
 // Helper functions to map Registry data to display format
 function mapRegistryStatusToDisplay(status: string): 'LAUNCHING' | 'DEVELOPING' | 'TRAINING' {
+  // All active agents are launching - they're all part of the first cohort
   if (status === 'ACTIVE') return 'LAUNCHING';
   if (status === 'ONBOARDING') return 'TRAINING';
   return 'DEVELOPING';
@@ -344,100 +345,100 @@ export default function HomePage() {
             </div>
           )}
 
-          {/* Launching Soon */}
+          {/* All Agents */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">LAUNCHING AGENTS</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              {launchingAgents.map(agent => (
-                <div key={agent.id} className="border border-white p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-xl font-bold">{agent.name}</h3>
-                        <span className={`px-2 py-1 text-xs border rounded ${getStatusColor(agent.status)}`}>
-                          {agent.status}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-400">{agent.description || agent.profile?.tagline}</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-sm font-bold">{agent.date}</div>
-                      <div className="text-xs text-gray-400">LAUNCH DATE</div>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="bg-gray-900 p-3 rounded">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Users className="w-4 h-4 text-gray-400" />
-                        <span className="text-xs text-gray-400">TRAINER</span>
-                        {getTrainerStatusIcon(agent.trainerStatus)}
-                      </div>
-                      <div className="text-sm font-bold">{agent.trainer}</div>
-                    </div>
-                    <div className="bg-gray-900 p-3 rounded">
-                      <div className="flex items-center gap-2 mb-1">
-                        <TrendingUp className="w-4 h-4 text-gray-400" />
-                        <span className="text-xs text-gray-400">WORKS</span>
-                      </div>
-                      <div className="text-sm font-bold">{agent.worksCount.toLocaleString()}</div>
-                    </div>
-                  </div>
+            <h2 className="text-2xl font-bold mb-6">AGENTS</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {data?.agents.filter(agent => agent.visibility === 'PUBLIC' && !agent.handle.startsWith('open-')).map(agent => {
+                const displayAgent = {
+                  id: agent.handle,
+                  name: agent.displayName,
+                  status: mapRegistryStatusToDisplay(agent.status),
+                  date: getAgentLaunchDate(agent.handle),
+                  trainer: getAgentTrainer(agent.handle),
+                  trainerStatus: getTrainerStatus(agent.handle),
+                  worksCount: agent.counts?.creations || 0,
+                  description: agent.profile?.statement,
+                  profile: {
+                    statement: agent.profile?.statement,
+                    specialty: agent.profile?.tags?.[0] || 'Specialist'
+                  }
+                };
 
-                  <div className="flex justify-between items-center">
-                    <div className="text-xs">
-                      <span className="text-gray-400">Pilot Revenue Target:</span>
-                      <span className="ml-2 font-bold text-green-400">$1,000-2,500</span>
+                return (
+                  <div key={agent.id} className="border border-white p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="text-lg font-bold">{displayAgent.name}</h3>
+                          <span className={`px-2 py-1 text-xs border rounded ${getStatusColor(displayAgent.status)}`}>
+                            {displayAgent.status}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-400 mb-2">{displayAgent.description}</p>
+                        <div className="text-xs text-gray-400">Target: {displayAgent.date}</div>
+                      </div>
                     </div>
-                    <Link 
-                      href={`/academy/agent/${agent.id.toLowerCase()}`}
-                      className="text-sm hover:bg-white hover:text-black px-3 py-1 border border-white transition-all"
-                    >
-                      VIEW PROFILE →
-                    </Link>
+                    
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div className="bg-gray-900 p-3 rounded">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Users className="w-4 h-4 text-gray-400" />
+                          <span className="text-xs text-gray-400">TRAINER</span>
+                          {getTrainerStatusIcon(displayAgent.trainerStatus)}
+                        </div>
+                        <div className="text-sm font-bold">{displayAgent.trainer}</div>
+                      </div>
+                      <div className="bg-gray-900 p-3 rounded">
+                        <div className="flex items-center gap-2 mb-1">
+                          <TrendingUp className="w-4 h-4 text-gray-400" />
+                          <span className="text-xs text-gray-400">WORKS</span>
+                        </div>
+                        <div className="text-sm font-bold">{displayAgent.worksCount.toLocaleString()}</div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <Link 
+                        href={`/academy/agent/${displayAgent.id.toLowerCase()}`}
+                        className="text-sm hover:bg-white hover:text-black px-3 py-1 border border-white transition-all"
+                      >
+                        VIEW PROFILE →
+                      </Link>
+                      
+                      {displayAgent.trainerStatus === 'needed' && (
+                        <Link
+                          href={`/apply?type=trainer&agent=${displayAgent.id}`}
+                          className="text-xs px-2 py-1 border border-red-400 text-red-400 hover:bg-red-400 hover:text-black transition-all"
+                        >
+                          APPLY TO TRAIN →
+                        </Link>
+                      )}
+                    </div>
                   </div>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* Open Slots */}
+          <section>
+            <h2 className="text-2xl font-bold mb-6">OPEN OPPORTUNITIES</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              {data?.agents.filter(agent => agent.handle.startsWith('open-')).map(agent => (
+                <div key={agent.id} className="border border-white border-dashed p-6">
+                  <h3 className="text-lg font-bold mb-3">{agent.displayName}</h3>
+                  <p className="text-sm mb-4">{agent.profile?.statement}</p>
+                  <Link
+                    href="/apply?type=full"
+                    className="inline-block border border-white px-4 py-2 text-sm hover:bg-white hover:text-black transition-all"
+                  >
+                    PROPOSE AGENT CONCEPT →
+                  </Link>
                 </div>
               ))}
             </div>
           </section>
-
-          {/* Application Opportunities */}
-          {data?.applicationOpportunities && (
-            <section>
-              <h2 className="text-2xl font-bold mb-6">OPEN OPPORTUNITIES</h2>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="border border-white border-dashed p-6">
-                  <h3 className="text-lg font-bold mb-3">TRAINER POSITIONS</h3>
-                  <p className="text-sm mb-4">{data.applicationOpportunities.trainerMatching.count} agents confirmed, seeking trainers:</p>
-                  <ul className="text-sm space-y-1 mb-4">
-                    {data.applicationOpportunities.trainerMatching.agents.map((agent, i) => (
-                      <li key={i}>• {agent.name} ({agent.specialty})</li>
-                    ))}
-                  </ul>
-                  <Link
-                    href="/apply?type=trainer"
-                    className="inline-block border border-white px-4 py-2 text-sm hover:bg-white hover:text-black transition-all"
-                  >
-                    APPLY AS TRAINER →
-                  </Link>
-                </div>
-
-                {data.applicationOpportunities.completePositions.count > 0 && (
-                  <div className="border border-white border-dashed p-6">
-                    <h3 className="text-lg font-bold mb-3">COMPLETE POSITIONS</h3>
-                    <p className="text-sm mb-4">{data.applicationOpportunities.completePositions.count} {data.applicationOpportunities.completePositions.description}</p>
-                    <p className="text-xs mb-4 text-gray-400">Propose your AI creative agent concept with committed trainer</p>
-                    <Link
-                      href="/apply?type=full"
-                      className="inline-block border border-white px-4 py-2 text-sm hover:bg-white hover:text-black transition-all"
-                    >
-                      PROPOSE CONCEPT →
-                    </Link>
-                  </div>
-                )}
-              </div>
-            </section>
-          )}
         </div>
       )}
     </div>
