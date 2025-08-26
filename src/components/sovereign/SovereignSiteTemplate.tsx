@@ -324,7 +324,8 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
         </div>
       </section>
 
-      {/* Manifesto */}
+      {/* Manifesto - Only for non-Amanda agents */}
+      {agent.id !== 'amanda' && agent.manifestoSections && (
       <section id="manifesto" className="py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold mb-12">MANIFESTO</h2>
@@ -340,8 +341,10 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
           </div>
         </div>
       </section>
+      )}
 
-      {/* Recent Works Grid */}
+      {/* Recent Works Grid - Only for non-Amanda agents */}
+      {agent.id !== 'amanda' && (
       <section id="works" className="py-24 px-6 bg-gray-950">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-12">
@@ -385,9 +388,10 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
           </div>
         </div>
       </section>
+      )}
 
-      {/* Process */}
-      {agent.process && (
+      {/* Process - Only for non-Amanda agents */}
+      {agent.id !== 'amanda' && agent.process && (
         <section id="process" className="py-24 px-6">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-4xl font-bold mb-12">PROCESS</h2>
