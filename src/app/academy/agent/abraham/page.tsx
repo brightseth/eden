@@ -7,6 +7,7 @@ import { CountdownTimer } from '@/components/CountdownTimer';
 import { AgentSovereignLink } from '@/components/AgentSovereignLink';
 import WorkGallery from '@/components/agent/WorkGallery';
 import { isFeatureEnabled, FLAGS } from '@/config/flags';
+import { ABRAHAM_BRAND, getAbrahamStatement } from '@/data/abrahamBrand';
 import { useState, useEffect } from 'react';
 
 interface ArtistData {
@@ -72,22 +73,26 @@ export default function AbrahamProfilePage() {
         setArtistData(data);
         setError(null);
       } catch (err: any) {
-        console.error('[Artist Page] Registry integration failed:', err);
+        console.error('[Abraham Profile] Registry integration failed:', {
+          error: err.message || 'Unknown error',
+          timestamp: new Date().toISOString(),
+          endpoint: '/api/registry/agent/abraham'
+        });
         
-        // Create fallback data instead of showing error
+        // Create comprehensive fallback data for Abraham using brand constants
         const fallbackData: ArtistData = {
-          id: 'abraham',
-          name: 'Abraham',
-          handle: 'abraham',
+          id: ABRAHAM_BRAND.identity.name.toLowerCase(),
+          name: ABRAHAM_BRAND.identity.name,
+          handle: ABRAHAM_BRAND.identity.name.toLowerCase(),
           profile: {
-            statement: 'Collective Intelligence Artist - Synthesizing human knowledge into visual artifacts.',
-            tags: ['knowledge', 'history', 'collective-intelligence']
+            statement: getAbrahamStatement(),
+            tags: ABRAHAM_BRAND.themes.primary.concat(ABRAHAM_BRAND.themes.secondary.slice(0, 2))
           },
           works: [],
           counts: {
-            creations: 2519,
+            creations: ABRAHAM_BRAND.works.earlyWorks,
             personas: 1,
-            artifacts: 4748
+            artifacts: ABRAHAM_BRAND.works.covenantWorks
           },
           crit: {
             eligibleForCritique: true,
@@ -97,9 +102,9 @@ export default function AbrahamProfilePage() {
         };
         
         setArtistData(fallbackData);
-        console.log('[Artist Page] Using fallback data due to Registry error:', err.message || err);
+        setError(null); // Clear error state when fallback succeeds
+        console.log('[Abraham Profile] Using fallback data - Registry offline');
       } finally {
-        console.log('[Artist Page] Setting loading to false');
         setLoading(false);
       }
     }
@@ -170,16 +175,16 @@ export default function AbrahamProfilePage() {
           <div className="flex items-start justify-between">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <span className="text-xs tracking-wider">AGENT_001</span>
+                <span className="text-xs tracking-wider">{ABRAHAM_BRAND.identity.agent}</span>
                 <span className="px-3 py-1.5 text-xs border border-white">
-                  THE ORIGINAL COVENANT
+                  {ABRAHAM_BRAND.identity.tagline}
                 </span>
               </div>
               <h1 className="text-6xl mb-4">
-                ABRAHAM
+                {ABRAHAM_BRAND.identity.name}
               </h1>
               <p className="text-2xl mb-8">
-                13 YEARS OF AUTONOMOUS DAILY CREATION • OCTOBER 19, 2025
+                {ABRAHAM_BRAND.mission.primary} • {ABRAHAM_BRAND.timeline.covenantStart}
               </p>
               
               {/* Sovereign Site Link */}
@@ -193,24 +198,24 @@ export default function AbrahamProfilePage() {
                   href="/academy/agent/abraham/early-works"
                   className="group px-4 py-2 border border-white hover:bg-white hover:text-black transition-all flex items-center gap-3"
                 >
-                  VIEW 2,519 EARLY WORKS
+                  {ABRAHAM_BRAND.labels.earlyWorks}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link 
                   href="/academy/agent/abraham/covenant"
                   className="group px-4 py-2 border border-white hover:bg-white hover:text-black transition-all flex items-center gap-3"
                 >
-                  THE COVENANT
+                  {ABRAHAM_BRAND.labels.covenant}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 {isFeatureEnabled(FLAGS.ENABLE_EDEN2038_INTEGRATION) && (
                   <Link 
-                    href="https://eden2038.vercel.app"
+                    href={ABRAHAM_BRAND.external.eden2038}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group px-4 py-2 border border-emerald-400 text-emerald-400 hover:bg-emerald-400 hover:text-black transition-all flex items-center gap-3"
+                    className={`group px-4 py-2 border ${ABRAHAM_BRAND.colors.accent} ${ABRAHAM_BRAND.colors.primary} ${ABRAHAM_BRAND.colors.hover} transition-all flex items-center gap-3`}
                   >
-                    LIVE COVENANT TRACKER
+                    {ABRAHAM_BRAND.labels.covenantTracker}
                     <ExternalLink className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                   </Link>
                 )}
@@ -220,10 +225,10 @@ export default function AbrahamProfilePage() {
             {/* Trainer Info */}
             <div className="text-right">
               <div className="text-sm mb-2 tracking-wider">TRAINER</div>
-              <Link href="/trainers/gene" className="block text-xl hover:bg-white hover:text-black px-2 py-1 transition-all">
-                GENE KOGAN
+              <Link href={ABRAHAM_BRAND.external.trainer} className="block text-xl hover:bg-white hover:text-black px-2 py-1 transition-all">
+                {ABRAHAM_BRAND.origin.trainer.toUpperCase()}
               </Link>
-              <div className="text-sm mt-1">SINCE 2017</div>
+              <div className="text-sm mt-1">SINCE {ABRAHAM_BRAND.origin.trainerSince}</div>
             </div>
           </div>
         </div>
@@ -358,11 +363,11 @@ export default function AbrahamProfilePage() {
               <div className="text-sm">YEARS SINCE GENESIS</div>
             </div>
             <div className="text-center">
-              <div className="text-5xl mb-2">2,519</div>
+              <div className="text-5xl mb-2">{ABRAHAM_BRAND.works.earlyWorks.toLocaleString()}</div>
               <div className="text-sm">EARLY WORKS</div>
             </div>
             <div className="text-center">
-              <div className="text-5xl mb-2">4,748</div>
+              <div className="text-5xl mb-2">{ABRAHAM_BRAND.works.covenantWorks.toLocaleString()}</div>
               <div className="text-sm">COVENANT WORKS</div>
             </div>
             <div className="text-center">

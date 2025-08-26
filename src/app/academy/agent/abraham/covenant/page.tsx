@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, ExternalLink, Calendar, Target } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { isFeatureEnabled, FLAGS } from '@/config/flags';
+import { ABRAHAM_BRAND, getCovenantDescription, getTotalWorksDescription } from '@/data/abrahamBrand';
 
 export default function AbrahamCovenantPage() {
   return (
@@ -16,7 +17,7 @@ export default function AbrahamCovenantPage() {
             className="inline-flex items-center gap-2 text-sm hover:bg-white hover:text-black px-2 py-1 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            BACK TO ABRAHAM
+            {ABRAHAM_BRAND.labels.backToAbraham}
           </Link>
         </div>
       </div>
@@ -27,16 +28,16 @@ export default function AbrahamCovenantPage() {
           <div className="flex items-start justify-between">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <span className="text-xs tracking-wider">AGENT_001</span>
+                <span className="text-xs tracking-wider">{ABRAHAM_BRAND.identity.agent}</span>
                 <span className="px-3 py-1.5 text-xs border border-white">
-                  THE COVENANT SERIES
+                  {ABRAHAM_BRAND.identity.tagline}
                 </span>
               </div>
               <h1 className="text-6xl mb-4">
-                ABRAHAM'S COVENANT
+                {ABRAHAM_BRAND.identity.name}'S COVENANT
               </h1>
               <p className="text-2xl mb-8">
-                EXPLORATIONS IN FAITH, TECHNOLOGY & THE DIVINE
+                {ABRAHAM_BRAND.mission.primary} • {getCovenantDescription()}
               </p>
               
               {/* Quick Links */}
@@ -81,9 +82,9 @@ export default function AbrahamCovenantPage() {
                   </span>
                   <span className="text-xs text-emerald-400">2025-2038</span>
                 </div>
-                <h2 className="text-4xl mb-6">THE 13-YEAR COVENANT</h2>
+                <h2 className="text-4xl mb-6">{ABRAHAM_BRAND.mission.primary}</h2>
                 <p className="text-lg mb-6 text-gray-300">
-                  Experience Abraham's real-time covenant journey—4,748 daily creations across 13 years. 
+                  Experience Abraham's real-time covenant journey—{getCovenantDescription()}. 
                   Track progress, witness the evolution, and participate in the largest autonomous art project ever conceived.
                 </p>
                 <div className="flex items-center gap-4 text-sm text-gray-400 mb-8">
@@ -93,16 +94,16 @@ export default function AbrahamCovenantPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Target className="w-4 h-4" />
-                    <span>4,748 Works</span>
+                    <span>{ABRAHAM_BRAND.works.covenantWorks.toLocaleString()} Works</span>
                   </div>
                 </div>
                 <Link 
-                  href="https://eden2038.vercel.app"
+                  href={ABRAHAM_BRAND.external.eden2038}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-500 hover:to-blue-500 transition-all duration-300 text-lg font-semibold"
                 >
-                  ENTER COVENANT TRACKER
+                  {ABRAHAM_BRAND.labels.covenantTracker.replace('LIVE ', '')}
                   <ExternalLink className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </Link>
               </div>
@@ -111,24 +112,24 @@ export default function AbrahamCovenantPage() {
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-400">Covenant Start:</span>
-                    <span>October 19, 2025</span>
+                    <span>{ABRAHAM_BRAND.timeline.covenantStart}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Covenant End:</span>
-                    <span>October 19, 2038</span>
+                    <span>{ABRAHAM_BRAND.timeline.covenantEnd}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Total Works:</span>
-                    <span>4,748 daily creations</span>
+                    <span>{ABRAHAM_BRAND.works.covenantWorks.toLocaleString()} daily creations</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Early Works:</span>
-                    <span>2,519 (2021-2024)</span>
+                    <span>{ABRAHAM_BRAND.works.earlyWorks.toLocaleString()} ({ABRAHAM_BRAND.timeline.communityWorksComplete})</span>
                   </div>
                   <div className="border-t border-emerald-400/30 pt-3 mt-4">
                     <div className="flex justify-between font-semibold text-emerald-400">
                       <span>Legacy Total:</span>
-                      <span>7,267 works</span>
+                      <span>{ABRAHAM_BRAND.works.totalLegacy.toLocaleString()} works</span>
                     </div>
                   </div>
                 </div>

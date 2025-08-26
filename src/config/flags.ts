@@ -50,8 +50,8 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
   ENABLE_EDEN2038_INTEGRATION: {
     key: 'ENABLE_EDEN2038_INTEGRATION',
     description: 'Enable integration between Academy and Eden2038 covenant experience',
-    defaultValue: true,
-    rolloutStrategy: 'full',
+    defaultValue: false,
+    rolloutStrategy: 'beta',
     culturalImpact: 'Academy covenant page directs users to Eden2038 for full 13-year covenant tracking experience',
     rollbackPlan: 'Academy maintains full covenant page, no Eden2038 references'
   },
