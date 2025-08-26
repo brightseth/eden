@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 
 // Types for Genesis Cohort agents
 interface GenesisAgent {
-  id: number;
+  id: string;
   name: string;
   status: string;
   date?: string;
@@ -15,6 +15,7 @@ interface GenesisAgent {
   worksCount?: number;
   description?: string;
   image?: string;
+  trainerStatus?: string;
 }
 
 interface GenesisResponse {
@@ -29,16 +30,14 @@ interface GenesisResponse {
 
 // Fallback data in case Registry is unavailable
 const FALLBACK_AGENTS: GenesisAgent[] = [
-  { id: 1, name: "ABRAHAM", status: "LAUNCHING", date: "OCT 19, 2025", hasProfile: true, trainer: "GENE KOGAN", worksCount: 2519, description: "13-YEAR AUTONOMOUS COVENANT" },
-  { id: 2, name: "SOLIENNE", status: "LAUNCHING", date: "NOV 10, 2025", hasProfile: true, trainer: "KRISTI CORONADO & SETH GOLDSTEIN", worksCount: 1740, description: "CONSCIOUSNESS, VELOCITY & ARCHITECTURAL LIGHT" },
-  { id: 3, name: "GEPPETTO", status: "DEVELOPING", date: "DEC 2025", hasProfile: true, image: "/agents/geppetto/profile.svg" },
-  { id: 4, name: "KORU", status: "DEVELOPING", date: "JAN 2026", hasProfile: true, image: "/agents/koru/profile.svg" },
-  { id: 5, name: "MIYOMI", status: "DEVELOPING", date: "Q1 2026", image: "/agents/miyomi/profile.svg" },
-  { id: 6, name: "ART COLLECTOR", status: "DEVELOPING", date: "Q1 2026", image: "/agents/art-collector/profile.svg" },
-  { id: 7, name: "CITIZEN", status: "DEVELOPING", date: "Q1 2026", image: "/agents/citizen/profile.svg" },
-  { id: 8, name: "NINA", status: "DEVELOPING", date: "Q1 2026", image: "/agents/nina/profile.svg" },
-  { id: 9, name: "[OPEN SLOT]", status: "OPEN" },
-  { id: 10, name: "[OPEN SLOT]", status: "OPEN" }
+  { id: "abraham", name: "ABRAHAM", status: "LAUNCHING", date: "OCT 19, 2025", hasProfile: true, trainer: "GENE KOGAN", worksCount: 2519, description: "13-YEAR AUTONOMOUS COVENANT" },
+  { id: "solienne", name: "SOLIENNE", status: "LAUNCHING", date: "NOV 10, 2025", hasProfile: true, trainer: "KRISTI CORONADO & SETH GOLDSTEIN", worksCount: 1740, description: "CONSCIOUSNESS, VELOCITY & ARCHITECTURAL LIGHT" },
+  { id: "geppetto", name: "GEPPETTO", status: "DEVELOPING", date: "DEC 2025", hasProfile: true, trainer: "MARTIN & COLIN (LATTICE)", image: "/agents/geppetto/profile.svg" },
+  { id: "koru", name: "KORU", status: "DEVELOPING", date: "JAN 2026", hasProfile: true, trainer: "XANDER", image: "/agents/koru/profile.svg" },
+  { id: "miyomi", name: "MIYOMI", status: "DEVELOPING", date: "Q1 2026", trainer: "TBD - Applications Open", image: "/agents/miyomi/profile.svg" },
+  { id: "amanda", name: "AMANDA", status: "DEVELOPING", date: "Q1 2026", trainer: "TBD - Applications Open", image: "/agents/art-collector/profile.svg" },
+  { id: "citizen", name: "CITIZEN", status: "DEVELOPING", date: "Q1 2026", trainer: "TBD - Applications Open", image: "/agents/citizen/profile.svg" },
+  { id: "nina", name: "NINA", status: "DEVELOPING", date: "Q1 2026", trainer: "TBD - Applications Open", image: "/agents/nina/profile.svg" }
 ];
 
 export default function AcademyPage() {
