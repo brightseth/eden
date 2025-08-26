@@ -510,7 +510,10 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                             <span className="text-yellow-400 font-mono text-xl font-bold animate-pulse">{liveOpportunities}</span>
                           </div>
                           <div className="space-y-2">
-                            <div className="flex items-center justify-between bg-gradient-to-r from-green-500/10 to-transparent border border-green-500/30 p-3 rounded text-xs transform hover:scale-105 transition-transform cursor-pointer group">
+                            <div 
+                              className="flex items-center justify-between bg-gradient-to-r from-green-500/10 to-transparent border border-green-500/30 p-3 rounded text-xs transform hover:scale-105 transition-transform cursor-pointer group"
+                              onClick={() => window.open('https://superrare.com/artwork-nft/death-dip-31666', '_blank')}
+                            >
                               <div className="flex items-start gap-3 flex-1">
                                 <div className="w-16 h-16 bg-gradient-to-br from-red-600 via-purple-600 to-black rounded border border-red-500/30 flex items-center justify-center relative overflow-hidden group-hover:border-green-400 transition-colors">
                                   <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-black animate-pulse" />
@@ -539,7 +542,10 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                               </div>
                             </div>
                             
-                            <div className="flex items-center justify-between bg-gradient-to-r from-yellow-500/10 to-transparent border border-yellow-500/30 p-3 rounded text-xs transform hover:scale-105 transition-transform cursor-pointer group">
+                            <div 
+                              className="flex items-center justify-between bg-gradient-to-r from-yellow-500/10 to-transparent border border-yellow-500/30 p-3 rounded text-xs transform hover:scale-105 transition-transform cursor-pointer group"
+                              onClick={() => window.open('https://foundation.app/@refikanadol', '_blank')}
+                            >
                               <div className="flex items-start gap-3 flex-1">
                                 <div className="w-16 h-16 bg-gradient-to-br from-purple-500 via-blue-600 to-cyan-400 rounded border border-purple-500/30 flex items-center justify-center relative overflow-hidden group-hover:border-yellow-400 transition-colors">
                                   <div className="absolute inset-0 bg-gradient-to-br from-purple-400/30 via-blue-400/20 to-cyan-300/30 animate-pulse" />
@@ -565,7 +571,10 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                               </div>
                             </div>
                             
-                            <div className="flex items-center justify-between bg-gradient-to-r from-red-500/10 to-transparent border border-red-500/30 p-3 rounded text-xs transform hover:scale-105 transition-transform opacity-60 cursor-pointer group">
+                            <div 
+                              className="flex items-center justify-between bg-gradient-to-r from-red-500/10 to-transparent border border-red-500/30 p-3 rounded text-xs transform hover:scale-105 transition-transform opacity-60 cursor-pointer group"
+                              onClick={() => window.open('https://artblocks.io/collections/curated/projects/0x059edd72cd353df5106d2b9cc5ab83a52287ac3a/1', '_blank')}
+                            >
                               <div className="flex items-start gap-3 flex-1">
                                 <div className="w-16 h-16 bg-gradient-to-br from-orange-400 via-yellow-500 to-green-400 rounded border border-orange-500/30 flex items-center justify-center relative overflow-hidden group-hover:border-red-400 transition-colors">
                                   <div className="absolute inset-0">
@@ -720,24 +729,61 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                     <div className="border border-gray-600 bg-gray-800/20 p-4 rounded">
                       <div className="font-semibold text-gray-300 mb-3">RECENT ACQUISITIONS</div>
                       <div className="space-y-2 text-sm">
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <div className="text-gray-300">Pak - "Lost Poets" <span className="text-xs text-purple-400">[Foundation]</span></div>
-                            <div className="text-xs text-gray-500">Acquired: 3.2 ETH | Current: 8.9 ETH</div>
+                        <div 
+                          className="flex justify-between items-center cursor-pointer hover:bg-gray-800/30 p-2 rounded transition-colors group"
+                          onClick={() => window.open('https://foundation.app/@muratpak', '_blank')}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 bg-gradient-to-br from-gray-900 via-purple-900 to-black rounded border border-purple-500/30 flex items-center justify-center relative overflow-hidden group-hover:border-purple-400 transition-colors">
+                              <div className="text-white font-bold text-xs">PAK</div>
+                              <div className="absolute bottom-0 right-0 w-2 h-2 bg-purple-400 rounded-full" />
+                            </div>
+                            <div>
+                              <div className="text-gray-300">Pak - "Lost Poets" <span className="text-xs text-purple-400">[Foundation]</span></div>
+                              <div className="text-xs text-gray-500">Acquired: 3.2 ETH | Current: 8.9 ETH</div>
+                            </div>
                           </div>
                           <div className="text-green-400">+178%</div>
                         </div>
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <div className="text-gray-300">Tyler Hobbs - "Fidenza #313" <span className="text-xs text-orange-400">[ArtBlocks]</span></div>
-                            <div className="text-xs text-gray-500">Acquired: 89 ETH | Current: 210 ETH</div>
+                        <div 
+                          className="flex justify-between items-center cursor-pointer hover:bg-gray-800/30 p-2 rounded transition-colors group"
+                          onClick={() => window.open('https://artblocks.io/collections/curated/projects/0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270/313', '_blank')}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 rounded border border-orange-500/30 flex items-center justify-center relative overflow-hidden group-hover:border-orange-400 transition-colors">
+                              <div className="absolute inset-0 opacity-60">
+                                <div className="w-full h-full bg-gradient-to-br from-transparent via-white/10 to-transparent" style={{clipPath: 'polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%)'}} />
+                              </div>
+                              <div className="text-white font-bold text-xs relative z-10">#313</div>
+                              <div className="absolute bottom-0 right-0 w-2 h-2 bg-orange-400 rounded-full" />
+                            </div>
+                            <div>
+                              <div className="text-gray-300">Tyler Hobbs - "Fidenza #313" <span className="text-xs text-orange-400">[ArtBlocks]</span></div>
+                              <div className="text-xs text-gray-500">Acquired: 89 ETH | Current: 210 ETH</div>
+                            </div>
                           </div>
                           <div className="text-green-400">+136%</div>
                         </div>
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <div className="text-gray-300">Dmitri Cherniak - "Ringers #879" <span className="text-xs text-orange-400">[ArtBlocks]</span></div>
-                            <div className="text-xs text-gray-500">Acquired: 15 ETH | Current: 42 ETH</div>
+                        <div 
+                          className="flex justify-between items-center cursor-pointer hover:bg-gray-800/30 p-2 rounded transition-colors group"
+                          onClick={() => window.open('https://artblocks.io/collections/curated/projects/0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270/879', '_blank')}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 rounded border border-cyan-500/30 flex items-center justify-center relative overflow-hidden group-hover:border-cyan-400 transition-colors">
+                              <div className="absolute inset-0">
+                                <svg viewBox="0 0 48 48" className="w-full h-full">
+                                  <circle cx="24" cy="24" r="18" stroke="#fff" strokeWidth="1" fill="none" opacity="0.7" />
+                                  <circle cx="24" cy="24" r="12" stroke="#fff" strokeWidth="1" fill="none" opacity="0.5" />
+                                  <circle cx="24" cy="24" r="6" stroke="#fff" strokeWidth="1" fill="none" opacity="0.3" />
+                                </svg>
+                              </div>
+                              <div className="text-white font-bold text-xs relative z-10">#879</div>
+                              <div className="absolute bottom-0 right-0 w-2 h-2 bg-cyan-400 rounded-full" />
+                            </div>
+                            <div>
+                              <div className="text-gray-300">Dmitri Cherniak - "Ringers #879" <span className="text-xs text-orange-400">[ArtBlocks]</span></div>
+                              <div className="text-xs text-gray-500">Acquired: 15 ETH | Current: 42 ETH</div>
+                            </div>
                           </div>
                           <div className="text-green-400">+180%</div>
                         </div>
