@@ -570,6 +570,7 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                               </div>
                             </div>
                           </div>
+                        </div>
                       </div>
                     </div>
 
