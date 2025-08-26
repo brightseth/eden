@@ -2,5 +2,6 @@ import { SovereignSiteTemplate } from '@/components/sovereign/SovereignSiteTempl
 import { agentConfigs } from '@/data/agentConfigs';
 
 export default function AmandaSite() {
+  // Force rebuild - Collection Intelligence should be at top
   return <SovereignSiteTemplate agent={agentConfigs.amanda} showPrivateMode={true} />;
 }
