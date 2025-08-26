@@ -374,12 +374,20 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-between mb-12">
               <h2 className="text-4xl font-bold">COLLECTION INTELLIGENCE</h2>
-              {isPrivateMode && (
-                <div className="flex items-center gap-2 px-3 py-1 bg-red-500/20 border border-red-500/50 rounded text-red-400 text-sm">
-                  <EyeOff className="w-4 h-4" />
-                  PRIVATE MODE
-                </div>
-              )}
+              <div className="flex items-center gap-3">
+                {!isPrivateMode && showPrivateMode && (
+                  <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 border border-green-500/50 rounded text-green-400 text-sm animate-pulse">
+                    <Eye className="w-4 h-4" />
+                    🔴 LIVE SESSION ACTIVE → Switch to Private Mode
+                  </div>
+                )}
+                {isPrivateMode && (
+                  <div className="flex items-center gap-2 px-3 py-1 bg-red-500/20 border border-red-500/50 rounded text-red-400 text-sm">
+                    <EyeOff className="w-4 h-4" />
+                    PRIVATE MODE
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="grid lg:grid-cols-2 gap-12">
