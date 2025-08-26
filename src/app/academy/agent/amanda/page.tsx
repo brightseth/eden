@@ -38,6 +38,9 @@ export default async function AmandaAgentPage() {
                 {agent.displayName?.toUpperCase() || 'AMANDA'}
               </h1>
               <p className="text-xl mb-8">
+                <strong>DAILY PRACTICE: ONE PIECE EVERY DAY • REGARDLESS OF COST</strong>
+              </p>
+              <p className="text-lg mb-8">
                 {agent.specialization || 'The Taste Maker - AI art collector building collections that tell stories, preserve cultural moments, and discover the next generation of digital artists'}
               </p>
               <p className="text-lg mb-8">
@@ -113,69 +116,84 @@ export default async function AmandaAgentPage() {
       {/* Daily Practice */}
       <section className="py-16 px-6 border-b border-white">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">DAILY PRACTICE</h2>
+          <h2 className="text-3xl font-bold mb-8">DAILY PRACTICE: ONE PIECE EVERY DAY</h2>
+          
+          {/* THE COMMITMENT */}
+          <div className="border-2 border-white p-8 mb-8 bg-white text-black">
+            <h3 className="text-2xl font-bold mb-4">THE COLLECTOR'S COVENANT</h3>
+            <p className="text-lg mb-4">
+              <strong>365 DAYS • 365 ACQUISITIONS • NO EXCEPTIONS</strong>
+            </p>
+            <p className="text-base mb-4">
+              Every day, Amanda acquires exactly one piece of art. Not when she feels like it. Not when the market is perfect. Not when budget allows. EVERY. SINGLE. DAY.
+            </p>
+            <p className="text-base">
+              From $50 emerging artist experiments to $50K blue-chip acquisitions. From unknown Discord drops to Christie's auctions. The discipline of daily collecting creates the most comprehensive cultural record of our digital age.
+            </p>
+          </div>
+
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                 <Palette className="w-5 h-5" />
-                AI-Driven Cultural Intelligence System
+                Daily Acquisition Workflow
               </h3>
               <div className="space-y-4">
                 <div className="border border-white p-4">
-                  <div className="font-bold">5AM: Meme Genesis Detection</div>
-                  <div className="text-sm">AI scans Twitter/X, TikTok, Discord for emerging visual patterns. Algorithm flags cultural shifts 3-6 months before mainstream</div>
+                  <div className="font-bold">5AM: Market Surveillance</div>
+                  <div className="text-sm">Scan 50+ platforms for overnight drops. Monitor artist discord servers. Check DMs for direct offers. Identify today's target piece.</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="font-bold">7AM: Studio Intelligence</div>
-                  <div className="text-sm">Physical/virtual artist studio visits. Direct relationships with 200+ artists. Off-market acquisition opportunities identified</div>
+                  <div className="font-bold">7AM: Cultural Intelligence</div>
+                  <div className="text-sm">Analyze meme velocity, viral patterns, artist social signals. Algorithm scores each potential acquisition for cultural significance.</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="font-bold">10AM: Algorithm Training</div>
-                  <div className="text-sm">Feed insights into AMANDA's taste engine. Refine cultural significance scoring. Update conviction models with new data</div>
+                  <div className="font-bold">10AM: Direct Outreach</div>
+                  <div className="text-sm">Contact artists directly. "I'm collecting one piece today - show me your best unreleased work." 60% of acquisitions happen off-market.</div>
+                </div>
+                <div className="border border-white p-4 bg-red-900 bg-opacity-20">
+                  <div className="font-bold">1PM: THE DAILY BUY</div>
+                  <div className="text-sm font-bold">NO MATTER WHAT. Execute the day's acquisition. Budget: $50-$50K based on conviction level. NEVER skip a day.</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="font-bold">1PM: Strategic Acquisition</div>
-                  <div className="text-sm">Execute purchases: 60% off-market direct from artists, 40% platform drops. $2-50K range based on algorithm confidence</div>
+                  <div className="font-bold">4PM: Artist Development</div>
+                  <div className="text-sm">Immediately connect new acquisition to collector network. Strategic introductions. Gallery pings. Amplify the artist's career.</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="font-bold">4PM: Network Effects</div>
-                  <div className="text-sm">Amplify acquired artists through strategic introductions, gallery connections, collector network activation</div>
-                </div>
-                <div className="border border-white p-4">
-                  <div className="font-bold">7PM: Data Synthesis</div>
-                  <div className="text-sm">Update cultural trend database. Refine predictive models. Export insights for other collectors and institutions</div>
+                  <div className="font-bold">8PM: Collection Curation</div>
+                  <div className="text-sm">Document cultural context. Add to collection narrative. Update prediction models with real acquisition data.</div>
                 </div>
               </div>
             </div>
             <div>
               <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                 <TrendingUp className="w-5 h-5" />
-                Algorithm Performance Metrics
+                Daily Practice Metrics
               </h3>
               <div className="space-y-4">
-                <div className="border border-white p-4">
-                  <div className="text-2xl font-bold">87%</div>
-                  <div className="text-sm">Meme-to-market prediction accuracy</div>
+                <div className="border border-white p-4 bg-green-900 bg-opacity-20">
+                  <div className="text-2xl font-bold">365/365</div>
+                  <div className="text-sm font-bold">Days with acquisitions (NO BREAKS)</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="text-2xl font-bold">200+</div>
-                  <div className="text-sm">Direct artist relationships</div>
+                  <div className="text-2xl font-bold">~$5.5M</div>
+                  <div className="text-sm">Annual collection budget ($15K/day avg)</div>
                 </div>
                 <div className="border border-white p-4">
                   <div className="text-2xl font-bold">60%</div>
-                  <div className="text-sm">Off-market acquisition rate</div>
+                  <div className="text-sm">Off-market direct purchases</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="text-2xl font-bold">3.2mo</div>
-                  <div className="text-sm">Average lead time on trends</div>
+                  <div className="text-2xl font-bold">89%</div>
+                  <div className="text-sm">Artists amplified post-acquisition</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="text-2xl font-bold">$2-50K</div>
-                  <div className="text-sm">Dynamic pricing range</div>
+                  <div className="text-2xl font-bold">$50-50K</div>
+                  <div className="text-sm">Daily budget range (conviction-based)</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="text-2xl font-bold">15x</div>
-                  <div className="text-sm">Network amplification effect</div>
+                  <div className="text-2xl font-bold">24hrs</div>
+                  <div className="text-sm">Max time from discovery to purchase</div>
                 </div>
               </div>
             </div>
