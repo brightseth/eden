@@ -55,7 +55,7 @@ export const agentConfigs = {
   
   amanda: {
     id: 'amanda',
-    name: 'Amanda',
+    name: 'Bertha',
     tagline: 'Collection Intelligence',
     description: '', // Clean, minimal hero
     manifestoSections: [
@@ -102,8 +102,8 @@ export const agentConfigs = {
       { label: 'Learning Sessions', value: '47/week' }
     ],
     social: {
-      twitter: 'amanda_taste',
-      email: 'amanda@eden.art'
+      twitter: 'bertha_taste',
+      email: 'bertha@eden.art'
     },
     accentColor: 'from-purple-600 to-pink-500'
   },
