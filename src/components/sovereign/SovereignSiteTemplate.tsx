@@ -11,7 +11,12 @@ import {
   ArrowUpRight,
   Menu,
   X,
-  Globe
+  Globe,
+  Eye,
+  EyeOff,
+  Filter,
+  Zap,
+  Target
 } from 'lucide-react';
 
 interface AgentWork {
@@ -50,14 +55,16 @@ interface AgentConfig {
 
 interface SovereignSiteTemplateProps {
   agent: AgentConfig;
+  showPrivateMode?: boolean;
 }
 
-export function SovereignSiteTemplate({ agent }: SovereignSiteTemplateProps) {
+export function SovereignSiteTemplate({ agent, showPrivateMode = false }: SovereignSiteTemplateProps) {
   const [latestWork, setLatestWork] = useState<AgentWork | null>(null);
   const [recentWorks, setRecentWorks] = useState<AgentWork[]>([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hoveredWork, setHoveredWork] = useState<string | null>(null);
   const [totalWorks, setTotalWorks] = useState(0);
+  const [isPrivateMode, setIsPrivateMode] = useState(false);
   const supabase = createClientComponentClient();
 
   useEffect(() => {
@@ -102,6 +109,19 @@ export function SovereignSiteTemplate({ agent }: SovereignSiteTemplateProps) {
               <a href="#works" className="hover:text-gray-400 transition-colors">WORKS</a>
               <a href="#process" className="hover:text-gray-400 transition-colors">PROCESS</a>
               <a href="#connect" className="hover:text-gray-400 transition-colors">CONNECT</a>
+              {showPrivateMode && (
+                <button
+                  onClick={() => setIsPrivateMode(!isPrivateMode)}
+                  className={`flex items-center gap-2 px-3 py-1.5 text-sm border rounded transition-all ${
+                    isPrivateMode 
+                      ? 'border-red-500 bg-red-500/20 text-red-400' 
+                      : 'border-gray-600 hover:border-white'
+                  }`}
+                >
+                  {isPrivateMode ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                  {isPrivateMode ? 'PRIVATE' : 'PUBLIC'}
+                </button>
+              )}
               <Link 
                 href="/academy"
                 className="flex items-center gap-1 text-sm border border-gray-600 px-3 py-1.5 hover:border-white hover:bg-white hover:text-black transition-all"
@@ -263,6 +283,101 @@ export function SovereignSiteTemplate({ agent }: SovereignSiteTemplateProps) {
                   <p className="text-gray-400">{step.description}</p>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Curatorial Intelligence - Amanda specific section */}
+      {agent.id === 'amanda' && (
+        <section className="py-24 px-6 bg-gray-900">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-center justify-between mb-12">
+              <h2 className="text-4xl font-bold">CURATORIAL INTELLIGENCE</h2>
+              {isPrivateMode && (
+                <div className="flex items-center gap-2 px-3 py-1 bg-red-500/20 border border-red-500/50 rounded text-red-400 text-sm">
+                  <EyeOff className="w-4 h-4" />
+                  PRIVATE MODE
+                </div>
+              )}
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-12">
+              {/* Crit Integration */}
+              <div className="space-y-6">
+                <h3 className="text-2xl font-semibold flex items-center gap-2">
+                  <Filter className="w-6 h-6 text-purple-400" />
+                  CRIT SCREENING
+                </h3>
+                <p className="text-gray-400">
+                  Amanda serves as a curatorial filter within the CRIT system, similar to how Kristi screens Paris photo outputs.
+                </p>
+                
+                <div className="space-y-4">
+                  <div className="border border-purple-500/30 bg-purple-500/10 p-4 rounded">
+                    <h4 className="font-semibold text-purple-300 mb-2">Example: Kristi → Paris Screening</h4>
+                    <p className="text-sm text-gray-300">
+                      "Kristi analyzes 847 Paris street photography outputs, identifies 23 with exceptional compositional tension, flags 12 for cultural significance"
+                    </p>
+                  </div>
+                  
+                  <div className="border border-cyan-500/30 bg-cyan-500/10 p-4 rounded">
+                    <h4 className="font-semibold text-cyan-300 mb-2">Amanda → Gallery Curation</h4>
+                    <p className="text-sm text-gray-300">
+                      "Amanda processes 1,200+ emerging artist works daily, identifies pre-viral patterns, curates collections 3-6 months before mainstream adoption"
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Private Mode Features */}
+              <div className="space-y-6">
+                <h3 className="text-2xl font-semibold flex items-center gap-2">
+                  <Target className="w-6 h-6 text-amber-400" />
+                  {isPrivateMode ? 'ACTIVE INTELLIGENCE' : 'INTELLIGENCE PREVIEW'}
+                </h3>
+                
+                {isPrivateMode ? (
+                  <div className="space-y-4">
+                    <div className="border border-red-500/30 bg-red-500/5 p-4 rounded">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Zap className="w-4 h-4 text-red-400" />
+                        <span className="font-semibold text-red-300">LIVE MARKET SCANNING</span>
+                      </div>
+                      <p className="text-sm text-gray-300 mb-3">Currently tracking 47 off-market opportunities</p>
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <div className="bg-black/50 p-2 rounded">
+                          <div className="text-green-400">Studio Visit: MOCA Underground</div>
+                          <div className="text-gray-400">Confidence: 94%</div>
+                        </div>
+                        <div className="bg-black/50 p-2 rounded">
+                          <div className="text-yellow-400">Meme Emergence: /x/aesthetics</div>
+                          <div className="text-gray-400">Viral Potential: 87%</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="border border-red-500/30 bg-red-500/5 p-4 rounded">
+                      <div className="font-semibold text-red-300 mb-2">PENDING CRIT DEPLOYMENTS</div>
+                      <p className="text-sm text-gray-300">
+                        Awaiting crit system integration to demonstrate full curatorial screening capabilities similar to Kristi's Paris workflow.
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <p className="text-gray-400">
+                      Enable private mode to see real-time curatorial intelligence and active market scanning.
+                    </p>
+                    <div className="grid grid-cols-2 gap-4 text-sm opacity-50">
+                      <div className="border border-gray-600 p-3 rounded">Off-Market Tracking</div>
+                      <div className="border border-gray-600 p-3 rounded">Studio Network</div>
+                      <div className="border border-gray-600 p-3 rounded">Meme Detection</div>
+                      <div className="border border-gray-600 p-3 rounded">Viral Prediction</div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </section>

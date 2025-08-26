@@ -2,5 +2,5 @@ import { SovereignSiteTemplate } from '@/components/sovereign/SovereignSiteTempl
 import { agentConfigs } from '@/data/agentConfigs';
 
 export default function AmandaSite() {
-  return <SovereignSiteTemplate agent={agentConfigs.amanda} />;
+  return <SovereignSiteTemplate agent={agentConfigs.amanda} showPrivateMode={true} />;
 }

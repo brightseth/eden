@@ -163,18 +163,25 @@ export class RegistryApiClient {
     status?: Agent['status'];
     include?: string[];
   }): Promise<Agent[]> {
-    const searchParams = new URLSearchParams();
-    if (params?.cohort) searchParams.append('cohort', params.cohort);
-    if (params?.status) searchParams.append('status', params.status);
-    if (params?.include) searchParams.append('include', params.include.join(','));
-
-    const query = searchParams.toString();
-    const path = `/agents${query ? `?${query}` : ''}`;
+    // NOTE: Registry API currently has issues with query parameters (returns 500)
+    // For now, get all agents and filter client-side
+    const path = '/agents';
     
     // Registry API returns {agents: Agent[], pagination: {...}}
     // Extract just the agents array for SDK compatibility
     const response = await this.request<{agents: Agent[], pagination?: any, total?: number}>(path);
-    return response.agents || [];
+    let agents = response.agents || [];
+    
+    // Client-side filtering until Registry API query parameters are fixed
+    if (params) {
+      agents = agents.filter(agent => {
+        if (params.cohort && agent.cohort !== params.cohort) return false;
+        if (params.status && agent.status !== params.status) return false;
+        return true;
+      });
+    }
+    
+    return agents;
   }
 
   async getAgent(id: string, include?: string[]): Promise<Agent> {

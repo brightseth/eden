@@ -24,11 +24,14 @@ export async function GET(
     } catch (individualError) {
       console.log(`[CRIT] Individual agent endpoint failed, trying agents list...`);
       
-      // Fallback: get from agents list (this endpoint works)
-      const agents = await registryApi.getAgents({ 
-        cohort: 'genesis',
-        status: 'ACTIVE' 
-      });
+      // Fallback: get from agents list (this endpoint works without filters)
+      const allAgents = await registryApi.getAgents();
+      
+      // Filter client-side since query params cause 500 errors
+      const agents = allAgents.filter(a => 
+        a.cohort === 'genesis' && 
+        a.status === 'ACTIVE'
+      );
       
       agent = agents.find(a => a.handle.toLowerCase() === handle.toLowerCase());
       
