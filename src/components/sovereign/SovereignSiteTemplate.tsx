@@ -397,13 +397,13 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                   <div className="border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-transparent p-4 rounded relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-20 h-20 bg-cyan-500/10 rounded-full blur-xl animate-pulse" />
                     <h4 className="font-semibold text-cyan-300 mb-4 flex items-center gap-2">
-                      Daily Collection Workflow
+                      Cross-Platform Collection Engine
                       <span className="text-xs bg-cyan-500/20 px-2 py-1 rounded animate-pulse">LIVE</span>
                     </h4>
                     <div className="text-sm text-gray-300 space-y-3">
                       <div className="relative">
                         <div className="flex justify-between items-center mb-1">
-                          <span>Input: daily opportunities</span>
+                          <span>Scanning: SuperRare, Foundation, ArtBlocks, Eden</span>
                           <span className="text-cyan-400 font-bold text-lg">{liveOpportunities}</span>
                         </div>
                         <div className="h-8 bg-gray-800 rounded-full overflow-hidden relative">
@@ -513,17 +513,17 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                             <div className="flex items-center justify-between bg-gradient-to-r from-green-500/10 to-transparent border border-green-500/30 p-3 rounded text-xs transform hover:scale-105 transition-transform">
                               <div className="flex-1">
                                 <div className="text-green-400 font-semibold flex items-center gap-2">
-                                  Studio Visit: Maria Santos, Bushwick
+                                  SuperRare: XCOPY "Death Dip"
                                   <span className="w-1 h-1 bg-green-400 rounded-full animate-ping" />
                                 </div>
                                 <div className="text-gray-400 mt-1">
                                   <div className="flex gap-3">
-                                    <span>Confidence: <span className="text-green-300 font-bold">{Math.floor(confidence)}%</span></span>
-                                    <span>Price: <span className="text-white">$3.2K</span></span>
-                                    <span>Viral: <span className="text-green-300">87%</span></span>
+                                    <span>Platform: <span className="text-blue-300 font-bold">SuperRare</span></span>
+                                    <span>Price: <span className="text-white">5.2 ETH</span></span>
+                                    <span>Rarity: <span className="text-green-300">Legendary</span></span>
                                   </div>
                                   <div className="w-full bg-gray-800 rounded-full h-1 mt-2">
-                                    <div className="bg-gradient-to-r from-green-500 to-green-300 h-1 rounded-full" style={{width: `${confidence}%`}} />
+                                    <div className="bg-gradient-to-r from-green-500 to-green-300 h-1 rounded-full" style={{width: '95%'}} />
                                   </div>
                                 </div>
                               </div>
@@ -534,12 +534,12 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                             
                             <div className="flex items-center justify-between bg-gradient-to-r from-yellow-500/10 to-transparent border border-yellow-500/30 p-3 rounded text-xs transform hover:scale-105 transition-transform">
                               <div className="flex-1">
-                                <div className="text-yellow-400 font-semibold">Platform Drop: @neo_abstract collection</div>
+                                <div className="text-yellow-400 font-semibold">Foundation: Refik Anadol Studio</div>
                                 <div className="text-gray-400 mt-1">
                                   <div className="flex gap-3">
-                                    <span>Confidence: <span className="text-yellow-300 font-bold">71%</span></span>
-                                    <span>Price: <span className="text-white">$890</span></span>
-                                    <span>Risk: <span className="text-yellow-300">Medium</span></span>
+                                    <span>Platform: <span className="text-purple-300 font-bold">Foundation</span></span>
+                                    <span>Price: <span className="text-white">2.8 ETH</span></span>
+                                    <span>Type: <span className="text-yellow-300">AI Art</span></span>
                                   </div>
                                   <div className="w-full bg-gray-800 rounded-full h-1 mt-2">
                                     <div className="bg-gradient-to-r from-yellow-500 to-yellow-300 h-1 rounded-full" style={{width: '71%'}} />
@@ -553,12 +553,12 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                             
                             <div className="flex items-center justify-between bg-gradient-to-r from-red-500/10 to-transparent border border-red-500/30 p-3 rounded text-xs transform hover:scale-105 transition-transform opacity-60">
                               <div className="flex-1">
-                                <div className="text-red-400 font-semibold">Gallery Rec: Traditional landscape series</div>
+                                <div className="text-red-400 font-semibold">ArtBlocks: Chromie Squiggle #8271</div>
                                 <div className="text-gray-400 mt-1">
                                   <div className="flex gap-3">
-                                    <span>Confidence: <span className="text-red-300 font-bold">23%</span></span>
-                                    <span>Price: <span className="text-white">$5.8K</span></span>
-                                    <span>Trend: <span className="text-red-300">↓</span></span>
+                                    <span>Platform: <span className="text-orange-300 font-bold">ArtBlocks</span></span>
+                                    <span>Floor: <span className="text-white">12 ETH</span></span>
+                                    <span>Status: <span className="text-red-300">Overpriced</span></span>
                                   </div>
                                   <div className="w-full bg-gray-800 rounded-full h-1 mt-2">
                                     <div className="bg-gradient-to-r from-red-500 to-red-300 h-1 rounded-full" style={{width: '23%'}} />
@@ -669,18 +669,22 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
 
                     {/* Market Insights */}
                     <div className="border border-gray-600 bg-gray-800/20 p-4 rounded">
-                      <div className="font-semibold text-gray-300 mb-3">MARKET INTELLIGENCE</div>
+                      <div className="font-semibold text-gray-300 mb-3">CROSS-PLATFORM MARKET SIGNALS</div>
                       <div className="space-y-2 text-sm">
                         <div className="flex items-center justify-between bg-black/20 p-2 rounded">
-                          <span className="text-gray-300">AI-Generated Art Sector</span>
+                          <span className="text-gray-300">SuperRare: Glitch Art <span className="text-xs text-blue-400">[Platform]</span></span>
                           <span className="text-green-400">↗ BULLISH</span>
                         </div>
                         <div className="flex items-center justify-between bg-black/20 p-2 rounded">
-                          <span className="text-gray-300">Photography Market</span>
-                          <span className="text-yellow-400">→ NEUTRAL</span>
+                          <span className="text-gray-300">Foundation: AI Artists <span className="text-xs text-purple-400">[Platform]</span></span>
+                          <span className="text-green-400">↗ ACCUMULATE</span>
                         </div>
                         <div className="flex items-center justify-between bg-black/20 p-2 rounded">
-                          <span className="text-gray-300">Digital Collectibles</span>
+                          <span className="text-gray-300">ArtBlocks: Generative <span className="text-xs text-orange-400">[Platform]</span></span>
+                          <span className="text-yellow-400">→ HOLD</span>
+                        </div>
+                        <div className="flex items-center justify-between bg-black/20 p-2 rounded">
+                          <span className="text-gray-300">Eden: Agent Works <span className="text-xs text-amber-400">[Platform]</span></span>
                           <span className="text-green-400">↗ STRONG BUY</span>
                         </div>
                       </div>
@@ -692,17 +696,24 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between items-center">
                           <div>
-                            <div className="text-gray-300">Maria Santos - "Digital Flux #3"</div>
-                            <div className="text-xs text-gray-500">Acquired: $3,200 | Current: $8,900</div>
+                            <div className="text-gray-300">Pak - "Lost Poets" <span className="text-xs text-purple-400">[Foundation]</span></div>
+                            <div className="text-xs text-gray-500">Acquired: 3.2 ETH | Current: 8.9 ETH</div>
                           </div>
                           <div className="text-green-400">+178%</div>
                         </div>
                         <div className="flex justify-between items-center">
                           <div>
-                            <div className="text-gray-300">@neo_abstract collection</div>
-                            <div className="text-xs text-gray-500">Acquired: $890 | Current: $2,100</div>
+                            <div className="text-gray-300">Tyler Hobbs - "Fidenza #313" <span className="text-xs text-orange-400">[ArtBlocks]</span></div>
+                            <div className="text-xs text-gray-500">Acquired: 89 ETH | Current: 210 ETH</div>
                           </div>
                           <div className="text-green-400">+136%</div>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <div className="text-gray-300">Dmitri Cherniak - "Ringers #879" <span className="text-xs text-orange-400">[ArtBlocks]</span></div>
+                            <div className="text-xs text-gray-500">Acquired: 15 ETH | Current: 42 ETH</div>
+                          </div>
+                          <div className="text-green-400">+180%</div>
                         </div>
                       </div>
                     </div>
