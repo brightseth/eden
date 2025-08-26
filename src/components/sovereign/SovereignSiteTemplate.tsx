@@ -390,6 +390,93 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
               </div>
             </div>
 
+            {/* Live Purchase Session - Moved up for immediate impact */}
+            {isPrivateMode && (
+              <div className="mb-12">
+                <div className="border border-green-500/30 bg-green-500/5 p-6 rounded-lg relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent" />
+                  <div className="relative">
+                    <div className="font-semibold text-green-300 mb-4 flex items-center gap-2">
+                      🔴 LIVE PURCHASE SESSION
+                      <span className="text-xs px-2 py-1 bg-green-500 text-black rounded animate-pulse">ACTIVE</span>
+                    </div>
+                    <div className="grid lg:grid-cols-2 gap-6">
+                      <div>
+                        <div className="text-xs text-gray-400 mb-2">Current Analysis Target</div>
+                        <div className="bg-black/50 p-4 rounded border border-green-500/20">
+                          <div className="flex justify-between items-start mb-3">
+                            <div>
+                              <div className="text-white font-bold text-lg">Chromie Squiggle #4471</div>
+                              <div className="text-sm text-blue-400">ArtBlocks • Erick Calderon</div>
+                              <div className="text-xs text-gray-400 mt-1">Current Price: 2.1 ETH ($3,780)</div>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-green-400 font-bold text-xl">92% BUY</div>
+                              <div className="text-xs text-gray-400">Confidence</div>
+                            </div>
+                          </div>
+                          <div className="pt-3 border-t border-gray-700">
+                            <div className="text-xs text-gray-400 mb-2">Purchase Analysis</div>
+                            <div className="grid grid-cols-2 gap-2 text-xs">
+                              <div>✓ Historical trajectory: +340%</div>
+                              <div>✓ Rarity rank: Top 8%</div>
+                              <div>✓ Artist momentum: Rising</div>
+                              <div>✓ Market timing: Optimal</div>
+                            </div>
+                            <button 
+                              className="mt-3 w-full px-4 py-2 bg-green-500 text-black font-bold rounded hover:bg-green-400 transition-colors"
+                              onClick={() => window.open('https://opensea.io/assets/ethereum/0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270/40000613', '_blank')}
+                            >
+                              EXECUTE PURCHASE → OpenSea
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <div className="text-xs text-gray-400 mb-2">Recent Acquisitions (48 Hours)</div>
+                        <div className="space-y-3">
+                          <div className="bg-black/30 p-3 rounded">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <div className="text-white font-bold text-sm">XCOPY - "Max Pain"</div>
+                                <div className="text-xs text-blue-400">SuperRare • 14 hours ago</div>
+                                <div className="text-xs text-gray-500 mt-1">Purchase: 3.2 ETH → Current: 7.3 ETH</div>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-green-400 font-bold text-lg">+127%</div>
+                                <div className="text-xs text-gray-400">ROI</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="bg-black/30 p-3 rounded">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <div className="text-white font-bold text-sm">Fidenza #887</div>
+                                <div className="text-xs text-orange-400">ArtBlocks • 31 hours ago</div>
+                                <div className="text-xs text-gray-500 mt-1">Purchase: 45 ETH → Current: 64 ETH</div>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-green-400 font-bold text-lg">+43%</div>
+                                <div className="text-xs text-gray-400">ROI</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="mt-4 text-xs text-gray-400">
+                          <div className="flex justify-between">
+                            <span>Session Duration: 47 minutes</span>
+                            <span>Opportunities Analyzed: 23</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="grid lg:grid-cols-2 gap-12">
               {/* Collection Screening Process */}
               <div className="space-y-6">
@@ -513,83 +600,6 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                           <span className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
                         </div>
                         <div className="text-sm text-gray-300 space-y-3">
-                          {/* Live Purchase Session */}
-                          <div className="border border-green-500/30 bg-green-500/5 p-4 rounded mb-4">
-                            <div className="font-semibold text-green-300 mb-3 flex items-center gap-2">
-                              🔴 LIVE PURCHASE SESSION
-                              <span className="text-xs px-2 py-1 bg-green-500 text-black rounded animate-pulse">ACTIVE</span>
-                            </div>
-                            <div className="space-y-3">
-                              <div className="text-sm text-gray-300">
-                                <div className="text-xs text-gray-400 mb-1">Current Analysis Target</div>
-                                <div className="bg-black/50 p-3 rounded border border-green-500/20">
-                                  <div className="flex justify-between items-start">
-                                    <div>
-                                      <div className="text-white font-bold">Chromie Squiggle #4471</div>
-                                      <div className="text-sm text-blue-400">ArtBlocks • Erick Calderon</div>
-                                      <div className="text-xs text-gray-400 mt-1">Current Price: 2.1 ETH ($3,780)</div>
-                                    </div>
-                                    <div className="text-right">
-                                      <div className="text-green-400 font-bold text-sm">92% BUY</div>
-                                      <div className="text-xs text-gray-400">Confidence</div>
-                                    </div>
-                                  </div>
-                                  <div className="mt-3 pt-3 border-t border-gray-700">
-                                    <div className="text-xs text-gray-400 mb-2">Purchase Analysis</div>
-                                    <div className="grid grid-cols-2 gap-2 text-xs">
-                                      <div>✓ Historical trajectory: +340%</div>
-                                      <div>✓ Rarity rank: Top 8%</div>
-                                      <div>✓ Artist momentum: Rising</div>
-                                      <div>✓ Market timing: Optimal</div>
-                                    </div>
-                                    <button 
-                                      className="mt-3 w-full px-4 py-2 bg-green-500 text-black font-bold rounded hover:bg-green-400 transition-colors"
-                                      onClick={() => window.open('https://opensea.io/assets/ethereum/0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270/40000613', '_blank')}
-                                    >
-                                      EXECUTE PURCHASE → OpenSea
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="text-xs text-gray-400">
-                                <div className="flex justify-between">
-                                  <span>Session Duration: 47 minutes</span>
-                                  <span>Opportunities Analyzed: 23</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Recent Acquisitions */}
-                          <div className="border border-blue-500/30 bg-blue-500/5 p-3 rounded mb-4">
-                            <div className="font-semibold text-blue-300 mb-3 text-sm">RECENT ACQUISITIONS (48 HOURS)</div>
-                            <div className="space-y-2">
-                              <div className="bg-black/30 p-2 rounded">
-                                <div className="flex justify-between items-start">
-                                  <div>
-                                    <div className="text-white font-bold text-xs">XCOPY - "Max Pain"</div>
-                                    <div className="text-xs text-blue-400">SuperRare • 14 hours ago</div>
-                                  </div>
-                                  <div className="text-right">
-                                    <div className="text-green-400 font-bold text-xs">+127%</div>
-                                    <div className="text-xs text-gray-500">ROI</div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="bg-black/30 p-2 rounded">
-                                <div className="flex justify-between items-start">
-                                  <div>
-                                    <div className="text-white font-bold text-xs">Fidenza #887</div>
-                                    <div className="text-xs text-orange-400">ArtBlocks • 31 hours ago</div>
-                                  </div>
-                                  <div className="text-right">
-                                    <div className="text-green-400 font-bold text-xs">+43%</div>
-                                    <div className="text-xs text-gray-500">ROI</div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
                           
                           <div className="flex justify-between items-center">
                             <span>Incoming opportunities (24h):</span>

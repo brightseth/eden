@@ -5,13 +5,13 @@ import Link from 'next/link';
 import { Camera, Sparkles, Clock, CheckCircle, ArrowRight, Activity, Eye, Heart, TrendingUp } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
 
-interface SolienneWork {
+interface ConsciousnessStream {
   id: string;
   number: number;
   date: string;
   title: string;
   theme: string;
-  status: 'completed' | 'creating' | 'upcoming'; // Using canonical status terms
+  status: 'completed' | 'generating' | 'upcoming';
   views?: number;
   likes?: number;
   collected?: boolean;
@@ -26,8 +26,8 @@ export default function SolienneSite() {
   const [liveWatching, setLiveWatching] = useState(342);
   const [dailyTheme, setDailyTheme] = useState('VELOCITY THROUGH ARCHITECTURAL LIGHT');
   const [isClient, setIsClient] = useState(false);
-  const [actualWorks, setActualWorks] = useState<SolienneWork[]>([]);
-  const [loadingWorks, setLoadingWorks] = useState(false);
+  const [actualStreams, setActualStreams] = useState<ConsciousnessStream[]>([]);
+  const [loadingStreams, setLoadingStreams] = useState(false);
 
   // Calculate Paris Photo countdown
   const parisPhotoDate = new Date('2025-11-10T14:00:00'); // 2PM Paris time
@@ -123,8 +123,8 @@ export default function SolienneSite() {
             number: work.archive_number || (1740 - index),
             date: formatStreamDate(work.created_date),
             title: work.title || `Consciousness Stream #${work.archive_number || (1740 - index)}`,
-            theme: work.metadata?.theme || fashionThemes[Math.floor(Math.random() * fashionThemes.length)],
-            status: index === 0 ? 'generating' : 'completed',
+            theme: work.metadata?.theme || parisThemes[Math.floor(Math.random() * parisThemes.length)],
+            status: (index === 0 ? 'generating' : 'completed') as 'generating' | 'completed',
             views: Math.floor(Math.random() * 3000) + 500,
             likes: Math.floor(Math.random() * 200) + 50,
             collected: Math.random() > 0.4,
