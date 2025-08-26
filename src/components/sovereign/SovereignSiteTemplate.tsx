@@ -185,10 +185,21 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
             
             {/* Desktop Nav */}
             <div className="hidden md:flex items-center gap-8">
-              <a href="#manifesto" className="hover:text-gray-400 transition-colors">MANIFESTO</a>
-              <a href="#works" className="hover:text-gray-400 transition-colors">WORKS</a>
-              <a href="#process" className="hover:text-gray-400 transition-colors">PROCESS</a>
-              <a href="#connect" className="hover:text-gray-400 transition-colors">CONNECT</a>
+              {agent.id === 'amanda' ? (
+                <>
+                  <a href="#intelligence" className="hover:text-gray-400 transition-colors">INTELLIGENCE</a>
+                  <a href="#about" className="hover:text-gray-400 transition-colors">ABOUT</a>
+                  <a href="#works" className="hover:text-gray-400 transition-colors">WORKS</a>
+                  <a href="#connect" className="hover:text-gray-400 transition-colors">CONNECT</a>
+                </>
+              ) : (
+                <>
+                  <a href="#manifesto" className="hover:text-gray-400 transition-colors">MANIFESTO</a>
+                  <a href="#works" className="hover:text-gray-400 transition-colors">WORKS</a>
+                  <a href="#process" className="hover:text-gray-400 transition-colors">PROCESS</a>
+                  <a href="#connect" className="hover:text-gray-400 transition-colors">CONNECT</a>
+                </>
+              )}
               {showPrivateMode && (
                 <button
                   onClick={() => setIsPrivateMode(!isPrivateMode)}
@@ -232,10 +243,34 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
         {isMenuOpen && (
           <div className="md:hidden border-t border-white/10 bg-black">
             <div className="px-6 py-4 space-y-4">
-              <a href="#manifesto" className="block hover:text-gray-400">MANIFESTO</a>
-              <a href="#works" className="block hover:text-gray-400">WORKS</a>
-              <a href="#process" className="block hover:text-gray-400">PROCESS</a>
-              <a href="#connect" className="block hover:text-gray-400">CONNECT</a>
+              {agent.id === 'amanda' ? (
+                <>
+                  <a href="#intelligence" className="block hover:text-gray-400">INTELLIGENCE</a>
+                  <a href="#about" className="block hover:text-gray-400">ABOUT</a>
+                  <a href="#works" className="block hover:text-gray-400">WORKS</a>
+                  <a href="#connect" className="block hover:text-gray-400">CONNECT</a>
+                </>
+              ) : (
+                <>
+                  <a href="#manifesto" className="block hover:text-gray-400">MANIFESTO</a>
+                  <a href="#works" className="block hover:text-gray-400">WORKS</a>
+                  <a href="#process" className="block hover:text-gray-400">PROCESS</a>
+                  <a href="#connect" className="block hover:text-gray-400">CONNECT</a>
+                </>
+              )}
+              {showPrivateMode && (
+                <button
+                  onClick={() => setIsPrivateMode(!isPrivateMode)}
+                  className={`w-full flex items-center justify-center gap-2 px-3 py-2 text-sm border rounded transition-all ${
+                    isPrivateMode 
+                      ? 'border-red-500 bg-red-500/20 text-red-400' 
+                      : 'border-gray-600 hover:border-white'
+                  }`}
+                >
+                  {isPrivateMode ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                  {isPrivateMode ? 'PRIVATE MODE' : 'PUBLIC MODE'}
+                </button>
+              )}
               <Link href="/academy" className="block border border-gray-600 px-3 py-2 text-center">
                 BACK TO ACADEMY →
               </Link>
@@ -403,24 +438,30 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                   {/* Public preview - clickable NFT opportunities */}
                   {!isPrivateMode ? (
                     <div className="grid lg:grid-cols-3 gap-4">
-                      <div className="bg-black/30 p-4 rounded border border-green-500/20 cursor-pointer hover:border-green-400/40 transition-colors"
-                           onClick={() => window.open('https://opensea.io/assets/ethereum/0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270/40000613', '_blank')}>
+                      <button 
+                        className="bg-black/30 p-4 rounded border border-green-500/20 hover:border-green-400/40 transition-colors text-left"
+                        onClick={() => window.open('https://opensea.io/assets/ethereum/0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270/40000613', '_blank')}
+                      >
                         <div className="text-white font-bold">Chromie Squiggle #4471</div>
                         <div className="text-xs text-blue-400">ArtBlocks</div>
                         <div className="text-green-400 font-bold text-lg mt-2">92% BUY</div>
-                      </div>
-                      <div className="bg-black/30 p-4 rounded border border-yellow-500/20 cursor-pointer hover:border-yellow-400/40 transition-colors"
-                           onClick={() => window.open('https://opensea.io/', '_blank')}>
+                      </button>
+                      <button 
+                        className="bg-black/30 p-4 rounded border border-yellow-500/20 hover:border-yellow-400/40 transition-colors text-left"
+                        onClick={() => window.open('https://opensea.io/', '_blank')}
+                      >
                         <div className="text-white font-bold">Fidenza #312</div>
                         <div className="text-xs text-orange-400">Tyler Hobbs</div>
                         <div className="text-yellow-400 font-bold text-lg mt-2">78% HOLD</div>
-                      </div>
-                      <div className="bg-black/30 p-4 rounded border border-cyan-500/20 cursor-pointer hover:border-cyan-400/40 transition-colors"
-                           onClick={() => window.open('https://foundation.app/', '_blank')}>
+                      </button>
+                      <button 
+                        className="bg-black/30 p-4 rounded border border-cyan-500/20 hover:border-cyan-400/40 transition-colors text-left"
+                        onClick={() => window.open('https://foundation.app/', '_blank')}
+                      >
                         <div className="text-white font-bold">XCOPY - "Grifters"</div>
                         <div className="text-xs text-purple-400">Foundation</div>
                         <div className="text-cyan-400 font-bold text-lg mt-2">94% WATCH</div>
-                      </div>
+                      </button>
                     </div>
                   ) : (
                     /* Full private mode session details */
