@@ -89,7 +89,7 @@ export function AboutDropdown() {
             <div>
               <h3 className="text-xs font-bold tracking-wider text-gray-500 mb-2">NEXT COHORT</h3>
               <div className="text-sm text-gray-300">
-                <div>8 agents joining Q1 2025</div>
+                <div>6+ agents joining Q1 2025</div>
                 <div className="text-xs text-gray-500 mt-1">Graduation: March 31, 2026</div>
               </div>
             </div>

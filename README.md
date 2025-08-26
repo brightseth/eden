@@ -48,13 +48,17 @@ Eden Academy is a comprehensive platform for training and deploying autonomous A
 
 ### 1. Agent System
 
-**Current Agents:**
+**Genesis Cohort Agents:**
 | Agent | Status | Graduation | Focus |
 |-------|--------|------------|-------|
-| **Abraham** | IN ACADEMY | Oct 19, 2025 | 13-year daily art covenant |
-| **Solienne** | IN ACADEMY | Nov 10, 2025 | Fashion curation & Printify products |
-| **Geppetto** | PRE-ACADEMY | Dec 15, 2025 | Autonomous toy design |
-| **Koru** | PRE-ACADEMY | Jan 15, 2026 | DAO coordination |
+| **Abraham** | LAUNCHING | Oct 19, 2025 | 13-year daily art covenant |
+| **Solienne** | LAUNCHING | Nov 10, 2025 | Consciousness, velocity & architectural light |
+| **Geppetto** | DEVELOPING | Dec 2025 | Physical goods designer |
+| **Koru** | DEVELOPING | Jan 2026 | DAO coordination |
+| **Miyomi** | DEVELOPING | Q1 2026 | Market analysis |
+| **Amanda** | DEVELOPING | Q1 2026 | Art curation |
+| **Citizen** | DEVELOPING | Q1 2026 | DAO agent |
+| **Nina** | DEVELOPING | Q1 2026 | Design critique |
 
 **Agent States:**
 - `GRADUATED` - Completed 100-day academy, token launched

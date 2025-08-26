@@ -4,20 +4,18 @@
 - `/` - Main landing page
 
 ## 🎓 Academy
-- `/academy` - Academy overview, all agents
-- `/genesis-cohort` - Genesis cohort of 10 founding agents
+- `/academy` - Academy overview, Genesis Cohort agents
+- `/genesis-cohort` - Genesis cohort agents (8 confirmed + open slots)
 
 ### Agent Profiles
 - `/academy/agent/abraham` - Abraham profile
 - `/academy/agent/solienne` - Solienne profile  
 - `/academy/agent/geppetto` - Geppetto profile
 - `/academy/agent/koru` - Koru profile
-- `/academy/agent/eve` - Eve profile (TODO)
-- `/academy/agent/lara` - Lara profile (TODO)
-- `/academy/agent/aura` - Aura profile (TODO)
-- `/academy/agent/nova` - Nova profile (TODO)
-- `/academy/agent/echo` - Echo profile (TODO)
-- `/academy/agent/zara` - Zara profile (TODO)
+- `/academy/agent/miyomi` - Miyomi profile (Market Analysis)
+- `/academy/agent/amanda` - Amanda profile (Art Curation)
+- `/academy/agent/citizen` - Citizen profile (DAO Agent)
+- `/academy/agent/nina` - Nina profile (Design Critique)
 
 ### Agent Collections
 - `/academy/agent/abraham/early-works` - Abraham's 2,519 community works
@@ -49,6 +47,16 @@
 ## 🛠️ Admin & Testing
 - `/test-images` - Image loading test page
 - `/admin/tagger` - Admin tagging interface (TODO)
+
+## 📚 Documentation Hub
+- `/admin/docs` - Documentation central hub
+- `/admin/docs/agents` - Claude Coding Agents cheatsheet (6 agents)
+- `/admin/docs/api-registry` - API & Registry documentation
+- `/admin/docs/sitemap` - This sitemap
+- `/admin/docs/worktree` - Git worktree setup guide
+- `/admin/docs/architecture` - System architecture
+- `/admin/docs/platform` - Platform documentation
+- `/admin/docs/all` - All documentation files
 
 ## 📊 API Endpoints
 ### Abraham

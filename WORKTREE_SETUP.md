@@ -1,21 +1,19 @@
 # Eden Academy Git Worktree Setup for Parallel Agent Development
 
 ## 🎯 Overview
-This setup enables 8 specialized Claude agents to work simultaneously on different Eden Academy features without conflicts.
+This setup enables 6 specialized Claude Coding Agents to work simultaneously on different Eden Academy features without conflicts.
 
 ## 📁 Recommended Directory Structure
 ```
 /Users/seth/
 ├── eden-academy/              # Main repository (main branch)
 ├── eden-worktrees/            # Worktree container directory
-│   ├── architecture/          # Architecture Guardian worktree
-│   ├── token-economics/       # Token Economist worktree
-│   ├── agent-launcher/        # Agent Launcher worktree
-│   ├── academy-domain/        # Academy Domain Expert worktree
-│   ├── feature-integrator/    # Feature Integrator worktree
-│   ├── registry/              # Registry Guardian worktree
-│   ├── ui-design/             # Design Critic worktree
-│   └── code-review/           # Code Reviewer staging area
+│   ├── arch/                  # ARCH - Architecture Guardian worktree
+│   ├── truth/                 # TRUTH - Registry Data Guardian worktree
+│   ├── lore/                  # LORE - Narrative & Culture worktree
+│   ├── helvetica/             # HELVETICA - Visual Design worktree
+│   ├── token/                 # TOKEN - Economics worktree
+│   └── launcher/              # LAUNCHER - Agent Quality worktree
 ```
 
 ## 🚀 Initial Setup Commands
@@ -27,58 +25,46 @@ mkdir -p /Users/seth/eden-worktrees
 
 ### 2. Create Feature Branches and Worktrees
 
-#### Architecture Guardian - System Architecture & ADRs
+#### ARCH - System Architecture & ADRs
 ```bash
-git worktree add -b feature/architecture-improvements /Users/seth/eden-worktrees/architecture
+git worktree add -b feature/architecture /Users/seth/eden-worktrees/arch
 ```
 
-#### Token Economist - Economic Models & Revenue
+#### TRUTH - Data Integrity & Registry
 ```bash
-git worktree add -b feature/token-economics /Users/seth/eden-worktrees/token-economics
+git worktree add -b feature/data-integrity /Users/seth/eden-worktrees/truth
 ```
 
-#### Agent Launcher - Onboarding & Launch Criteria
+#### LORE - Narrative & Cultural Mission
 ```bash
-git worktree add -b feature/agent-onboarding /Users/seth/eden-worktrees/agent-launcher
+git worktree add -b feature/narrative /Users/seth/eden-worktrees/lore
 ```
 
-#### Academy Domain Expert - Content & Cultural Alignment
+#### HELVETICA - Visual Design & Brand
 ```bash
-git worktree add -b feature/academy-content /Users/seth/eden-worktrees/academy-domain
+git worktree add -b feature/visual-design /Users/seth/eden-worktrees/helvetica
 ```
 
-#### Feature Integrator - Production Implementation
+#### TOKEN - Economics & Metrics
 ```bash
-git worktree add -b feature/production-integration /Users/seth/eden-worktrees/feature-integrator
+git worktree add -b feature/economics /Users/seth/eden-worktrees/token
 ```
 
-#### Registry Guardian - Data Models & Integrity
+#### LAUNCHER - Agent Quality & Onboarding
 ```bash
-git worktree add -b feature/registry-integration /Users/seth/eden-worktrees/registry
-```
-
-#### Design Critic - UI/UX Improvements
-```bash
-git worktree add -b feature/ui-design-system /Users/seth/eden-worktrees/ui-design
-```
-
-#### Code Reviewer - Review Staging
-```bash
-git worktree add -b staging/code-review /Users/seth/eden-worktrees/code-review
+git worktree add -b feature/agent-quality /Users/seth/eden-worktrees/launcher
 ```
 
 ## 🔄 Agent-to-Worktree Mapping
 
-| Agent | Worktree | Branch | Primary Focus |
+| Claude Agent | Worktree | Branch | Primary Focus |
 |-------|----------|--------|---------------|
-| Architecture Guardian | `/architecture` | `feature/architecture-improvements` | ADRs, system design, API contracts |
-| Token Economist | `/token-economics` | `feature/token-economics` | Revenue models, token distribution |
-| Agent Launcher | `/agent-launcher` | `feature/agent-onboarding` | Launch criteria, onboarding flow |
-| Academy Domain Expert | `/academy-domain` | `feature/academy-content` | Content, copy, cultural alignment |
-| Feature Integrator | `/feature-integrator` | `feature/production-integration` | Production code, CI/CD |
-| Registry Guardian | `/registry` | `feature/registry-integration` | Database schemas, data models |
-| Design Critic | `/ui-design` | `feature/ui-design-system` | Components, styling, UX |
-| Code Reviewer | `/code-review` | `staging/code-review` | Review & merge preparation |
+| ARCH | `/arch` | `feature/architecture` | System coherence, ADRs, API contracts |
+| TRUTH | `/truth` | `feature/data-integrity` | Single source of truth, data models |
+| LORE | `/lore` | `feature/narrative` | Cultural mission, language consistency |
+| HELVETICA | `/helvetica` | `feature/visual-design` | Brand excellence, UI/UX standards |
+| TOKEN | `/token` | `feature/economics` | Economic models, pricing, metrics |
+| LAUNCHER | `/launcher` | `feature/agent-quality` | Launch criteria, quality gates |
 
 ## 📋 Development Workflow
 
@@ -134,14 +120,12 @@ gh pr create --base main --head feature/<branch-name>
 ## 🔀 Merge Strategy
 
 ### Priority Order for Merging
-1. **Registry Guardian** - Data model changes (foundation)
-2. **Architecture Guardian** - System design changes
-3. **Token Economist** - Economic model updates
-4. **Academy Domain Expert** - Content updates
-5. **Design Critic** - UI/UX improvements
-6. **Agent Launcher** - Onboarding features
-7. **Feature Integrator** - Production implementations
-8. **Code Reviewer** - Final review and cleanup
+1. **TRUTH** - Data model changes (foundation)
+2. **ARCH** - System design changes
+3. **TOKEN** - Economic model updates
+4. **LORE** - Content and cultural updates
+5. **HELVETICA** - UI/UX improvements
+6. **LAUNCHER** - Agent quality features
 
 ### Conflict Resolution
 - Each worktree maintains independence
@@ -169,32 +153,26 @@ git worktree prune
 ### Switch Between Worktrees
 ```bash
 # Use aliases for quick switching
-alias wa='cd /Users/seth/eden-worktrees/architecture'
-alias wt='cd /Users/seth/eden-worktrees/token-economics'
-alias wl='cd /Users/seth/eden-worktrees/agent-launcher'
-alias wd='cd /Users/seth/eden-worktrees/academy-domain'
-alias wf='cd /Users/seth/eden-worktrees/feature-integrator'
-alias wr='cd /Users/seth/eden-worktrees/registry'
-alias wu='cd /Users/seth/eden-worktrees/ui-design'
-alias wc='cd /Users/seth/eden-worktrees/code-review'
-alias wm='cd /Users/seth/eden-academy'  # main
+alias arch='cd /Users/seth/eden-worktrees/arch'
+alias truth='cd /Users/seth/eden-worktrees/truth'
+alias lore='cd /Users/seth/eden-worktrees/lore'
+alias helvetica='cd /Users/seth/eden-worktrees/helvetica'
+alias token='cd /Users/seth/eden-worktrees/token'
+alias launcher='cd /Users/seth/eden-worktrees/launcher'
+alias main='cd /Users/seth/eden-academy'  # main repository
 ```
 
 ## 🎯 Current MVP Priorities by Worktree
 
 ### Immediate Setup (Do Now)
-1. **ui-design** - Admin documentation viewer improvements
-2. **agent-launcher** - Agent onboarding flow
-3. **token-economics** - Revenue calculator implementation
+1. **HELVETICA** - Admin documentation viewer improvements
+2. **LAUNCHER** - Agent onboarding flow
+3. **TOKEN** - Revenue calculator implementation
 
 ### Next Phase
-4. **registry** - Data model standardization
-5. **architecture** - ADR documentation
-6. **academy-domain** - Content refinement
-
-### Future
-7. **feature-integrator** - Production deployment
-8. **code-review** - Quality assurance
+4. **TRUTH** - Data model standardization with spirit-registry
+5. **ARCH** - ADR documentation for integrations
+6. **LORE** - Content refinement and cultural alignment
 
 ## 📝 Best Practices
 
@@ -221,15 +199,13 @@ Save this as `setup-worktrees.sh`:
 # Create worktree directory
 mkdir -p /Users/seth/eden-worktrees
 
-# Create all worktrees
-git worktree add -b feature/architecture-improvements /Users/seth/eden-worktrees/architecture
-git worktree add -b feature/token-economics /Users/seth/eden-worktrees/token-economics
-git worktree add -b feature/agent-onboarding /Users/seth/eden-worktrees/agent-launcher
-git worktree add -b feature/academy-content /Users/seth/eden-worktrees/academy-domain
-git worktree add -b feature/production-integration /Users/seth/eden-worktrees/feature-integrator
-git worktree add -b feature/registry-integration /Users/seth/eden-worktrees/registry
-git worktree add -b feature/ui-design-system /Users/seth/eden-worktrees/ui-design
-git worktree add -b staging/code-review /Users/seth/eden-worktrees/code-review
+# Create all worktrees for the 6 Claude Coding Agents
+git worktree add -b feature/architecture /Users/seth/eden-worktrees/arch
+git worktree add -b feature/data-integrity /Users/seth/eden-worktrees/truth
+git worktree add -b feature/narrative /Users/seth/eden-worktrees/lore
+git worktree add -b feature/visual-design /Users/seth/eden-worktrees/helvetica
+git worktree add -b feature/economics /Users/seth/eden-worktrees/token
+git worktree add -b feature/agent-quality /Users/seth/eden-worktrees/launcher
 
 # Copy env files to each worktree
 for dir in /Users/seth/eden-worktrees/*/; do
@@ -251,14 +227,12 @@ git worktree list
 
 ## 📊 Port Allocation
 
-| Worktree | Dev Server Port |
-|----------|----------------|
-| main | 3000 |
-| architecture | 3001 |
-| token-economics | 3002 |
-| agent-launcher | 3003 |
-| academy-domain | 3004 |
-| feature-integrator | 3005 |
-| registry | 3006 |
-| ui-design | 3007 |
-| code-review | 3008 |
+| Worktree | Dev Server Port | Claude Agent |
+|----------|----------------|-------------|
+| main | 3000 | (Main branch) |
+| arch | 3001 | ARCH |
+| truth | 3002 | TRUTH |
+| lore | 3003 | LORE |
+| helvetica | 3004 | HELVETICA |
+| token | 3005 | TOKEN |
+| launcher | 3006 | LAUNCHER |

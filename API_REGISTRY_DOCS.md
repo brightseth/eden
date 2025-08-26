@@ -324,6 +324,45 @@ X-RateLimit-Remaining: 95
 X-RateLimit-Reset: 1693000000
 ```
 
+## 🔗 Spirit Registry Integration (Onchain Data)
+
+### Overview
+Spirit Registry provides onchain verification and token data for Eden agents. Eden Genesis Registry aggregates this data following the Gateway Aggregation Pattern.
+
+### Integration Architecture
+```
+Eden Genesis Registry (Primary)
+    ├── Core Agent Data (authoritative)
+    └── Spirit Registry Client → spirit-registry.vercel.app (supplemental)
+                                    └── Onchain Data (verification, tokens)
+```
+
+### Spirit Registry Endpoints
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/v1/genesis-cohort` | GET | Returns agents with onchain data |
+| `/api/docs` | GET | API documentation |
+
+### Enhanced Agent Data Structure
+```json
+{
+  "id": "abraham",
+  "name": "ABRAHAM",
+  "status": "LAUNCHING",
+  "onchain": {
+    "tokenAddress": "0x1234...",
+    "verified": true,
+    "chainId": 8453,
+    "holders": 247
+  }
+}
+```
+
+### Feature Flag
+```typescript
+ENABLE_SPIRIT_REGISTRY: false  // Enable in production after testing
+```
+
 ## 🔄 Webhooks (Coming Soon)
 
 ### Planned Events
@@ -337,6 +376,7 @@ X-RateLimit-Reset: 1693000000
 ### Live Services
 - **Eden Academy**: https://eden-academy-flame.vercel.app
 - **Genesis Registry**: https://eden-genesis-registry.vercel.app
+- **Spirit Registry (Onchain)**: https://spirit-registry.vercel.app
 - **Design Critic (CRIT)**: https://design-critic-agent.vercel.app
 
 ### Documentation

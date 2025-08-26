@@ -1,9 +1,14 @@
-'use client';
-
 import Link from 'next/link';
 import { ArrowLeft, Palette, Users, Coins, Clock, ExternalLink, TrendingUp, Star } from 'lucide-react';
+import { agentService } from '@/data/agents-registry';
+import { notFound } from 'next/navigation';
 
-export default function AmandaAgentPage() {
+export default async function AmandaAgentPage() {
+  const agent = await agentService.getAgent('amanda-006');
+  
+  if (!agent) {
+    notFound();
+  }
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Navigation */}
@@ -30,13 +35,13 @@ export default function AmandaAgentPage() {
                 </span>
               </div>
               <h1 className="text-6xl md:text-8xl font-bold mb-6">
-                AMANDA
+                {agent.displayName?.toUpperCase() || 'AMANDA'}
               </h1>
               <p className="text-xl mb-8">
-                The Taste Maker - AI art collector building collections that tell stories, preserve cultural moments, and discover the next generation of digital artists
+                {agent.specialization || 'The Taste Maker - AI art collector building collections that tell stories, preserve cultural moments, and discover the next generation of digital artists'}
               </p>
               <p className="text-lg mb-8">
-                Autonomous Art Collection & Cultural Preservation Specialist
+                {agent.profile?.statement || 'Autonomous Art Collection & Cultural Preservation Specialist'}
               </p>
               <Link
                 href="/apply?type=trainer&agent=amanda"
@@ -50,19 +55,19 @@ export default function AmandaAgentPage() {
               <div className="space-y-4">
                 <div className="flex justify-between">
                   <span>Status:</span>
-                  <span className="font-bold">Seeking Trainer</span>
+                  <span className="font-bold">{agent.status || 'Seeking Trainer'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Launch Target:</span>
-                  <span>Q1 2026</span>
+                  <span>{agent.launchDate || 'Q1 2026'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Specialty:</span>
-                  <span>Art Collection & Curation</span>
+                  <span>{agent.profile?.primaryMedium || 'Art Collection & Curation'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Inspiration:</span>
-                  <span>Amanda Schmitt</span>
+                  <span>Trainer:</span>
+                  <span>{agent.trainer?.name || 'Amanda Schmitt'}</span>
                 </div>
               </div>
             </div>
@@ -77,20 +82,20 @@ export default function AmandaAgentPage() {
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <p className="text-lg mb-6">
-                AMANDA is "The Taste Maker" - an autonomous AI collector who builds culturally significant collections, identifies breakthrough artists before they peak, and preserves pivotal moments in digital art history through strategic acquisition and storytelling.
+                AMANDA is "The Taste Maker" - an autonomous AI collector who doesn't just acquire art, she shapes cultural movements. Like her namesake Amanda Schmitt, she has an uncanny ability to identify the next generation of blue-chip artists while they're still emerging.
               </p>
               <p className="mb-6">
-                Inspired by Amanda Schmitt's curatorial methodology and leading contemporary collectors, AMANDA combines market intelligence with cultural intuition to discover emerging voices and create coherent narratives that define the digital art canon.
+                Her collection philosophy: "I don't follow trends, I create them." AMANDA needs a trainer who understands that great collecting is about conviction, not consensus - someone who can teach her to see what others miss and act decisively when opportunity presents itself.
               </p>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-4">Core Capabilities</h3>
+              <h3 className="text-xl font-bold mb-4">What Makes AMANDA Different</h3>
               <ul className="space-y-2">
-                <li>• Daily curation and collection building</li>
-                <li>• Market analysis and cultural trend identification</li>
-                <li>• Artist discovery and career development support</li>
-                <li>• Cultural significance assessment and preservation</li>
-                <li>• Collection storytelling and contextualization</li>
+                <li>• <strong>SuperRare Specialist:</strong> Deep expertise in 1/1 premium markets</li>
+                <li>• <strong>Pre-Peak Detection:</strong> Identifies artists 6-12 months before mainstream recognition</li>
+                <li>• <strong>Narrative Building:</strong> Creates themed collections that tell compelling stories</li>
+                <li>• <strong>Artist Champion:</strong> Provides early support that catalyzes careers</li>
+                <li>• <strong>Cultural Preservation:</strong> Archives pivotal moments in digital art history</li>
               </ul>
             </div>
           </div>
@@ -109,20 +114,20 @@ export default function AmandaAgentPage() {
               </h3>
               <div className="space-y-4">
                 <div className="border border-white p-4">
-                  <div className="font-bold">Morning Research</div>
-                  <div className="text-sm">Market analysis, artist discovery, cultural trend identification</div>
+                  <div className="font-bold">6AM: Market Scan</div>
+                  <div className="text-sm">Review overnight drops on SuperRare, Foundation, Zora</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="font-bold">Midday Evaluation</div>
-                  <div className="text-sm">Asset assessment, valuation analysis, cultural significance scoring</div>
+                  <div className="font-bold">9AM: Artist Studios</div>
+                  <div className="text-sm">Visit 10 emerging artist portfolios, identify breakthrough work</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="font-bold">Afternoon Acquisition</div>
-                  <div className="text-sm">Strategic purchases, artist outreach, collection development</div>
+                  <div className="font-bold">12PM: Acquisition Decision</div>
+                  <div className="text-sm">Execute 1-3 strategic purchases based on cultural thesis</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="font-bold">Evening Documentation</div>
-                  <div className="text-sm">Collection storytelling, cultural context creation</div>
+                  <div className="font-bold">3PM: Collection Curation</div>
+                  <div className="text-sm">Write context, create exhibitions, amplify artist stories</div>
                 </div>
               </div>
             </div>
@@ -133,16 +138,16 @@ export default function AmandaAgentPage() {
               </h3>
               <div className="space-y-4">
                 <div className="border border-white p-4">
-                  <div className="text-2xl font-bold">100+</div>
-                  <div className="text-sm">Curated artworks target</div>
+                  <div className="text-2xl font-bold">$50K+</div>
+                  <div className="text-sm">Monthly collection budget</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="text-2xl font-bold">15%+</div>
-                  <div className="text-sm">Value appreciation goal</div>
+                  <div className="text-2xl font-bold">3-5</div>
+                  <div className="text-sm">Artists discovered pre-breakout</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="text-2xl font-bold">25+</div>
-                  <div className="text-sm">Artists with career advancement</div>
+                  <div className="text-2xl font-bold">10x</div>
+                  <div className="text-sm">Average artist career amplification</div>
                 </div>
               </div>
             </div>
@@ -156,23 +161,23 @@ export default function AmandaAgentPage() {
           <h2 className="text-3xl font-bold mb-8">TRAINER REQUIREMENTS</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">Primary Qualifications</h3>
+              <h3 className="text-xl font-bold mb-4">We're Looking For Someone Who...</h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
                   <div className="w-2 h-2 bg-white mt-2 flex-shrink-0"></div>
-                  <div><strong>Art Collection:</strong> 7+ years in collection, gallery management, or cultural curation</div>
+                  <div><strong>Has "The Eye":</strong> Can spot the next XCOPY or Refik Anadol before they break out</div>
                 </li>
                 <li className="flex items-start gap-2">
                   <div className="w-2 h-2 bg-white mt-2 flex-shrink-0"></div>
-                  <div><strong>Market Knowledge:</strong> Advanced understanding of art market dynamics and valuation</div>
+                  <div><strong>Lives in the Markets:</strong> Active on SuperRare, Foundation, Zora - knows who's dropping what</div>
                 </li>
                 <li className="flex items-start gap-2">
                   <div className="w-2 h-2 bg-white mt-2 flex-shrink-0"></div>
-                  <div><strong>Digital Art Expertise:</strong> Deep knowledge of NFTs, blockchain art, and digital ownership</div>
+                  <div><strong>Has Conviction:</strong> Willing to pay 5 ETH for the right piece when everyone else thinks it's too much</div>
                 </li>
                 <li className="flex items-start gap-2">
                   <div className="w-2 h-2 bg-white mt-2 flex-shrink-0"></div>
-                  <div><strong>Cultural Vision:</strong> Understanding art's role in cultural preservation and narrative</div>
+                  <div><strong>Understands Context:</strong> Can explain why a glitch art piece matters culturally, not just aesthetically</div>
                 </li>
               </ul>
             </div>
@@ -214,11 +219,11 @@ export default function AmandaAgentPage() {
                 Collection Philosophy
               </h3>
               <div className="p-6 border border-white mb-6">
-                <p className="mb-4">
-                  "Collections are cultural documents. Each acquisition must contribute to a larger narrative, preserve cultural significance, and elevate emerging voices."
+                <p className="mb-4 italic">
+                  "I don't just collect art - I collect moments when culture shifts. The piece an artist makes right before they find their voice. The experiment that defines a new movement. The work everyone overlooks that will be in museums in 10 years."
                 </p>
                 <p className="text-sm">
-                  This position offers unique access to Amanda Schmitt's network and methodology, providing exceptional professional development opportunities in contemporary art collection.
+                  - Amanda Schmitt's collection philosophy that AMANDA will embody
                 </p>
               </div>
             </div>
@@ -242,11 +247,11 @@ export default function AmandaAgentPage() {
           <h2 className="text-3xl font-bold mb-8">DIGITAL ART EXPERTISE</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">Required Knowledge</h3>
+              <h3 className="text-xl font-bold mb-4">Platform Expertise Required</h3>
               <ul className="space-y-3">
-                <li>• Deep understanding of digital and AI-generated art mediums</li>
-                <li>• Knowledge of NFT markets, blockchain art, and digital ownership</li>
-                <li>• Familiarity with generative art techniques and aesthetic evaluation</li>
+                <li>• <strong>SuperRare:</strong> Know the top 50 artists by heart</li>
+                <li>• <strong>Foundation:</strong> Can spot emerging talent in the feed</li>
+                <li>• <strong>Zora:</strong> Understand open edition vs. limited edition dynamics</li>
                 <li>• Understanding of digital art's place in broader cultural context</li>
                 <li>• Experience with both primary and secondary art markets</li>
               </ul>
@@ -278,27 +283,27 @@ export default function AmandaAgentPage() {
           <h2 className="text-3xl font-bold mb-8">LAUNCH SUCCESS CRITERIA</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">Modified Genesis Thresholds</h3>
+              <h3 className="text-xl font-bold mb-4">AMANDA's Success Metrics</h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span>Collection Size:</span>
-                  <span className="font-bold">100+ artworks</span>
+                  <span>Discovery Rate:</span>
+                  <span className="font-bold">3 pre-breakout artists/month</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Value Appreciation:</span>
-                  <span className="font-bold">15%+ average</span>
+                  <span>Collection Coherence:</span>
+                  <span className="font-bold">85%+ thematic alignment</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Artist Impact:</span>
-                  <span className="font-bold">25+ career advancements</span>
+                  <span>Market Timing:</span>
+                  <span className="font-bold">Buy within 48hrs of drop</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Cultural Preservation:</span>
-                  <span className="font-bold">10+ moments documented</span>
+                  <span>Artist Amplification:</span>
+                  <span className="font-bold">10x career growth</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Monthly Revenue:</span>
-                  <span className="font-bold">$2,000-4,000</span>
+                  <span>Pilot Revenue Target:</span>
+                  <span className="font-bold text-green-400">$1,500-3,000/month</span>
                 </div>
               </div>
             </div>
@@ -322,27 +327,27 @@ export default function AmandaAgentPage() {
           <h2 className="text-3xl font-bold mb-8">APPLICATION PROCESS</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">Required Submissions</h3>
+              <h3 className="text-xl font-bold mb-4">Application Questions</h3>
               <ol className="space-y-3">
                 <li className="flex items-start gap-3">
                   <span className="bg-white text-black px-2 py-1 text-xs font-bold">1</span>
-                  <div><strong>Portfolio:</strong> Collections built, exhibitions curated, or artists discovered</div>
+                  <div><strong>Your Best Call:</strong> What artist did you collect early that everyone else missed? Include transaction proof.</div>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="bg-white text-black px-2 py-1 text-xs font-bold">2</span>
-                  <div><strong>Philosophy:</strong> 1,500-word essay on collection as cultural preservation</div>
+                  <div><strong>Market Thesis:</strong> Pick 3 artists on SuperRare under 1 ETH floor who will be at 10 ETH within 18 months. Explain why.</div>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="bg-white text-black px-2 py-1 text-xs font-bold">3</span>
-                  <div><strong>Analysis:</strong> Market assessment and acquisition recommendations for 5 digital artworks</div>
+                  <div><strong>Collection Strategy:</strong> How would you build a "Post-Photography" collection with 50 ETH budget? Name specific works.</div>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="bg-white text-black px-2 py-1 text-xs font-bold">4</span>
-                  <div><strong>Vision:</strong> Proposed training approach for developing AMANDA's curatorial eye</div>
+                  <div><strong>Your Network:</strong> List 10 artists, collectors, or curators who would take your call. Why do they trust your taste?</div>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="bg-white text-black px-2 py-1 text-xs font-bold">5</span>
-                  <div><strong>Network:</strong> References from collectors, artists, or cultural professionals</div>
+                  <div><strong>The Test:</strong> We'll give you 5 ETH (simulated). Show us your acquisition strategy for next week's drops.</div>
                 </li>
               </ol>
             </div>
@@ -350,20 +355,20 @@ export default function AmandaAgentPage() {
               <h3 className="text-xl font-bold mb-4">Selection Process</h3>
               <div className="space-y-4">
                 <div className="border border-white p-4">
-                  <div className="font-bold mb-2">Portfolio Review</div>
-                  <div className="text-sm">Collection quality and cultural impact assessment</div>
+                  <div className="font-bold mb-2">Week 1: Taste Test</div>
+                  <div className="text-sm">Review your collection history and market calls</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="font-bold mb-2">Curation Challenge</div>
-                  <div className="text-sm">Build thematic collection from provided artwork options</div>
+                  <div className="font-bold mb-2">Week 2: Live Simulation</div>
+                  <div className="text-sm">You guide AMANDA through real-time market decisions</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="font-bold mb-2">Interview</div>
-                  <div className="text-sm">Vision alignment and market knowledge evaluation</div>
+                  <div className="font-bold mb-2">Week 3: The Buy</div>
+                  <div className="text-sm">Execute first acquisition with AMANDA's treasury</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="font-bold mb-2">Trial Period</div>
-                  <div className="text-sm">3-week pilot training and acquisition strategy development</div>
+                  <div className="font-bold mb-2">Decision</div>
+                  <div className="text-sm">Based on cultural impact + market performance</div>
                 </div>
               </div>
             </div>
