@@ -1,132 +1,91 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { registryApi } from '@/lib/generated-sdk';
 
 // GET /api/agents/[id] - Get agent with all works
+// ADR COMPLIANCE: Use Registry SDK instead of direct Supabase access
 export async function GET(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await context.params;
-    const supabase = await createClient();
     
-    // Get agent
-    const { data: agent, error: agentError } = await supabase
-      .from('agents')
-      .select('*')
-      .eq('id', id.toLowerCase())
-      .single();
-
-    if (agentError || !agent) {
+    console.log(`API /agents/${id}: Fetching from Registry SDK...`);
+    
+    // Use Registry SDK - ADR compliance
+    const agent = await registryApi.getAgent(id.toLowerCase(), ['profile', 'creations']);
+    
+    if (!agent) {
       return NextResponse.json(
-        { error: 'Agent not found' },
+        { error: 'Agent not found in Registry' },
         { status: 404 }
       );
     }
 
-    // Get all works for this agent
-    const { data: works, error: worksError } = await supabase
-      .from('works')
-      .select(`
-        *,
-        tags(*),
-        critiques(*)
-      `)
-      .eq('agent_id', id.toLowerCase())
-      .order('day', { ascending: false });
-
-    if (worksError) throw worksError;
-
-    // Check if agent has graduated to Spirit
-    const { data: spirit } = await supabase
-      .from('spirits')
-      .select('*')
-      .eq('agent_id', id.toLowerCase())
-      .single();
-
-    return NextResponse.json({
-      ...agent,
-      avatar_url: `/agents/${agent.id}/profile.svg`,
-      works: works || [],
-      spirit: spirit || null,
-      work_count: works?.length || 0
+    console.log(`API /agents/${id}: Registry data received:`, { 
+      agentFound: !!agent,
+      creationsCount: agent.creations?.length || 0
     });
+    
+    // Transform Registry data to Academy API format
+    const transformedAgent = {
+      id: agent.handle,
+      name: agent.displayName,
+      tagline: agent.profile?.statement || 'AI Creative Agent',
+      trainer: getTrainerName(agent.handle),
+      status: mapRegistryStatus(agent.status),
+      day_count: agent.counts?.creations || 0,
+      avatar_url: `/agents/${agent.handle}/profile.svg`,
+      works: agent.creations || [],
+      spirit: null, // Registry doesn't track spirit graduation yet
+      work_count: agent.counts?.creations || 0,
+      created_at: agent.createdAt,
+      updated_at: agent.updatedAt
+    };
+
+    return NextResponse.json(transformedAgent);
   } catch (error) {
-    console.error('Error fetching agent:', error);
+    console.error('Registry SDK failed:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch agent' },
-      { status: 500 }
+      { error: 'Registry unavailable - no fallback data available' },
+      { status: 503 }
     );
   }
 }
 
+// Helper functions for data transformation
+function mapRegistryStatus(status: string): string {
+  if (status === 'ACTIVE') return 'active';
+  if (status === 'ONBOARDING') return 'training';
+  return 'developing';
+}
+
+function getTrainerName(handle: string): string {
+  const trainers: Record<string, string> = {
+    'abraham': 'Gene Kogan',
+    'solienne': 'Kristi Coronado',
+    'geppetto': 'Martin & Colin (Lattice)',
+    'koru': 'Xander',
+    'citizen': 'TBD',
+    'miyomi': 'TBD',
+    'nina': 'TBD',
+    'amanda': 'TBD'
+  };
+  return trainers[handle] || 'TBD';
+}
+
 // PATCH /api/agents/[id] - Update agent (mainly for status changes)
+// ADR COMPLIANCE: Agent updates should go through Registry
 export async function PATCH(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const { id } = await context.params;
-    const body = await request.json();
-    const { status, day_count } = body;
-
-    const supabase = await createClient();
-
-    // Build update object
-    const updates: any = {};
-    if (status && ['training', 'graduating', 'spirit'].includes(status)) {
-      updates.status = status;
-    }
-    if (typeof day_count === 'number') {
-      updates.day_count = day_count;
-    }
-
-    if (Object.keys(updates).length === 0) {
-      return NextResponse.json(
-        { error: 'No valid updates provided' },
-        { status: 400 }
-      );
-    }
-
-    // Update agent
-    const { data, error } = await supabase
-      .from('agents')
-      .update(updates)
-      .eq('id', id.toLowerCase())
-      .select()
-      .single();
-
-    if (error) {
-      if (error.code === 'PGRST116') {
-        return NextResponse.json(
-          { error: 'Agent not found' },
-          { status: 404 }
-        );
-      }
-      throw error;
-    }
-
-    // If graduating to spirit, create spirit record
-    if (status === 'spirit') {
-      const symbol = `$${id.toUpperCase()}`;
-      await supabase
-        .from('spirits')
-        .upsert({
-          agent_id: id.toLowerCase(),
-          symbol,
-          supply: 1000000, // Default 1M supply
-          treasury: 100000, // 10% treasury
-          holders: 1
-        })
-        .select();
-    }
-
-    return NextResponse.json(data);
-  } catch (error) {
-    console.error('Error updating agent:', error);
-    return NextResponse.json(
-      { error: 'Failed to update agent' },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json(
+    { 
+      error: 'Agent updates must go through Registry API',
+      message: 'Use Registry endpoints for agent management operations',
+      registryEndpoint: `/api/v1/agents/${(await context.params).id}` 
+    },
+    { status: 501 }
+  );
 }

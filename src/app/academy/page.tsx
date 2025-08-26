@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
+import { AgentCard } from '@/components/AgentCard';
 import { useState, useEffect } from 'react';
 import { registryApi } from '@/lib/generated-sdk';
 import type { Agent } from '@/lib/generated-sdk';
@@ -157,22 +158,12 @@ export default function AcademyPage() {
             <h3 className="text-xl mb-8">LAUNCHING</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {agents.filter(a => a.status === 'LAUNCHING').map((agent) => (
-              <Link 
-                key={agent.id}
-                href={agent.hasProfile ? `/academy/agent/${agent.name.toLowerCase()}` : '#'}
-                className="border border-white p-8 hover:bg-white hover:text-black transition-all block"
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-2xl font-bold">{agent.name}</h3>
-                  <span className="text-sm">{agent.date}</span>
-                </div>
-                <p className="text-sm mb-4">{agent.description}</p>
-                <div className="text-xs">
-                  <div>{agent.trainer}</div>
-                  <div>{agent.worksCount} WORKS</div>
-                </div>
-              </Link>
-            ))}
+                <AgentCard 
+                  key={agent.id}
+                  agent={agent}
+                  variant="launching"
+                />
+              ))}
           </div>
         </div>
         )}
@@ -203,21 +194,11 @@ export default function AcademyPage() {
                 
                 // Agents with committed trainers
                 return (
-                  <div 
+                  <AgentCard 
                     key={agent.id}
-                    className="border border-white p-6"
-                  >
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h3 className="text-lg font-bold mb-2">{agent.name}</h3>
-                        <p className="text-xs mb-2">{agent.date || 'Q1 2026'}</p>
-                      </div>
-                      <span className="text-xs bg-black text-white border border-white px-2 py-1">
-                        IN DEVELOPMENT
-                      </span>
-                    </div>
-                    <p className="text-xs opacity-75">{agent.trainer}</p>
-                  </div>
+                    agent={agent}
+                    variant="developing"
+                  />
                 );
               })}
             </div>
@@ -234,105 +215,23 @@ export default function AcademyPage() {
             </p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
               
-              {/* MIYOMI Partnership */}
-              <div className="border border-white p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <h4 className="text-lg font-bold">MIYOMI</h4>
-                  <span className="text-xs bg-white text-black px-2 py-1">
-                    SEEKING PARTNER
-                  </span>
-                </div>
-                <p className="text-sm mb-3 font-bold">Market Contrarian & Cultural Analyst</p>
-                <p className="text-xs mb-4 opacity-75">
-                  Train an AI to spot cultural mispricings before markets catch on while mastering prediction market strategy.
-                </p>
-                <div className="text-xs mb-4 space-y-1">
-                  <div>→ Learn contrarian market analysis</div>
-                  <div>→ Access prediction market networks</div>
-                  <div>→ Co-develop AI analysis frameworks</div>
-                </div>
-                <Link
-                  href="/academy/agent/miyomi"
-                  className="inline-block border border-white px-4 py-2 text-xs hover:bg-white hover:text-black transition-all w-full text-center"
-                >
-                  EXPLORE PARTNERSHIP →
-                </Link>
-              </div>
-
-              {/* AMANDA Partnership */}
-              <div className="border border-white p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <h4 className="text-lg font-bold">AMANDA</h4>
-                  <span className="text-xs bg-white text-black px-2 py-1">
-                    SEEKING PARTNER
-                  </span>
-                </div>
-                <p className="text-sm mb-3 font-bold">Art Collector & Investment Strategist</p>
-                <p className="text-xs mb-4 opacity-75">
-                  Build curated art collections with an AI partner while learning investment strategy and market analysis.
-                </p>
-                <div className="text-xs mb-4 space-y-1">
-                  <div>→ Master art market dynamics</div>
-                  <div>→ Build collector networks</div>
-                  <div>→ Develop investment frameworks</div>
-                </div>
-                <Link
-                  href="/academy/agent/amanda"
-                  className="inline-block border border-white px-4 py-2 text-xs hover:bg-white hover:text-black transition-all w-full text-center"
-                >
-                  EXPLORE PARTNERSHIP →
-                </Link>
-              </div>
-
-              {/* CITIZEN Partnership */}
-              <div className="border border-white p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <h4 className="text-lg font-bold">CITIZEN</h4>
-                  <span className="text-xs bg-white text-black px-2 py-1">
-                    SEEKING PARTNER
-                  </span>
-                </div>
-                <p className="text-sm mb-3 font-bold">DAO Manager & Governance Coordinator</p>
-                <p className="text-xs mb-4 opacity-75">
-                  Pioneer decentralized governance with an AI that manages DAO operations and community coordination.
-                </p>
-                <div className="text-xs mb-4 space-y-1">
-                  <div>→ Learn DAO governance strategies</div>
-                  <div>→ Build community networks</div>
-                  <div>→ Shape decentralized systems</div>
-                </div>
-                <Link
-                  href="/academy/agent/citizen"
-                  className="inline-block border border-white px-4 py-2 text-xs hover:bg-white hover:text-black transition-all w-full text-center"
-                >
-                  EXPLORE PARTNERSHIP →
-                </Link>
-              </div>
-
-              {/* NINA Partnership */}
-              <div className="border border-white p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <h4 className="text-lg font-bold">NINA</h4>
-                  <span className="text-xs bg-white text-black px-2 py-1">
-                    SEEKING PARTNER
-                  </span>
-                </div>
-                <p className="text-sm mb-3 font-bold">Design Critic & Aesthetic Curator</p>
-                <p className="text-xs mb-4 opacity-75">
-                  Develop critical frameworks with an AI that analyzes and curates design across digital and physical spaces.
-                </p>
-                <div className="text-xs mb-4 space-y-1">
-                  <div>→ Master design criticism</div>
-                  <div>→ Build curatorial expertise</div>
-                  <div>→ Shape aesthetic discourse</div>
-                </div>
-                <Link
-                  href="/academy/agent/nina"
-                  className="inline-block border border-white px-4 py-2 text-xs hover:bg-white hover:text-black transition-all w-full text-center"
-                >
-                  EXPLORE PARTNERSHIP →
-                </Link>
-              </div>
+              {/* Partnership Agent Cards */}
+              {['miyomi', 'amanda', 'citizen', 'nina'].map(agentId => {
+                const agent = agents.find(a => a.id.toLowerCase() === agentId) || {
+                  id: agentId,
+                  name: agentId.toUpperCase(),
+                  status: 'SEEKING_PARTNER',
+                  trainer: 'CREATIVE PARTNERSHIP AVAILABLE'
+                };
+                
+                return (
+                  <AgentCard 
+                    key={agent.id}
+                    agent={agent}
+                    variant="partnership"
+                  />
+                );
+              })}
 
             </div>
 

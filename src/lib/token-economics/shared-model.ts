@@ -678,6 +678,19 @@ export class TokenEconomicsService {
     
     return managementFees + performanceFees + advisoryFees + dataLicensing + platformRevenue;
   }
+  
+  private calculateDAOManagementRevenue(economics: EdenTokenModel): number {
+    // Citizen's DAO management and governance revenue streams
+    const daoManagementFees = 5000;    // Monthly retainer per DAO managed
+    const governanceConsulting = 3500; // Governance strategy and setup consulting
+    const treasuryOptimization = 2000; // Treasury management performance fees
+    const proposalManagement = 1500;   // Automated proposal creation and management
+    const voterEngagement = 1200;      // Voter participation optimization services
+    const crossDAOFacilitation = 800;  // Cross-DAO partnership and collaboration fees
+    
+    return daoManagementFees + governanceConsulting + treasuryOptimization + 
+           proposalManagement + voterEngagement + crossDAOFacilitation;
+  }
 
   private calculateRoyaltiesRevenue(economics: EdenTokenModel): number {
     // Based on secondary market activity

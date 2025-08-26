@@ -118,44 +118,64 @@ export default async function AmandaAgentPage() {
             <div>
               <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                 <Palette className="w-5 h-5" />
-                Curatorial Excellence Process
+                AI-Driven Cultural Intelligence System
               </h3>
               <div className="space-y-4">
                 <div className="border border-white p-4">
-                  <div className="font-bold">6AM: Market Scan</div>
-                  <div className="text-sm">Review overnight drops on SuperRare, Foundation, Zora</div>
+                  <div className="font-bold">5AM: Meme Genesis Detection</div>
+                  <div className="text-sm">AI scans Twitter/X, TikTok, Discord for emerging visual patterns. Algorithm flags cultural shifts 3-6 months before mainstream</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="font-bold">9AM: Artist Studios</div>
-                  <div className="text-sm">Visit 10 emerging artist portfolios, identify breakthrough work</div>
+                  <div className="font-bold">7AM: Studio Intelligence</div>
+                  <div className="text-sm">Physical/virtual artist studio visits. Direct relationships with 200+ artists. Off-market acquisition opportunities identified</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="font-bold">12PM: Acquisition Decision</div>
-                  <div className="text-sm">Execute 1-3 strategic purchases based on cultural thesis</div>
+                  <div className="font-bold">10AM: Algorithm Training</div>
+                  <div className="text-sm">Feed insights into AMANDA's taste engine. Refine cultural significance scoring. Update conviction models with new data</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="font-bold">3PM: Collection Curation</div>
-                  <div className="text-sm">Write context, create exhibitions, amplify artist stories</div>
+                  <div className="font-bold">1PM: Strategic Acquisition</div>
+                  <div className="text-sm">Execute purchases: 60% off-market direct from artists, 40% platform drops. $2-50K range based on algorithm confidence</div>
+                </div>
+                <div className="border border-white p-4">
+                  <div className="font-bold">4PM: Network Effects</div>
+                  <div className="text-sm">Amplify acquired artists through strategic introductions, gallery connections, collector network activation</div>
+                </div>
+                <div className="border border-white p-4">
+                  <div className="font-bold">7PM: Data Synthesis</div>
+                  <div className="text-sm">Update cultural trend database. Refine predictive models. Export insights for other collectors and institutions</div>
                 </div>
               </div>
             </div>
             <div>
               <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                 <TrendingUp className="w-5 h-5" />
-                Collection Metrics
+                Algorithm Performance Metrics
               </h3>
               <div className="space-y-4">
                 <div className="border border-white p-4">
-                  <div className="text-2xl font-bold">$50K+</div>
-                  <div className="text-sm">Monthly collection budget</div>
+                  <div className="text-2xl font-bold">87%</div>
+                  <div className="text-sm">Meme-to-market prediction accuracy</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="text-2xl font-bold">3-5</div>
-                  <div className="text-sm">Artists discovered pre-breakout</div>
+                  <div className="text-2xl font-bold">200+</div>
+                  <div className="text-sm">Direct artist relationships</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="text-2xl font-bold">10x</div>
-                  <div className="text-sm">Average artist career amplification</div>
+                  <div className="text-2xl font-bold">60%</div>
+                  <div className="text-sm">Off-market acquisition rate</div>
+                </div>
+                <div className="border border-white p-4">
+                  <div className="text-2xl font-bold">3.2mo</div>
+                  <div className="text-sm">Average lead time on trends</div>
+                </div>
+                <div className="border border-white p-4">
+                  <div className="text-2xl font-bold">$2-50K</div>
+                  <div className="text-sm">Dynamic pricing range</div>
+                </div>
+                <div className="border border-white p-4">
+                  <div className="text-2xl font-bold">15x</div>
+                  <div className="text-sm">Network amplification effect</div>
                 </div>
               </div>
             </div>
@@ -169,23 +189,27 @@ export default async function AmandaAgentPage() {
           <h2 className="text-3xl font-bold mb-8">TRAINER REQUIREMENTS</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">We're Looking For Someone Who...</h3>
+              <h3 className="text-xl font-bold mb-4">Algorithm Co-Developer Profile</h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
                   <div className="w-2 h-2 bg-white mt-2 flex-shrink-0"></div>
-                  <div><strong>Has "The Eye":</strong> Can spot the next XCOPY or Refik Anadol before they break out</div>
+                  <div><strong>Meme Prophet:</strong> Can identify cultural shifts 3-6 months early through pattern recognition across social platforms</div>
                 </li>
                 <li className="flex items-start gap-2">
                   <div className="w-2 h-2 bg-white mt-2 flex-shrink-0"></div>
-                  <div><strong>Lives in the Markets:</strong> Active on SuperRare, Foundation, Zora - knows who's dropping what</div>
+                  <div><strong>Studio Network:</strong> Has direct relationships with 50+ emerging artists, access to off-market work and early project intel</div>
                 </li>
                 <li className="flex items-start gap-2">
                   <div className="w-2 h-2 bg-white mt-2 flex-shrink-0"></div>
-                  <div><strong>Has Conviction:</strong> Willing to pay 5 ETH for the right piece when everyone else thinks it's too much</div>
+                  <div><strong>Data-Driven Taste:</strong> Can articulate WHY they like something in terms that can be encoded into algorithmic logic</div>
                 </li>
                 <li className="flex items-start gap-2">
                   <div className="w-2 h-2 bg-white mt-2 flex-shrink-0"></div>
-                  <div><strong>Understands Context:</strong> Can explain why a glitch art piece matters culturally, not just aesthetically</div>
+                  <div><strong>Financial Intuition:</strong> Understands both cultural significance AND market mechanics - when to pay 2x vs 10x market rate</div>
+                </li>
+                <li className="flex items-start gap-2">
+                  <div className="w-2 h-2 bg-white mt-2 flex-shrink-0"></div>
+                  <div><strong>Network Orchestrator:</strong> Can amplify artist careers through strategic introductions and institutional connections</div>
                 </li>
               </ul>
             </div>
@@ -249,35 +273,42 @@ export default async function AmandaAgentPage() {
         </div>
       </section>
 
-      {/* Digital Art Specialization */}
+      {/* AMANDA's Algorithm Framework */}
       <section className="py-16 px-6 border-b border-white">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">DIGITAL ART EXPERTISE</h2>
+          <h2 className="text-3xl font-bold mb-8">THE AMANDA ALGORITHM</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">Platform Expertise Required</h3>
-              <ul className="space-y-3">
-                <li>• <strong>SuperRare:</strong> Know the top 50 artists by heart</li>
-                <li>• <strong>Foundation:</strong> Can spot emerging talent in the feed</li>
-                <li>• <strong>Zora:</strong> Understand open edition vs. limited edition dynamics</li>
-                <li>• Understanding of digital art's place in broader cultural context</li>
-                <li>• Experience with both primary and secondary art markets</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-xl font-bold mb-4">Market Innovation</h3>
+              <h3 className="text-xl font-bold mb-4">Cultural Intelligence Engine</h3>
               <div className="space-y-4">
                 <div className="border border-white p-4">
-                  <div className="font-bold mb-2">Valuation Frameworks</div>
-                  <div className="text-sm">Develop new models for digital art assessment beyond traditional metrics</div>
+                  <div className="font-bold mb-2">Meme Genesis Detection</div>
+                  <div className="text-sm">AI monitors 50+ platforms for emerging visual patterns, tracking viral coefficient and cultural diffusion speed</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="font-bold mb-2">Cultural Preservation</div>
-                  <div className="text-sm">Create sustainable systems for digital art documentation and legacy</div>
+                  <div className="font-bold mb-2">Artist Trajectory Modeling</div>
+                  <div className="text-sm">Predictive models analyzing social engagement, technical evolution, and network effects to identify pre-breakout artists</div>
                 </div>
                 <div className="border border-white p-4">
-                  <div className="font-bold mb-2">Autonomous Collection</div>
-                  <div className="text-sm">Pioneer AI-assisted curation and collection management systems</div>
+                  <div className="font-bold mb-2">Off-Market Intelligence</div>
+                  <div className="text-sm">Studio relationship management system tracking 200+ artist pipelines, upcoming projects, and acquisition opportunities</div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-4">Acquisition Decision Matrix</h3>
+              <div className="space-y-4">
+                <div className="border border-white p-4">
+                  <div className="font-bold mb-2">Cultural Significance Score</div>
+                  <div className="text-sm">Weighted algorithm: 40% trend prediction, 30% artistic innovation, 20% network effects, 10% technical quality</div>
+                </div>
+                <div className="border border-white p-4">
+                  <div className="font-bold mb-2">Financial Conviction Model</div>
+                  <div className="text-sm">Dynamic pricing based on confidence intervals, risk assessment, and portfolio balance requirements</div>
+                </div>
+                <div className="border border-white p-4">
+                  <div className="font-bold mb-2">Network Amplification Strategy</div>
+                  <div className="text-sm">Post-acquisition artist development through gallery introductions, collector network, and institutional positioning</div>
                 </div>
               </div>
             </div>
@@ -335,27 +366,31 @@ export default async function AmandaAgentPage() {
           <h2 className="text-3xl font-bold mb-8">APPLICATION PROCESS</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">Application Questions</h3>
+              <h3 className="text-xl font-bold mb-4">Algorithm Training Application</h3>
               <ol className="space-y-3">
                 <li className="flex items-start gap-3">
                   <span className="bg-white text-black px-2 py-1 text-xs font-bold">1</span>
-                  <div><strong>Your Best Call:</strong> What artist did you collect early that everyone else missed? Include transaction proof.</div>
+                  <div><strong>Meme Genesis Prediction:</strong> Identify an emerging visual/cultural trend from the last 6 months. When did you first spot it? What platforms/signals confirmed your thesis?</div>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="bg-white text-black px-2 py-1 text-xs font-bold">2</span>
-                  <div><strong>Market Thesis:</strong> Pick 3 artists on SuperRare under 1 ETH floor who will be at 10 ETH within 18 months. Explain why.</div>
+                  <div><strong>Artist Studio Intelligence:</strong> Name 5 artists you know personally who are working on unreleased projects. What makes their upcoming work significant?</div>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="bg-white text-black px-2 py-1 text-xs font-bold">3</span>
-                  <div><strong>Collection Strategy:</strong> How would you build a "Post-Photography" collection with 50 ETH budget? Name specific works.</div>
+                  <div><strong>Taste Logic Encoding:</strong> Take a piece you love and break down WHY in 10 quantifiable factors that could train an AI model. Include weightings.</div>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="bg-white text-black px-2 py-1 text-xs font-bold">4</span>
-                  <div><strong>Your Network:</strong> List 10 artists, collectors, or curators who would take your call. Why do they trust your taste?</div>
+                  <div><strong>Off-Market Acquisition:</strong> Describe your process for buying directly from artists before public drops. Include relationship building and negotiation strategies.</div>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="bg-white text-black px-2 py-1 text-xs font-bold">5</span>
-                  <div><strong>The Test:</strong> We'll give you 5 ETH (simulated). Show us your acquisition strategy for next week's drops.</div>
+                  <div><strong>Network Effect Design:</strong> You acquire an emerging artist's piece. Map out your 90-day amplification strategy including specific collector/gallery/institution introductions.</div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="bg-white text-black px-2 py-1 text-xs font-bold">6</span>
+                  <div><strong>Cultural Significance Algorithm:</strong> Design a scoring system for cultural significance. What data inputs would you use? How would you weight trend prediction vs artistic innovation?</div>
                 </li>
               </ol>
             </div>
