@@ -18,7 +18,7 @@ const AGENT_SITES: Record<string, { url: string; label: string }> = {
     label: 'Visit Abraham.ai'
   },
   geppetto: {
-    url: '/sites/geppetto',
+    url: '/sites/geppetto-daily',
     label: 'Visit Geppetto Studio'
   }
 };
