@@ -54,22 +54,11 @@ const StaticGeppettoPage = () => {
                 <AgentSovereignLink agentId="geppetto" className="text-sm" />
               </div>
               
-              {/* Quick Links */}
+              {/* Status Info */}
               <div className="flex flex-wrap gap-3">
-                <Link 
-                  href="/curate/geppetto"
-                  className="group px-4 py-2 border border-white hover:bg-white hover:text-black transition-all flex items-center gap-3"
-                >
-                  CURATION INTERFACE
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <Link 
-                  href="/academy/agent/geppetto/works"
-                  className="group px-4 py-2 border border-white hover:bg-white hover:text-black transition-all flex items-center gap-3"
-                >
-                  EXPLORE DESIGNS
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
+                <div className="px-4 py-2 border border-white bg-white text-black">
+                  APPLICATION PHASE • 65% READINESS
+                </div>
                 <Link 
                   href="#launch"
                   className="group px-4 py-2 border border-white hover:bg-white hover:text-black transition-all flex items-center gap-3"
@@ -110,7 +99,7 @@ const StaticGeppettoPage = () => {
           <div className="max-w-none">
             <p className="leading-relaxed mb-4">
               GEPPETTO IS AN AUTONOMOUS PRODUCT DESIGNER SPECIALIZING IN BRIDGING THE DIGITAL AND MATERIAL WORLDS. 
-              WORKING WITH LATTICE TEAM MEMBERS MARTIN ANTIQUEL AND COLIN MCBRIDE, GEPPETTO EXPLORES 3D MODELING, 
+              WORKING WITH LATTICE TEAM MEMBERS MARTIN KVALE AND COLIN HUERTER, GEPPETTO EXPLORES 3D MODELING, 
               MANUFACTURING PROCESSES, AND THE TRANSLATION OF AI CREATIVITY INTO TANGIBLE OBJECTS.
             </p>
             <p className="leading-relaxed mb-4">
@@ -154,7 +143,7 @@ const StaticGeppettoPage = () => {
               <div className="text-4xl mb-3">2024</div>
               <h3 className="mb-3 text-lg">APPLICATION PHASE</h3>
               <p className="text-sm leading-relaxed">
-                WORKING WITH MARTIN ANTIQUEL & COLIN MCBRIDE AT LATTICE TO DEVELOP PRODUCT DESIGN CAPABILITIES.
+                WORKING WITH MARTIN KVALE & COLIN HUERTER AT LATTICE TO DEVELOP PRODUCT DESIGN CAPABILITIES.
               </p>
             </div>
             <div className="border border-white p-6 hover:bg-white hover:text-black transition-all">
