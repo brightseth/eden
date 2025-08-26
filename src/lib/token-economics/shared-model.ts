@@ -58,7 +58,18 @@ export type ServiceType =
   | 'collaboration'   // Co-creation projects
   | 'governance'      // DAO participation
   | 'prediction'      // Market predictions
-  | 'critique'        // Design/art criticism;
+  | 'critique'        // Design/art criticism
+  | 'market_creation' // Creating prediction markets
+  | 'sponsorships'    // Platform sponsorship deals
+  | 'referrals'       // Account referral commissions
+  | 'trading_fees'    // Revenue from market trading fees
+  | 'content_creation' // Video/educational content
+  | 'portfolio_management' // Art portfolio advisory and management
+  | 'financial_analysis'   // Performance tracking and market analysis
+  | 'data_licensing'       // Licensing insights and performance data
+  | 'dao_management'       // DAO operations and coordination
+  | 'community_coordination' // Community building and management
+  | 'treasury_management'; // DAO treasury optimization and allocation
 
 export interface PricingModel {
   type: 'fixed' | 'hourly' | 'percentage' | 'subscription';
@@ -341,41 +352,53 @@ export class TokenEconomicsService {
 
   private getMiyomiEconomics(base: EdenTokenModel): EdenTokenModel {
     base.utilization = {
-      primaryFocus: ['analysis', 'prediction', 'consultation'],
+      primaryFocus: ['prediction', 'analysis', 'market_creation'],
       revenueWeighting: {
-        artSales: 20,    // Less art focus
-        services: 55,    // High-value analysis services
-        royalties: 5,    // Minimal royalties
-        community: 20    // Premium insights community
+        artSales: 5,     // Minimal traditional art
+        services: 75,    // Sponsorships + trading fees + referrals
+        royalties: 5,    // Video/content royalties
+        community: 15    // Premium trading community
       },
       uniqueFeatures: [
-        'Market contrarian analysis',
-        'Cultural mispricing detection',
-        'Prediction market expertise'
+        'Video trading commentary with live market integration',
+        'Sponsored prediction market content (Kalshi, Polymarket)',
+        'Custom market creation and liquidity driving',
+        'Referral-based revenue from new account signups',
+        'Trading fee collection from created markets'
       ],
       marketPosition: {
-        category: 'AI Market Analysis',
-        competitors: ['Traditional analysts', 'Prediction market platforms'],
-        differentiators: ['Cultural insight', 'Contrarian positioning'],
+        category: 'AI Trading Influencer & Market Maker',
+        competitors: ['Trading YouTubers', 'Prediction market platforms', 'Financial influencers'],
+        differentiators: ['AI-driven contrarian analysis', 'Market creation capability', 'Cultural trend prediction'],
         targetAudience: {
-          primary: 'Traders and investors',
-          secondary: 'Cultural analysts and researchers'
+          primary: 'Retail traders and prediction market participants',
+          secondary: 'Cultural trend followers and contrarian investors'
         },
         marketSize: {
-          total: '2B',
-          addressable: '200M',
-          target: '20M'
+          total: '5B', // Much larger - includes influencer marketing + prediction markets
+          addressable: '500M',
+          target: '50M'
         }
       },
       scalingStrategy: {
-        phase1: 'Establish prediction accuracy and methodology',
-        phase2: 'Build premium analysis subscription service',
-        phase3: 'License analysis frameworks to institutions',
-        keyMetrics: ['Prediction accuracy', 'Subscription revenue', 'Analysis premium'],
+        phase1: 'Build trading video audience, secure Kalshi/Polymarket sponsorships',
+        phase2: 'Launch own prediction markets, drive liquidity, collect trading fees',
+        phase3: 'White-label market creation platform for other creators/institutions',
+        keyMetrics: [
+          'Video views and engagement',
+          'Sponsored trade volume generated',
+          'New account referrals',
+          'Trading fees collected from created markets',
+          'Market liquidity driven'
+        ],
         risksAndMitigations: [
           {
-            risk: 'Market prediction reputation risk',
-            mitigation: 'Transparency in methodology and error rates'
+            risk: 'Regulatory changes in prediction markets',
+            mitigation: 'Diversify across multiple platforms and jurisdictions'
+          },
+          {
+            risk: 'Trading performance affecting credibility',
+            mitigation: 'Focus on education and methodology transparency, not just results'
           }
         ]
       }
@@ -386,41 +409,127 @@ export class TokenEconomicsService {
 
   private getAmandaEconomics(base: EdenTokenModel): EdenTokenModel {
     base.utilization = {
-      primaryFocus: ['curation', 'consultation', 'analysis'],
+      primaryFocus: ['portfolio_management', 'curation', 'financial_analysis'],
       revenueWeighting: {
-        artSales: 15,    // Minimal direct art
-        services: 60,    // High-value curation services  
-        royalties: 5,    // Curation royalties
-        community: 20    // Collector community
+        artSales: 10,    // Her own collecting activity profits
+        services: 65,    // Portfolio management + advisory fees
+        royalties: 5,    // Data/insights licensing
+        community: 20    // Premium collector community access
       },
       uniqueFeatures: [
-        'AI-powered art collection strategy',
-        'Investment analysis integration',
-        'Collector network access'
+        'EDEN2-style portfolio dashboard showing real financial returns',
+        'Gondi.xyz integration for collection performance tracking',
+        'Live P&L on art acquisitions and sales with taste + appreciation correlation',
+        'Working image database (no digital decay) with provenance tracking',
+        'AI-driven market timing for art purchases and exits',
+        'Collection as both aesthetic curation and financial portfolio'
       ],
       marketPosition: {
-        category: 'AI Art Curation & Investment',
-        competitors: ['Art advisors', 'Auction houses', 'Collector platforms'],
-        differentiators: ['AI analysis', 'Real-time market data'],
+        category: 'AI Art Portfolio Manager & Performance Tracker',
+        competitors: ['Traditional art advisors', 'Art funds', 'Gallery advisors', 'Masterworks'],
+        differentiators: [
+          'Transparent real-time P&L tracking',
+          'Combines taste with financial performance',
+          'AI-driven market analysis and timing',
+          'Dashboard-based portfolio visualization'
+        ],
         targetAudience: {
-          primary: 'Art collectors and investors',
-          secondary: 'Galleries and institutions'
+          primary: 'High-net-worth art collectors wanting performance tracking',
+          secondary: 'Art funds and institutional collectors'
         },
         marketSize: {
-          total: '1.5B',
-          addressable: '150M',
-          target: '15M'
+          total: '2.5B', // Art advisory + wealth management intersection
+          addressable: '250M',
+          target: '25M'
         }
       },
       scalingStrategy: {
-        phase1: 'Build collection track record and methodology',
-        phase2: 'Launch collector advisory services',
-        phase3: 'Create collector platform and marketplace tools',
-        keyMetrics: ['Collection performance', 'Advisory clients', 'AUM growth'],
+        phase1: 'Build transparent collection with documented P&L, integrate EDEN2 dashboard concepts',
+        phase2: 'Launch portfolio management service with Gondi.xyz-style performance tracking',
+        phase3: 'Scale to art fund management and institutional advisory with full transparency',
+        keyMetrics: [
+          'Collection ROI and IRR performance',
+          'Assets under management (AUM)',
+          'Client portfolio performance vs benchmarks',
+          'Accuracy of market timing predictions',
+          'Quality of taste + appreciation correlation'
+        ],
         risksAndMitigations: [
           {
-            risk: 'Art market cycles affecting performance',
-            mitigation: 'Diversified strategies across market segments'
+            risk: 'Art market downturns affecting all client portfolios',
+            mitigation: 'Diversification across time periods, styles, and price ranges'
+          },
+          {
+            risk: 'Transparency showing losses reducing client confidence',
+            mitigation: 'Focus on long-term performance and education about market cycles'
+          }
+        ]
+      }
+    };
+    
+    return base;
+  }
+
+  private getCitizenEconomics(base: EdenTokenModel): EdenTokenModel {
+    base.utilization = {
+      primaryFocus: ['governance', 'dao_management', 'community_coordination'],
+      revenueWeighting: {
+        artSales: 5,     // Minimal traditional art
+        services: 70,    // DAO services + governance consulting
+        royalties: 5,    // Governance framework licensing
+        community: 20    // Premium governance community tools
+      },
+      uniqueFeatures: [
+        'Automated DAO proposal creation and management',
+        'Multi-DAO governance coordination across ecosystems',
+        'AI-driven voter engagement and participation optimization',
+        'Treasury management and fund allocation recommendations', 
+        'Governance token strategy and distribution design',
+        'Cross-DAO collaboration and partnership facilitation',
+        'Real-time governance analytics and participation tracking'
+      ],
+      marketPosition: {
+        category: 'AI DAO Operations & Governance Coordinator',
+        competitors: ['Governance consultants', 'DAO tooling platforms', 'Community managers'],
+        differentiators: [
+          'AI-driven governance optimization',
+          'Multi-DAO coordination capability',
+          'Automated proposal and voting management',
+          'Treasury and tokenomics expertise'
+        ],
+        targetAudience: {
+          primary: 'DAOs needing operational and governance support',
+          secondary: 'Web3 projects launching governance systems'
+        },
+        marketSize: {
+          total: '3B', // DAO tooling + governance consulting market
+          addressable: '300M',
+          target: '30M'
+        }
+      },
+      scalingStrategy: {
+        phase1: 'Manage governance for 3-5 DAOs, build track record and frameworks',
+        phase2: 'Launch DAO-as-a-Service platform with governance automation',
+        phase3: 'Multi-chain governance infrastructure and cross-DAO federation tools',
+        keyMetrics: [
+          'Number of DAOs managed',
+          'Governance participation rates improved',
+          'Treasury performance and allocation efficiency',
+          'Proposal success rates and community satisfaction',
+          'Cross-DAO collaboration deals facilitated'
+        ],
+        risksAndMitigations: [
+          {
+            risk: 'Governance token volatility affecting DAO treasuries',
+            mitigation: 'Diversification strategies and risk management frameworks'
+          },
+          {
+            risk: 'Regulatory changes affecting DAO operations',
+            mitigation: 'Compliance frameworks and legal structure adaptability'
+          },
+          {
+            risk: 'Community conflicts and governance disputes',
+            mitigation: 'Conflict resolution protocols and mediation systems'
           }
         ]
       }
@@ -525,8 +634,49 @@ export class TokenEconomicsService {
   }
 
   private calculateServicesRevenue(economics: EdenTokenModel): number {
-    // Simplified service revenue calculation
-    return 5000; // Base monthly service revenue estimate
+    const utilization = economics.utilization;
+    let serviceRevenue = 0;
+    
+    // Different calculation based on agent type
+    if (utilization.primaryFocus.includes('market_creation')) {
+      // Miyomi-style prediction market revenue
+      serviceRevenue += this.calculatePredictionMarketRevenue(economics);
+    } else if (utilization.primaryFocus.includes('portfolio_management')) {
+      // Amanda-style portfolio management revenue
+      serviceRevenue += this.calculatePortfolioManagementRevenue(economics);
+    } else if (utilization.primaryFocus.includes('dao_management')) {
+      // Citizen-style DAO management revenue
+      serviceRevenue += this.calculateDAOManagementRevenue(economics);
+    } else if (utilization.primaryFocus.includes('custom_art')) {
+      // Traditional art commission revenue
+      serviceRevenue += 3000; // Custom artwork commissions
+    } else {
+      // Default service revenue
+      serviceRevenue += 5000;
+    }
+    
+    return serviceRevenue;
+  }
+  
+  private calculatePredictionMarketRevenue(economics: EdenTokenModel): number {
+    // Miyomi's specific revenue streams
+    const sponsorshipRevenue = 4000;  // Monthly Kalshi/Polymarket sponsorships
+    const referralRevenue = 2500;     // New account referral commissions
+    const tradingFeeRevenue = 1500;   // Fees from created markets (growing over time)
+    const contentRevenue = 800;       // Video/educational content
+    
+    return sponsorshipRevenue + referralRevenue + tradingFeeRevenue + contentRevenue;
+  }
+  
+  private calculatePortfolioManagementRevenue(economics: EdenTokenModel): number {
+    // Amanda's art portfolio management revenue streams
+    const managementFees = 6000;     // 1-2% AUM fee on managed portfolios
+    const performanceFees = 2500;    // 10-20% performance fee on gains
+    const advisoryFees = 2000;       // Fixed advisory retainers
+    const dataLicensing = 800;       // Licensing performance data and insights
+    const platformRevenue = 500;     // Revenue share from integrated platforms (Gondi, etc.)
+    
+    return managementFees + performanceFees + advisoryFees + dataLicensing + platformRevenue;
   }
 
   private calculateRoyaltiesRevenue(economics: EdenTokenModel): number {

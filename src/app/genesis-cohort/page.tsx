@@ -106,15 +106,10 @@ export default function GenesisCohortDashboard() {
       console.log('Fetching Genesis cohort from Registry SDK...');
       
       // Use Registry SDK instead of raw fetch - ADR compliance
-      const registryResponse = await registryApi.getAgents({
+      const agents = await registryApi.getAgents({
         cohort: 'genesis',
         status: 'ACTIVE'
       });
-      
-      // Handle Registry API response structure (returns {agents: Agent[]})
-      const agents = Array.isArray(registryResponse) 
-        ? registryResponse 
-        : (registryResponse as any).agents || [];
       
       console.log('Registry SDK data received:', { 
         agentCount: agents?.length || 0

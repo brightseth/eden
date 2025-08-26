@@ -171,7 +171,10 @@ export class RegistryApiClient {
     const query = searchParams.toString();
     const path = `/agents${query ? `?${query}` : ''}`;
     
-    return this.request<Agent[]>(path);
+    // Registry API returns {agents: Agent[], pagination: {...}}
+    // Extract just the agents array for SDK compatibility
+    const response = await this.request<{agents: Agent[], pagination?: any, total?: number}>(path);
+    return response.agents || [];
   }
 
   async getAgent(id: string, include?: string[]): Promise<Agent> {

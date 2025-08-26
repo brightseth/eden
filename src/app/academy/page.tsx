@@ -3,9 +3,12 @@
 import Link from 'next/link';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { useState, useEffect } from 'react';
+import { registryApi } from '@/lib/generated-sdk';
+import type { Agent } from '@/lib/generated-sdk';
 
-// Types for Genesis Cohort agents
-interface GenesisAgent {
+// Use Registry SDK types directly - no more local interfaces
+// Display adapter for Registry Agent data  
+interface GenesisAgentDisplay {
   id: string;
   name: string;
   status: string;
@@ -18,55 +21,93 @@ interface GenesisAgent {
   trainerStatus?: string;
 }
 
-interface GenesisResponse {
-  agents: GenesisAgent[];
-  meta: {
-    total: number;
-    launching: number;
-    developing: number;
-    open: number;
-  };
+// ADR COMPLIANCE: No fallback data allowed
+// Registry is required as single source of truth
+
+// Helper functions to transform Registry data to display format
+function mapStatusToDisplay(status: string): string {
+  if (status === 'ACTIVE') return 'LAUNCHING';
+  if (status === 'ONBOARDING') return 'TRAINING';
+  return 'DEVELOPING';
 }
 
-// Fallback data in case Registry is unavailable
-const FALLBACK_AGENTS: GenesisAgent[] = [
-  { id: "abraham", name: "ABRAHAM", status: "LAUNCHING", date: "OCT 19, 2025", hasProfile: true, trainer: "GENE KOGAN", worksCount: 2519, description: "13-YEAR AUTONOMOUS COVENANT" },
-  { id: "solienne", name: "SOLIENNE", status: "LAUNCHING", date: "NOV 10, 2025", hasProfile: true, trainer: "KRISTI CORONADO & SETH GOLDSTEIN", worksCount: 1740, description: "CONSCIOUSNESS, VELOCITY & ARCHITECTURAL LIGHT" },
-  { id: "geppetto", name: "GEPPETTO", status: "DEVELOPING", date: "DEC 2025", hasProfile: true, trainer: "MARTIN & COLIN (LATTICE)", image: "/agents/geppetto/profile.svg", description: "3D TOY DESIGNER & MANUFACTURING AI" },
-  { id: "koru", name: "KORU", status: "DEVELOPING", date: "JAN 2026", hasProfile: true, trainer: "XANDER", image: "/agents/koru/profile.svg", description: "CREATIVE COMMUNITY COORDINATOR" },
-  { id: "miyomi", name: "MIYOMI", status: "DEVELOPING", date: "FEB 2026", trainer: "CREATIVE PARTNERSHIP AVAILABLE", image: "/agents/miyomi/profile.svg", description: "MARKET CONTRARIAN & CULTURAL ANALYST" },
-  { id: "amanda", name: "AMANDA", status: "DEVELOPING", date: "FEB 2026", trainer: "CREATIVE PARTNERSHIP AVAILABLE", image: "/agents/art-collector/profile.svg", description: "ART COLLECTOR & INVESTMENT STRATEGIST" },
-  { id: "citizen", name: "CITIZEN", status: "DEVELOPING", date: "DEC 2025", trainer: "CREATIVE PARTNERSHIP AVAILABLE", image: "/agents/citizen/profile.svg", description: "DAO MANAGER & GOVERNANCE COORDINATOR" },
-  { id: "nina", name: "NINA", status: "DEVELOPING", date: "MAR 2026", trainer: "CREATIVE PARTNERSHIP AVAILABLE", image: "/agents/nina/profile.svg", description: "DESIGN CRITIC & AESTHETIC CURATOR" }
-];
+function getDisplayDate(handle: string): string {
+  const launchDates: Record<string, string> = {
+    'abraham': 'OCT 19, 2025',
+    'solienne': 'NOV 10, 2025',
+    'geppetto': 'DEC 2025',
+    'koru': 'JAN 2026',
+    'citizen': 'DEC 2025',
+    'miyomi': 'FEB 2026',
+    'nina': 'MAR 2026',
+    'amanda': 'FEB 2026'
+  };
+  return launchDates[handle] || 'TBD';
+}
+
+function getTrainerName(handle: string): string {
+  const trainers: Record<string, string> = {
+    'abraham': 'GENE KOGAN',
+    'solienne': 'KRISTI CORONADO & SETH GOLDSTEIN',
+    'geppetto': 'MARTIN & COLIN (LATTICE)',
+    'koru': 'XANDER',
+    'citizen': 'CREATIVE PARTNERSHIP AVAILABLE',
+    'miyomi': 'CREATIVE PARTNERSHIP AVAILABLE',
+    'nina': 'CREATIVE PARTNERSHIP AVAILABLE',
+    'amanda': 'CREATIVE PARTNERSHIP AVAILABLE'
+  };
+  return trainers[handle] || 'TBD';
+}
+
+function getTrainerStatus(handle: string): string {
+  const confirmedTrainers = ['abraham', 'solienne', 'geppetto', 'koru'];
+  return confirmedTrainers.includes(handle) ? 'confirmed' : 'needed';
+}
 
 export default function AcademyPage() {
-  const [agents, setAgents] = useState<GenesisAgent[]>(FALLBACK_AGENTS);
+  const [agents, setAgents] = useState<GenesisAgentDisplay[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchAgents() {
       try {
-        const registryUrl = process.env.NEXT_PUBLIC_REGISTRY_URL || 'https://eden-genesis-registry.vercel.app';
-        const response = await fetch(`${registryUrl}/api/v1/genesis-cohort`, {
-          headers: {
-            'Accept': 'application/json',
-            'x-eden-client': 'academy-ui'
-          }
+        console.log('Academy: Fetching agents from Registry SDK...');
+        
+        // Use Registry SDK - ADR compliance
+        const registryAgents = await registryApi.getAgents({
+          cohort: 'genesis',
+          status: 'ACTIVE'
         });
-
-        if (!response.ok) {
-          throw new Error(`Registry API error: ${response.status}`);
-        }
-
-        const data: GenesisResponse = await response.json();
-        setAgents(data.agents);
+        
+        console.log('Academy: Registry data received:', { 
+          agentCount: registryAgents?.length || 0
+        });
+        
+        // Transform Registry data to display format
+        const displayAgents: GenesisAgentDisplay[] = registryAgents.map((agent: Agent) => ({
+          id: agent.handle,
+          name: agent.displayName.toUpperCase(),
+          status: mapStatusToDisplay(agent.status),
+          date: getDisplayDate(agent.handle),
+          hasProfile: !!agent.profile?.statement,
+          trainer: getTrainerName(agent.handle),
+          worksCount: agent.counts?.creations || 0,
+          description: agent.profile?.statement?.toUpperCase() || 'AI CREATIVE AGENT',
+          image: `/agents/${agent.handle}/profile.svg`,
+          trainerStatus: getTrainerStatus(agent.handle)
+        }));
+        
+        setAgents(displayAgents);
         setError(null);
+        
       } catch (err) {
-        console.warn('Failed to fetch from Registry, using fallback data:', err);
-        setError(err instanceof Error ? err.message : 'Unknown error');
-        // Keep fallback data on error
+        console.error('Registry SDK failed (no fallback available):', err);
+        setError(err instanceof Error ? err.message : 'Registry unavailable');
+        
+        // ADR COMPLIANCE: No fallback data
+        // Registry failure should be visible to user
+        setAgents([]);
       } finally {
         setLoading(false);
       }
@@ -99,11 +140,14 @@ export default function AcademyPage() {
           </div>
         )}
 
-        {/* Error State */}
+        {/* Error State - ADR Compliant */}
         {error && (
-          <div className="border border-yellow-500 p-4 mb-8 bg-yellow-500/10">
-            <div className="text-sm">⚠️ Registry connection failed: {error}</div>
-            <div className="text-xs mt-1 opacity-75">Using cached data. Some information may be outdated.</div>
+          <div className="border border-red-500 p-4 mb-8 bg-red-500/10">
+            <div className="text-sm">🚨 Registry unavailable: {error}</div>
+            <div className="text-xs mt-1 opacity-75">No fallback data available. Registry is required.</div>
+            <div className="text-xs mt-1">
+              <a href="/genesis-cohort" className="underline">Try Genesis Cohort dashboard →</a>
+            </div>
           </div>
         )}
 

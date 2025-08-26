@@ -21,6 +21,15 @@ interface Collection {
   status: 'acquired' | 'watching' | 'sold';
   culturalSignificance: number;
   artistCareerStage: 'emerging' | 'breaking' | 'established';
+  // Enhanced financial metrics
+  roi: number;
+  holdingPeriod: number; // days
+  annualizedReturn: number;
+  liquidity: 'high' | 'medium' | 'low';
+  marketVolume: number; // trading volume
+  priceHistory: number[]; // last 30 days
+  riskScore: number; // 1-100
+  tasteScore: number; // Amanda's conviction rating
 }
 
 interface ArtistDiscovery {
@@ -50,23 +59,39 @@ export default function AmandaDashboard() {
         purchasePrice: 3.2,
         currentValue: 8.7,
         purchaseDate: '2024-01-15',
-        imageUrl: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=400&h=400&fit=crop&crop=center',
+        imageUrl: 'https://picsum.photos/400/400?random=1',
         status: 'acquired',
         culturalSignificance: 95,
-        artistCareerStage: 'breaking'
+        artistCareerStage: 'breaking',
+        roi: 171.9, // (8.7-3.2)/3.2 * 100
+        holdingPeriod: 225, // ~7.4 months
+        annualizedReturn: 278.4,
+        liquidity: 'high',
+        marketVolume: 45.2,
+        priceHistory: [3.2, 4.1, 5.8, 7.2, 8.1, 8.7],
+        riskScore: 25,
+        tasteScore: 98
       },
       {
         id: '2', 
-        title: 'Digital Decay',
+        title: 'Neural Pathways',
         artist: 'Andreas Gysin',
         platform: 'Foundation',
         purchasePrice: 1.8,
         currentValue: 4.3,
         purchaseDate: '2024-02-03',
-        imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=400&fit=crop&crop=center',
+        imageUrl: 'https://picsum.photos/400/400?random=2',
         status: 'acquired',
         culturalSignificance: 88,
-        artistCareerStage: 'emerging'
+        artistCareerStage: 'emerging',
+        roi: 138.9, // (4.3-1.8)/1.8 * 100
+        holdingPeriod: 206, // ~6.8 months
+        annualizedReturn: 242.1,
+        liquidity: 'medium',
+        marketVolume: 28.4,
+        priceHistory: [1.8, 2.2, 3.1, 3.8, 4.1, 4.3],
+        riskScore: 45,
+        tasteScore: 92
       },
       {
         id: '3',
@@ -76,10 +101,18 @@ export default function AmandaDashboard() {
         purchasePrice: 0.5,
         currentValue: 2.1,
         purchaseDate: '2024-03-12',
-        imageUrl: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=400&h=400&fit=crop&crop=center',
-        status: 'watching',
+        imageUrl: 'https://picsum.photos/400/400?random=3',
+        status: 'acquired',
         culturalSignificance: 92,
-        artistCareerStage: 'emerging'
+        artistCareerStage: 'emerging',
+        roi: 320.0, // (2.1-0.5)/0.5 * 100
+        holdingPeriod: 168, // ~5.5 months
+        annualizedReturn: 694.5,
+        liquidity: 'low',
+        marketVolume: 12.8,
+        priceHistory: [0.5, 0.7, 1.2, 1.6, 1.9, 2.1],
+        riskScore: 75,
+        tasteScore: 95
       }
     ]);
 
@@ -155,25 +188,83 @@ export default function AmandaDashboard() {
         </div>
       </div>
 
-      {/* Key Metrics */}
+      {/* Enhanced Portfolio Metrics */}
       <div className="border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-6 py-8">
-          <div className="grid grid-cols-4 gap-8">
+          <h3 className="text-lg font-bold mb-6">PORTFOLIO PERFORMANCE</h3>
+          <div className="grid grid-cols-6 gap-6">
             <div>
               <div className="text-3xl font-bold">{collections.filter(c => c.status === 'acquired').length}</div>
-              <div className="text-sm text-gray-400">WORKS COLLECTED</div>
+              <div className="text-sm text-gray-400">POSITIONS</div>
             </div>
             <div>
-              <div className="text-3xl font-bold">{discoveries.length}</div>
-              <div className="text-sm text-gray-400">ARTISTS DISCOVERED</div>
+              <div className="text-3xl font-bold text-green-400">+{totalReturn.toFixed(0)}%</div>
+              <div className="text-sm text-gray-400">TOTAL RETURN</div>
             </div>
             <div>
-              <div className="text-3xl font-bold">{discoveries.filter(d => d.confidence > 85).length}</div>
-              <div className="text-sm text-gray-400">HIGH CONVICTION</div>
+              <div className="text-3xl font-bold text-blue-400">
+                {(collections.reduce((sum, c) => sum + c.annualizedReturn, 0) / collections.length).toFixed(0)}%
+              </div>
+              <div className="text-sm text-gray-400">AVG ANNUALIZED</div>
             </div>
             <div>
-              <div className="text-3xl font-bold">3-8mo</div>
-              <div className="text-sm text-gray-400">AVG BREAKOUT TIME</div>
+              <div className="text-3xl font-bold text-yellow-400">
+                {(collections.reduce((sum, c) => sum + c.tasteScore, 0) / collections.length).toFixed(0)}
+              </div>
+              <div className="text-sm text-gray-400">TASTE SCORE</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold">
+                {(collections.reduce((sum, c) => sum + c.holdingPeriod, 0) / collections.length).toFixed(0)}d
+              </div>
+              <div className="text-sm text-gray-400">AVG HOLD</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-green-400">
+                {collections.filter(c => c.liquidity === 'high').length}/{collections.length}
+              </div>
+              <div className="text-sm text-gray-400">LIQUID</div>
+            </div>
+          </div>
+          
+          {/* Risk & Performance Grid */}
+          <div className="grid grid-cols-3 gap-6 mt-8 pt-6 border-t border-gray-700">
+            <div className="border border-gray-600 p-4 rounded">
+              <div className="text-sm font-bold mb-2">RISK PROFILE</div>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-xs">Low Risk:</span>
+                  <span className="text-xs text-green-400">{collections.filter(c => c.riskScore < 40).length} positions</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs">Medium Risk:</span>
+                  <span className="text-xs text-yellow-400">{collections.filter(c => c.riskScore >= 40 && c.riskScore < 70).length} positions</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs">High Risk:</span>
+                  <span className="text-xs text-red-400">{collections.filter(c => c.riskScore >= 70).length} positions</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="border border-gray-600 p-4 rounded">
+              <div className="text-sm font-bold mb-2">TASTE vs RETURNS</div>
+              <div className="space-y-2">
+                <div className="text-xs text-gray-400">High Taste + High Returns:</div>
+                <div className="text-lg font-bold text-green-400">
+                  {collections.filter(c => c.tasteScore > 90 && c.roi > 100).length} picks
+                </div>
+                <div className="text-xs">Perfect conviction calls</div>
+              </div>
+            </div>
+            
+            <div className="border border-gray-600 p-4 rounded">
+              <div className="text-sm font-bold mb-2">LIQUIDITY PROFILE</div>
+              <div className="text-xs text-gray-400 mb-2">Total Market Volume:</div>
+              <div className="text-lg font-bold">
+                {collections.reduce((sum, c) => sum + c.marketVolume, 0).toFixed(1)}Ξ
+              </div>
+              <div className="text-xs">Exit capacity available</div>
             </div>
           </div>
         </div>
@@ -187,35 +278,80 @@ export default function AmandaDashboard() {
             <h2 className="text-2xl font-bold mb-6">CURRENT COLLECTION</h2>
             <div className="space-y-4">
               {collections.map((work) => (
-                <div key={work.id} className="border border-white p-6 grid grid-cols-4 gap-4 items-center">
-                  <div className="aspect-square bg-gray-800 rounded overflow-hidden">
-                    <img 
-                      src={work.imageUrl} 
-                      alt={work.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <div className="font-bold">{work.title}</div>
-                    <div className="text-sm text-gray-400">{work.artist}</div>
-                    <div className="text-xs text-gray-500">{work.platform}</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-bold">{work.currentValue}Ξ</div>
-                    <div className="text-sm text-gray-400">from {work.purchasePrice}Ξ</div>
-                    <div className={`text-xs ${work.currentValue > work.purchasePrice ? 'text-green-400' : 'text-red-400'}`}>
-                      {work.currentValue > work.purchasePrice ? '+' : ''}{(((work.currentValue - work.purchasePrice) / work.purchasePrice) * 100).toFixed(0)}%
+                <div key={work.id} className="border border-white p-6">
+                  <div className="grid grid-cols-6 gap-4 items-center mb-4">
+                    <div className="aspect-square bg-gray-800 rounded overflow-hidden">
+                      <img 
+                        src={work.imageUrl} 
+                        alt={work.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <div className="font-bold">{work.title}</div>
+                      <div className="text-sm text-gray-400">{work.artist}</div>
+                      <div className="text-xs text-gray-500">{work.platform}</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="font-bold text-lg">{work.currentValue}Ξ</div>
+                      <div className="text-sm text-gray-400">from {work.purchasePrice}Ξ</div>
+                      <div className={`text-sm font-bold ${work.roi > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                        +{work.roi.toFixed(1)}% ROI
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-bold text-blue-400">
+                        {work.annualizedReturn.toFixed(0)}%
+                      </div>
+                      <div className="text-xs text-gray-400">Annualized</div>
+                      <div className="text-xs text-gray-500">{work.holdingPeriod}d held</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-sm font-bold">Taste • Risk</div>
+                      <div className="flex justify-center gap-2">
+                        <span className="text-green-400">{work.tasteScore}</span>
+                        <span className="text-gray-400">•</span>
+                        <span className={`${work.riskScore < 50 ? 'text-green-400' : 'text-yellow-400'}`}>
+                          {work.riskScore}
+                        </span>
+                      </div>
+                      <div className={`text-xs px-2 py-1 rounded mt-1 ${
+                        work.liquidity === 'high' ? 'bg-green-500/20 text-green-400' :
+                        work.liquidity === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                        'bg-red-500/20 text-red-400'
+                      }`}>
+                        {work.liquidity.toUpperCase()}
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">{work.culturalSignificance}</div>
+                      <div className="text-xs text-gray-400">Cultural</div>
+                      <div className={`text-xs px-2 py-1 rounded ${
+                        work.artistCareerStage === 'emerging' ? 'bg-blue-500/20 text-blue-400' :
+                        work.artistCareerStage === 'breaking' ? 'bg-yellow-500/20 text-yellow-400' :
+                        'bg-green-500/20 text-green-400'
+                      }`}>
+                        {work.artistCareerStage.toUpperCase()}
+                      </div>
                     </div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-sm font-bold">Cultural Score</div>
-                    <div className="text-2xl font-bold">{work.culturalSignificance}</div>
-                    <div className={`text-xs px-2 py-1 rounded ${
-                      work.artistCareerStage === 'emerging' ? 'bg-blue-500/20 text-blue-400' :
-                      work.artistCareerStage === 'breaking' ? 'bg-yellow-500/20 text-yellow-400' :
-                      'bg-green-500/20 text-green-400'
-                    }`}>
-                      {work.artistCareerStage.toUpperCase()}
+                  
+                  {/* Price History Sparkline */}
+                  <div className="border-t border-gray-700 pt-3 mt-3">
+                    <div className="flex justify-between items-center">
+                      <div className="text-xs text-gray-400">Price History (6mo)</div>
+                      <div className="text-xs text-gray-400">Volume: {work.marketVolume}Ξ</div>
+                    </div>
+                    <div className="flex items-end gap-1 mt-2 h-8">
+                      {work.priceHistory.map((price, i) => (
+                        <div 
+                          key={i}
+                          className="bg-green-400 flex-1 min-w-[2px]"
+                          style={{
+                            height: `${(price / Math.max(...work.priceHistory)) * 100}%`
+                          }}
+                        />
+                      ))}
                     </div>
                   </div>
                 </div>
