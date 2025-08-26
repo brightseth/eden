@@ -14,8 +14,15 @@ export function CountdownTimer({ targetDate, label }: CountdownTimerProps) {
     minutes: 0,
     seconds: 0
   });
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+    
     const calculateTimeLeft = () => {
       const difference = new Date(targetDate).getTime() - new Date().getTime();
       
@@ -35,7 +42,7 @@ export function CountdownTimer({ targetDate, label }: CountdownTimerProps) {
     const timer = setInterval(calculateTimeLeft, 1000);
 
     return () => clearInterval(timer);
-  }, [targetDate]);
+  }, [targetDate, isClient]);
 
   return (
     <div className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 rounded-xl p-6 border border-gray-700/50">

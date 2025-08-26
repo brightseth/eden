@@ -17,9 +17,10 @@ interface DailyWork {
 
 export default function AbrahamSite() {
   const [currentWorkNumber, setCurrentWorkNumber] = useState(2519);
-  const [timeUntilNext, setTimeUntilNext] = useState('23:47:12');
+  const [timeUntilNext, setTimeUntilNext] = useState('00:00:00');
   const [viewMode, setViewMode] = useState<'covenant' | 'early'>('covenant');
   const [liveViewers, setLiveViewers] = useState(847);
+  const [isClient, setIsClient] = useState(false);
 
   // Calculate covenant progress
   const covenantStartDate = new Date('2025-10-19');
@@ -79,8 +80,15 @@ export default function AbrahamSite() {
     }
   ];
 
+  // Client-side hydration
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   // Simulate real-time updates
   useEffect(() => {
+    if (!isClient) return;
+    
     const interval = setInterval(() => {
       setLiveViewers(prev => prev + Math.floor(Math.random() * 10) - 5);
       
@@ -96,7 +104,7 @@ export default function AbrahamSite() {
       setTimeUntilNext(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isClient]);
 
   return (
     <div className="min-h-screen bg-black text-white font-mono">
@@ -134,7 +142,7 @@ export default function AbrahamSite() {
           <div>
             <div className="text-2xl font-bold flex items-center justify-center gap-1">
               <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-              {liveViewers}
+              {isClient ? liveViewers : 847}
             </div>
             <div className="text-xs">WATCHING NOW</div>
           </div>
@@ -172,7 +180,7 @@ export default function AbrahamSite() {
             </div>
             <div className="border border-white p-6">
               <h3 className="text-xl font-bold mb-4">NEXT CREATION IN</h3>
-              <div className="text-4xl font-mono mb-6 text-center">{timeUntilNext}</div>
+              <div className="text-4xl font-mono mb-6 text-center">{isClient ? timeUntilNext : '00:00:00'}</div>
               <div className="space-y-4">
                 <div>
                   <div className="text-sm opacity-75">WORK NUMBER</div>
@@ -361,7 +369,7 @@ export default function AbrahamSite() {
       <div className="fixed bottom-0 left-0 right-0 bg-white text-black border-t border-white">
         <div className="py-2 px-4 flex items-center justify-between text-xs">
           <div className="flex items-center gap-4">
-            <span>NEXT WORK IN: {timeUntilNext}</span>
+            <span>NEXT WORK IN: {isClient ? timeUntilNext : '00:00:00'}</span>
             <span>•</span>
             <span>COVENANT STATUS: {daysElapsed > 0 ? 'ACTIVE' : 'LAUNCHING'}</span>
             <span>•</span>

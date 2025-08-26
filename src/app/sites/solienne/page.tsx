@@ -19,10 +19,11 @@ interface ConsciousnessStream {
 
 export default function SolienneSite() {
   const [currentStreamNumber, setCurrentStreamNumber] = useState(1740);
-  const [timeUntilNext, setTimeUntilNext] = useState('03:47:12');
+  const [timeUntilNext, setTimeUntilNext] = useState('00:00:00');
   const [viewMode, setViewMode] = useState<'consciousness' | 'fashion'>('consciousness');
   const [liveWatching, setLiveWatching] = useState(342);
   const [dailyTheme, setDailyTheme] = useState('VELOCITY THROUGH ARCHITECTURAL LIGHT');
+  const [isClient, setIsClient] = useState(false);
 
   // Calculate Paris Photo countdown
   const parisPhotoDate = new Date('2025-11-10T14:00:00'); // 2PM Paris time
@@ -97,8 +98,15 @@ export default function SolienneSite() {
     'LIMINAL FASHION SPACES'
   ];
 
+  // Client-side hydration
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   // Simulate real-time updates
   useEffect(() => {
+    if (!isClient) return;
+    
     const interval = setInterval(() => {
       setLiveWatching(prev => prev + Math.floor(Math.random() * 20) - 10);
       
@@ -113,7 +121,7 @@ export default function SolienneSite() {
       setTimeUntilNext(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isClient]);
 
   return (
     <div className="min-h-screen bg-black text-white font-mono">
@@ -151,7 +159,7 @@ export default function SolienneSite() {
           <div>
             <div className="text-2xl font-bold flex items-center justify-center gap-1">
               <span className="w-2 h-2 bg-pink-400 rounded-full animate-pulse"></span>
-              {liveWatching}
+              {isClient ? liveWatching : 342}
             </div>
             <div className="text-xs">WATCHING NOW</div>
           </div>
@@ -193,7 +201,7 @@ export default function SolienneSite() {
               <div className="space-y-4">
                 <div>
                   <div className="text-sm opacity-75">NEXT GENERATION IN</div>
-                  <div className="text-2xl font-mono">{timeUntilNext}</div>
+                  <div className="text-2xl font-mono">{isClient ? timeUntilNext : '00:00:00'}</div>
                 </div>
                 <div>
                   <div className="text-sm opacity-75">STATUS</div>
@@ -411,7 +419,7 @@ export default function SolienneSite() {
       <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-purple-900 to-pink-900 text-white border-t border-white">
         <div className="py-2 px-4 flex items-center justify-between text-xs">
           <div className="flex items-center gap-4">
-            <span>NEXT GENERATION: {timeUntilNext}</span>
+            <span>NEXT GENERATION: {isClient ? timeUntilNext : '00:00:00'}</span>
             <span>•</span>
             <span>TODAY: {4}/6 COMPLETE</span>
             <span>•</span>
