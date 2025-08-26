@@ -47,6 +47,15 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
     rollbackPlan: 'Manual launch approval process'
   },
 
+  ENABLE_EDEN2038_INTEGRATION: {
+    key: 'ENABLE_EDEN2038_INTEGRATION',
+    description: 'Enable integration between Academy and Eden2038 covenant experience',
+    defaultValue: true,
+    rolloutStrategy: 'full',
+    culturalImpact: 'Academy covenant page directs users to Eden2038 for full 13-year covenant tracking experience',
+    rollbackPlan: 'Academy maintains full covenant page, no Eden2038 references'
+  },
+
   ENABLE_DATA_RECONCILIATION: {
     key: 'ENABLE_DATA_RECONCILIATION',
     description: 'Enable automatic data reconciliation between Registry and Spirit Registry',
@@ -171,6 +180,7 @@ export const FLAGS = {
   ENABLE_ONCHAIN_BADGES: 'ENABLE_ONCHAIN_BADGES', 
   ENABLE_TOKEN_ECONOMICS: 'ENABLE_TOKEN_ECONOMICS',
   ENABLE_LAUNCH_CRITERIA: 'ENABLE_LAUNCH_CRITERIA',
+  ENABLE_EDEN2038_INTEGRATION: 'ENABLE_EDEN2038_INTEGRATION',
   ENABLE_DATA_RECONCILIATION: 'ENABLE_DATA_RECONCILIATION',
   ENABLE_REGISTRY_SYNC: 'ENABLE_REGISTRY_SYNC',
   ENABLE_ABRAHAM_REGISTRY_INTEGRATION: 'ENABLE_ABRAHAM_REGISTRY_INTEGRATION',

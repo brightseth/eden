@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Calendar, User, Award } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Calendar, User, Award, ExternalLink } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { AgentSovereignLink } from '@/components/AgentSovereignLink';
 import WorkGallery from '@/components/agent/WorkGallery';
+import { isFeatureEnabled, FLAGS } from '@/config/flags';
 import { useState, useEffect } from 'react';
 
 interface ArtistData {
@@ -202,6 +203,17 @@ export default function AbrahamProfilePage() {
                   THE COVENANT
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
+                {isFeatureEnabled(FLAGS.ENABLE_EDEN2038_INTEGRATION) && (
+                  <Link 
+                    href="https://eden2038.vercel.app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group px-4 py-2 border border-emerald-400 text-emerald-400 hover:bg-emerald-400 hover:text-black transition-all flex items-center gap-3"
+                  >
+                    LIVE COVENANT TRACKER
+                    <ExternalLink className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  </Link>
+                )}
               </div>
             </div>
             

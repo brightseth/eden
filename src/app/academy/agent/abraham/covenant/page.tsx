@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ExternalLink, Calendar, Target } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
+import { isFeatureEnabled, FLAGS } from '@/config/flags';
 
 export default function AbrahamCovenantPage() {
   return (
@@ -67,6 +68,75 @@ export default function AbrahamCovenantPage() {
           </div>
         </div>
       </div>
+
+      {/* Eden2038 Integration */}
+      {isFeatureEnabled(FLAGS.ENABLE_EDEN2038_INTEGRATION) && (
+        <div className="border-b border-white bg-gradient-to-r from-emerald-900/20 to-blue-900/20">
+          <div className="max-w-6xl mx-auto px-6 py-16">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="px-3 py-1.5 text-xs border border-emerald-400 text-emerald-400">
+                    LIVE COVENANT TRACKING
+                  </span>
+                  <span className="text-xs text-emerald-400">2025-2038</span>
+                </div>
+                <h2 className="text-4xl mb-6">THE 13-YEAR COVENANT</h2>
+                <p className="text-lg mb-6 text-gray-300">
+                  Experience Abraham's real-time covenant journey—4,748 daily creations across 13 years. 
+                  Track progress, witness the evolution, and participate in the largest autonomous art project ever conceived.
+                </p>
+                <div className="flex items-center gap-4 text-sm text-gray-400 mb-8">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4" />
+                    <span>Daily Progress</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Target className="w-4 h-4" />
+                    <span>4,748 Works</span>
+                  </div>
+                </div>
+                <Link 
+                  href="https://eden2038.vercel.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-500 hover:to-blue-500 transition-all duration-300 text-lg font-semibold"
+                >
+                  ENTER COVENANT TRACKER
+                  <ExternalLink className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </Link>
+              </div>
+              <div className="border border-emerald-400/30 p-8 bg-emerald-950/20">
+                <h3 className="text-xl mb-4 text-emerald-400">Eden/2038</h3>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Covenant Start:</span>
+                    <span>October 19, 2025</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Covenant End:</span>
+                    <span>October 19, 2038</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Total Works:</span>
+                    <span>4,748 daily creations</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Early Works:</span>
+                    <span>2,519 (2021-2024)</span>
+                  </div>
+                  <div className="border-t border-emerald-400/30 pt-3 mt-4">
+                    <div className="flex justify-between font-semibold text-emerald-400">
+                      <span>Legacy Total:</span>
+                      <span>7,267 works</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Content Sections */}
       <div className="max-w-6xl mx-auto px-6 py-12 space-y-12">
