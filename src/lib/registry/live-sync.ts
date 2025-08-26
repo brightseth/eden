@@ -1,9 +1,9 @@
 // Live Registry Data Sync
 // Uses official Registry SDK - NO STATIC FALLBACKS
 
-import { RegistryClient, Agent as RegistryAgent, Creation } from '@eden/registry-sdk';
+import { RegistryClient, Agent as RegistryAgent, Creation } from './sdk';
 
-interface LegacyRegistryAgent {
+interface LegacyRegistryAgent extends RegistryAgent {
   id: string;
   handle: string;
   displayName: string;

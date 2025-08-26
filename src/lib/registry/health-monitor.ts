@@ -4,7 +4,7 @@
  * Enforces Registry as single source of truth - no fallbacks
  */
 
-import { RegistryClient } from '@eden/registry-sdk';
+import { RegistryClient } from './sdk';
 
 interface HealthStatus {
   status: 'healthy' | 'degraded' | 'critical';
