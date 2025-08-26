@@ -50,7 +50,7 @@ export default function AmandaDashboard() {
         purchasePrice: 3.2,
         currentValue: 8.7,
         purchaseDate: '2024-01-15',
-        imageUrl: '/placeholder-art.jpg',
+        imageUrl: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=400&h=400&fit=crop&crop=center',
         status: 'acquired',
         culturalSignificance: 95,
         artistCareerStage: 'breaking'
@@ -63,7 +63,7 @@ export default function AmandaDashboard() {
         purchasePrice: 1.8,
         currentValue: 4.3,
         purchaseDate: '2024-02-03',
-        imageUrl: '/placeholder-art.jpg',
+        imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=400&fit=crop&crop=center',
         status: 'acquired',
         culturalSignificance: 88,
         artistCareerStage: 'emerging'
@@ -76,7 +76,7 @@ export default function AmandaDashboard() {
         purchasePrice: 0.5,
         currentValue: 2.1,
         purchaseDate: '2024-03-12',
-        imageUrl: '/placeholder-art.jpg',
+        imageUrl: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=400&h=400&fit=crop&crop=center',
         status: 'watching',
         culturalSignificance: 92,
         artistCareerStage: 'emerging'
@@ -188,7 +188,13 @@ export default function AmandaDashboard() {
             <div className="space-y-4">
               {collections.map((work) => (
                 <div key={work.id} className="border border-white p-6 grid grid-cols-4 gap-4 items-center">
-                  <div className="aspect-square bg-gray-800 rounded"></div>
+                  <div className="aspect-square bg-gray-800 rounded overflow-hidden">
+                    <img 
+                      src={work.imageUrl} 
+                      alt={work.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                   <div>
                     <div className="font-bold">{work.title}</div>
                     <div className="text-sm text-gray-400">{work.artist}</div>

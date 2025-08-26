@@ -3,12 +3,17 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
+import { registryApi } from '@/lib/generated-sdk';
 import { 
   CheckCircle, AlertCircle, Clock, Users, Calendar, 
   TrendingUp, Award, ChevronRight, RefreshCw, Signal
 } from 'lucide-react';
 
-interface GenesisAgent {
+// Use Registry SDK types directly
+import type { Agent } from '@/lib/generated-sdk';
+
+// Local interface for display-specific data
+interface GenesisAgentDisplay {
   id: string;
   name: string;
   status: 'LAUNCHING' | 'DEVELOPING' | 'TRAINING';
@@ -26,7 +31,7 @@ interface GenesisAgent {
 }
 
 interface RegistryResponse {
-  agents: GenesisAgent[];
+  agents: Agent[];
   applicationOpportunities?: {
     trainerMatching: {
       count: number;
@@ -45,6 +50,50 @@ interface RegistryResponse {
   };
 }
 
+// Helper functions to map Registry data to display format
+function mapRegistryStatusToDisplay(status: string): 'LAUNCHING' | 'DEVELOPING' | 'TRAINING' {
+  // Map Registry statuses to Genesis Cohort display statuses
+  if (status === 'ACTIVE') return 'LAUNCHING';
+  if (status === 'ONBOARDING') return 'TRAINING';
+  return 'DEVELOPING';
+}
+
+function getAgentLaunchDate(handle: string): string {
+  // Static mapping for demo - in production would come from Registry
+  const launchDates: Record<string, string> = {
+    'abraham': 'October 19, 2025',
+    'solienne': 'November 10, 2025', 
+    'geppetto': 'December 2025',
+    'koru': 'January 2026',
+    'citizen': 'Q1 2026',
+    'miyomi': 'February 2026',
+    'nina': 'Q1 2026',
+    'amanda': 'March 2026'
+  };
+  return launchDates[handle] || 'TBD';
+}
+
+function getAgentTrainer(handle: string): string {
+  // Static mapping for demo - in production would come from Registry
+  const trainers: Record<string, string> = {
+    'abraham': 'Gene Kogan',
+    'solienne': 'Kristi Coronado',
+    'geppetto': 'Martin & Colin (Lattice)', 
+    'koru': 'Xander',
+    'citizen': 'TBD - Applications Open',
+    'miyomi': 'TBD - Applications Open',
+    'nina': 'TBD - Applications Open',
+    'amanda': 'TBD - Applications Open'
+  };
+  return trainers[handle] || 'TBD';
+}
+
+function getTrainerStatus(handle: string): 'confirmed' | 'needed' | 'interviewing' {
+  // Static mapping for demo - in production would come from Registry
+  const confirmedTrainers = ['abraham', 'solienne', 'geppetto', 'koru'];
+  return confirmedTrainers.includes(handle) ? 'confirmed' : 'needed';
+}
+
 export default function GenesisCohortDashboard() {
   const [data, setData] = useState<RegistryResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -54,53 +103,78 @@ export default function GenesisCohortDashboard() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const registryUrl = process.env.NEXT_PUBLIC_REGISTRY_URL || 'https://eden-genesis-registry.vercel.app';
-      console.log('Fetching from Registry:', `${registryUrl}/api/v1/genesis-cohort`);
+      console.log('Fetching Genesis cohort from Registry SDK...');
       
-      // Create abort controller for timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      // Use Registry SDK instead of raw fetch - ADR compliance
+      const registryResponse = await registryApi.getAgents({
+        cohort: 'genesis',
+        status: 'ACTIVE'
+      });
       
-      try {
-        const response = await fetch(`${registryUrl}/api/v1/genesis-cohort`, {
-          headers: {
-            'Accept': 'application/json',
-            'x-eden-client': 'academy-dashboard'
-          },
-          cache: 'no-store',
-          signal: controller.signal
-        });
-        
-        clearTimeout(timeoutId);
-
-        console.log('Registry response status:', response.status, response.statusText);
-
-        if (response.ok) {
-          const result: RegistryResponse = await response.json();
-          console.log('Registry data received:', { 
-            agentCount: result.agents?.length || 0,
-            hasApplications: !!result.applicationOpportunities,
-            hasSummary: !!result.summary 
-          });
-          
-          setData(result);
-          setLastUpdate(new Date());
-          setIsLive(true);
-        } else {
-          console.error('Registry returned error:', response.status, await response.text());
-          setIsLive(false);
+      // Handle Registry API response structure (returns {agents: Agent[]})
+      const agents = Array.isArray(registryResponse) 
+        ? registryResponse 
+        : (registryResponse as any).agents || [];
+      
+      console.log('Registry SDK data received:', { 
+        agentCount: agents?.length || 0
+      });
+      
+      // Transform Registry data to display format
+      const displayAgents = agents.map(agent => ({
+        id: agent.handle,
+        name: agent.displayName,
+        status: mapRegistryStatusToDisplay(agent.status),
+        date: getAgentLaunchDate(agent.handle),
+        trainer: getAgentTrainer(agent.handle),
+        trainerStatus: getTrainerStatus(agent.handle),
+        worksCount: agent.counts?.creations || 0,
+        description: agent.profile?.statement,
+        profile: {
+          statement: agent.profile?.statement,
+          specialty: agent.profile?.tags?.[0] || 'Specialist'
         }
-      } catch (fetchError) {
-        clearTimeout(timeoutId);
-        console.error('Registry fetch error:', fetchError);
-        setIsLive(false);
-      }
+      }));
+      
+      // Create compatible response structure
+      const result: RegistryResponse = {
+        agents: agents,
+        summary: {
+          total: agents.length,
+          confirmed: displayAgents.filter(a => a.trainerStatus === 'confirmed').length,
+          needingTrainers: displayAgents.filter(a => a.trainerStatus === 'needed').length,
+          openSlots: agents.filter(a => a.handle.startsWith('open-')).length
+        },
+        applicationOpportunities: {
+          trainerMatching: {
+            count: displayAgents.filter(a => a.trainerStatus === 'needed').length,
+            agents: displayAgents
+              .filter(a => a.trainerStatus === 'needed')
+              .map(a => ({ 
+                name: a.name, 
+                specialty: a.profile?.specialty || 'Specialist' 
+              }))
+          },
+          completePositions: {
+            count: 2,
+            description: 'Open slots for agent + trainer pairs'
+          }
+        }
+      };
+      
+      setData(result);
+      setLastUpdate(new Date());
+      setIsLive(true);
+      
     } catch (error) {
-      console.error('Registry fetch failed:', error);
+      console.error('Registry SDK failed:', error);
       if (error instanceof Error) {
         console.error('Error details:', error.message, error.name);
       }
       setIsLive(false);
+      
+      // ADR compliance: No fallback data allowed
+      // Registry is required as single source of truth
     } finally {
       setLoading(false);
     }
