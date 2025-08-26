@@ -36,7 +36,7 @@ function getDisplayDate(handle: string): string {
   const launchDates: Record<string, string> = {
     'abraham': 'OCT 19, 2025',
     'solienne': 'NOV 10, 2025',
-    'geppetto': 'DEC 2025',
+    'geppetto': 'Q4 2025',
     'koru': 'JAN 2026',
     'citizen': 'DEC 2025',
     'miyomi': 'FEB 2026',
@@ -50,7 +50,7 @@ function getTrainerName(handle: string): string {
   const trainers: Record<string, string> = {
     'abraham': 'GENE KOGAN',
     'solienne': 'KRISTI CORONADO & SETH GOLDSTEIN',
-    'geppetto': 'MARTIN KVALE & COLIN HUERTER (LATTICE)',
+    'geppetto': 'MARTIN ANTIQUEL & COLIN MCBRIDE (LATTICE)',
     'koru': 'XANDER',
     'citizen': 'CREATIVE PARTNERSHIP AVAILABLE',
     'miyomi': 'CREATIVE PARTNERSHIP AVAILABLE',
