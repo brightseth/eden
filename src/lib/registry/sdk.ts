@@ -9,7 +9,7 @@
  * - Proper error handling
  */
 
-import fetch from 'cross-fetch';
+// Use native fetch in browser/Node 18+
 
 // Registry API Configuration
 const DEFAULT_BASE_URL = 'https://eden-genesis-registry.vercel.app/api/v1';
