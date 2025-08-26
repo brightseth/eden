@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { EDEN_AGENTS } from '@/data/eden-agents-manifest';
+// NO STATIC DATA - Registry is the single source of truth
 
 interface LiveAgent {
   id: string;
@@ -38,9 +38,9 @@ interface LiveAgentDataProps {
 }
 
 export default function LiveAgentData({ children }: LiveAgentDataProps) {
-  const [agents, setAgents] = useState<LiveAgent[]>(EDEN_AGENTS as any);
+  const [agents, setAgents] = useState<LiveAgent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [source, setSource] = useState<'live' | 'static'>('static');
+  const [source, setSource] = useState<'live' | 'static'>('live');
 
   useEffect(() => {
     let isMounted = true;
@@ -69,12 +69,12 @@ export default function LiveAgentData({ children }: LiveAgentDataProps) {
         }
 
       } catch (error) {
-        console.warn('[LiveAgentData] Registry fetch failed, using static data:', error);
+        console.error('[LiveAgentData] Registry unavailable - NO FALLBACK:', error);
         
         if (isMounted) {
-          // Fallback to static manifest
-          setAgents(EDEN_AGENTS as any);
-          setSource('static');
+          // NO STATIC FALLBACK - Registry is required
+          setAgents([]);
+          setSource('live'); // Still mark as live since static is forbidden
         }
       } finally {
         if (isMounted) {

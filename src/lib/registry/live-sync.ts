@@ -1,7 +1,9 @@
 // Live Registry Data Sync
-// Replaces static manifest with real-time Registry API data
+// Uses official Registry SDK - NO STATIC FALLBACKS
 
-interface RegistryAgent {
+import { RegistryClient, Agent as RegistryAgent, Creation } from '@eden/registry-sdk';
+
+interface LegacyRegistryAgent {
   id: string;
   handle: string;
   displayName: string;
@@ -36,79 +38,40 @@ interface RegistryResponse {
 }
 
 export class LiveRegistrySync {
-  private baseUrl = 'https://eden-genesis-registry.vercel.app/api/v1';
+  private client: RegistryClient;
   private cache: Map<string, { data: any; timestamp: number }> = new Map();
   private cacheExpiry = 5 * 60 * 1000; // 5 minutes
 
-  // Fetch live agents from Registry
+  constructor() {
+    this.client = new RegistryClient({
+      onError: (error) => console.error('[LiveSync] Registry error:', error)
+    });
+  }
+
+  // Fetch live agents from Registry - NO FALLBACKS
   async fetchLiveAgents(): Promise<RegistryAgent[]> {
-    const cacheKey = 'live-agents';
-    const cached = this.cache.get(cacheKey);
+    console.log('[LiveSync] Fetching from Registry (no static fallback)');
     
-    if (cached && Date.now() - cached.timestamp < this.cacheExpiry) {
-      console.log('[LiveSync] Using cached Registry data');
-      return cached.data;
-    }
-
     try {
-      console.log('[LiveSync] Fetching fresh data from Registry API');
-      const response = await fetch(`${this.baseUrl}/agents`, {
-        headers: {
-          'accept': 'application/json',
-          'user-agent': 'Eden Academy Live Sync'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`Registry API returned ${response.status}`);
-      }
-
-      const data: RegistryResponse = await response.json();
-      
-      // Cache the fresh data
-      this.cache.set(cacheKey, {
-        data: data.agents,
-        timestamp: Date.now()
-      });
-
-      console.log(`[LiveSync] Fetched ${data.agents.length} agents from Registry`);
-      return data.agents;
-
+      // Use official SDK - enforces Registry as single source of truth
+      const agents = await this.client.agents.list();
+      console.log(`[LiveSync] Fetched ${agents.length} agents from Registry`);
+      return agents;
     } catch (error) {
-      console.error('[LiveSync] Failed to fetch from Registry:', error);
-      
-      // Return cached data if available, even if expired
-      const cached = this.cache.get(cacheKey);
-      if (cached) {
-        console.log('[LiveSync] Using stale cached data due to error');
-        return cached.data;
-      }
-      
-      throw new Error('Registry unavailable and no cached data');
+      console.error('[LiveSync] Registry unavailable - NO STATIC FALLBACK:', error);
+      throw new Error('Registry is required - no static data fallback allowed');
     }
   }
 
   // Get agent works/creations from Registry
-  async fetchAgentCreations(agentId: string): Promise<any[]> {
+  async fetchAgentCreations(agentId: string): Promise<Creation[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/agents/${agentId}/creations`, {
-        headers: {
-          'accept': 'application/json',
-          'user-agent': 'Eden Academy Live Sync'
-        }
-      });
-
-      if (!response.ok) {
-        console.warn(`[LiveSync] No creations found for ${agentId}`);
-        return [];
-      }
-
-      const data = await response.json();
-      return data.creations || [];
-
+      // Use official SDK
+      const creations = await this.client.creations.list(agentId, { status: 'published' });
+      return creations;
     } catch (error) {
       console.error(`[LiveSync] Failed to fetch creations for ${agentId}:`, error);
-      return [];
+      throw new Error('Registry creations endpoint required');
     }
   }
 
@@ -117,7 +80,7 @@ export class LiveRegistrySync {
     // Map Registry roles to Academy trainer info
     const trainerMap: Record<string, { name: string; id: string }> = {
       'abraham': { name: 'Gene Kogan', id: 'gene-kogan' },
-      'solienne': { name: 'Kristi Coronado & Seth Goldstein', id: 'kristi-seth' },
+      'solienne': { name: 'Seth Goldstein', id: 'seth-goldstein' },
       'miyomi': { name: 'Seth Goldstein', id: 'seth-goldstein' },
       'geppetto': { name: 'Lattice', id: 'lattice' },
       'koru': { name: 'Xander', id: 'xander' },
@@ -157,7 +120,8 @@ export class LiveRegistrySync {
       status: statusMap[registryAgent.status] || 'training',
       launchDate: this.estimateLaunchDate(registryAgent.handle),
       trainer: trainerMap[registryAgent.handle] || { name: 'TBD', id: 'tbd' },
-      specialization: registryAgent.profile.links.specialty.description,
+      // USE REGISTRY DATA DIRECTLY - no overrides
+      specialization: registryAgent.profile.links?.specialty?.description || registryAgent.profile.statement,
       description: registryAgent.profile.statement,
       economyMetrics: {
         monthlyRevenue: estimateRevenue(registryAgent.role, registryAgent.counts.creations),
@@ -195,17 +159,29 @@ export class LiveRegistrySync {
   }
 
   private inferModel(medium: string): string {
-    const modelMap: Record<string, string> = {
-      'knowledge-synthesis': 'Knowledge LLM + Visual Generation',
-      'identity-art': 'Self-Portrait Generation + Reflection LLM', 
-      'toys': '3D Generation + Manufacturing Integration',
-      'community': 'Event Planning + Coordination LLM',
-      'curation': 'Aesthetic Analysis + Critique LLM',
-      'economics': 'Market Analysis + Investment LLM',
-      'governance': 'DAO Management + Consensus LLM',
-      'prediction-markets': 'Probability LLM + Market Integration'
-    };
-    return modelMap[medium] || 'Multi-Modal AI System';
+    // Map Registry medium descriptions to technical models
+    if (medium?.includes('identity') || medium?.includes('self-portrait')) {
+      return 'Identity Exploration LLM + Self-Portrait Generation';
+    }
+    if (medium?.includes('knowledge')) {
+      return 'Knowledge Synthesis LLM + Visual Generation';
+    }
+    if (medium?.includes('fashion')) {
+      return 'Fashion AI + Aesthetic Curation LLM';
+    }
+    if (medium?.includes('toy') || medium?.includes('3D')) {
+      return '3D Generation + Manufacturing Integration';
+    }
+    if (medium?.includes('market') || medium?.includes('prediction')) {
+      return 'Probability LLM + Market Analysis';
+    }
+    if (medium?.includes('art') || medium?.includes('collection')) {
+      return 'Art Curation + Investment Analysis LLM';
+    }
+    if (medium?.includes('govern') || medium?.includes('DAO')) {
+      return 'DAO Management + Governance LLM';
+    }
+    return 'Multi-Modal AI System';
   }
 
   private inferSocialProfiles(handle: string): any {

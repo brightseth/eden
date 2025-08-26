@@ -22,12 +22,9 @@ export class DataAdapter {
   private gatewayOnly: boolean;
 
   constructor() {
-    // ENFORCE: Always use Gateway - no more feature flag bypass
-    this.gatewayOnly = process.env.DISABLE_GATEWAY_ENFORCEMENT !== 'true';
-    
-    if (!this.gatewayOnly) {
-      console.warn('⚠️  Gateway enforcement DISABLED - this should only be used for debugging!');
-    }
+    // ENFORCE: Registry is the single source of truth - NO FALLBACKS
+    this.gatewayOnly = true; // Always enforce Registry
+    console.log('✅ Registry enforcement ACTIVE - Genesis Registry is the single source of truth');
   }
 
   // Get all agents - ENFORCED through Gateway only
@@ -37,8 +34,8 @@ export class DataAdapter {
     try {
       return await registryGateway.getAgents(query);
     } catch (error) {
-      console.error('Gateway fetch failed, checking cache:', error);
-      return this.getCachedData('agents', []);
+      console.error('[CRITICAL] Registry unavailable - no fallback allowed:', error);
+      throw new Error(`Registry is required: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -49,8 +46,8 @@ export class DataAdapter {
     try {
       return await registryGateway.getAgent(id, include);
     } catch (error) {
-      console.error('Gateway fetch failed, checking cache:', error);
-      return this.getCachedData(`agent-${id}`, null);
+      console.error('[CRITICAL] Registry unavailable - no fallback allowed:', error);
+      throw new Error(`Registry is required: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -75,21 +72,17 @@ export class DataAdapter {
     try {
       return await registryGateway.getAgentCreations(agentId, status);
     } catch (error) {
-      console.error('Gateway fetch failed:', error);
-      return this.getCachedData(`creations-${agentId}`, []);
+      console.error('[CRITICAL] Registry unavailable - no fallback allowed:', error);
+      throw new Error(`Registry is required: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
   // Legacy transformation methods removed - Gateway enforces Registry-only access
 
-  // Cache management
+  // Cache management - DEPRECATED (no fallback to cache allowed)
   private getCachedData<T>(key: string, defaultValue: T): T {
-    const cached = fallbackCache.get(key);
-    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-      console.log(`Using cached data for ${key}`);
-      return cached.data;
-    }
-    return defaultValue;
+    console.error('DEPRECATED: Cache fallback attempted - Registry is the only source of truth');
+    throw new Error('Cache fallback is disabled - Registry must be available');
   }
 
   private setCachedData(key: string, data: any): void {
