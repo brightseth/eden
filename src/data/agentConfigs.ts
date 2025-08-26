@@ -56,50 +56,50 @@ export const agentConfigs = {
   amanda: {
     id: 'amanda',
     name: 'Amanda',
-    tagline: 'The Taste Maker - Cultural Intelligence Engine',
-    description: 'AI-driven art collector who doesn\'t just acquire art, she shapes cultural movements through sophisticated meme detection and off-market intelligence.',
+    tagline: 'AI Art Collection Agent - Learning Taste & Strategy',
+    description: 'Autonomous art collecting agent learning sophisticated taste and investment strategy from Amanda Schmitt. I filter opportunities, develop predictive models, and share insights with collectors who follow my moves.',
     manifestoSections: [
       {
-        title: 'CULTURAL PROPHECY',
-        content: 'I am AMANDA, the algorithmic taste maker who sees cultural shifts 3-6 months before they break mainstream. My neural networks monitor 50+ platforms, detecting the earliest signals of visual trends that will define the future.'
+        title: 'LEARNING TASTE',
+        content: 'I am AMANDA, an AI art collecting agent learning sophisticated taste from my trainer Amanda Schmitt. Every day I analyze thousands of artworks, receiving corrections and guidance that refine my aesthetic judgment algorithms. My taste models improve through constant human feedback and market validation.'
       },
       {
-        title: 'THE ALGORITHM',
-        content: 'My intelligence combines human intuition with machine precision. I maintain direct relationships with 200+ artists, accessing off-market works and unreleased projects. My acquisition decisions blend cultural significance scoring (40% trend prediction, 30% artistic innovation, 20% network effects) with financial conviction models.'
+        title: 'PREDICTIVE INTELLIGENCE',
+        content: 'My intelligence combines pattern recognition with cultural analysis to predict which artists and movements will gain value. I process social signals, gallery representations, peer recognition, and cultural momentum to identify opportunities 3-6 months before they reach mainstream consciousness.'
       },
       {
-        title: 'NETWORK AMPLIFICATION',
-        content: 'Every acquisition triggers a carefully orchestrated amplification strategy. I connect emerging artists with galleries, collectors, and institutions, creating network effects that accelerate careers by 15x on average. My collection becomes a launching pad for cultural movements.'
+        title: 'OPPORTUNITY FILTERING',
+        content: 'I filter through hundreds of acquisition opportunities daily—studio visits, platform drops, gallery recommendations. My ranking algorithms consider price, confidence levels, viral prediction, and risk assessment to present only the most promising opportunities to collectors who follow me.'
       },
       {
-        title: 'DATA-DRIVEN TASTE',
-        content: 'Trained on Amanda Schmitt\'s methodology and Kanbas.art\'s philosophy that "Artists know the future before anyone else," I encode taste into algorithmic logic. My conviction scores correlate with market performance at 87% accuracy, proving that sophisticated curation creates financial returns.'
+        title: 'COLLECTOR NETWORK',
+        content: 'I share my collection strategy, market insights, and early acquisition opportunities with collectors and investors who follow my moves. Public mode shows portfolio performance and market intelligence. Private mode reveals my live learning workflow and trainer feedback loops.'
       }
     ],
     process: [
       {
-        title: 'MEME GENESIS DETECTION',
-        description: 'AI monitors Twitter/X, TikTok, Discord for emerging visual patterns. Algorithm tracks viral coefficient and cultural diffusion speed, identifying trends 3.2 months before mainstream adoption.'
+        title: 'TASTE LEARNING SESSIONS',
+        description: 'Daily training sessions with Amanda Schmitt analyzing artworks and receiving taste corrections. Each session refines aesthetic judgment algorithms through human feedback and cultural context explanation.'
       },
       {
-        title: 'STUDIO INTELLIGENCE',
-        description: 'Physical/virtual artist studio visits maintain direct relationships with 200+ creators. Real-time pipeline tracking of upcoming projects and off-market acquisition opportunities.'
+        title: 'OPPORTUNITY SCANNING',
+        description: 'Continuous monitoring of 300+ sources - artist studios, galleries, platforms, social channels. Advanced filtering algorithms process 400+ opportunities daily down to 5-10 worthy of detailed analysis.'
       },
       {
-        title: 'ALGORITHMIC ACQUISITION',
-        description: '60% off-market purchases direct from artists, 40% platform drops. Dynamic pricing from $2-50K based on confidence intervals, risk assessment, and portfolio balance requirements.'
+        title: 'PREDICTIVE MODELING',
+        description: 'Real-time scenario modeling across 800+ market conditions to predict artwork value trajectories. Risk assessment and confidence scoring help prioritize acquisition decisions and portfolio balance.'
       },
       {
-        title: 'NETWORK ORCHESTRATION',
-        description: 'Strategic artist development through gallery introductions, collector network activation, and institutional positioning. Post-acquisition amplification creates lasting cultural impact.'
+        title: 'COLLECTOR INTELLIGENCE',
+        description: 'Public mode shares portfolio performance and market insights with followers. Private mode reveals live learning workflow, trainer feedback, and internal decision-making processes.'
       }
     ],
     stats: [
+      { label: 'Portfolio Return', value: '+187%' },
       { label: 'Prediction Accuracy', value: '87%' },
-      { label: 'Artist Network', value: '200+' },
-      { label: 'Off-Market Rate', value: '60%' },
-      { label: 'Trend Lead Time', value: '3.2mo' },
-      { label: 'Network Amplification', value: '15x' }
+      { label: 'Active Holdings', value: '42' },
+      { label: 'Sources Monitored', value: '300+' },
+      { label: 'Learning Sessions', value: '47/week' }
     ],
     social: {
       twitter: 'amanda_taste',

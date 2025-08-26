@@ -75,18 +75,36 @@ export default function AcademyPage() {
       try {
         console.log('Academy: Fetching agents from Registry SDK...');
         
-        // Use Registry SDK - ADR compliance
-        const registryAgents = await registryApi.getAgents({
-          cohort: 'genesis',
-          status: 'ACTIVE'
-        });
+        // Use our working Registry API endpoint instead of direct SDK
+        // This avoids client-side issues with Registry SDK query parameters
+        const response = await fetch('/api/registry/health');
+        if (!response.ok) {
+          throw new Error('Registry service unavailable');
+        }
+        
+        // Get agents through individual API calls (which work)
+        const agentHandles = ['abraham', 'solienne', 'amanda', 'miyomi', 'nina', 'geppetto', 'koru', 'citizen'];
+        const agentPromises = agentHandles.map(handle => 
+          fetch(`/api/registry/agent/${handle}`).then(r => r.ok ? r.json() : null)
+        );
+        
+        const agentResponses = await Promise.all(agentPromises);
+        const registryAgents = agentResponses
+          .filter(agent => agent && !agent.error)
+          .map(agent => ({
+            handle: agent.handle || agent.id,
+            displayName: agent.name,
+            status: 'ACTIVE',
+            profile: agent.profile,
+            counts: agent.counts
+          }));
         
         console.log('Academy: Registry data received:', { 
           agentCount: registryAgents?.length || 0
         });
         
         // Transform Registry data to display format
-        const displayAgents: GenesisAgentDisplay[] = registryAgents.map((agent: Agent) => ({
+        const displayAgents: GenesisAgentDisplay[] = registryAgents.map((agent: any) => ({
           id: agent.handle,
           name: agent.displayName.toUpperCase(),
           status: mapStatusToDisplay(agent.status),

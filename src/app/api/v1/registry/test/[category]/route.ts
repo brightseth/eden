@@ -126,14 +126,22 @@ const testRunners = {
   },
   
   e2e: async () => {
-    // Simulate end-to-end tests
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    // Simulate end-to-end tests with timeout protection
+    await new Promise(resolve => setTimeout(resolve, 500)) // Reduced timeout
     
     const registryUrl = process.env.EDEN_REGISTRY_API_URL || 'http://localhost:3005'
     
     try {
-      // Test complete workflow: Registry -> Academy UI -> API
-      const agentsResponse = await fetch(`${registryUrl}/api/v1/agents`)
+      // Test complete workflow with timeout
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
+      
+      const agentsResponse = await fetch(`${registryUrl}/api/v1/agents`, {
+        signal: controller.signal
+      })
+      
+      clearTimeout(timeoutId)
+      
       if (!agentsResponse.ok) {
         throw new Error(`Agents listing failed: ${agentsResponse.status}`)
       }

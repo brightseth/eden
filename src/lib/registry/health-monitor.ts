@@ -4,7 +4,7 @@
  * Enforces Registry as single source of truth - no fallbacks
  */
 
-import { RegistryClient } from './sdk';
+import { registryApi } from '@/lib/generated-sdk';
 
 interface HealthStatus {
   status: 'healthy' | 'degraded' | 'critical';
@@ -22,14 +22,12 @@ interface HealthCheckResult {
 }
 
 export class RegistryHealthMonitor {
-  private client: RegistryClient;
   private status: HealthStatus;
   private checkInterval: NodeJS.Timeout | null = null;
   private alertThreshold = 3; // Alert after 3 consecutive failures
   private criticalThreshold = 5; // Critical after 5 consecutive failures
 
   constructor() {
-    this.client = new RegistryClient();
     this.status = {
       status: 'healthy',
       lastCheck: new Date(),
@@ -72,7 +70,7 @@ export class RegistryHealthMonitor {
 
     try {
       // Try to fetch a minimal dataset to test connectivity
-      const agents = await this.client.agents.list({ limit: 1 });
+      const agents = await registryApi.getAgents();
       
       const latency = Date.now() - startTime;
 
