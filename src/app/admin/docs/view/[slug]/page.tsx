@@ -1,4 +1,4 @@
-import { parseMarkdownFile, parseMarkdownWithTOC, getAllMarkdownFiles } from '@/lib/docs/markdown-parser';
+import { parseMarkdownFile, parseMarkdownWithTOC, getAllMarkdownFiles, findDocumentationFile } from '@/lib/docs/markdown-parser';
 import DocumentationViewer from '@/components/admin/docs/DocumentationViewer';
 import { notFound } from 'next/navigation';
 
@@ -11,18 +11,9 @@ export async function generateStaticParams() {
 
 export default async function ViewDocumentPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  // Convert slug back to filename
-  const possibleFilenames = [
-    `${slug.toUpperCase().replace(/-/g, '_')}.md`,
-    `${slug.replace(/-/g, '_')}.md`,
-    `${slug}.md`,
-  ];
   
-  let doc = null;
-  for (const filename of possibleFilenames) {
-    doc = await parseMarkdownFile(filename);
-    if (doc) break;
-  }
+  // Use the enhanced finder that checks multiple locations
+  const doc = await findDocumentationFile(slug);
   
   if (!doc) {
     notFound();

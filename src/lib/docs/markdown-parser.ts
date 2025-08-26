@@ -20,6 +20,43 @@ export interface MarkdownSection {
 export async function parseMarkdownFile(filePath: string): Promise<MarkdownDocument | null> {
   try {
     const fullPath = path.join(process.cwd(), filePath);
+    
+    // Check if file exists first
+    if (!fs.existsSync(fullPath)) {
+      // Try alternative paths for ADRs and docs
+      const alternatives = [
+        path.join(process.cwd(), 'docs', path.basename(filePath)),
+        path.join(process.cwd(), 'docs', 'adr', path.basename(filePath)),
+      ];
+      
+      let foundPath = null;
+      for (const altPath of alternatives) {
+        if (fs.existsSync(altPath)) {
+          foundPath = altPath;
+          break;
+        }
+      }
+      
+      if (!foundPath) {
+        return null;
+      }
+      
+      const content = fs.readFileSync(foundPath, 'utf-8');
+      const stats = fs.statSync(foundPath);
+      const filename = path.basename(foundPath);
+      const title = extractTitle(content) || filename.replace('.md', '').replace(/_/g, ' ');
+      const sections = extractSections(content);
+
+      return {
+        filename,
+        title,
+        content,
+        path: path.relative(process.cwd(), foundPath),
+        lastModified: stats.mtime,
+        sections,
+      };
+    }
+    
     const content = fs.readFileSync(fullPath, 'utf-8');
     const stats = fs.statSync(fullPath);
     
@@ -43,16 +80,44 @@ export async function parseMarkdownFile(filePath: string): Promise<MarkdownDocum
 
 export async function getAllMarkdownFiles(): Promise<MarkdownDocument[]> {
   const projectRoot = process.cwd();
-  const mdFiles = fs.readdirSync(projectRoot)
+  const documents: MarkdownDocument[] = [];
+  
+  // Get root level markdown files
+  const rootMdFiles = fs.readdirSync(projectRoot)
     .filter(file => file.endsWith('.md'))
     .filter(file => !file.toLowerCase().includes('readme'))
     .filter(file => !file.toLowerCase().includes('license'));
 
-  const documents = await Promise.all(
-    mdFiles.map(file => parseMarkdownFile(file))
+  const rootDocuments = await Promise.all(
+    rootMdFiles.map(file => parseMarkdownFile(file))
   );
+  documents.push(...rootDocuments.filter((doc): doc is MarkdownDocument => doc !== null));
 
-  return documents.filter((doc): doc is MarkdownDocument => doc !== null);
+  // Get docs directory files
+  const docsDir = path.join(projectRoot, 'docs');
+  if (fs.existsSync(docsDir)) {
+    const docFiles = fs.readdirSync(docsDir)
+      .filter(file => file.endsWith('.md'));
+      
+    const docsDocuments = await Promise.all(
+      docFiles.map(file => parseMarkdownFile(path.join('docs', file)))
+    );
+    documents.push(...docsDocuments.filter((doc): doc is MarkdownDocument => doc !== null));
+    
+    // Get ADR files
+    const adrDir = path.join(docsDir, 'adr');
+    if (fs.existsSync(adrDir)) {
+      const adrFiles = fs.readdirSync(adrDir)
+        .filter(file => file.endsWith('.md'));
+        
+      const adrDocuments = await Promise.all(
+        adrFiles.map(file => parseMarkdownFile(path.join('docs', 'adr', file)))
+      );
+      documents.push(...adrDocuments.filter((doc): doc is MarkdownDocument => doc !== null));
+    }
+  }
+
+  return documents;
 }
 
 export function extractTitle(content: string): string | null {
@@ -126,4 +191,30 @@ export function parseMarkdownWithTOC(content: string): ParsedMarkdown {
     toc,
     sections,
   };
+}
+
+// Helper function to find documentation by various naming patterns
+export async function findDocumentationFile(slug: string): Promise<MarkdownDocument | null> {
+  const possibleFilenames = [
+    // ADR patterns
+    `${slug}.md`,
+    `docs/adr/${slug}.md`,
+    // Upper case patterns
+    `${slug.toUpperCase().replace(/-/g, '_')}.md`,
+    `docs/${slug.toUpperCase().replace(/-/g, '_')}.md`,
+    // Standard patterns
+    `${slug.replace(/-/g, '_')}.md`,
+    `docs/${slug.replace(/-/g, '_')}.md`,
+    `${slug.replace(/-/g, '-')}.md`,
+    `docs/${slug.replace(/-/g, '-')}.md`,
+  ];
+  
+  for (const filename of possibleFilenames) {
+    const doc = await parseMarkdownFile(filename);
+    if (doc) {
+      return doc;
+    }
+  }
+  
+  return null;
 }

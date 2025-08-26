@@ -1,5 +1,36 @@
 import Link from 'next/link';
-import { FileText, Users, Map, Book, Code, Database, Rocket, Info, Server, GitBranch } from 'lucide-react';
+import { FileText, Users, Map, Book, Code, Database, Rocket, Info, Server, GitBranch, ExternalLink, Share2, Globe } from 'lucide-react';
+
+// Shareable Documentation Categories for Henry & Collaborators
+const shareableLinks = [
+  {
+    title: 'Registry Integration Hub',
+    description: 'Complete Registry documentation hub for Henry and collaborators',
+    href: '/admin/docs/registry-hub',
+    shareUrl: '/admin/docs/registry-hub',
+    icon: Server,
+    featured: true,
+    forHenry: true,
+  },
+  {
+    title: 'Registry Integration Complete Guide',
+    description: 'Comprehensive guide for Henry\\'s Registry API integration',
+    href: '/admin/docs/view/henry-registry-integration-complete',
+    shareUrl: '/admin/docs/view/henry-registry-integration-complete',
+    icon: FileText,
+    featured: true,
+    forHenry: true,
+  },
+  {
+    title: 'Registry-First Architecture ADR',
+    description: 'Core architectural pattern and decision rationale',
+    href: '/admin/docs/view/022-registry-first-architecture-pattern',
+    shareUrl: '/admin/docs/view/022-registry-first-architecture-pattern',
+    icon: Database,
+    featured: true,
+    forHenry: true,
+  },
+];
 
 const documentationSections = [
   {
@@ -7,14 +38,14 @@ const documentationSections = [
     description: 'Quick reference for 6 Claude Coding Agents + visual diagrams',
     href: '/admin/docs/agents',
     icon: Users,
-    featured: true,
+    featured: false,
   },
   {
     title: 'API & Registry',
     description: 'Complete API documentation and Registry integration',
     href: '/admin/docs/api-registry',
     icon: Server,
-    featured: true,
+    featured: false,
   },
   {
     title: 'Training Applications',
@@ -68,6 +99,10 @@ const documentationSections = [
 ];
 
 export default function AdminDocsPage() {
+  const baseUrl = process.env.NODE_ENV === 'production' 
+    ? 'https://eden-academy.vercel.app' 
+    : 'http://localhost:3000';
+
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -76,6 +111,84 @@ export default function AdminDocsPage() {
           <p className="text-gray-400 text-lg">
             Central hub for all technical documentation, agent references, and architectural guidelines.
           </p>
+        </div>
+
+        {/* Shareable Links Section for Henry */}
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold flex items-center">
+              <Share2 className="w-6 h-6 mr-3 text-green-400" />
+              Registry Documentation - Shareable Links
+            </h2>
+            <div className="text-sm text-gray-400 flex items-center">
+              <Globe className="w-4 h-4 mr-1" />
+              For Henry & Collaborators
+            </div>
+          </div>
+          
+          <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
+            {shareableLinks.map((doc) => {
+              const Icon = doc.icon;
+              const fullShareUrl = `${baseUrl}${doc.shareUrl}`;
+              return (
+                <div
+                  key={doc.href}
+                  className="block p-6 rounded-lg border border-green-500/50 bg-green-500/5 hover:bg-green-500/10"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-start space-x-4">
+                      <div className="p-3 rounded-lg bg-green-500/20">
+                        <Icon className="w-6 h-6 text-green-400" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-xl font-semibold mb-2 flex items-center">
+                          {doc.title}
+                          {doc.forHenry && (
+                            <span className="ml-2 text-xs px-2 py-1 bg-green-500/20 text-green-400 rounded">
+                              FOR HENRY
+                            </span>
+                          )}
+                        </h3>
+                        <p className="text-gray-400 text-sm mb-3">
+                          {doc.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Link
+                      href={doc.href}
+                      className="inline-flex items-center text-green-400 hover:text-green-300 text-sm font-medium"
+                    >
+                      <FileText className="w-4 h-4 mr-2" />
+                      View Documentation
+                      <ExternalLink className="w-3 h-3 ml-1" />
+                    </Link>
+                    
+                    <div className="mt-2 p-3 bg-gray-900/50 border border-gray-800 rounded text-xs">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-gray-500">Shareable URL:</span>
+                        <button
+                          onClick={() => navigator.clipboard.writeText(fullShareUrl)}
+                          className="text-blue-400 hover:text-blue-300"
+                          title="Copy to clipboard"
+                        >
+                          Copy
+                        </button>
+                      </div>
+                      <code className="text-blue-400 break-all">{fullShareUrl}</code>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Regular Documentation Sections */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-6">General Documentation</h2>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -118,17 +231,34 @@ export default function AdminDocsPage() {
           })}
         </div>
 
-        <div className="mt-12 p-6 bg-gray-900/50 border border-gray-800 rounded-lg">
-          <div className="flex items-start space-x-3">
-            <Info className="w-5 h-5 text-blue-400 mt-0.5" />
-            <div>
-              <h3 className="font-semibold mb-2">Quick Access Tips</h3>
-              <ul className="text-sm text-gray-400 space-y-1">
-                <li>• Use <kbd className="px-2 py-1 bg-gray-800 rounded text-xs">Cmd+K</kbd> for quick search (coming soon)</li>
-                <li>• Agent Cheatsheet includes workflow patterns and decision matrices</li>
-                <li>• All documentation files are auto-synced from project .md files</li>
-                <li>• Documentation updates automatically when files change</li>
-              </ul>
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
+          <div className="p-6 bg-green-500/5 border border-green-500/30 rounded-lg">
+            <div className="flex items-start space-x-3">
+              <Share2 className="w-5 h-5 text-green-400 mt-0.5" />
+              <div>
+                <h3 className="font-semibold mb-2 text-green-400">Shareable Links</h3>
+                <ul className="text-sm text-gray-300 space-y-1">
+                  <li>• All Registry documentation is shareable via public URLs</li>
+                  <li>• Copy links directly from the documentation cards above</li>
+                  <li>• Links work for external collaborators like Henry</li>
+                  <li>• No authentication required for documentation viewing</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div className="p-6 bg-gray-900/50 border border-gray-800 rounded-lg">
+            <div className="flex items-start space-x-3">
+              <Info className="w-5 h-5 text-blue-400 mt-0.5" />
+              <div>
+                <h3 className="font-semibold mb-2">Documentation Features</h3>
+                <ul className="text-sm text-gray-400 space-y-1">
+                  <li>• Dynamic markdown parsing with table of contents</li>
+                  <li>• Search functionality within documentation viewer</li>
+                  <li>• Auto-synced from project .md files and /docs directory</li>
+                  <li>• ADRs (Architecture Decision Records) included</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>

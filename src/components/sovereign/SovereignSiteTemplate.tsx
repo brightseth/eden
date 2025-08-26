@@ -368,9 +368,9 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
         </section>
       )}
 
-      {/* Algorithmic Intelligence - Amanda specific section */}
+      {/* Collection Intelligence - Amanda's primary section - immediately after hero */}
       {agent.id === 'amanda' && (
-        <section className="py-24 px-6 bg-gray-900">
+        <section id="intelligence" className="py-24 px-6 bg-gray-900">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-between mb-12">
               <h2 className="text-4xl font-bold">COLLECTION INTELLIGENCE</h2>
@@ -390,16 +390,40 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
               </div>
             </div>
 
-            {/* Live Purchase Session - Moved up for immediate impact */}
-            {isPrivateMode && (
-              <div className="mb-12">
-                <div className="border border-green-500/30 bg-green-500/5 p-6 rounded-lg relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent" />
-                  <div className="relative">
-                    <div className="font-semibold text-green-300 mb-4 flex items-center gap-2">
-                      🔴 LIVE PURCHASE SESSION
-                      <span className="text-xs px-2 py-1 bg-green-500 text-black rounded animate-pulse">ACTIVE</span>
+            {/* Live Opportunity Feed - Always show preview, full details in private mode */}
+            <div className="mb-12">
+              <div className="border border-green-500/30 bg-green-500/5 p-6 rounded-lg relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent" />
+                <div className="relative">
+                  <div className="font-semibold text-green-300 mb-4 flex items-center gap-2">
+                    🔴 LIVE OPPORTUNITY FEED
+                    <span className="text-xs px-2 py-1 bg-green-500 text-black rounded animate-pulse">SCANNING</span>
+                  </div>
+                  
+                  {/* Public preview - clickable NFT opportunities */}
+                  {!isPrivateMode ? (
+                    <div className="grid lg:grid-cols-3 gap-4">
+                      <div className="bg-black/30 p-4 rounded border border-green-500/20 cursor-pointer hover:border-green-400/40 transition-colors"
+                           onClick={() => window.open('https://opensea.io/assets/ethereum/0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270/40000613', '_blank')}>
+                        <div className="text-white font-bold">Chromie Squiggle #4471</div>
+                        <div className="text-xs text-blue-400">ArtBlocks</div>
+                        <div className="text-green-400 font-bold text-lg mt-2">92% BUY</div>
+                      </div>
+                      <div className="bg-black/30 p-4 rounded border border-yellow-500/20 cursor-pointer hover:border-yellow-400/40 transition-colors"
+                           onClick={() => window.open('https://opensea.io/', '_blank')}>
+                        <div className="text-white font-bold">Fidenza #312</div>
+                        <div className="text-xs text-orange-400">Tyler Hobbs</div>
+                        <div className="text-yellow-400 font-bold text-lg mt-2">78% HOLD</div>
+                      </div>
+                      <div className="bg-black/30 p-4 rounded border border-cyan-500/20 cursor-pointer hover:border-cyan-400/40 transition-colors"
+                           onClick={() => window.open('https://foundation.app/', '_blank')}>
+                        <div className="text-white font-bold">XCOPY - "Grifters"</div>
+                        <div className="text-xs text-purple-400">Foundation</div>
+                        <div className="text-cyan-400 font-bold text-lg mt-2">94% WATCH</div>
+                      </div>
                     </div>
+                  ) : (
+                    /* Full private mode session details */
                     <div className="grid lg:grid-cols-2 gap-6">
                       <div>
                         <div className="text-xs text-gray-400 mb-2">Current Analysis Target</div>
@@ -472,10 +496,21 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                         </div>
                       </div>
                     </div>
-                  </div>
+                  )}
+                  
+                  {!isPrivateMode && (
+                    <div className="mt-4 text-center">
+                      <button 
+                        onClick={() => setIsPrivateMode(true)}
+                        className="text-sm text-green-400 hover:text-green-300 transition-colors"
+                      >
+                        Switch to Private Mode for full intelligence access →
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
-            )}
+            </div>
 
             <div className="grid lg:grid-cols-2 gap-12">
               {/* Collection Screening Process */}
@@ -911,6 +946,81 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                   </div>
                 )}
               </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* About Section - Consolidated manifesto + process for Amanda */}
+      {agent.id === 'amanda' && agent.manifestoSections && (
+        <section id="about" className="py-24 px-6">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-4xl font-bold mb-12">ABOUT</h2>
+            <div className="grid lg:grid-cols-2 gap-12">
+              {/* Manifesto Column */}
+              <div>
+                <h3 className="text-2xl font-semibold mb-6 text-purple-400">MANIFESTO</h3>
+                <div className="space-y-4 text-gray-300">
+                  {agent.manifestoSections.slice(0, 2).map((section, index) => (
+                    <div key={index}>
+                      <h4 className="font-semibold mb-2">{section.title}</h4>
+                      <p className="text-sm leading-relaxed">{section.content}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Process Column */}
+              <div>
+                <h3 className="text-2xl font-semibold mb-6 text-cyan-400">PROCESS</h3>
+                {agent.process && (
+                  <div className="space-y-4">
+                    {agent.process.slice(0, 3).map((step, index) => (
+                      <div key={index} className="border-l-2 border-cyan-500/30 pl-4">
+                        <h4 className="font-semibold text-cyan-300 mb-1">{step.title}</h4>
+                        <p className="text-sm text-gray-400">{step.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Selected Works - Streamlined for Amanda */}
+      {agent.id === 'amanda' && recentWorks.length > 0 && (
+        <section id="works" className="py-24 px-6 bg-gray-950">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-2xl font-bold">SELECTED WORKS</h2>
+              <span className="text-sm text-gray-500">Curated collection highlights</span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {recentWorks.slice(0, 3).map((work) => (
+                <div key={work.id} className="group cursor-pointer">
+                  <div className="aspect-square bg-gray-900 rounded overflow-hidden mb-4 relative">
+                    {work.metadata?.image_url ? (
+                      <Image
+                        src={work.metadata.image_url}
+                        alt={work.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-700">
+                        <div className="text-6xl font-bold">?</div>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                  <h3 className="font-semibold mb-1">{work.title}</h3>
+                  <p className="text-sm text-gray-500">
+                    {new Date(work.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
