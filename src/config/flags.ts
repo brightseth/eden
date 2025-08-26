@@ -174,6 +174,11 @@ export function useFeatureFlag(flagKey: string): boolean {
   return featureFlags.isEnabled(flagKey);
 }
 
+// Helper function for server/client components
+export function isFeatureEnabled(flagKey: string): boolean {
+  return featureFlags.isEnabled(flagKey);
+}
+
 // Export flag keys for type safety
 export const FLAGS = {
   ENABLE_SPIRIT_REGISTRY: 'ENABLE_SPIRIT_REGISTRY',
