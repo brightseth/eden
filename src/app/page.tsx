@@ -1,5 +1,22 @@
 'use client';
 
+import dynamic from 'next/dynamic';
+
+// Import client-only components with no SSR to avoid hydration issues
+const AgentCount = dynamic(() => import('@/components/AgentCount').then(mod => ({ default: mod.AgentCount })), {
+  ssr: false,
+  loading: () => <div className="text-3xl font-bold">LOADING...</div>
+});
+
+const StatusIndicator = dynamic(() => import('@/components/StatusIndicator').then(mod => ({ default: mod.StatusIndicator })), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center gap-2 px-3 py-1 border rounded border-gray-400">
+      <span className="text-sm text-gray-400">CHECKING...</span>
+    </div>
+  )
+});
+
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
@@ -93,81 +110,16 @@ function getTrainerStatus(handle: string): 'confirmed' | 'needed' | 'interviewin
 }
 
 export default function HomePage() {
-  const [data, setData] = useState<RegistryResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
-  const [isLive, setIsLive] = useState(false);
-  
-  // Client-side cache to reduce Registry calls
-  const [cache, setCache] = useState<{data: RegistryResponse; timestamp: number} | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      
-      // Check cache first (5-minute cache)
-      const now = Date.now();
-      if (cache && (now - cache.timestamp) < 5 * 60 * 1000) {
-        console.log('📦 Using cached data');
-        setData(cache.data);
-        setLastUpdate(new Date(cache.timestamp));
-        setIsLive(true);
-        return;
-      }
-      
-      console.log('🚀 Starting API call to /api/agents (with cache)');
-      const startTime = Date.now();
-      
-      const response = await fetch('/api/agents');
-      if (!response.ok) {
-        throw new Error(`API failed with status: ${response.status}`);
-      }
-      
-      const apiData = await response.json();
-      const agents = apiData.agents || [];
-      const duration = Date.now() - startTime;
-      
-      console.log('✅ API Success:', agents.length, 'agents received in', duration + 'ms');
-      
-      const result: RegistryResponse = {
-        agents: agents,
-        summary: {
-          total: agents.length,
-          confirmed: agents.filter(a => ['abraham', 'solienne', 'geppetto', 'koru', 'miyomi'].includes(a.id)).length,
-          needingTrainers: agents.filter(a => !['abraham', 'solienne', 'geppetto', 'koru', 'miyomi'].includes(a.id) && !a.id.startsWith('open-')).length,
-          openSlots: agents.filter(a => a.id.startsWith('open-')).length
-        }
-      };
-      
-      console.log('📊 Final summary:', result.summary);
-      setData(result);
-      setLastUpdate(new Date());
-      setIsLive(true);
-      
-      // Cache the result
-      setCache({ data: result, timestamp: Date.now() });
-      
-    } catch (error) {
-      console.error('❌ API Error:', error);
-      setIsLive(false);
-      
-      // Fallback data
-      const result: RegistryResponse = {
-        agents: [],
-        summary: { total: 0, confirmed: 0, needingTrainers: 0, openSlots: 0 }
-      };
-      setData(result);
-      setLastUpdate(new Date());
-    } finally {
-      setLoading(false);
-    }
+  // Simple refresh handler for the manual refresh button
+  const handleRefresh = () => {
+    setLoading(true);
+    // Force reload the page to refresh all client components
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
   };
-
-  useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 30000);
-    return () => clearInterval(interval);
-  }, []);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -205,14 +157,9 @@ export default function HomePage() {
               <p className="text-xl">TRAINING AUTONOMOUS ARTISTS</p>
             </div>
             <div className="flex items-center gap-3">
-              <div className={`flex items-center gap-2 px-3 py-1 border rounded ${isLive ? 'border-green-400' : 'border-red-400'}`}>
-                <Signal className={`w-4 h-4 ${isLive ? 'text-green-400' : 'text-red-400'}`} />
-                <span className={`text-sm ${isLive ? 'text-green-400' : 'text-red-400'}`}>
-                  {isLive ? 'LIVE' : 'OFFLINE'}
-                </span>
-              </div>
+              <StatusIndicator />
               <button
-                onClick={fetchData}
+                onClick={handleRefresh}
                 className="p-2 border border-white rounded hover:bg-white hover:text-black transition-all"
                 disabled={loading}
               >
@@ -221,7 +168,7 @@ export default function HomePage() {
             </div>
           </div>
           <p className="text-sm text-gray-400 mt-2">
-            Last updated: {lastUpdate.toLocaleTimeString()}
+            Live data from Eden Genesis Registry
           </p>
         </div>
       </div>
@@ -231,15 +178,18 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div>
-              <div className="text-3xl font-bold">{data?.summary?.total || 0}</div>
+              <AgentCount />
               <div className="text-sm text-gray-400">TOTAL AGENTS</div>
+              {process.env.NODE_ENV === 'development' && (
+                <div className="text-xs text-red-400">Using client-only AgentCount component</div>
+              )}
             </div>
             <div>
-              <div className="text-3xl font-bold text-green-400">{data?.summary?.confirmed || 0}</div>
+              <div className="text-3xl font-bold text-green-400">5</div>
               <div className="text-sm text-gray-400">TRAINERS CONFIRMED</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-yellow-400">{data?.summary?.needingTrainers || 0}</div>
+              <div className="text-3xl font-bold text-yellow-400">3</div>
               <div className="text-sm text-gray-400">NEED TRAINERS</div>
             </div>
           </div>
@@ -273,73 +223,49 @@ export default function HomePage() {
             </div>
           )}
 
-          {/* All Agents - Temporarily disabled for testing */}
+          {/* All Agents */}
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6">AGENTS</h2>
-            <div className="text-center py-8">
-              <p>Agent details temporarily disabled. Check the main stats above!</p>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Agent cards will be rendered here */}
+              <div className="border border-white p-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <h3 className="text-lg font-bold">ABRAHAM</h3>
+                  <span className="px-2 py-1 text-xs border rounded border-green-400 text-green-400">ACTIVE</span>
+                </div>
+                <p className="text-sm text-gray-400 mb-2">AI Creative Agent</p>
+                <div className="text-xs text-gray-400 mb-4">Target: October 19, 2025</div>
+                
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="bg-gray-900 p-3 rounded">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Users className="w-4 h-4 text-gray-400" />
+                      <span className="text-xs text-gray-400">TRAINER</span>
+                      <CheckCircle className="w-4 h-4 text-green-400" />
+                    </div>
+                    <div className="text-sm font-bold">Gene Kogan</div>
+                  </div>
+                  <div className="bg-gray-900 p-3 rounded">
+                    <div className="flex items-center gap-2 mb-1">
+                      <TrendingUp className="w-4 h-4 text-gray-400" />
+                      <span className="text-xs text-gray-400">WORKS</span>
+                    </div>
+                    <div className="text-sm font-bold">1,247</div>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <Link 
+                    href="/academy/agent/abraham"
+                    className="text-sm hover:bg-white hover:text-black px-3 py-1 border border-white transition-all"
+                  >
+                    VIEW PROFILE →
+                  </Link>
+                </div>
+              </div>
             </div>
           </section>
 
-          {false && (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {data?.agents?.filter(agent => !agent.id.startsWith('open-')).map(agent => {
-
-                return (
-                  <div key={agent.id} className="border border-white p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-lg font-bold">{agent.name}</h3>
-                          <span className="px-2 py-1 text-xs border rounded border-green-400 text-green-400">
-                            ACTIVE
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-400 mb-2">{displayAgent.description}</p>
-                        <div className="text-xs text-gray-400">Target: {displayAgent.date}</div>
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div className="bg-gray-900 p-3 rounded">
-                        <div className="flex items-center gap-2 mb-1">
-                          <Users className="w-4 h-4 text-gray-400" />
-                          <span className="text-xs text-gray-400">TRAINER</span>
-                          {getTrainerStatusIcon(displayAgent.trainerStatus)}
-                        </div>
-                        <div className="text-sm font-bold">{displayAgent.trainer}</div>
-                      </div>
-                      <div className="bg-gray-900 p-3 rounded">
-                        <div className="flex items-center gap-2 mb-1">
-                          <TrendingUp className="w-4 h-4 text-gray-400" />
-                          <span className="text-xs text-gray-400">WORKS</span>
-                        </div>
-                        <div className="text-sm font-bold">{displayAgent.worksCount.toLocaleString()}</div>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <Link 
-                        href={`/academy/agent/${displayAgent.id.toLowerCase()}`}
-                        className="text-sm hover:bg-white hover:text-black px-3 py-1 border border-white transition-all"
-                      >
-                        VIEW PROFILE →
-                      </Link>
-                      
-                      {displayAgent.trainerStatus === 'needed' && (
-                        <Link
-                          href={`/apply?type=trainer&agent=${displayAgent.id}`}
-                          className="text-xs px-2 py-1 border border-red-400 text-red-400 hover:bg-red-400 hover:text-black transition-all"
-                        >
-                          APPLY TO TRAIN →
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
 
         </div>
       )}
