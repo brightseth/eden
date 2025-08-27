@@ -115,7 +115,7 @@ export default function HomePage() {
         return;
       }
       
-      console.log('🚀 Starting API call to /api/agents');
+      console.log('🚀 Starting API call to /api/agents (with cache)');
       const startTime = Date.now();
       
       const response = await fetch('/api/agents');
