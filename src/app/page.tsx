@@ -17,6 +17,11 @@ const StatusIndicator = dynamic(() => import('@/components/StatusIndicator').the
   )
 });
 
+const AgentList = dynamic(() => import('@/components/AgentList').then(mod => ({ default: mod.AgentList })), {
+  ssr: false,
+  loading: () => <div className="text-center py-8">Loading agents...</div>
+});
+
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
@@ -226,44 +231,7 @@ export default function HomePage() {
           {/* All Agents */}
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6">AGENTS</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Agent cards will be rendered here */}
-              <div className="border border-white p-6">
-                <div className="flex items-center gap-3 mb-2">
-                  <h3 className="text-lg font-bold">ABRAHAM</h3>
-                  <span className="px-2 py-1 text-xs border rounded border-green-400 text-green-400">ACTIVE</span>
-                </div>
-                <p className="text-sm text-gray-400 mb-2">AI Creative Agent</p>
-                <div className="text-xs text-gray-400 mb-4">Target: October 19, 2025</div>
-                
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div className="bg-gray-900 p-3 rounded">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Users className="w-4 h-4 text-gray-400" />
-                      <span className="text-xs text-gray-400">TRAINER</span>
-                      <CheckCircle className="w-4 h-4 text-green-400" />
-                    </div>
-                    <div className="text-sm font-bold">Gene Kogan</div>
-                  </div>
-                  <div className="bg-gray-900 p-3 rounded">
-                    <div className="flex items-center gap-2 mb-1">
-                      <TrendingUp className="w-4 h-4 text-gray-400" />
-                      <span className="text-xs text-gray-400">WORKS</span>
-                    </div>
-                    <div className="text-sm font-bold">1,247</div>
-                  </div>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <Link 
-                    href="/academy/agent/abraham"
-                    className="text-sm hover:bg-white hover:text-black px-3 py-1 border border-white transition-all"
-                  >
-                    VIEW PROFILE →
-                  </Link>
-                </div>
-              </div>
-            </div>
+            <AgentList />
           </section>
 
 

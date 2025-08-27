@@ -49,14 +49,14 @@ export default function AbrahamProfilePage() {
         console.log('[Abraham Page] Fetching Abraham data from Registry SDK...');
         
         // Use Registry SDK instead of direct fetch
-        const agentProfile = await registryApi.getAgentProfile('abraham');
-        const agentCreations = await registryApi.getAgentCreations('abraham', 'PUBLISHED');
+        const agentProfile = await registryApi.getAgent('abraham', ['profile', 'creations']);
+        const agentCreations = agentProfile.creations || [];
         
         // Transform Registry data to expected format
         const data: ArtistData = {
           id: agentProfile.id,
-          name: agentProfile.name,
-          handle: agentProfile.handle,
+          name: agentProfile.displayName || 'Abraham',
+          handle: agentProfile.handle || 'abraham',
           profile: {
             statement: agentProfile.profile?.statement || getAbrahamStatement(),
             manifesto: agentProfile.profile?.manifesto,
