@@ -63,6 +63,8 @@ export async function POST(request: NextRequest) {
   }
 }
 
+import { marketAggregator } from '@/lib/agents/market-connectors';
+
 // Mock implementations - replace with actual integrations
 async function getActivePicks() {
   // TODO: Query database for picks with status 'LIVE' or 'PENDING'

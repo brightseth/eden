@@ -224,7 +224,7 @@ export class MiyomiScheduler {
   private async deployToSite(dropId: string, pick: any, videoUrl: string) {
     try {
       // Submit to Eden Registry
-      const response = await fetch('/api/eden/miyomi/works', {
+      const response = await fetch(`${process.env.EDEN_BASE_URL}/api/eden/miyomi/works`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${process.env.INTERNAL_API_TOKEN}`,

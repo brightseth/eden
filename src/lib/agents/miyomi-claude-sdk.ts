@@ -4,6 +4,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
+import { marketAggregator, type MarketData } from './market-connectors';
 
 interface MarketPick {
   market: string;
@@ -70,8 +71,11 @@ export class MiyomiClaudeSDK {
    * Generate market picks based on current config and market conditions
    */
   async generatePicks(maxPicks: number = 3): Promise<MarketPick[]> {
+    // First fetch current market data to inform picks
+    const marketData = await this.fetchRelevantMarkets();
+    
     const systemPrompt = this.buildSystemPrompt();
-    const userPrompt = this.buildPickGenerationPrompt(maxPicks);
+    const userPrompt = this.buildPickGenerationPrompt(maxPicks, marketData);
 
     try {
       const response = await this.anthropic.messages.create({
@@ -240,11 +244,31 @@ Always explain WHY you think the market is wrong, not just WHAT your pick is.
 `;
   }
 
-  private buildPickGenerationPrompt(maxPicks: number): string {
+  private async fetchRelevantMarkets(): Promise<MarketData[]> {
+    try {
+      console.log('Fetching market data from all platforms...');
+      const markets = await marketAggregator.getAllMarkets(50);
+      console.log(`Found ${markets.length} active markets`);
+      return markets;
+    } catch (error) {
+      console.error('Error fetching market data:', error);
+      return [];
+    }
+  }
+
+  private buildPickGenerationPrompt(maxPicks: number, marketData: MarketData[]): string {
     const currentDate = new Date().toISOString().split('T')[0];
+    
+    const marketContext = marketData.length > 0 ? `
+Current Market Data (Top ${Math.min(marketData.length, 20)} markets by volume):
+${marketData.slice(0, 20).map(m => 
+  `- ${m.question} (${m.platform}) - YES: ${(m.yes_price * 100).toFixed(0)}%, Volume: $${Math.round(m.volume)}`
+).join('\n')}
+` : '';
     
     return `
 Generate ${maxPicks} contrarian prediction market picks for ${currentDate}.
+${marketContext}
 
 Requirements:
 - Focus on markets where crowd psychology is creating inefficiencies

@@ -9,7 +9,17 @@ export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
   try {
-    const { agent_id, trigger_time } = await request.json();
+    // Parse JSON body if present, otherwise use defaults
+    let agent_id = 'miyomi';
+    let trigger_time = new Date().toISOString();
+    
+    try {
+      const body = await request.json();
+      agent_id = body.agent_id || agent_id;
+      trigger_time = body.trigger_time || trigger_time;
+    } catch {
+      // No JSON body provided, use defaults
+    }
 
     if (agent_id !== 'miyomi') {
       return NextResponse.json({ error: 'Invalid agent ID' }, { status: 400 });

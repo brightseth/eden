@@ -20,33 +20,33 @@ interface InterviewSection {
 
 const interviewSections: InterviewSection[] = [
   {
-    id: 'taste-profile',
-    title: 'Taste & Aesthetic Preferences',
-    icon: <Sparkles className="w-5 h-5" />,
+    id: 'aesthetic-position',
+    title: 'Aesthetic Position',
+    icon: <Target className="w-5 h-5" />,
     questions: [
       {
-        id: 'art-movements',
-        question: 'Which art movements resonate most with your collecting philosophy?',
-        type: 'multiselect',
-        options: ['Abstract Expressionism', 'Minimalism', 'Generative Art', 'Glitch Art', 'Photography', 'AI Art', 'Conceptual', 'Street Art', 'Post-Internet', 'Feminist Art', 'Spatial Experimentation']
+        id: 'core-thesis',
+        question: 'Define your collecting philosophy in one paragraph. What makes a work matter?',
+        type: 'textarea',
+        placeholder: 'Your foundational collecting thesis - what drives every decision...'
       },
       {
-        id: 'taste-evolution',
-        question: 'How has your taste evolved over the past 5 years?',
+        id: 'specificity-markers',
+        question: 'Give 3 examples of highly specific qualities you seek (e.g., "dry and complex", "productive discomfort")',
         type: 'textarea',
-        placeholder: 'Describe key shifts in your aesthetic preferences...'
+        placeholder: '1. Specific quality - why it matters\n2. Another quality - its significance\n3. Third quality - how you recognize it'
       },
       {
-        id: 'red-flags',
-        question: 'What are immediate red flags when evaluating art?',
+        id: 'anti-collection',
+        question: 'Describe the worst possible artwork to collect. Why? (This helps define boundaries)',
         type: 'textarea',
-        placeholder: 'List warning signs that make you pass on a piece...'
+        placeholder: 'Paint a picture of everything you avoid and why these qualities repel you...'
       },
       {
-        id: 'hidden-gems',
-        question: 'How do you identify undervalued artists before they gain recognition?',
-        type: 'textarea',
-        placeholder: 'Share your process for discovering talent early...'
+        id: 'transgression-threshold',
+        question: 'How essential is work that challenges, disturbs, or takes sides?',
+        type: 'scale',
+        options: ['Essential - must transgress', 'Important - prefer challenging work', 'Neutral - content agnostic', 'Prefer safe - avoid controversy', 'Avoid - only collect pleasant work']
       }
     ]
   },
