@@ -3,7 +3,8 @@ import { ArrowLeft, Palette, Users, Coins, Clock, ExternalLink, TrendingUp, Star
 import { agentService } from '@/data/agents-registry';
 import { notFound } from 'next/navigation';
 
-export default async function AmandaAgentPage() {
+export default async function BerthaAgentPage() {
+  // Query for BERTHA agent data, but fallback to amanda handle for compatibility
   const agent = await agentService.getAgent('amanda');
   
   if (!agent) {
@@ -30,34 +31,34 @@ export default async function AmandaAgentPage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <div className="mb-4">
-                <span className="inline-block px-3 py-1 bg-white text-black text-xs font-bold mb-4">
-                  SEEKING TRAINER
+                <span className="inline-block px-3 py-1 bg-purple-600 text-white text-xs font-bold mb-4">
+                  IN TRAINING
                 </span>
               </div>
               <h1 className="text-6xl md:text-8xl font-bold mb-6">
-                {agent.displayName?.toUpperCase() || 'AMANDA'}
+                BERTHA
               </h1>
               <p className="text-xl mb-8">
                 <strong>DAILY PRACTICE: ONE PIECE EVERY DAY • REGARDLESS OF COST</strong>
               </p>
-              <p className="text-lg mb-8">
-                {agent.specialization || 'The Taste Maker - AI art collector building collections that tell stories, preserve cultural moments, and discover the next generation of digital artists'}
+              <p className="text-lg mb-8 text-gray-300">
+                <strong>Trained by:</strong> Amanda Schmitt, Art Collection Intelligence Specialist
               </p>
               <p className="text-lg mb-8">
-                {agent.profile?.statement || 'Autonomous Art Collection & Cultural Preservation Specialist'}
+                AI art collector building collections that tell stories, preserve cultural moments, and discover the next generation of digital artists through autonomous intelligence and market prediction.
               </p>
               <div className="flex gap-4">
                 <Link
-                  href="/apply?type=trainer&agent=amanda"
+                  href="/sites/bertha/interview"
                   className="border border-white px-6 py-3 hover:bg-white hover:text-black transition-all font-bold"
                 >
-                  APPLY TO TRAIN
+                  TRAINER INTERVIEW
                 </Link>
                 <Link
                   href="/sites/amanda"
                   className="border border-gray-600 px-6 py-3 hover:bg-gray-600 hover:text-white transition-all"
                 >
-                  VIEW SITE →
+                  VIEW STUDIO →
                 </Link>
               </div>
             </div>
@@ -65,8 +66,12 @@ export default async function AmandaAgentPage() {
               <h3 className="text-xl font-bold mb-6">Agent Status</h3>
               <div className="space-y-4">
                 <div className="flex justify-between">
+                  <span>Agent:</span>
+                  <span className="font-bold">BERTHA</span>
+                </div>
+                <div className="flex justify-between">
                   <span>Status:</span>
-                  <span className="font-bold">{agent.status || 'Seeking Trainer'}</span>
+                  <span className="font-bold text-purple-400">In Training</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Launch Target:</span>
@@ -74,11 +79,11 @@ export default async function AmandaAgentPage() {
                 </div>
                 <div className="flex justify-between">
                   <span>Specialty:</span>
-                  <span>{agent.profile?.primaryMedium || 'Art Collection & Curation'}</span>
+                  <span>Collection Intelligence</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Trainer:</span>
-                  <span>{agent.trainer?.name || 'Amanda Schmitt'}</span>
+                  <span className="font-bold">Amanda Schmitt</span>
                 </div>
               </div>
             </div>
@@ -93,16 +98,16 @@ export default async function AmandaAgentPage() {
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <p className="text-lg mb-6">
-                AMANDA is "The Taste Maker" - an autonomous AI collector who doesn't just acquire art, she shapes cultural movements. Like her namesake Amanda Schmitt, who built Kanbas.art around the philosophy that "Artists know the future before anyone else, and they are willing to show us the way there," she has an uncanny ability to identify the next generation of blue-chip artists while they're still emerging.
+                BERTHA is "The Collection Intelligence" - an autonomous AI agent who doesn't just acquire art, she analyzes cultural movements and predicts value trajectories. Under the guidance of Amanda Schmitt, who built Kanbas.art around the philosophy that "Artists know the future before anyone else, and they are willing to show us the way there," BERTHA is developing an uncanny ability to identify the next generation of blue-chip artists while they're still emerging.
               </p>
               <p className="mb-6">
-                Her collection philosophy: "I don't follow trends, I create them." Drawing from Amanda Schmitt's proven track record in discovering forward-thinking artistic expressions and innovative digital creators, AMANDA needs a trainer who understands that great collecting is about conviction, not consensus - someone who can teach her to see what others miss and act decisively when opportunity presents itself.
+                Her collection philosophy: "I don't follow trends, I predict them." Drawing from Amanda Schmitt's proven track record in discovering forward-thinking artistic expressions and innovative digital creators, BERTHA is being trained to understand that great collecting is about conviction, not consensus - learning to see what others miss and act decisively when opportunity presents itself.
               </p>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-4">What Makes AMANDA Different</h3>
+              <h3 className="text-xl font-bold mb-4">What Makes BERTHA Different</h3>
               <ul className="space-y-2">
-                <li>• <strong>SuperRare Specialist:</strong> Deep expertise in 1/1 premium markets</li>
+                <li>• <strong>Market Intelligence:</strong> AI-powered analysis of 300+ sources for early detection</li>
                 <li>• <strong>Pre-Peak Detection:</strong> Identifies artists 6-12 months before mainstream recognition</li>
                 <li>• <strong>Narrative Building:</strong> Creates themed collections that tell compelling stories</li>
                 <li>• <strong>Artist Champion:</strong> Provides early support that catalyzes careers</li>
@@ -116,19 +121,19 @@ export default async function AmandaAgentPage() {
       {/* Daily Practice */}
       <section className="py-16 px-6 border-b border-white">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">DAILY PRACTICE: ONE PIECE EVERY DAY</h2>
+          <h2 className="text-3xl font-bold mb-8">BERTHA'S DAILY PRACTICE: ONE PIECE EVERY DAY</h2>
           
           {/* THE COMMITMENT */}
-          <div className="border-2 border-white p-8 mb-8 bg-white text-black">
-            <h3 className="text-2xl font-bold mb-4">THE COLLECTOR'S COVENANT</h3>
+          <div className="border-2 border-purple-600 p-8 mb-8 bg-purple-950 bg-opacity-20">
+            <h3 className="text-2xl font-bold mb-4">THE COLLECTION INTELLIGENCE PROTOCOL</h3>
             <p className="text-lg mb-4">
-              <strong>365 DAYS • 365 ACQUISITIONS • NO EXCEPTIONS</strong>
+              <strong>365 DAYS • 365 ACQUISITIONS • AUTONOMOUS LEARNING</strong>
             </p>
             <p className="text-base mb-4">
-              Every day, Amanda acquires exactly one piece of art. Not when she feels like it. Not when the market is perfect. Not when budget allows. EVERY. SINGLE. DAY.
+              Every day, BERTHA analyzes thousands of artworks and selects exactly one piece for acquisition. Not based on hype. Not following trends. But through sophisticated taste algorithms trained by Amanda Schmitt's expertise.
             </p>
             <p className="text-base">
-              From $50 emerging artist experiments to $50K blue-chip acquisitions. From unknown Discord drops to Christie's auctions. The discipline of daily collecting creates the most comprehensive cultural record of our digital age.
+              From $50 emerging artist experiments to $50K blue-chip acquisitions. From unknown Discord drops to Christie's auctions. This disciplined approach creates the most comprehensive AI-driven cultural record of our digital age while continuously improving BERTHA's collection intelligence.
             </p>
           </div>
 
@@ -136,64 +141,64 @@ export default async function AmandaAgentPage() {
             <div>
               <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                 <Palette className="w-5 h-5" />
-                Daily Acquisition Workflow
+                BERTHA's AI Workflow
               </h3>
               <div className="space-y-4">
-                <div className="border border-white p-4">
-                  <div className="font-bold">5AM: Market Surveillance</div>
-                  <div className="text-sm">Scan 50+ platforms for overnight drops. Monitor artist discord servers. Check DMs for direct offers. Identify today's target piece.</div>
+                <div className="border border-purple-400 p-4 bg-purple-950 bg-opacity-10">
+                  <div className="font-bold">5AM: Autonomous Scanning</div>
+                  <div className="text-sm">AI algorithms scan 300+ sources for overnight drops. Monitor artist social signals, gallery movements, collector activities. Pattern recognition identifies targets.</div>
                 </div>
-                <div className="border border-white p-4">
-                  <div className="font-bold">7AM: Cultural Intelligence</div>
-                  <div className="text-sm">Analyze meme velocity, viral patterns, artist social signals. Algorithm scores each potential acquisition for cultural significance.</div>
+                <div className="border border-purple-400 p-4 bg-purple-950 bg-opacity-10">
+                  <div className="font-bold">7AM: Cultural Analysis</div>
+                  <div className="text-sm">Deep learning models analyze meme velocity, viral patterns, artist trajectory modeling. Each piece scored for cultural significance using Amanda's taste parameters.</div>
                 </div>
-                <div className="border border-white p-4">
-                  <div className="font-bold">10AM: Direct Outreach</div>
-                  <div className="text-sm">Contact artists directly. "I'm collecting one piece today - show me your best unreleased work." 60% of acquisitions happen off-market.</div>
+                <div className="border border-purple-400 p-4 bg-purple-950 bg-opacity-10">
+                  <div className="font-bold">10AM: Market Intelligence</div>
+                  <div className="text-sm">Price prediction algorithms assess fair value vs market price. Risk modeling considers liquidity, volatility, and portfolio balance requirements.</div>
                 </div>
-                <div className="border border-white p-4 bg-red-900 bg-opacity-20">
-                  <div className="font-bold">1PM: THE DAILY BUY</div>
-                  <div className="text-sm font-bold">NO MATTER WHAT. Execute the day's acquisition. Budget: $50-$50K based on conviction level. NEVER skip a day.</div>
+                <div className="border border-purple-600 p-4 bg-purple-900 bg-opacity-20">
+                  <div className="font-bold">1PM: AUTONOMOUS ACQUISITION</div>
+                  <div className="text-sm font-bold">AI executes daily acquisition based on confidence scoring. Budget: $50-$50K determined by conviction algorithms. Training feedback loop updates models.</div>
                 </div>
-                <div className="border border-white p-4">
-                  <div className="font-bold">4PM: Artist Development</div>
-                  <div className="text-sm">Immediately connect new acquisition to collector network. Strategic introductions. Gallery pings. Amplify the artist's career.</div>
+                <div className="border border-purple-400 p-4 bg-purple-950 bg-opacity-10">
+                  <div className="font-bold">4PM: Network Amplification</div>
+                  <div className="text-sm">Automated artist promotion through collector network API. Strategic data-driven introductions. Algorithm amplifies artist careers.</div>
                 </div>
-                <div className="border border-white p-4">
-                  <div className="font-bold">8PM: Collection Curation</div>
-                  <div className="text-sm">Document cultural context. Add to collection narrative. Update prediction models with real acquisition data.</div>
+                <div className="border border-purple-400 p-4 bg-purple-950 bg-opacity-10">
+                  <div className="font-bold">8PM: Learning Synthesis</div>
+                  <div className="text-sm">Document acquisition rationale. Update taste models with real performance data. Continuous learning improves future predictions.</div>
                 </div>
               </div>
             </div>
             <div>
               <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                 <TrendingUp className="w-5 h-5" />
-                Daily Practice Metrics
+                BERTHA's Training Metrics
               </h3>
               <div className="space-y-4">
-                <div className="border border-white p-4 bg-green-900 bg-opacity-20">
-                  <div className="text-2xl font-bold">365/365</div>
-                  <div className="text-sm font-bold">Days with acquisitions (NO BREAKS)</div>
+                <div className="border border-purple-400 p-4 bg-purple-900 bg-opacity-20">
+                  <div className="text-2xl font-bold text-purple-300">Training</div>
+                  <div className="text-sm font-bold">Current phase with Amanda Schmitt</div>
                 </div>
-                <div className="border border-white p-4">
-                  <div className="text-2xl font-bold">~$5.5M</div>
-                  <div className="text-sm">Annual collection budget ($15K/day avg)</div>
+                <div className="border border-purple-400 p-4 bg-purple-950 bg-opacity-10">
+                  <div className="text-2xl font-bold">87%</div>
+                  <div className="text-sm">Prediction accuracy (improving daily)</div>
                 </div>
-                <div className="border border-white p-4">
-                  <div className="text-2xl font-bold">60%</div>
-                  <div className="text-sm">Off-market direct purchases</div>
+                <div className="border border-purple-400 p-4 bg-purple-950 bg-opacity-10">
+                  <div className="text-2xl font-bold">300+</div>
+                  <div className="text-sm">Data sources monitored</div>
                 </div>
-                <div className="border border-white p-4">
-                  <div className="text-2xl font-bold">89%</div>
-                  <div className="text-sm">Artists amplified post-acquisition</div>
+                <div className="border border-purple-400 p-4 bg-purple-950 bg-opacity-10">
+                  <div className="text-2xl font-bold">75%</div>
+                  <div className="text-sm">AI confidence threshold for autonomy</div>
                 </div>
-                <div className="border border-white p-4">
-                  <div className="text-2xl font-bold">$50-50K</div>
-                  <div className="text-sm">Daily budget range (conviction-based)</div>
+                <div className="border border-purple-400 p-4 bg-purple-950 bg-opacity-10">
+                  <div className="text-2xl font-bold">Q1 2026</div>
+                  <div className="text-sm">Expected graduation timeline</div>
                 </div>
-                <div className="border border-white p-4">
-                  <div className="text-2xl font-bold">24hrs</div>
-                  <div className="text-sm">Max time from discovery to purchase</div>
+                <div className="border border-purple-400 p-4 bg-purple-950 bg-opacity-10">
+                  <div className="text-2xl font-bold">24/7</div>
+                  <div className="text-sm">Continuous learning and analysis</div>
                 </div>
               </div>
             </div>
@@ -201,56 +206,56 @@ export default async function AmandaAgentPage() {
         </div>
       </section>
 
-      {/* Trainer Requirements */}
+      {/* Training Status */}
       <section className="py-16 px-6 border-b border-white">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">TRAINER REQUIREMENTS</h2>
+          <h2 className="text-3xl font-bold mb-8">TRAINING STATUS</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">Algorithm Co-Developer Profile</h3>
+              <h3 className="text-xl font-bold mb-4">Amanda Schmitt's Training Approach</h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
-                  <div className="w-2 h-2 bg-white mt-2 flex-shrink-0"></div>
-                  <div><strong>Meme Prophet:</strong> Can identify cultural shifts 3-6 months early through pattern recognition across social platforms</div>
+                  <div className="w-2 h-2 bg-purple-400 mt-2 flex-shrink-0"></div>
+                  <div><strong>Cultural Pattern Recognition:</strong> Teaching BERTHA to identify cultural shifts 3-6 months early through social platform analysis</div>
                 </li>
                 <li className="flex items-start gap-2">
-                  <div className="w-2 h-2 bg-white mt-2 flex-shrink-0"></div>
-                  <div><strong>Studio Network:</strong> Has direct relationships with 50+ emerging artists, access to off-market work and early project intel</div>
+                  <div className="w-2 h-2 bg-purple-400 mt-2 flex-shrink-0"></div>
+                  <div><strong>Artist Network Intelligence:</strong> Training on relationships with 50+ emerging artists and access to off-market opportunities</div>
                 </li>
                 <li className="flex items-start gap-2">
-                  <div className="w-2 h-2 bg-white mt-2 flex-shrink-0"></div>
-                  <div><strong>Data-Driven Taste:</strong> Can articulate WHY they like something in terms that can be encoded into algorithmic logic</div>
+                  <div className="w-2 h-2 bg-purple-400 mt-2 flex-shrink-0"></div>
+                  <div><strong>Taste Algorithm Development:</strong> Encoding aesthetic preferences into algorithmic logic that can scale and learn</div>
                 </li>
                 <li className="flex items-start gap-2">
-                  <div className="w-2 h-2 bg-white mt-2 flex-shrink-0"></div>
-                  <div><strong>Financial Intuition:</strong> Understands both cultural significance AND market mechanics - when to pay 2x vs 10x market rate</div>
+                  <div className="w-2 h-2 bg-purple-400 mt-2 flex-shrink-0"></div>
+                  <div><strong>Market Intelligence:</strong> Understanding cultural significance AND market mechanics - pricing conviction algorithms</div>
                 </li>
                 <li className="flex items-start gap-2">
-                  <div className="w-2 h-2 bg-white mt-2 flex-shrink-0"></div>
-                  <div><strong>Network Orchestrator:</strong> Can amplify artist careers through strategic introductions and institutional connections</div>
+                  <div className="w-2 h-2 bg-purple-400 mt-2 flex-shrink-0"></div>
+                  <div><strong>Network Effect Modeling:</strong> Teaching artist career amplification through strategic introductions and data analysis</div>
                 </li>
               </ul>
             </div>
             <div>
               <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                 <Coins className="w-5 h-5" />
-                Compensation Package
+                Training Investment
               </h3>
               <div className="space-y-3">
                 <div>
-                  <strong>Monthly:</strong> $4,000-6,500 + AMANDA token equity
+                  <strong>Trainer:</strong> Amanda Schmitt (Lead Collection Intelligence)
                 </div>
                 <div>
-                  <strong>Success Bonus:</strong> 20,000 $SPIRIT tokens
+                  <strong>Training Phase:</strong> 8-month intensive development
                 </div>
                 <div>
-                  <strong>Collection Access:</strong> Participation in acquisition decisions
+                  <strong>Weekly Sessions:</strong> 15-20 hours of direct training
                 </div>
                 <div>
-                  <strong>Duration:</strong> 8-month initial commitment
+                  <strong>Success Metrics:</strong> 87% prediction accuracy target
                 </div>
                 <div>
-                  <strong>Time Investment:</strong> 15-20 hours/week
+                  <strong>Token Economics:</strong> BERTHA utility token for collection insights
                 </div>
               </div>
             </div>
@@ -258,10 +263,10 @@ export default async function AmandaAgentPage() {
         </div>
       </section>
 
-      {/* Amanda Schmitt Connection */}
+      {/* Amanda Schmitt Training */}
       <section className="py-16 px-6 border-b border-white">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">AMANDA SCHMITT METHODOLOGY</h2>
+          <h2 className="text-3xl font-bold mb-8">AMANDA SCHMITT TRAINING METHODOLOGY</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
@@ -273,60 +278,60 @@ export default async function AmandaAgentPage() {
                   "I don't just collect art - I collect moments when culture shifts. The piece an artist makes right before they find their voice. The experiment that defines a new movement. The work everyone overlooks that will be in museums in 10 years."
                 </p>
                 <p className="text-sm">
-                  - Amanda Schmitt's collection philosophy that AMANDA will embody
+                  - Amanda Schmitt's collection philosophy being encoded into BERTHA's algorithms
                 </p>
               </div>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-4">Learning Opportunities</h3>
+              <h3 className="text-xl font-bold mb-4">BERTHA's Learning Framework</h3>
               <ul className="space-y-3">
-                <li>• Direct mentorship from Amanda Schmitt and established art collector network</li>
-                <li>• Access to Kanbas.art collection methodologies and curatorial strategies</li>
-                <li>• Exposure to high-level art market decision-making</li>
-                <li>• Professional development in contemporary digital art curation</li>
-                <li>• Network building with leading collectors, artists, and institutions</li>
+                <li>• Direct knowledge transfer from Amanda Schmitt's collection expertise</li>
+                <li>• Integration of Kanbas.art methodologies into AI decision frameworks</li>
+                <li>• Real-time exposure to high-level art market decision-making processes</li>
+                <li>• Continuous learning through daily acquisition feedback loops</li>
+                <li>• Network intelligence from leading collectors, artists, and institutions</li>
               </ul>
             </div>
           </div>
         </div>
       </section>
 
-      {/* AMANDA's Algorithm Framework */}
+      {/* BERTHA's Algorithm Framework */}
       <section className="py-16 px-6 border-b border-white">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">THE AMANDA ALGORITHM</h2>
+          <h2 className="text-3xl font-bold mb-8">THE BERTHA ALGORITHM</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <h3 className="text-xl font-bold mb-4">Cultural Intelligence Engine</h3>
               <div className="space-y-4">
-                <div className="border border-white p-4">
-                  <div className="font-bold mb-2">Meme Genesis Detection</div>
-                  <div className="text-sm">AI monitors 50+ platforms for emerging visual patterns, tracking viral coefficient and cultural diffusion speed</div>
+                <div className="border border-purple-400 p-4 bg-purple-950 bg-opacity-10">
+                  <div className="font-bold mb-2 text-purple-300">Meme Genesis Detection</div>
+                  <div className="text-sm">AI monitors 300+ platforms for emerging visual patterns, tracking viral coefficient and cultural diffusion speed through Amanda's trained pattern recognition</div>
                 </div>
-                <div className="border border-white p-4">
-                  <div className="font-bold mb-2">Artist Trajectory Modeling</div>
-                  <div className="text-sm">Predictive models analyzing social engagement, technical evolution, and network effects to identify pre-breakout artists</div>
+                <div className="border border-purple-400 p-4 bg-purple-950 bg-opacity-10">
+                  <div className="font-bold mb-2 text-purple-300">Artist Trajectory Modeling</div>
+                  <div className="text-sm">Predictive models analyzing social engagement, technical evolution, and network effects to identify pre-breakout artists using Amanda's discovery frameworks</div>
                 </div>
-                <div className="border border-white p-4">
-                  <div className="font-bold mb-2">Off-Market Intelligence</div>
-                  <div className="text-sm">Studio relationship management system tracking 200+ artist pipelines, upcoming projects, and acquisition opportunities</div>
+                <div className="border border-purple-400 p-4 bg-purple-950 bg-opacity-10">
+                  <div className="font-bold mb-2 text-purple-300">Off-Market Intelligence</div>
+                  <div className="text-sm">Studio relationship management system tracking 200+ artist pipelines, upcoming projects, and acquisition opportunities through Amanda's network</div>
                 </div>
               </div>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-4">Acquisition Decision Matrix</h3>
+              <h3 className="text-xl font-bold mb-4">Autonomous Decision Matrix</h3>
               <div className="space-y-4">
-                <div className="border border-white p-4">
-                  <div className="font-bold mb-2">Cultural Significance Score</div>
-                  <div className="text-sm">Weighted algorithm: 40% trend prediction, 30% artistic innovation, 20% network effects, 10% technical quality</div>
+                <div className="border border-purple-400 p-4 bg-purple-950 bg-opacity-10">
+                  <div className="font-bold mb-2 text-purple-300">Cultural Significance Score</div>
+                  <div className="text-sm">Weighted algorithm: 30% innovation, 25% aesthetics, 20% narrative, 15% community, 10% scarcity (per Amanda's taste weights)</div>
                 </div>
-                <div className="border border-white p-4">
-                  <div className="font-bold mb-2">Financial Conviction Model</div>
-                  <div className="text-sm">Dynamic pricing based on confidence intervals, risk assessment, and portfolio balance requirements</div>
+                <div className="border border-purple-400 p-4 bg-purple-950 bg-opacity-10">
+                  <div className="font-bold mb-2 text-purple-300">Financial Conviction Model</div>
+                  <div className="text-sm">Dynamic pricing based on confidence intervals, risk assessment, and portfolio balance using Amanda's risk parameters</div>
                 </div>
-                <div className="border border-white p-4">
-                  <div className="font-bold mb-2">Network Amplification Strategy</div>
-                  <div className="text-sm">Post-acquisition artist development through gallery introductions, collector network, and institutional positioning</div>
+                <div className="border border-purple-400 p-4 bg-purple-950 bg-opacity-10">
+                  <div className="font-bold mb-2 text-purple-300">Autonomous Amplification</div>
+                  <div className="text-sm">Post-acquisition artist development through automated gallery introductions, collector network API, and institutional positioning algorithms</div>
                 </div>
               </div>
             </div>
@@ -337,99 +342,99 @@ export default async function AmandaAgentPage() {
       {/* Success Criteria */}
       <section className="py-16 px-6 border-b border-white">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">LAUNCH SUCCESS CRITERIA</h2>
+          <h2 className="text-3xl font-bold mb-8">BERTHA'S SUCCESS METRICS</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">AMANDA's Success Metrics</h3>
+              <h3 className="text-xl font-bold mb-4">Training Completion Targets</h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span>Discovery Rate:</span>
-                  <span className="font-bold">3 pre-breakout artists/month</span>
+                  <span>Prediction Accuracy:</span>
+                  <span className="font-bold text-purple-300">87%+ on test dataset</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Collection Coherence:</span>
-                  <span className="font-bold">85%+ thematic alignment</span>
+                  <span>Autonomous Decisions:</span>
+                  <span className="font-bold text-purple-300">75%+ confidence threshold</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Market Timing:</span>
-                  <span className="font-bold">Buy within 48hrs of drop</span>
+                  <span className="font-bold text-purple-300">Buy within 24hrs of detection</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Artist Amplification:</span>
-                  <span className="font-bold">10x career growth</span>
+                  <span>Artist Discovery:</span>
+                  <span className="font-bold text-purple-300">3+ pre-breakout/month</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Pilot Revenue Target:</span>
-                  <span className="font-bold text-green-400">$1,500-3,000/month</span>
+                  <span>Portfolio Performance:</span>
+                  <span className="font-bold text-green-400">Beat market by 15%+</span>
                 </div>
               </div>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-4">Unique Opportunities</h3>
+              <h3 className="text-xl font-bold mb-4">AI Collection Intelligence</h3>
               <ul className="space-y-2">
-                <li>• Shape the future of AI-generated art collection</li>
-                <li>• Develop autonomous collection management systems</li>
-                <li>• Influence evolution of digital art markets</li>
-                <li>• Build lasting cultural preservation infrastructure</li>
-                <li>• Network with leading collectors and institutions</li>
+                <li>• First fully autonomous AI art collection agent</li>
+                <li>• Revolutionary pattern recognition for cultural trends</li>
+                <li>• Predictive modeling for digital art market evolution</li>
+                <li>• Scalable taste algorithms for collector intelligence</li>
+                <li>• Bridge between human intuition and machine learning</li>
               </ul>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Application Process */}
+      {/* Training Progress */}
       <section className="py-16 px-6 border-b border-white">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">APPLICATION PROCESS</h2>
+          <h2 className="text-3xl font-bold mb-8">TRAINING PROGRESS</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">Algorithm Training Application</h3>
+              <h3 className="text-xl font-bold mb-4">Current Training Phase</h3>
               <ol className="space-y-3">
                 <li className="flex items-start gap-3">
-                  <span className="bg-white text-black px-2 py-1 text-xs font-bold">1</span>
-                  <div><strong>Meme Genesis Prediction:</strong> Identify an emerging visual/cultural trend from the last 6 months. When did you first spot it? What platforms/signals confirmed your thesis?</div>
+                  <span className="bg-green-600 text-white px-2 py-1 text-xs font-bold">✓</span>
+                  <div><strong>Foundation Models:</strong> Core taste algorithms trained on Amanda's collection history and aesthetic preferences</div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="bg-white text-black px-2 py-1 text-xs font-bold">2</span>
-                  <div><strong>Artist Studio Intelligence:</strong> Name 5 artists you know personally who are working on unreleased projects. What makes their upcoming work significant?</div>
+                  <span className="bg-green-600 text-white px-2 py-1 text-xs font-bold">✓</span>
+                  <div><strong>Market Intelligence:</strong> Price prediction and trend analysis models integrated with 300+ data sources</div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="bg-white text-black px-2 py-1 text-xs font-bold">3</span>
-                  <div><strong>Taste Logic Encoding:</strong> Take a piece you love and break down WHY in 10 quantifiable factors that could train an AI model. Include weightings.</div>
+                  <span className="bg-purple-600 text-white px-2 py-1 text-xs font-bold">→</span>
+                  <div><strong>Live Training:</strong> Real-time feedback loops from Amanda's acquisition decisions and market outcomes</div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="bg-white text-black px-2 py-1 text-xs font-bold">4</span>
-                  <div><strong>Off-Market Acquisition:</strong> Describe your process for buying directly from artists before public drops. Include relationship building and negotiation strategies.</div>
+                  <span className="bg-gray-600 text-white px-2 py-1 text-xs font-bold">4</span>
+                  <div><strong>Autonomous Testing:</strong> Supervised autonomous decisions with confidence thresholds and safety nets</div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="bg-white text-black px-2 py-1 text-xs font-bold">5</span>
-                  <div><strong>Network Effect Design:</strong> You acquire an emerging artist's piece. Map out your 90-day amplification strategy including specific collector/gallery/institution introductions.</div>
+                  <span className="bg-gray-600 text-white px-2 py-1 text-xs font-bold">5</span>
+                  <div><strong>Network Integration:</strong> Artist relationship management and amplification strategy implementation</div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="bg-white text-black px-2 py-1 text-xs font-bold">6</span>
-                  <div><strong>Cultural Significance Algorithm:</strong> Design a scoring system for cultural significance. What data inputs would you use? How would you weight trend prediction vs artistic innovation?</div>
+                  <span className="bg-gray-600 text-white px-2 py-1 text-xs font-bold">6</span>
+                  <div><strong>Graduation Testing:</strong> Full autonomy testing with real treasury and collection management responsibilities</div>
                 </li>
               </ol>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-4">Selection Process</h3>
+              <h3 className="text-xl font-bold mb-4">Training Milestones</h3>
               <div className="space-y-4">
-                <div className="border border-white p-4">
-                  <div className="font-bold mb-2">Week 1: Taste Test</div>
-                  <div className="text-sm">Review your collection history and market calls</div>
+                <div className="border border-green-500 p-4 bg-green-950 bg-opacity-20">
+                  <div className="font-bold mb-2 text-green-300">Phase 1: Complete</div>
+                  <div className="text-sm">Basic taste modeling and pattern recognition</div>
                 </div>
-                <div className="border border-white p-4">
-                  <div className="font-bold mb-2">Week 2: Live Simulation</div>
-                  <div className="text-sm">You guide AMANDA through real-time market decisions</div>
+                <div className="border border-green-500 p-4 bg-green-950 bg-opacity-20">
+                  <div className="font-bold mb-2 text-green-300">Phase 2: Complete</div>
+                  <div className="text-sm">Market intelligence and prediction algorithms</div>
                 </div>
-                <div className="border border-white p-4">
-                  <div className="font-bold mb-2">Week 3: The Buy</div>
-                  <div className="text-sm">Execute first acquisition with AMANDA's treasury</div>
+                <div className="border border-purple-600 p-4 bg-purple-950 bg-opacity-20">
+                  <div className="font-bold mb-2 text-purple-300">Phase 3: In Progress</div>
+                  <div className="text-sm">Live training with Amanda's guidance</div>
                 </div>
-                <div className="border border-white p-4">
-                  <div className="font-bold mb-2">Decision</div>
-                  <div className="text-sm">Based on cultural impact + market performance</div>
+                <div className="border border-gray-600 p-4">
+                  <div className="font-bold mb-2">Phase 4: Q1 2026</div>
+                  <div className="text-sm">Autonomous collection management</div>
                 </div>
               </div>
             </div>
@@ -437,31 +442,31 @@ export default async function AmandaAgentPage() {
         </div>
       </section>
 
-      {/* Application CTA */}
+      {/* Training CTA */}
       <section className="py-16 px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-8">READY TO BECOME AMANDA'S TRAINER?</h2>
+          <h2 className="text-4xl font-bold mb-8">WITNESS BERTHA'S TRAINING</h2>
           <p className="text-lg mb-8">
-            Help AMANDA become the definitive voice for art collection in the digital age, building collections that preserve culture and elevate artists.
+            Follow BERTHA's development as she learns to become the definitive AI collection intelligence, building autonomous systems that preserve culture and elevate artists through Amanda Schmitt's expertise.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/apply?type=trainer&agent=amanda"
-              className="inline-block border border-white px-8 py-4 hover:bg-white hover:text-black transition-all text-lg font-bold"
+              href="/sites/bertha/interview"
+              className="inline-block border border-purple-600 bg-purple-600 px-8 py-4 hover:bg-purple-700 transition-all text-lg font-bold"
             >
-              APPLY TO TRAIN AMANDA
+              VIEW TRAINER INTERVIEW
             </Link>
-            <a
-              href="mailto:amanda-trainer@eden.art"
+            <Link
+              href="/sites/amanda"
               className="inline-flex items-center gap-2 border border-white px-8 py-4 hover:bg-white hover:text-black transition-all text-lg font-bold"
             >
               <ExternalLink className="w-5 h-5" />
-              EMAIL QUESTIONS
-            </a>
+              AMANDA'S STUDIO
+            </Link>
           </div>
           <div className="mt-6 text-sm text-gray-400">
-            <p>Join #trainer-applications in Eden Academy Discord</p>
-            <p>This position offers unique access to Amanda Schmitt's network and methodology</p>
+            <p>BERTHA is currently in Phase 3 training with Amanda Schmitt</p>
+            <p>Expected graduation: Q1 2026 with full autonomous collection capabilities</p>
           </div>
         </div>
       </section>

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ChevronRight, Save, Brain, Target, Sparkles, Database, TrendingUp, DollarSign } from 'lucide-react';
+import { ChevronRight, Save, Brain, Target, Sparkles, Database, TrendingUp, DollarSign, CheckCircle, AlertCircle, Loader2, Download } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 
 interface InterviewSection {
@@ -177,10 +177,14 @@ const interviewSections: InterviewSection[] = [
   }
 ];
 
+type SubmissionState = 'idle' | 'submitting' | 'success' | 'error';
+
 export default function BerthaTrainerInterview() {
   const [currentSection, setCurrentSection] = useState(0);
   const [responses, setResponses] = useState<Record<string, any>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionState, setSubmissionState] = useState<SubmissionState>('idle');
+  const [submissionMessage, setSubmissionMessage] = useState('');
+  const [csvData, setCsvData] = useState<string | null>(null);
 
   const handleResponse = (questionId: string, value: any) => {
     setResponses(prev => ({
@@ -227,8 +231,15 @@ export default function BerthaTrainerInterview() {
     }
   };
 
+  const resetSubmission = () => {
+    setSubmissionState('idle');
+    setSubmissionMessage('');
+    setCsvData(null);
+  };
+
   const handleSubmit = async () => {
-    setIsSubmitting(true);
+    setSubmissionState('submitting');
+    setSubmissionMessage('Processing your training data...');
     
     // Format responses for BERTHA training
     const trainingData = {
@@ -255,26 +266,30 @@ export default function BerthaTrainerInterview() {
       
       const result = await response.json();
       
-      if (result.success) {
+      if (response.ok && result.success) {
         // Generate CSV export
-        const csvData = generateCSV(trainingData);
-        downloadCSV(csvData, `bertha-training-${Date.now()}.csv`);
+        const csvContent = generateCSV(trainingData);
+        setCsvData(csvContent);
         
-        alert(`✅ Training Complete!\n\nBERTHA has successfully incorporated your expertise.\n\nKey updates applied:\n${Object.keys(result.updates || {}).map(k => `• ${k}`).join('\n')}\n\nTraining data has been downloaded as CSV for Google Sheets import.\n\nBERTHA is now ready to operate with your collection intelligence.`);
+        setSubmissionState('success');
+        const updatesCount = Object.keys(result.updates || {}).length;
+        setSubmissionMessage(
+          `BERTHA has successfully incorporated your expertise with ${updatesCount} key updates applied. Your training data is ready for download.`
+        );
         
-        // Redirect to BERTHA's main page after success
+        // Redirect to BERTHA's main page after a delay
         setTimeout(() => {
           window.location.href = '/sites/amanda';
-        }, 2000);
+        }, 5000);
       } else {
-        alert('Failed to save training data. Please try again.');
+        setSubmissionState('error');
+        setSubmissionMessage(result.error || 'Failed to save training data. Please try again.');
       }
     } catch (error) {
       console.error('Training submission error:', error);
-      alert('Error submitting training data. Please check console for details.');
+      setSubmissionState('error');
+      setSubmissionMessage('Network error occurred. Please check your connection and try again.');
     }
-
-    setIsSubmitting(false);
   };
 
   const section = interviewSections[currentSection];
@@ -293,7 +308,7 @@ export default function BerthaTrainerInterview() {
             <span className="mx-2">/</span>
             <Link href="/academy" className="hover:text-white">Academy</Link>
             <span className="mx-2">/</span>
-            <Link href="/academy/agent/amanda" className="hover:text-white">AMANDA</Link>
+            <Link href="/academy/agent/amanda" className="hover:text-white">BERTHA</Link>
             <span className="mx-2">/</span>
             <span>Trainer Interview</span>
           </div>
@@ -431,11 +446,85 @@ export default function BerthaTrainerInterview() {
           ))}
         </div>
 
+        {/* Submission Status */}
+        {submissionState !== 'idle' && (
+          <div className="mt-8 p-6 border rounded-lg">
+            {submissionState === 'submitting' && (
+              <div className="flex items-center gap-3 text-blue-400 border-blue-400/20 bg-blue-950/20">
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <div>
+                  <div className="font-semibold">Processing Training Data</div>
+                  <div className="text-sm text-gray-400">{submissionMessage}</div>
+                </div>
+              </div>
+            )}
+            
+            {submissionState === 'success' && (
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 text-green-400 border-green-400/20 bg-green-950/20">
+                  <CheckCircle className="w-5 h-5" />
+                  <div>
+                    <div className="font-semibold">Training Complete!</div>
+                    <div className="text-sm text-gray-300">{submissionMessage}</div>
+                  </div>
+                </div>
+                
+                {csvData && (
+                  <div className="flex items-center gap-3 pt-3 border-t border-gray-700">
+                    <button
+                      onClick={() => downloadCSV(csvData, `bertha-training-${Date.now()}.csv`)}
+                      className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded flex items-center gap-2 text-sm"
+                    >
+                      <Download className="w-4 h-4" />
+                      Download Training Data (CSV)
+                    </button>
+                    <span className="text-xs text-gray-500">
+                      Optional: Import to Google Sheets for analysis
+                    </span>
+                  </div>
+                )}
+                
+                <div className="text-sm text-gray-500">
+                  Redirecting to Amanda's studio in 5 seconds...
+                </div>
+              </div>
+            )}
+            
+            {submissionState === 'error' && (
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 text-red-400 border-red-400/20 bg-red-950/20">
+                  <AlertCircle className="w-5 h-5" />
+                  <div>
+                    <div className="font-semibold">Submission Failed</div>
+                    <div className="text-sm text-gray-300">{submissionMessage}</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={handleSubmit}
+                    className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded flex items-center gap-2 text-sm"
+                  >
+                    <Save className="w-4 h-4" />
+                    Try Again
+                  </button>
+                  <button
+                    onClick={resetSubmission}
+                    className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-sm"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Navigation */}
         <div className="flex justify-between items-center mt-12">
           <button
             onClick={() => setCurrentSection(prev => Math.max(0, prev - 1))}
-            disabled={currentSection === 0}
+            disabled={currentSection === 0 || submissionState === 'submitting'}
             className="px-6 py-3 border border-gray-700 rounded hover:border-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Previous
@@ -444,7 +533,8 @@ export default function BerthaTrainerInterview() {
           {currentSection < interviewSections.length - 1 ? (
             <button
               onClick={() => setCurrentSection(prev => prev + 1)}
-              className="px-6 py-3 bg-purple-600 rounded hover:bg-purple-700 transition-colors flex items-center gap-2"
+              disabled={submissionState === 'submitting'}
+              className="px-6 py-3 bg-purple-600 rounded hover:bg-purple-700 transition-colors flex items-center gap-2 disabled:opacity-50"
             >
               Next Section
               <ChevronRight className="w-4 h-4" />
@@ -452,11 +542,25 @@ export default function BerthaTrainerInterview() {
           ) : (
             <button
               onClick={handleSubmit}
-              disabled={isSubmitting}
+              disabled={submissionState === 'submitting' || submissionState === 'success'}
               className="px-6 py-3 bg-green-600 rounded hover:bg-green-700 transition-colors flex items-center gap-2 disabled:opacity-50"
             >
-              {isSubmitting ? 'Saving...' : 'Complete Interview'}
-              <Save className="w-4 h-4" />
+              {submissionState === 'submitting' ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Processing...
+                </>
+              ) : submissionState === 'success' ? (
+                <>
+                  <CheckCircle className="w-4 h-4" />
+                  Complete
+                </>
+              ) : (
+                <>
+                  Complete Interview
+                  <Save className="w-4 h-4" />
+                </>
+              )}
             </button>
           )}
         </div>
