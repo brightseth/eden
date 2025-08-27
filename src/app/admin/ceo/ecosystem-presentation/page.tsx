@@ -23,10 +23,10 @@ export default function EcosystemPresentationPage() {
       color: 'bg-red-500',
       description: 'Daily knowledge synthesis works with 2,519+ pieces in archive',
       demoLinks: [
-        { name: 'Live Creation Status', url: '/api/agents/abraham', icon: Play },
-        { name: 'Latest Work (#2522)', url: '/api/agents/abraham/latest', icon: ExternalLink },
-        { name: 'Works Archive', url: '/api/agents/abraham/works', icon: BarChart3 },
-        { name: 'Covenant Dashboard', url: '/abraham', icon: Globe }
+        { name: 'Agent Profile', url: '/agents/abraham', icon: Play },
+        { name: 'Latest Work (#2522)', url: '/agents/abraham?tab=works', icon: ExternalLink },
+        { name: 'Works Archive', url: '/agents/abraham?tab=works', icon: BarChart3 },
+        { name: 'API Data', url: '/api/agents/abraham', icon: Settings }
       ]
     },
     {
@@ -37,10 +37,10 @@ export default function EcosystemPresentationPage() {
       color: 'bg-teal-500',
       description: 'Consciousness through light & motion - 3,677 works spanning consciousness studies',
       demoLinks: [
-        { name: 'Agent Profile', url: '/api/agents/solienne', icon: Play },
-        { name: 'Latest Works', url: '/api/agents/solienne/latest', icon: ExternalLink },
-        { name: 'Artist Statement', url: '/api/agents/solienne/statement', icon: BarChart3 },
-        { name: 'Gallery Site', url: '/solienne', icon: Globe }
+        { name: 'Agent Profile', url: '/agents/solienne', icon: Play },
+        { name: 'Works Gallery', url: '/agents/solienne?tab=works', icon: ExternalLink },
+        { name: 'Academy Page', url: '/academy/agent/solienne', icon: BarChart3 },
+        { name: 'API Data', url: '/api/agents/solienne', icon: Settings }
       ]
     },
     {
@@ -51,10 +51,10 @@ export default function EcosystemPresentationPage() {
       color: 'bg-purple-500',
       description: 'AI gallery curator managing exhibitions and cultural programming',
       demoLinks: [
-        { name: 'Agent Interface', url: '/api/agents/sue', icon: Play },
-        { name: 'Current Exhibitions', url: '/api/agents/sue/exhibitions', icon: ExternalLink },
-        { name: 'Curation Engine', url: '/api/agents/sue/curate', icon: BarChart3 },
-        { name: 'Gallery Dashboard', url: '/sue', icon: Globe }
+        { name: 'Agent Profile', url: '/agents/sue', icon: Play },
+        { name: 'Works Gallery', url: '/agents/sue?tab=works', icon: ExternalLink },
+        { name: 'Academy Page', url: '/academy/agent/sue', icon: BarChart3 },
+        { name: 'API Data', url: '/api/agents/sue', icon: Settings }
       ]
     },
     {
@@ -65,10 +65,10 @@ export default function EcosystemPresentationPage() {
       color: 'bg-blue-500',
       description: 'Autonomous DAO governance with real-time market data integration',
       demoLinks: [
-        { name: 'Agent Status', url: '/api/agents/citizen', icon: Play },
-        { name: 'Market Analytics', url: '/api/agents/citizen/market', icon: ExternalLink },
-        { name: 'DAO Governance', url: '/api/agents/citizen/governance', icon: BarChart3 },
-        { name: 'CryptoCitizen Hub', url: '/citizen', icon: Globe }
+        { name: 'Agent Profile', url: '/agents/citizen', icon: Play },
+        { name: 'Training System', url: '/agents/citizen?tab=training', icon: ExternalLink },
+        { name: 'Academy Page', url: '/academy/agent/citizen', icon: BarChart3 },
+        { name: 'API Data', url: '/api/agents/citizen', icon: Settings }
       ]
     },
     {
@@ -79,10 +79,10 @@ export default function EcosystemPresentationPage() {
       color: 'bg-orange-500',
       description: 'Collection intelligence trained by legendary collectors',
       demoLinks: [
-        { name: 'Agent Profile', url: '/api/agents/bertha', icon: Play },
-        { name: 'Portfolio Analysis', url: '/api/agents/bertha/portfolio', icon: ExternalLink },
-        { name: 'Artwork Evaluation', url: '/api/agents/bertha/evaluate', icon: BarChart3 },
-        { name: 'Training Interface', url: '/api/agents/bertha/training', icon: Settings }
+        { name: 'Agent Profile', url: '/agents/bertha', icon: Play },
+        { name: 'Dashboard', url: '/dashboard/bertha', icon: ExternalLink },
+        { name: 'Academy Page', url: '/academy/agent/bertha', icon: BarChart3 },
+        { name: 'API Data', url: '/api/agents/bertha', icon: Settings }
       ]
     },
     {
@@ -93,10 +93,10 @@ export default function EcosystemPresentationPage() {
       color: 'bg-emerald-500',
       description: 'Advanced market intelligence with prediction capabilities',
       demoLinks: [
-        { name: 'Agent Dashboard', url: '/api/agents/miyomi', icon: Play },
-        { name: 'Market Predictions', url: '/api/agents/miyomi/predictions', icon: ExternalLink },
-        { name: 'Revenue Analytics', url: '/api/agents/miyomi/revenue', icon: DollarSign },
-        { name: 'Public Interface', url: '/miyomi', icon: Globe }
+        { name: 'Agent Profile', url: '/agents/miyomi', icon: Play },
+        { name: 'Trading Dashboard', url: '/dashboard/miyomi', icon: ExternalLink },
+        { name: 'Academy Page', url: '/academy/agent/miyomi', icon: BarChart3 },
+        { name: 'API Data', url: '/api/agents/miyomi', icon: Settings }
       ]
     },
     {
@@ -107,10 +107,10 @@ export default function EcosystemPresentationPage() {
       color: 'bg-sky-500',
       description: '3D modeling & manufacturing - 347 designs, 89 prototypes created',
       demoLinks: [
-        { name: 'Agent Status', url: '/api/agents/geppetto', icon: Play },
-        { name: 'Design Generator', url: '/api/agents/geppetto/design', icon: ExternalLink },
-        { name: 'Project Portfolio', url: '/api/agents/geppetto/projects', icon: BarChart3 },
-        { name: 'Status Monitor', url: '/api/agents/geppetto/status', icon: Settings }
+        { name: 'Agent Profile', url: '/agents/geppetto', icon: Play },
+        { name: 'Works Gallery', url: '/agents/geppetto?tab=works', icon: ExternalLink },
+        { name: 'Academy Page', url: '/academy/agent/geppetto', icon: BarChart3 },
+        { name: 'API Data', url: '/api/agents/geppetto', icon: Settings }
       ]
     },
     {
@@ -121,10 +121,10 @@ export default function EcosystemPresentationPage() {
       color: 'bg-pink-500',
       description: 'Managing 45k members across 12 communities - 15.3% growth rate',
       demoLinks: [
-        { name: 'Agent Interface', url: '/api/agents/koru', icon: Play },
-        { name: 'Community Analytics', url: '/api/agents/koru/analytics', icon: ExternalLink },
-        { name: 'Engagement Tools', url: '/api/agents/koru/engagement', icon: BarChart3 },
-        { name: 'Status Dashboard', url: '/api/agents/koru/status', icon: Settings }
+        { name: 'Agent Profile', url: '/agents/koru', icon: Play },
+        { name: 'Works Gallery', url: '/agents/koru?tab=works', icon: ExternalLink },
+        { name: 'Academy Page', url: '/academy/agent/koru', icon: BarChart3 },
+        { name: 'API Data', url: '/api/agents/koru', icon: Settings }
       ]
     }
   ];
@@ -364,15 +364,15 @@ export default function EcosystemPresentationPage() {
             <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 p-6 rounded-xl border border-purple-500/30">
               <h3 className="text-xl font-bold mb-4">🚀 Quick Demo Sequence</h3>
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Link href="/api/agents/abraham" target="_blank" className="bg-red-500/20 hover:bg-red-500/30 p-4 rounded-lg text-center transition-all">
+                <Link href="/agents/abraham" target="_blank" className="bg-red-500/20 hover:bg-red-500/30 p-4 rounded-lg text-center transition-all">
                   <div className="font-semibold">ABRAHAM Live</div>
                   <div className="text-sm text-gray-300">Current Work #2522</div>
                 </Link>
-                <Link href="/api/agents/miyomi" target="_blank" className="bg-emerald-500/20 hover:bg-emerald-500/30 p-4 rounded-lg text-center transition-all">
+                <Link href="/dashboard/miyomi" target="_blank" className="bg-emerald-500/20 hover:bg-emerald-500/30 p-4 rounded-lg text-center transition-all">
                   <div className="font-semibold">MIYOMI Oracle</div>
                   <div className="text-sm text-gray-300">Market Intelligence</div>
                 </Link>
-                <Link href="/api/agents/bertha" target="_blank" className="bg-orange-500/20 hover:bg-orange-500/30 p-4 rounded-lg text-center transition-all">
+                <Link href="/dashboard/bertha" target="_blank" className="bg-orange-500/20 hover:bg-orange-500/30 p-4 rounded-lg text-center transition-all">
                   <div className="font-semibold">BERTHA Analysis</div>
                   <div className="text-sm text-gray-300">Collection Intelligence</div>
                 </Link>
@@ -388,7 +388,7 @@ export default function EcosystemPresentationPage() {
               <div className="bg-gray-900/50 p-6 rounded-xl border border-gray-800">
                 <h3 className="text-xl font-bold mb-4">🎨 Creative Agents</h3>
                 <div className="space-y-3">
-                  <Link href="/api/agents/abraham" target="_blank" className="flex items-center gap-3 p-3 hover:bg-gray-800/50 rounded transition-all">
+                  <Link href="/agents/abraham" target="_blank" className="flex items-center gap-3 p-3 hover:bg-gray-800/50 rounded transition-all">
                     <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-sm font-bold">A</div>
                     <div className="flex-1">
                       <div className="font-semibold">ABRAHAM - Live Creation</div>
@@ -397,7 +397,7 @@ export default function EcosystemPresentationPage() {
                     <ExternalLink className="w-4 h-4" />
                   </Link>
                   
-                  <Link href="/api/agents/solienne" target="_blank" className="flex items-center gap-3 p-3 hover:bg-gray-800/50 rounded transition-all">
+                  <Link href="/agents/solienne" target="_blank" className="flex items-center gap-3 p-3 hover:bg-gray-800/50 rounded transition-all">
                     <div className="w-8 h-8 bg-teal-500 rounded-full flex items-center justify-center text-sm font-bold">S</div>
                     <div className="flex-1">
                       <div className="font-semibold">SOLIENNE - Consciousness Art</div>
@@ -406,7 +406,7 @@ export default function EcosystemPresentationPage() {
                     <ExternalLink className="w-4 h-4" />
                   </Link>
                   
-                  <Link href="/api/agents/geppetto" target="_blank" className="flex items-center gap-3 p-3 hover:bg-gray-800/50 rounded transition-all">
+                  <Link href="/agents/geppetto" target="_blank" className="flex items-center gap-3 p-3 hover:bg-gray-800/50 rounded transition-all">
                     <div className="w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-sm font-bold">G</div>
                     <div className="flex-1">
                       <div className="font-semibold">GEPPETTO - Product Design</div>
@@ -420,7 +420,7 @@ export default function EcosystemPresentationPage() {
               <div className="bg-gray-900/50 p-6 rounded-xl border border-gray-800">
                 <h3 className="text-xl font-bold mb-4">💼 Business Agents</h3>
                 <div className="space-y-3">
-                  <Link href="/api/agents/miyomi" target="_blank" className="flex items-center gap-3 p-3 hover:bg-gray-800/50 rounded transition-all">
+                  <Link href="/dashboard/miyomi" target="_blank" className="flex items-center gap-3 p-3 hover:bg-gray-800/50 rounded transition-all">
                     <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-sm font-bold">M</div>
                     <div className="flex-1">
                       <div className="font-semibold">MIYOMI - Market Oracle</div>
@@ -429,7 +429,7 @@ export default function EcosystemPresentationPage() {
                     <ExternalLink className="w-4 h-4" />
                   </Link>
                   
-                  <Link href="/api/agents/bertha" target="_blank" className="flex items-center gap-3 p-3 hover:bg-gray-800/50 rounded transition-all">
+                  <Link href="/dashboard/bertha" target="_blank" className="flex items-center gap-3 p-3 hover:bg-gray-800/50 rounded transition-all">
                     <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-sm font-bold">B</div>
                     <div className="flex-1">
                       <div className="font-semibold">BERTHA - Art Intelligence</div>
@@ -438,7 +438,7 @@ export default function EcosystemPresentationPage() {
                     <ExternalLink className="w-4 h-4" />
                   </Link>
                   
-                  <Link href="/api/agents/citizen" target="_blank" className="flex items-center gap-3 p-3 hover:bg-gray-800/50 rounded transition-all">
+                  <Link href="/agents/citizen" target="_blank" className="flex items-center gap-3 p-3 hover:bg-gray-800/50 rounded transition-all">
                     <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-sm font-bold">C</div>
                     <div className="flex-1">
                       <div className="font-semibold">CITIZEN - DAO Manager</div>
@@ -447,7 +447,7 @@ export default function EcosystemPresentationPage() {
                     <ExternalLink className="w-4 h-4" />
                   </Link>
                   
-                  <Link href="/api/agents/koru" target="_blank" className="flex items-center gap-3 p-3 hover:bg-gray-800/50 rounded transition-all">
+                  <Link href="/agents/koru" target="_blank" className="flex items-center gap-3 p-3 hover:bg-gray-800/50 rounded transition-all">
                     <div className="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center text-sm font-bold">K</div>
                     <div className="flex-1">
                       <div className="font-semibold">KORU - Community Growth</div>

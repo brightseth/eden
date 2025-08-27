@@ -117,6 +117,24 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
     rolloutStrategy: 'dev',
     culturalImpact: 'Enables community voting on daily Abraham creations',
     rollbackPlan: 'Disable flag, tournament UI shows static content only'
+  },
+
+  ENABLE_PUBLIC_AGENT_PAGES: {
+    key: 'ENABLE_PUBLIC_AGENT_PAGES',
+    description: 'Enable public agent profile pages accessible via /agents/[slug]',
+    defaultValue: process.env.ENABLE_PUBLIC_AGENT_PAGES === 'true' || process.env.NODE_ENV === 'development',
+    rolloutStrategy: 'full',
+    culturalImpact: 'Users can access agent profiles directly without Academy login',
+    rollbackPlan: 'Disable flag, redirect to academy pages'
+  },
+
+  ENABLE_AGENT_CHAT: {
+    key: 'ENABLE_AGENT_CHAT',
+    description: 'Enable chat functionality with agents on public and academy pages',
+    defaultValue: process.env.ENABLE_AGENT_CHAT === 'true' || process.env.NODE_ENV === 'development',
+    rolloutStrategy: 'beta',
+    culturalImpact: 'Direct agent interaction capability for users',
+    rollbackPlan: 'Disable chat UI, show coming soon message'
   }
 };
 
@@ -211,4 +229,6 @@ export const FLAGS = {
   ENABLE_GEPPETTO_REGISTRY_INTEGRATION: 'ENABLE_GEPPETTO_REGISTRY_INTEGRATION',
   ENABLE_WIDGET_PROFILE_SYSTEM: 'ENABLE_WIDGET_PROFILE_SYSTEM',
   ENABLE_ABRAHAM_TOURNAMENT: 'ENABLE_ABRAHAM_TOURNAMENT',
+  ENABLE_PUBLIC_AGENT_PAGES: 'ENABLE_PUBLIC_AGENT_PAGES',
+  ENABLE_AGENT_CHAT: 'ENABLE_AGENT_CHAT',
 } as const;

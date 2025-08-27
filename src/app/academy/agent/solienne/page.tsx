@@ -8,6 +8,8 @@ import { AgentSovereignLink } from '@/components/AgentSovereignLink';
 import { VideoPlayer } from '@/components/VideoPlayer';
 import { ProfileRenderer } from '@/components/agent-profile/ProfileRenderer';
 import { isFeatureEnabled, FLAGS } from '@/config/flags';
+import { getAgentProfileConfig, getFallbackProfileConfig } from '@/lib/profile/profile-config';
+import { AgentProfileErrorBoundary } from '@/components/error-boundary/AgentProfileErrorBoundary';
 import { useState, useEffect } from 'react';
 
 interface SolienneData {
@@ -32,7 +34,7 @@ interface SolienneData {
   };
 }
 
-export default function SolienneProfilePage() {
+function SolienneProfilePageInner() {
   const [artistData, setArtistData] = useState<SolienneData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -115,7 +117,13 @@ export default function SolienneProfilePage() {
   // Use widget system if feature flag is enabled
   if (isFeatureEnabled(FLAGS.ENABLE_WIDGET_PROFILE_SYSTEM) && artistData) {
     try {
-      return <ProfileRenderer agent={artistData} agentId="solienne" />;
+      const config = getAgentProfileConfig('solienne') || getFallbackProfileConfig('solienne');
+      
+      return (
+        <AgentProfileErrorBoundary agentId="solienne">
+          <ProfileRenderer agent={artistData} config={config} />
+        </AgentProfileErrorBoundary>
+      );
     } catch (error) {
       console.error('[Solienne Page] Widget system failed, falling back to hardcoded page:', error);
       // Fall through to hardcoded version below
@@ -399,5 +407,13 @@ export default function SolienneProfilePage() {
         </section>
       </div>
     </div>
+  );
+}
+
+export default function SolienneProfilePage() {
+  return (
+    <AgentProfileErrorBoundary agentId="solienne">
+      <SolienneProfilePageInner />
+    </AgentProfileErrorBoundary>
   );
 }
