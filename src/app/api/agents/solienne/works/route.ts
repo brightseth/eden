@@ -27,11 +27,9 @@ export async function GET(request: NextRequest) {
     }
 
     // Use generated SDK as required by ADR-019
-    const registryData = await registryApi.getAgentWorks('solienne', { 
-      limit: Math.min(limit * 5, 100) // Fetch more for filtering, but cap at reasonable limit
-    });
+    const registryCreations = await registryApi.getAgentCreations('solienne', 'PUBLISHED');
     
-    if (!registryData.works) {
+    if (!registryCreations || registryCreations.length === 0) {
       return NextResponse.json({
         works: [],
         total: 0,
@@ -43,7 +41,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Apply client-side filtering and sorting until Registry API supports query params
-    let works = registryData.works.filter(creation => 
+    let works = registryCreations.filter(creation => 
       creation.status === 'PUBLISHED' || creation.status === 'CURATED'
     );
 
@@ -84,21 +82,21 @@ export async function GET(request: NextRequest) {
     const paginatedWorks = works.slice(offset, offset + limit);
 
     // Transform Registry works to Academy format
-    const transformedWorks = paginatedWorks.map((work: any) => ({
+    const transformedWorks = paginatedWorks.map((work) => ({
       id: work.id,
       agent_id: 'solienne',
       archive_type: 'work', // Using canonical term "work" not "generation"
       title: work.title || 'Untitled Work',
-      description: work.metadata?.description,
-      image_url: work.imageUrl || work.mediaUri,
-      thumbnail_url: work.imageUrl || work.mediaUri,
+      description: work.metadata?.description as string,
+      image_url: work.mediaUri,
+      thumbnail_url: work.mediaUri,
       created_date: work.createdAt,
-      archive_number: work.metadata?.dayNumber || null,
+      archive_number: work.metadata?.dayNumber as number || null,
       tags: [
         work.metadata?.theme,
         work.metadata?.style,
         work.metadata?.medium,
-        ...(work.metadata?.tags || [])
+        ...(work.metadata?.tags as string[] || [])
       ].filter(Boolean),
       metadata: {
         ...work.metadata,

@@ -5,10 +5,10 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
+  rootDir: '../../',
   roots: ['<rootDir>/tests/api'],
   testMatch: [
-    '**/__tests__/**/*.ts',
-    '**/?(*.)+(spec|test).ts'
+    '**/tests/api/**/*.test.ts'
   ],
   transform: {
     '^.+\\.ts$': ['ts-jest', {
@@ -19,7 +19,7 @@ module.exports = {
       }
     }]
   },
-  moduleNameMapper: {
+  moduleNameMapping: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   setupFilesAfterEnv: ['<rootDir>/tests/api/setup.ts'],
@@ -27,7 +27,7 @@ module.exports = {
   collectCoverageFrom: [
     'src/app/api/**/*.ts',
     '!src/app/api/**/*.test.ts',
-    '!src/app/api/**/route.ts', // Next.js route handlers
+    '!src/app/api/**/route.ts',
   ],
   coverageReporters: ['text', 'lcov', 'html'],
   verbose: true,

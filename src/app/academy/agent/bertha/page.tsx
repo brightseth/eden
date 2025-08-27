@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { ArrowLeft, Palette, Users, Coins, Clock, ExternalLink, TrendingUp, Star } from 'lucide-react';
 import { agentService } from '@/data/agents-registry';
 import { notFound } from 'next/navigation';
+import { isFeatureEnabled, FLAGS } from '@/config/flags';
+import { ProfileRenderer } from '@/components/agent-profile/ProfileRenderer';
 
 export default async function BerthaAgentPage() {
   // Query for BERTHA agent data - try bertha first, fallback to amanda for compatibility
@@ -26,6 +28,19 @@ export default async function BerthaAgentPage() {
         statement: 'AI art collector building collections that tell stories, preserve cultural moments, and discover the next generation of digital artists through autonomous intelligence and market prediction.'
       }
     } as any;
+  }
+
+  // Use widget system if feature flag is enabled
+  if (isFeatureEnabled(FLAGS.ENABLE_WIDGET_PROFILE_SYSTEM)) {
+    try {
+      const configResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/agents/bertha/profile-config`);
+      if (configResponse.ok) {
+        const profileConfig = await configResponse.json();
+        return <ProfileRenderer agent={agent} config={profileConfig} />;
+      }
+    } catch (error) {
+      console.error('[BERTHA] Widget system failed, falling back to hardcoded page:', error);
+    }
   }
   return (
     <div className="min-h-screen bg-black text-white">

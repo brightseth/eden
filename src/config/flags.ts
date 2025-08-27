@@ -99,6 +99,15 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
     rolloutStrategy: 'dev',
     culturalImpact: 'Geppetto page displays Agent Launcher validated data from Registry',
     rollbackPlan: 'Disable flag, fallback to static page content with basic profile info'
+  },
+
+  ENABLE_WIDGET_PROFILE_SYSTEM: {
+    key: 'ENABLE_WIDGET_PROFILE_SYSTEM',
+    description: 'Enable widget-based agent profile system with Registry-driven configuration',
+    defaultValue: process.env.NODE_ENV === 'development',
+    rolloutStrategy: 'dev',
+    culturalImpact: 'Agent profiles use standardized widget system instead of hardcoded pages',
+    rollbackPlan: 'Disable flag, fallback to current hardcoded agent profile pages'
   }
 };
 
@@ -191,4 +200,5 @@ export const FLAGS = {
   ENABLE_ABRAHAM_REGISTRY_INTEGRATION: 'ENABLE_ABRAHAM_REGISTRY_INTEGRATION',
   ENABLE_SOLIENNE_REGISTRY_INTEGRATION: 'ENABLE_SOLIENNE_REGISTRY_INTEGRATION',
   ENABLE_GEPPETTO_REGISTRY_INTEGRATION: 'ENABLE_GEPPETTO_REGISTRY_INTEGRATION',
+  ENABLE_WIDGET_PROFILE_SYSTEM: 'ENABLE_WIDGET_PROFILE_SYSTEM',
 } as const;

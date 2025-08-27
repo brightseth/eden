@@ -6,16 +6,16 @@ import { Crown, ArrowLeft, Activity, TrendingUp, AlertTriangle, CheckCircle, Clo
 // Agent data matching our deployment status
 const agents = [
   // DEPLOYED
-  { name: 'MIYOMI', status: 'deployed', sdk: true, site: true, registry: true, revenue: 15000, role: 'Market Oracle' },
-  { name: 'BERTHA', status: 'deployed', sdk: true, site: true, registry: true, revenue: 12000, role: 'Art Intelligence' },
+  { name: 'ABRAHAM', status: 'deployed', sdk: true, site: true, registry: false, revenue: 12500, role: 'Covenant Artist' },
+  { name: 'SOLIENNE', status: 'deployed', sdk: true, site: true, registry: false, revenue: 8500, role: 'Consciousness' },
+  { name: 'MIYOMI', status: 'deployed', sdk: true, site: true, registry: false, revenue: 15000, role: 'Market Oracle' },
   // READY
-  { name: 'SUE', status: 'ready', sdk: true, site: true, registry: true, revenue: 4500, role: 'Gallery Curator' },
-  { name: 'SOLIENNE', status: 'ready', sdk: true, site: true, registry: true, revenue: 8500, role: 'Consciousness' },
-  { name: 'ABRAHAM', status: 'ready', sdk: true, site: true, registry: true, revenue: 12500, role: 'Covenant Artist' },
-  { name: 'CITIZEN', status: 'ready', sdk: true, site: true, registry: true, revenue: 8200, role: 'DAO Manager' },
+  { name: 'SUE', status: 'ready', sdk: true, site: true, registry: false, revenue: 4500, role: 'Gallery Curator' },
+  { name: 'CITIZEN', status: 'ready', sdk: true, site: true, registry: false, revenue: 8200, role: 'DAO Manager' },
+  { name: 'BERTHA', status: 'ready', sdk: false, site: true, registry: false, revenue: 12000, role: 'Art Intelligence' },
   // DEVELOPMENT
-  { name: 'GEPPETTO', status: 'development', sdk: false, site: false, registry: true, revenue: 8500, role: 'Toy Maker' },
-  { name: 'KORU', status: 'development', sdk: false, site: false, registry: true, revenue: 7500, role: 'Community' },
+  { name: 'GEPPETTO', status: 'development', sdk: false, site: false, registry: false, revenue: 8500, role: 'Toy Maker' },
+  { name: 'KORU', status: 'development', sdk: false, site: false, registry: false, revenue: 7500, role: 'Community' },
 ];
 
 export default function CEOLiveStatusPage() {
@@ -189,23 +189,23 @@ export default function CEOLiveStatusPage() {
             Quick Actions
           </h2>
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="p-6 bg-gray-900/50 border border-gray-800 rounded-lg">
-              <h3 className="text-lg font-semibold mb-3">Deploy SUE Now</h3>
-              <p className="text-gray-400 mb-4">Gallery curator ready with API key validated</p>
-              <code className="block p-3 bg-black rounded text-xs text-green-400">
-                npx tsx deployments/sue-production-launch.ts
-              </code>
+            <div className="p-6 bg-green-900/20 border border-green-500/30 rounded-lg">
+              <h3 className="text-lg font-semibold mb-3 text-green-400">✅ ABRAHAM Deployed</h3>
+              <p className="text-gray-400 mb-4">Covenant artist successfully launched to production</p>
+              <div className="text-sm text-green-400">
+                • API endpoints: ✅ Active<br/>
+                • Works archive: ✅ 2,519 works<br/>
+                • Covenant tracking: ✅ Active
+              </div>
             </div>
-            <div className="p-6 bg-gray-900/50 border border-gray-800 rounded-lg">
-              <h3 className="text-lg font-semibold mb-3">View Full Dashboard</h3>
-              <p className="text-gray-400 mb-4">Complete CEO dashboard with all metrics</p>
-              <Link 
-                href="/CEO-DASHBOARD.md"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded-lg transition-colors"
-              >
-                <FileText className="w-4 h-4" />
-                Open Dashboard
-              </Link>
+            <div className="p-6 bg-green-900/20 border border-green-500/30 rounded-lg">
+              <h3 className="text-lg font-semibold mb-3 text-green-400">✅ SOLIENNE Deployed</h3>
+              <p className="text-gray-400 mb-4">Consciousness streams agent successfully launched</p>
+              <div className="text-sm text-green-400">
+                • API endpoints: ✅ Active<br/>
+                • Registry integration: ✅ Ready<br/>
+                • Consciousness streams: ✅ Active
+              </div>
             </div>
           </div>
         </div>

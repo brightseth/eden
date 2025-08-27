@@ -163,7 +163,11 @@ export class ApiTestClient {
    * Build URL with query parameters
    */
   private buildUrl(path: string, query?: Record<string, string | number | boolean>): string {
-    const url = new URL(path, this.baseUrl);
+    // Ensure path starts with / and remove any leading slash from path if baseUrl ends with /
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    const normalizedBase = this.baseUrl.endsWith('/') ? this.baseUrl.slice(0, -1) : this.baseUrl;
+    
+    const url = new URL(normalizedBase + normalizedPath);
     
     if (query) {
       Object.entries(query).forEach(([key, value]) => {
