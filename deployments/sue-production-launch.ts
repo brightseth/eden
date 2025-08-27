@@ -59,9 +59,10 @@ async function launchSueProduction() {
       }
     );
 
-    console.log(`✅ Exhibition Curated: "${exhibition.theme}"`);
-    console.log(`   Selected ${exhibition.selectedWorks.length} works`);
-    console.log(`   Curatorial Statement: ${exhibition.statement.substring(0, 100)}...`);
+    console.log(`✅ Exhibition Curated: "${exhibition.title}"`);
+    const totalWorks = exhibition.artists.reduce((total, artist) => total + artist.works.length, 0);
+    console.log(`   Selected ${totalWorks} works across ${exhibition.artists.length} artists`);
+    console.log(`   Concept: ${exhibition.concept.substring(0, 100)}...`);
 
     // Generate public programming
     console.log('\n📚 Phase 3: Generating Public Programming...');
@@ -121,7 +122,7 @@ async function launchSueProduction() {
       success: true,
       agent: 'sue',
       status: 'live',
-      exhibition: exhibition.theme,
+      exhibition: exhibition.title,
       programCount: programs.length,
       registrySync: true
     };

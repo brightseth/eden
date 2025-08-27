@@ -8,11 +8,11 @@ const agents = [
   // DEPLOYED
   { name: 'ABRAHAM', status: 'deployed', sdk: true, site: true, registry: false, revenue: 12500, role: 'Covenant Artist' },
   { name: 'SOLIENNE', status: 'deployed', sdk: true, site: true, registry: false, revenue: 8500, role: 'Consciousness' },
-  { name: 'MIYOMI', status: 'deployed', sdk: true, site: true, registry: false, revenue: 15000, role: 'Market Oracle' },
+  { name: 'MIYOMI', status: 'deployed', sdk: true, site: true, registry: true, revenue: 15000, role: 'Market Oracle' },
   // READY
-  { name: 'SUE', status: 'ready', sdk: true, site: true, registry: false, revenue: 4500, role: 'Gallery Curator' },
-  { name: 'CITIZEN', status: 'ready', sdk: true, site: true, registry: false, revenue: 8200, role: 'DAO Manager' },
-  { name: 'BERTHA', status: 'ready', sdk: false, site: true, registry: false, revenue: 12000, role: 'Art Intelligence' },
+  { name: 'SUE', status: 'deployed', sdk: true, site: true, registry: false, revenue: 4500, role: 'Gallery Curator' },
+  { name: 'CITIZEN', status: 'deployed', sdk: true, site: true, registry: false, revenue: 8200, role: 'DAO Manager' },
+  { name: 'BERTHA', status: 'development', sdk: false, site: true, registry: false, revenue: 12000, role: 'Art Intelligence' },
   // DEVELOPMENT
   { name: 'GEPPETTO', status: 'development', sdk: false, site: false, registry: false, revenue: 8500, role: 'Toy Maker' },
   { name: 'KORU', status: 'development', sdk: false, site: false, registry: false, revenue: 7500, role: 'Community' },

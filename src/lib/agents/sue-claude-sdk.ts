@@ -177,7 +177,7 @@ Format as JSON:
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20240620',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: 3000,
         temperature: 0.7,
         system: systemPrompt,
@@ -244,7 +244,7 @@ Format as JSON:
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20240620',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: 2000,
         temperature: 0.5,
         messages: [{ role: 'user', content: prompt }]
@@ -296,7 +296,7 @@ Format as JSON array:
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20240620',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: 2000,
         temperature: 0.8,
         messages: [{ role: 'user', content: prompt }]
@@ -307,7 +307,12 @@ Format as JSON array:
         throw new Error('Unexpected response type from Claude');
       }
 
-      return JSON.parse(content.text);
+      // Extract JSON from response that might contain explanatory text
+      const jsonMatch = content.text.match(/\[[\s\S]*\]/);
+      if (!jsonMatch) {
+        throw new Error('No JSON array found in response');
+      }
+      return JSON.parse(jsonMatch[0]);
     } catch (error) {
       console.error('Error generating public programs:', error);
       throw error;
@@ -361,7 +366,7 @@ Format as JSON:
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20240620',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: 1500,
         temperature: 0.6,
         messages: [{ role: 'user', content: prompt }]
@@ -414,7 +419,7 @@ Provide comprehensive annual plan with exhibitions and programs.`;
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20240620',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: 4000,
         temperature: 0.7,
         system: this.buildSystemPrompt(),

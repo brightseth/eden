@@ -133,7 +133,7 @@ export class CitizenClaudeSDK {
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20240620',
+        model: 'claude-3-5-sonnet-latest',
         max_tokens: 3000,
         temperature: 0.6,
         system: systemPrompt,
@@ -223,7 +223,7 @@ Format as JSON:
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20240620',
+        model: 'claude-3-5-sonnet-latest',
         max_tokens: 2500,
         temperature: 0.4,
         messages: [{ role: 'user', content: prompt }]
@@ -234,7 +234,12 @@ Format as JSON:
         throw new Error('Unexpected response type from Claude');
       }
 
-      const analysis = JSON.parse(content.text);
+      // Extract JSON from response that might contain explanatory text
+      const jsonMatch = content.text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error('No JSON object found in response');
+      }
+      const analysis = JSON.parse(jsonMatch[0]);
       return {
         proposal: proposal.title,
         ...analysis
@@ -289,7 +294,7 @@ Format as JSON:
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20240620',
+        model: 'claude-3-5-sonnet-latest',
         max_tokens: 2000,
         temperature: 0.65,
         system: this.buildSystemPrompt(),
@@ -301,7 +306,12 @@ Format as JSON:
         throw new Error('Unexpected response type from Claude');
       }
 
-      return JSON.parse(content.text);
+      // Extract JSON from response that might contain explanatory text
+      const jsonMatch = content.text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error('No JSON object found in response');
+      }
+      return JSON.parse(jsonMatch[0]);
     } catch (error) {
       console.error('Error generating fellowship strategy:', error);
       throw error;
@@ -358,7 +368,7 @@ Format as JSON:
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20240620',
+        model: 'claude-3-5-sonnet-latest',
         max_tokens: 1800,
         temperature: 0.3,
         messages: [{ role: 'user', content: prompt }]
@@ -369,7 +379,12 @@ Format as JSON:
         throw new Error('Unexpected response type from Claude');
       }
 
-      const assessment = JSON.parse(content.text);
+      // Extract JSON from response that might contain explanatory text
+      const jsonMatch = content.text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error('No JSON object found in response');
+      }
+      const assessment = JSON.parse(jsonMatch[0]);
       
       // Update internal health score
       this.governanceMetrics.governanceHealth = assessment.healthScore;
