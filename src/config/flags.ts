@@ -104,8 +104,8 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
   ENABLE_WIDGET_PROFILE_SYSTEM: {
     key: 'ENABLE_WIDGET_PROFILE_SYSTEM',
     description: 'Enable widget-based agent profile system with Registry-driven configuration',
-    defaultValue: process.env.NODE_ENV === 'development',
-    rolloutStrategy: 'dev',
+    defaultValue: true,
+    rolloutStrategy: 'full',
     culturalImpact: 'Agent profiles use standardized widget system instead of hardcoded pages',
     rollbackPlan: 'Disable flag, fallback to current hardcoded agent profile pages'
   }
