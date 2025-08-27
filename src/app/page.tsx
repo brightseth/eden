@@ -101,39 +101,42 @@ export default function HomePage() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      console.log('Fetching agents from Registry SDK...');
+      console.log('Fetching agents from local API...');
       
-      // Use enhanced Registry detection
-      const { agents, isFromRegistry, error: registryError } = await registryClient.getAgentsWithFallbackDetection({
-        status: 'ACTIVE'
-      });
+      // Call our local API which uses the Registry SDK server-side
+      const response = await fetch('/api/agents');
+      if (!response.ok) {
+        throw new Error(`API call failed: ${response.status}`);
+      }
       
-      console.log('Registry SDK data received:', { 
-        agentCount: agents?.length || 0,
-        isFromRegistry,
-        registryError
+      const apiData = await response.json();
+      console.log('API data received:', { 
+        agentCount: apiData?.agents?.length || 0
       });
 
-      // If Registry returned empty or failed, use fallback
-      if (!isFromRegistry || (isFromRegistry && agents.length === 0)) {
-        console.warn('Using fallback data due to Registry issues:', registryError);
+      // Convert API response back to Registry format
+      const agents = apiData.agents || [];
+      
+      // If API returned empty or failed, use fallback
+      if (agents.length === 0) {
+        console.warn('API returned no data, using fallback');
         setIsLive(false);
         // Jump to fallback logic
-        throw new Error(registryError || 'Registry returned no data');
+        throw new Error('API returned no data');
       }
       
       const displayAgents = agents.map(agent => ({
-        id: agent.handle,
-        name: agent.displayName,
+        id: agent.id, // API uses 'id' instead of 'handle'
+        name: agent.name, // API uses 'name' instead of 'displayName'
         status: mapRegistryStatusToDisplay(agent.status),
-        date: getAgentLaunchDate(agent.handle),
-        trainer: getAgentTrainer(agent.handle),
-        trainerStatus: getTrainerStatus(agent.handle),
-        worksCount: agent.counts?.creations || 0,
-        description: agent.profile?.statement,
+        date: getAgentLaunchDate(agent.id),
+        trainer: getAgentTrainer(agent.id),
+        trainerStatus: getTrainerStatus(agent.id),
+        worksCount: agent.day_count || 0, // API uses 'day_count'
+        description: agent.tagline, // API uses 'tagline'
         profile: {
-          statement: agent.profile?.statement,
-          specialty: agent.profile?.tags?.[0] || 'Specialist'
+          statement: agent.tagline,
+          specialty: 'AI Creative Agent'
         }
       }));
       
