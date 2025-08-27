@@ -74,6 +74,12 @@ export default function BerthaTrainingAdmin() {
             >
               View Interview Form
             </Link>
+            <Link 
+              href="/academy/agent/bertha"
+              className="px-4 py-2 border border-blue-500 hover:bg-blue-500 transition-colors"
+            >
+              View BERTHA Profile
+            </Link>
           </div>
         </div>
 

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { registryApi } from '@/lib/generated-sdk';
+import { registryClient } from '@/lib/registry/client';
 import { 
   CheckCircle, AlertCircle, Clock, Users, Calendar, 
   TrendingUp, Award, ChevronRight, RefreshCw, Signal
@@ -102,13 +103,24 @@ export default function HomePage() {
       setLoading(true);
       console.log('Fetching agents from Registry SDK...');
       
-      const agents = await registryApi.getAgents({
+      // Use enhanced Registry detection
+      const { agents, isFromRegistry, error: registryError } = await registryClient.getAgentsWithFallbackDetection({
         status: 'ACTIVE'
       });
       
       console.log('Registry SDK data received:', { 
-        agentCount: agents?.length || 0
+        agentCount: agents?.length || 0,
+        isFromRegistry,
+        registryError
       });
+
+      // If Registry returned empty or failed, use fallback
+      if (!isFromRegistry || (isFromRegistry && agents.length === 0)) {
+        console.warn('Using fallback data due to Registry issues:', registryError);
+        setIsLive(false);
+        // Jump to fallback logic
+        throw new Error(registryError || 'Registry returned no data');
+      }
       
       const displayAgents = agents.map(agent => ({
         id: agent.handle,

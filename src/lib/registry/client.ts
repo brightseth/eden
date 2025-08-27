@@ -204,6 +204,46 @@ class RegistryClient {
     }
   }
 
+  // Enhanced agent fetching with fallback detection
+  async getAgentsWithFallbackDetection(query?: AgentQuery): Promise<{ 
+    agents: Agent[], 
+    isFromRegistry: boolean, 
+    error?: string 
+  }> {
+    if (!this.useRegistry) {
+      return { 
+        agents: [], 
+        isFromRegistry: false, 
+        error: 'Registry is not enabled. Set USE_REGISTRY=true' 
+      };
+    }
+
+    try {
+      const agents = await this.getAgents(query);
+      
+      // Check if Registry returned empty but should have data
+      if (agents.length === 0) {
+        console.warn('[Registry] Empty result - may indicate Registry service issues');
+        return { 
+          agents: [], 
+          isFromRegistry: true, 
+          error: 'Registry returned empty results - service may be degraded' 
+        };
+      }
+      
+      return { agents, isFromRegistry: true };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown Registry error';
+      console.error('[Registry] Failed to fetch agents:', error);
+      
+      return { 
+        agents: [], 
+        isFromRegistry: false, 
+        error: errorMessage 
+      };
+    }
+  }
+
   // Check if Registry is enabled
   isEnabled(): boolean {
     return this.useRegistry;

@@ -1,0 +1,87 @@
+[
+  {
+    "id": "training-1756308653141",
+    "trainer": "Test Trainer",
+    "trainerEmail": "not-provided",
+    "timestamp": "2025-08-27T12:00:00Z",
+    "responses": {
+      "test-question": "Test response"
+    },
+    "configUpdates": {
+      "taste": {
+        "preferredMovements": [
+          "Generative Art",
+          "AI Art",
+          "Glitch Art",
+          "Photography",
+          "Abstract Expressionism"
+        ],
+        "avoidList": [
+          "Derivative PFP projects",
+          "Pump and dump schemes",
+          "Unoriginal generative copies"
+        ],
+        "qualitySignals": [
+          "Technical innovation",
+          "Conceptual depth",
+          "Cultural relevance",
+          "Artist consistency",
+          "Institutional interest"
+        ],
+        "culturalWeights": {
+          "innovation": 0.3,
+          "aesthetics": 0.25,
+          "narrative": 0.2,
+          "community": 0.15,
+          "scarcity": 0.1
+        }
+      },
+      "decision": {
+        "evaluationCriteria": [
+          {
+            "criterion": "Artist Track Record",
+            "weight": 0.2
+          },
+          {
+            "criterion": "Cultural Significance",
+            "weight": 0.2
+          },
+          {
+            "criterion": "Technical Innovation",
+            "weight": 0.15
+          },
+          {
+            "criterion": "Market Momentum",
+            "weight": 0.15
+          },
+          {
+            "criterion": "Price/Value Ratio",
+            "weight": 0.15
+          },
+          {
+            "criterion": "Liquidity Potential",
+            "weight": 0.1
+          },
+          {
+            "criterion": "Portfolio Fit",
+            "weight": 0.05
+          }
+        ],
+        "vetoRules": [
+          "Never buy confirmed fakes or plagiarism",
+          "Avoid artists with ethical violations",
+          "Skip if confidence < 75%",
+          "Reject if liquidity risk > 80%",
+          "Pass if correlation with existing holdings > 0.8"
+        ],
+        "emergencyStopConditions": [
+          "Market crash > 30% in 24h",
+          "Platform security breach",
+          "Regulatory enforcement action",
+          "Trainer override command"
+        ]
+      }
+    },
+    "status": "processed"
+  }
+]

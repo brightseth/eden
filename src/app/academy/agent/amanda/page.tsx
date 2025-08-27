@@ -64,18 +64,12 @@ export default async function BerthaAgentPage() {
               <p className="text-lg mb-8">
                 AI art collector building collections that tell stories, preserve cultural moments, and discover the next generation of digital artists through autonomous intelligence and market prediction.
               </p>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex gap-4">
                 <Link
                   href="/sites/bertha/interview"
                   className="border border-white px-6 py-3 hover:bg-white hover:text-black transition-all font-bold"
                 >
                   TRAINER INTERVIEW
-                </Link>
-                <Link
-                  href="/admin/bertha-training"
-                  className="border border-purple-600 px-6 py-3 hover:bg-purple-600 hover:text-white transition-all text-purple-400"
-                >
-                  VIEW TRAINING DATA
                 </Link>
                 <Link
                   href="/sites/amanda"

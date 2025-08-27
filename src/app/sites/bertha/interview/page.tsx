@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronRight, Save, Brain, Target, Sparkles, Flame, Eye, DollarSign } from 'lucide-react';
+import Link from 'next/link';
+import { ChevronRight, Save, Brain, Target, Sparkles, Flame, Eye, DollarSign, ArrowLeft } from 'lucide-react';
 
 interface InterviewSection {
   id: string;
@@ -288,7 +289,7 @@ export default function BerthaTrainerInterview() {
           </p>
           <div className="space-y-4">
             <button
-              onClick={() => window.location.href = '/academy/agent/amanda'}
+              onClick={() => window.location.href = '/academy/agent/bertha'}
               className="px-8 py-4 bg-purple-600 hover:bg-purple-700 transition-colors"
             >
               View BERTHA\'s Profile
@@ -316,7 +317,16 @@ export default function BerthaTrainerInterview() {
       <div className="border-b border-gray-800 bg-gray-950">
         <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold">BERTHA COLLECTOR TRAINING</h1>
+            <div className="flex items-center gap-4">
+              <Link 
+                href="/academy/agent/bertha"
+                className="inline-flex items-center gap-2 text-sm hover:bg-white hover:text-black px-3 py-2 transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                BERTHA
+              </Link>
+              <h1 className="text-2xl font-bold">COLLECTOR TRAINING</h1>
+            </div>
             <div className="text-sm text-gray-400">
               Psychology-Based Collection Intelligence
             </div>
@@ -332,9 +342,14 @@ export default function BerthaTrainerInterview() {
             </div>
             <div className="flex justify-between text-xs text-gray-500 mt-2">
               {interviewSections.map((s, i) => (
-                <span key={s.id} className={i <= currentSection ? 'text-white' : ''}>
+                <button
+                  key={s.id} 
+                  onClick={() => setCurrentSection(i)}
+                  className={`hover:text-white transition-colors cursor-pointer ${i <= currentSection ? 'text-white' : ''} ${i === currentSection ? 'font-bold' : ''}`}
+                  disabled={showSummary}
+                >
                   {s.title.split(' ')[0]}
-                </span>
+                </button>
               ))}
             </div>
           </div>
