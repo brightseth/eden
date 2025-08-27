@@ -43,7 +43,11 @@ export type WidgetType =
   | 'countdown'
   | 'trainer-info'
   | 'social-links'
-  | 'custom-content';
+  | 'custom-content'
+  | 'live-stream'
+  | 'token-economics'
+  | 'collaboration'
+  | 'community';
 
 export interface WidgetPosition {
   section: 'header' | 'main' | 'sidebar' | 'footer';

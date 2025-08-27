@@ -4,6 +4,15 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Rate limiting for chat endpoints - simplified without feature flags for now
+  if (pathname.startsWith('/api/agents/') && pathname.endsWith('/chat')) {
+    const response = NextResponse.next();
+    // Basic rate limiting headers
+    response.headers.set('X-RateLimit-Limit', '10');
+    response.headers.set('X-RateLimit-Window', '60000');
+    return response;
+  }
+
   // Redirect deleted and duplicate routes
   const redirects: Record<string, string> = {
     '/train': '/academy',
@@ -42,6 +51,9 @@ export const config = {
     '/academy/agent/agent09',
     '/academy/agent/agent10',
     '/academy/abraham/:path*',
-    '/academy/solienne/:path*'
+    '/academy/solienne/:path*',
+    // New agent chat endpoints
+    '/api/agents/:path*/chat',
+    '/agents/:path*'
   ]
 };

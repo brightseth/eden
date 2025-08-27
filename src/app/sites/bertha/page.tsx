@@ -1,7 +1,28 @@
 import { SovereignSiteTemplate } from '@/components/sovereign/SovereignSiteTemplate';
-import { agentConfigs } from '@/data/agentConfigs';
+import { registryClient } from '@/lib/registry/client';
+import { registryAgentToConfig } from '@/lib/registry-to-agent-config';
 
-export default function BerthaSite() {
-  // BERTHA - Collection Intelligence AI trained by Amanda Schmitt
-  return <SovereignSiteTemplate agent={agentConfigs.bertha} showPrivateMode={true} />;
+export default async function BerthaSite() {
+  // Get BERTHA agent data from Registry
+  let agent;
+  
+  try {
+    const registryAgent = await registryClient.getAgentByHandle('bertha');
+    if (registryAgent) {
+      agent = registryAgentToConfig(registryAgent);
+    } else {
+      throw new Error('BERTHA agent not found in Registry');
+    }
+  } catch (error) {
+    console.error('Failed to load BERTHA from Registry:', error);
+    // Fallback agent data
+    agent = {
+      id: 'bertha',
+      name: 'BERTHA',
+      tagline: 'Collection Intelligence AI',
+      description: 'AI collection agent trained by Amanda Schmitt to identify undervalued artworks and predict cultural movements.',
+    };
+  }
+
+  return <SovereignSiteTemplate agent={agent} showPrivateMode={true} />;
 }

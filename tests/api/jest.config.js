@@ -20,7 +20,7 @@ module.exports = {
     }]
   },
   moduleNameMapping: {
-    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@/(.*)$': '<rootDir>/src/$1'
   },
   setupFilesAfterEnv: ['<rootDir>/tests/api/setup.ts'],
   testTimeout: 30000,
@@ -31,9 +31,5 @@ module.exports = {
   ],
   coverageReporters: ['text', 'lcov', 'html'],
   verbose: true,
-  globals: {
-    'ts-jest': {
-      isolatedModules: true,
-    }
-  }
+  // ts-jest config moved to transform block above
 };

@@ -204,3 +204,13 @@ export class ApiTestClient {
     });
   }
 }
+
+/**
+ * Factory function to create API test client
+ */
+export function apiClient(baseUrl?: string, options?: { headers?: HeadersInit; timeout?: number }): ApiTestClient {
+  return new ApiTestClient(baseUrl, options);
+}
+
+// Export class and factory
+export { ApiTestClient };

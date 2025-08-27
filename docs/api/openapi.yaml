@@ -6,7 +6,7 @@ info:
   contact:
     name: Eden Academy Team
 servers:
-  - url: https://eden-academy.vercel.app/api
+  - url: https://eden-academy-flame.vercel.app/api
     description: Production server
   - url: http://localhost:3007/api  
     description: Development server

@@ -77,7 +77,7 @@ export async function GET(request: NextRequest) {
       console.log('[Abraham Works API] Using Registry integration via HTTP API');
       
       // Use Registry API via HTTP instead of generated SDK
-      const registryUrl = process.env.REGISTRY_URL || 'http://localhost:3005';
+      const registryUrl = process.env.REGISTRY_URL || 'https://eden-genesis-registry.vercel.app';
       const response = await fetch(`${registryUrl}/api/v1/agents/abraham/works?limit=10000`);
       
       if (!response.ok) {

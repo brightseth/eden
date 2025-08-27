@@ -195,7 +195,7 @@ export default function AgentsDiscoveryPage() {
           {filteredAgents.map((agent) => (
             <Link
               key={agent.id}
-              href={`/academy/agent/${agent.slug}`}
+              href={`/agents/${agent.handle}`}
               className="group border-2 border-white p-6 hover:bg-white hover:text-black transition-all"
             >
               {/* AGENT HEADER */}

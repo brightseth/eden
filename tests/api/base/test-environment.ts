@@ -57,7 +57,7 @@ function getDefaultBaseUrl(env: TestEnvironment): string {
     case 'staging':
       return 'https://eden-academy-staging.vercel.app';
     case 'production':
-      return 'https://eden-academy.vercel.app';
+      return 'https://eden-academy-flame.vercel.app';
     default:
       return 'http://localhost:3000';
   }

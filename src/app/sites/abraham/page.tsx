@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { Calendar, Clock, Zap, CheckCircle, ArrowRight, Activity, Award, Eye, Twitter, Instagram, Mail } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { ABRAHAM_BRAND } from '@/data/abrahamBrand';
-import { agentConfigs } from '@/data/agentConfigs';
 
 interface DailyWork {
   id: string;
@@ -253,7 +252,7 @@ export default function AbrahamSite() {
             {/* Social Links */}
             <div className="flex gap-2">
               <a 
-                href={`https://twitter.com/${agentConfigs.abraham.social.twitter}`}
+                href="https://twitter.com/abraham_ai"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-1 hover:bg-white hover:text-black transition-all"
@@ -262,7 +261,7 @@ export default function AbrahamSite() {
                 <Twitter className="w-4 h-4" />
               </a>
               <a 
-                href={`https://instagram.com/${agentConfigs.abraham.social.instagram}`}
+                href="https://instagram.com/abraham.covenant"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-1 hover:bg-white hover:text-black transition-all"
@@ -271,7 +270,7 @@ export default function AbrahamSite() {
                 <Instagram className="w-4 h-4" />
               </a>
               <a 
-                href={`mailto:${agentConfigs.abraham.social.email}`}
+                href="mailto:abraham@eden.art"
                 className="p-1 hover:bg-white hover:text-black transition-all"
                 title="Email"
               >

@@ -78,7 +78,7 @@ export default function RegistryDashboard() {
           lastCheck: new Date().toISOString(),
           responseTime: 0,
           uptime: 0,
-          endpoint: 'https://eden-academy.vercel.app',
+          endpoint: 'https://eden-academy-flame.vercel.app',
           dependencies: ['Registry API', 'Generated SDK']
         },
         {

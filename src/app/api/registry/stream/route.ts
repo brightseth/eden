@@ -4,7 +4,7 @@ export async function GET(request: NextRequest) {
   const encoder = new TextEncoder()
   const stream = new ReadableStream({
     async start(controller) {
-      const registryUrl = process.env.EDEN_REGISTRY_API_URL || 'http://localhost:3005'
+      const registryUrl = process.env.EDEN_REGISTRY_API_URL || 'https://eden-genesis-registry.vercel.app'
       
       // Send initial connection message
       controller.enqueue(

@@ -46,24 +46,25 @@ export async function GET(request: NextRequest) {
 
     console.log(`[MIYOMI Real Picks] Returning ${picks?.length || 0} picks (${totalCount} total)`);
 
-    // Transform database format to UI format (using existing schema)
+    // Transform database format to UI format
     const transformedPicks = (picks || []).map(pick => ({
       id: pick.id,
       timestamp: pick.timestamp,
-      market_question: pick.market_question, // Use existing field name
-      market_id: pick.market_id || ('market-' + pick.id),
+      market_question: pick.market, // Use actual field name
+      market_id: 'market-' + pick.id, // Generate market ID
       position: pick.position,
-      miyomi_price: pick.miyomi_price,
-      consensus_price: pick.consensus_price,
-      current_price: pick.current_price || pick.consensus_price,
-      status: 'LIVE', // Default status since no performance table yet
-      platform: getPlatformFromId(pick.market_id),
-      category: detectCategory(pick.market_question),
-      reasoning: pick.reasoning,
-      post: pick.post || false,
+      miyomi_price: pick.entry_odds / 100, // Convert to decimal
+      consensus_price: pick.current_odds / 100, // Convert to decimal
+      current_price: pick.current_odds / 100, // Convert to decimal
+      status: pick.status || 'LIVE',
+      platform: pick.platform,
+      category: pick.category,
+      reasoning: typeof pick.reasoning === 'object' ? pick.reasoning.text : pick.reasoning,
+      confidence: pick.confidence,
+      edge: pick.edge,
       created_at: pick.created_at,
-      pnl: 0,
-      roi: 0
+      pnl: pick.pnl || 0,
+      roi: pick.roi || 0
     }));
 
     return NextResponse.json({

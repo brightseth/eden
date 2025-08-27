@@ -41,7 +41,7 @@ export default function APIExplorer() {
   const [requestBody, setRequestBody] = useState('')
   const [response, setResponse] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [registryUrl, setRegistryUrl] = useState('http://localhost:3005')
+  const [registryUrl, setRegistryUrl] = useState('https://eden-genesis-registry.vercel.app')
 
   // API Endpoints Configuration
   const endpoints: APIEndpoint[] = [

@@ -44,7 +44,7 @@ export class MiyomiVideoGenerator {
   
   constructor() {
     this.edenApiKey = process.env.EDEN_API_KEY || '';
-    this.edenBaseUrl = process.env.EDEN_BASE_URL || 'https://api.eden.art/v1';
+    this.edenBaseUrl = process.env.EDEN_BASE_URL || 'https://api.eden.art';
   }
   
   /**
@@ -210,6 +210,12 @@ export class MiyomiVideoGenerator {
    * Generate voiceover using text-to-speech
    */
   private async generateVoiceover(script: any, style: string): Promise<string> {
+    // Skip if no Eden API key configured
+    if (!this.edenApiKey) {
+      console.warn('Eden API key not configured, using silent track');
+      return 'https://eden-media.s3.amazonaws.com/silent-track.mp3';
+    }
+
     try {
       const response = await fetch(`${this.edenBaseUrl}/tts/generate`, {
         method: 'POST',
@@ -382,6 +388,15 @@ export class MiyomiVideoGenerator {
    * Assemble video from components
    */
   private async assembleVideo(components: any): Promise<any> {
+    // Skip if no Eden API key configured
+    if (!this.edenApiKey) {
+      console.warn('Eden API key not configured, returning mock video');
+      return {
+        url: 'https://eden-media.s3.amazonaws.com/miyomi/mock-video.mp4',
+        thumbnailUrl: 'https://eden-media.s3.amazonaws.com/miyomi/mock-thumb.jpg'
+      };
+    }
+
     try {
       const response = await fetch(`${this.edenBaseUrl}/video/assemble`, {
         method: 'POST',

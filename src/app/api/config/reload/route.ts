@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
     
-    const registryUrl = process.env.EDEN_REGISTRY_API_URL || 'http://localhost:3005'
+    const registryUrl = process.env.EDEN_REGISTRY_API_URL || 'https://eden-genesis-registry.vercel.app'
     
     // Fetch current config
     let currentConfig

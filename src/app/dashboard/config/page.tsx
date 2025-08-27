@@ -81,7 +81,7 @@ export default function ConfigDashboard() {
   const fetchAgentConfig = async (agentHandle: string) => {
     setIsLoading(true)
     try {
-      const registryUrl = process.env.NEXT_PUBLIC_EDEN_REGISTRY_API_URL || 'http://localhost:3005'
+      const registryUrl = process.env.NEXT_PUBLIC_EDEN_REGISTRY_API_URL || 'https://eden-genesis-registry.vercel.app'
       const response = await fetch(`${registryUrl}/api/v1/agents/${agentHandle}`)
       
       if (response.ok) {

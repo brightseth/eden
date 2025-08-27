@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 export async function GET() {
   try {
     // Check Registry health
-    const registryUrl = process.env.EDEN_REGISTRY_API_URL || 'http://localhost:3005'
+    const registryUrl = process.env.EDEN_REGISTRY_API_URL || 'https://eden-genesis-registry.vercel.app'
     const startTime = Date.now()
     
     const response = await fetch(`${registryUrl}/api/v1/status`, {

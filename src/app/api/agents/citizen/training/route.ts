@@ -19,11 +19,29 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // Verify trainer authorization (Henry-specific for Bright Moments)
-    if (trainer.toLowerCase() !== 'henry' && !trainerEmail?.includes('henry')) {
-      console.warn('[CITIZEN Training] Unauthorized trainer:', trainer);
+    // Authorized Bright Moments trainers with their access levels
+    const AUTHORIZED_TRAINERS = {
+      // Primary BM trainers (full access)
+      'henry': { name: 'Henry', role: 'Lead Trainer', level: 'primary', permissions: ['train', 'review', 'approve', 'sync'] },
+      'keith': { name: 'Keith', role: 'BM Team Trainer', level: 'primary', permissions: ['train', 'review', 'approve', 'sync'] },
+      
+      // Email-based authorization
+      'henry@brightmoments.io': { name: 'Henry', role: 'Lead Trainer', level: 'primary', permissions: ['train', 'review', 'approve', 'sync'] },
+      'keith@brightmoments.io': { name: 'Keith', role: 'BM Team Trainer', level: 'primary', permissions: ['train', 'review', 'approve', 'sync'] },
+      
+      // System admin
+      'seth': { name: 'Seth', role: 'System Admin', level: 'admin', permissions: ['train', 'review', 'approve', 'sync', 'admin'] }
+    };
+
+    // Verify trainer authorization (Henry, Keith, or system admins)
+    const trainerKey = trainer.toLowerCase();
+    const emailKey = trainerEmail?.toLowerCase();
+    const trainerInfo = AUTHORIZED_TRAINERS[trainerKey] || AUTHORIZED_TRAINERS[emailKey];
+    
+    if (!trainerInfo) {
+      console.warn('[CITIZEN Training] Unauthorized trainer:', trainer, trainerEmail);
       return NextResponse.json(
-        { error: 'CITIZEN training restricted to authorized Bright Moments trainers' },
+        { error: `CITIZEN training restricted to authorized Bright Moments trainers: Henry, Keith, and system admins. Contact henry@brightmoments.io for access.` },
         { status: 403 }
       );
     }

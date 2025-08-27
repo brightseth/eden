@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 // GET /api/deploy/agents - List deployable agents
 export async function GET() {
   try {
-    const registryUrl = process.env.EDEN_REGISTRY_API_URL || 'http://localhost:3005'
+    const registryUrl = process.env.EDEN_REGISTRY_API_URL || 'https://eden-genesis-registry.vercel.app'
     
     // Fetch agents from Registry
     const response = await fetch(`${registryUrl}/api/v1/agents`)
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
     
-    const registryUrl = process.env.EDEN_REGISTRY_API_URL || 'http://localhost:3005'
+    const registryUrl = process.env.EDEN_REGISTRY_API_URL || 'https://eden-genesis-registry.vercel.app'
     
     // Simulate deployment process
     const deploymentSteps = [

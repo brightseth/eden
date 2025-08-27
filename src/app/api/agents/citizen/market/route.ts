@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { citizenMarketData } from '@/lib/agents/citizen-market-data';
+import { citizenDune } from '@/lib/agents/citizen-dune-integration';
+import { FEATURE_FLAGS } from '@/config/flags';
 
 // GET /api/agents/citizen/market - Get real-time CryptoCitizens market data
 export async function GET(request: NextRequest) {
@@ -59,9 +61,21 @@ export async function GET(request: NextRequest) {
       });
     }
     
-    // Get comprehensive market summary
+    // Get comprehensive market summary with Dune Analytics enhancement
     const marketSummary = await citizenMarketData.getMarketSummary();
     const allCollectionStats = includeStats ? await citizenMarketData.getAllCollectionStats() : [];
+    
+    // Get enhanced insights if Dune integration is enabled
+    let enhancedInsights = null;
+    let dataValidation = null;
+    if (FEATURE_FLAGS.CITIZEN_DUNE_INTEGRATION) {
+      console.log('[CITIZEN Market] Fetching enhanced Dune Analytics insights...');
+      enhancedInsights = await citizenMarketData.getEnhancedMarketInsights();
+      
+      if (FEATURE_FLAGS.CITIZEN_DATA_VALIDATION) {
+        dataValidation = await citizenMarketData.validateDataConsistency();
+      }
+    }
     
     // Build comprehensive market response
     const marketResponse: any = {
@@ -124,9 +138,35 @@ export async function GET(request: NextRequest) {
       };
     }
     
+    // Add enhanced Dune Analytics data if available
+    if (enhancedInsights) {
+      marketResponse.dune_analytics = {
+        verification_status: enhancedInsights.verification_status,
+        data_confidence: enhancedInsights.data_confidence,
+        on_chain_metrics: enhancedInsights.on_chain_metrics,
+        enhanced_intelligence: enhancedInsights.market_intelligence
+      };
+    }
+    
+    // Add data validation results if available
+    if (dataValidation) {
+      marketResponse.data_validation = {
+        consistency_score: dataValidation.consistency_score,
+        discrepancies: dataValidation.discrepancies,
+        recommendations: dataValidation.recommendations
+      };
+    }
+    
     marketResponse.timestamp = new Date().toISOString();
-    marketResponse.data_sources = ['OpenSea API', 'On-chain data', 'Bright Moments Registry'];
+    marketResponse.data_sources = enhancedInsights?.dune_verified 
+      ? ['OpenSea API', 'Dune Analytics (On-chain)', 'Bright Moments Registry']
+      : ['OpenSea API', 'Bright Moments Registry', 'Mock Data Fallback'];
     marketResponse.next_update = new Date(Date.now() + 15 * 60 * 1000).toISOString(); // 15 minutes
+    marketResponse.feature_flags = {
+      dune_integration: FEATURE_FLAGS.CITIZEN_DUNE_INTEGRATION,
+      data_validation: FEATURE_FLAGS.CITIZEN_DATA_VALIDATION,
+      enhanced_insights: FEATURE_FLAGS.CITIZEN_ENHANCED_MARKET_INSIGHTS
+    };
     
     return NextResponse.json(marketResponse);
     

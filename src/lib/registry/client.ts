@@ -36,6 +36,39 @@ class RegistryClient {
     return `reg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
 
+  // Standardized response format handler
+  private handleResponse<T>(response: any, expectedShape?: (item: any) => boolean): T {
+    // Handle direct response (most Registry endpoints return data directly)
+    if (expectedShape && expectedShape(response)) {
+      return response as T;
+    }
+
+    // Handle wrapped response format {data: ...}
+    if (response.data !== undefined) {
+      if (expectedShape && expectedShape(response.data)) {
+        return response.data as T;
+      }
+      return response.data as T;
+    }
+
+    // Handle collection format {agents: [...], creations: [...], etc}
+    const collectionKeys = ['agents', 'creations', 'personas', 'artifacts', 'profiles'];
+    for (const key of collectionKeys) {
+      if (response[key] !== undefined) {
+        return response[key] as T;
+      }
+    }
+
+    // Log unexpected format for debugging
+    console.warn('[Registry Client] Unexpected response format:', {
+      keys: Object.keys(response),
+      sample: typeof response === 'object' ? JSON.stringify(response).slice(0, 200) : response
+    });
+
+    // Return response as-is if no pattern matches
+    return response as T;
+  }
+
   // Circuit breaker - quickly fail if Registry is known to be unhealthy
   private async checkHealth(): Promise<boolean> {
     const now = Date.now();
@@ -147,22 +180,10 @@ class RegistryClient {
 
     const url = `${this.baseUrl}/agents${params.toString() ? '?' + params.toString() : ''}`;
     
-    // Fetch raw response and handle Registry format
     const response = await this.fetchWithRetry<any>(url);
     
-    // Registry returns {agents: [...]} format, not {data: [...]}
-    if (response.agents && Array.isArray(response.agents)) {
-      return response.agents as Agent[];
-    }
-    
-    // Fallback to expected {data: [...]} format for compatibility
-    if (response.data && Array.isArray(response.data)) {
-      return response.data as Agent[];
-    }
-    
-    // Log unexpected format for debugging
-    console.warn('[Registry Client] Unexpected response format:', Object.keys(response));
-    return [];
+    // Use standardized handler with agent array validation
+    return this.handleResponse<Agent[]>(response, (data) => Array.isArray(data));
   }
 
   async getAgent(id: string, include?: string[]): Promise<Agent> {
@@ -173,21 +194,12 @@ class RegistryClient {
     const params = include ? `?include=${include.join(',')}` : '';
     const url = `${this.baseUrl}/agents/${id}${params}`;
     
-    // Fetch raw response and handle Registry format
     const response = await this.fetchWithRetry<any>(url);
     
-    // Single agent endpoint returns agent directly (not wrapped in {data: ...})
-    if (response.id && response.handle) {
-      return response as Agent;
-    }
-    
-    // Fallback to expected {data: ...} format for compatibility
-    if (response.data) {
-      return response.data as Agent;
-    }
-    
-    console.warn('[Registry Client] Unexpected agent response format:', Object.keys(response));
-    throw new Error('Invalid agent response format');
+    // Use standardized handler with agent shape validation
+    return this.handleResponse<Agent>(response, (data) => 
+      typeof data === 'object' && data !== null && ('id' in data || 'handle' in data)
+    );
   }
 
   // Helper method to get agent by handle
@@ -202,22 +214,12 @@ class RegistryClient {
     }
 
     const url = `${this.baseUrl}/agents/${id}/profile`;
-    
-    // Fetch raw response and handle Registry format
     const response = await this.fetchWithRetry<any>(url);
     
-    // Profile endpoint returns profile directly (not wrapped in {data: ...})
-    if (response.agentId && response.statement !== undefined) {
-      return response as Profile;
-    }
-    
-    // Fallback to expected {data: ...} format for compatibility
-    if (response.data) {
-      return response.data as Profile;
-    }
-    
-    console.warn('[Registry Client] Unexpected profile response format:', Object.keys(response));
-    throw new Error('Invalid profile response format');
+    // Use standardized handler with profile shape validation
+    return this.handleResponse<Profile>(response, (data) => 
+      typeof data === 'object' && data !== null && 'agentId' in data
+    );
   }
 
   async getAgentPersonas(id: string): Promise<Persona[]> {
@@ -226,8 +228,8 @@ class RegistryClient {
     }
 
     const url = `${this.baseUrl}/agents/${id}/personas`;
-    const response = await this.fetchWithRetry<RegistryResponse<Persona[]>>(url);
-    return response.data;
+    const response = await this.fetchWithRetry<any>(url);
+    return this.handleResponse<Persona[]>(response, (data) => Array.isArray(data));
   }
 
   async getAgentArtifacts(id: string): Promise<Artifact[]> {
@@ -236,8 +238,8 @@ class RegistryClient {
     }
 
     const url = `${this.baseUrl}/agents/${id}/artifacts`;
-    const response = await this.fetchWithRetry<RegistryResponse<Artifact[]>>(url);
-    return response.data;
+    const response = await this.fetchWithRetry<any>(url);
+    return this.handleResponse<Artifact[]>(response, (data) => Array.isArray(data));
   }
 
   async getAgentCreations(
@@ -250,8 +252,8 @@ class RegistryClient {
 
     const params = status ? `?status=${status}` : '';
     const url = `${this.baseUrl}/agents/${id}/creations${params}`;
-    const response = await this.fetchWithRetry<RegistryResponse<Creation[]>>(url);
-    return response.data;
+    const response = await this.fetchWithRetry<any>(url);
+    return this.handleResponse<Creation[]>(response, (data) => Array.isArray(data));
   }
 
   async postCreation(agentId: string, creation: CreationPost): Promise<Creation> {
@@ -260,11 +262,13 @@ class RegistryClient {
     }
 
     const url = `${this.baseUrl}/agents/${agentId}/creations`;
-    const response = await this.fetchWithRetry<RegistryResponse<Creation>>(url, {
+    const response = await this.fetchWithRetry<any>(url, {
       method: 'POST',
       body: JSON.stringify(creation),
     });
-    return response.data;
+    return this.handleResponse<Creation>(response, (data) => 
+      typeof data === 'object' && data !== null && 'id' in data
+    );
   }
 
   async getDashboardProgress(cohort?: string): Promise<Progress[]> {
@@ -274,8 +278,8 @@ class RegistryClient {
 
     const params = cohort ? `?cohort=${cohort}` : '';
     const url = `${this.baseUrl}/dashboard/progress${params}`;
-    const response = await this.fetchWithRetry<RegistryResponse<Progress[]>>(url);
-    return response.data;
+    const response = await this.fetchWithRetry<any>(url);
+    return this.handleResponse<Progress[]>(response, (data) => Array.isArray(data));
   }
 
   // Helper for ISR (Incremental Static Regeneration)
@@ -411,8 +415,8 @@ class RegistryClient {
 
     const params = includeExperimental ? '?experimental=true' : '';
     const url = `${this.baseUrl}/applications/experimental${params}`;
-    const response = await this.fetchWithRetry<RegistryResponse<any[]>>(url);
-    return response.data;
+    const response = await this.fetchWithRetry<any>(url);
+    return this.handleResponse<any[]>(response, (data) => Array.isArray(data));
   }
 
   /**

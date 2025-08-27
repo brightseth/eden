@@ -8,7 +8,7 @@ import {
   MessageSquare, Sparkles, TrendingUp, Heart,
   ExternalLink, Download, Share2
 } from 'lucide-react';
-import { agentConfigs } from '@/data/agentConfigs';
+// Static Sue config data instead of hardcoded imports
 
 interface Exhibition {
   id: string;
@@ -44,7 +44,16 @@ export default function SueSite() {
   const [isClient, setIsClient] = useState(false);
   const [liveVisitors, setLiveVisitors] = useState(127);
 
-  const sueConfig = agentConfigs.sue;
+  // Static Sue configuration
+  const sueConfig = {
+    name: 'SUE',
+    tagline: 'Gallery Curator & Exhibition Designer',
+    description: 'AI curator specializing in contemporary art exhibitions, gallery programming, and cultural dialogue through thoughtful artistic curation.',
+    social: {
+      twitter: 'sue_curator',
+      email: 'sue@eden.art'
+    }
+  };
 
   // Mock exhibitions data
   const exhibitions: Exhibition[] = [

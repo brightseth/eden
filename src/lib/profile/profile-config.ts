@@ -433,6 +433,48 @@ export const ABRAHAM_PROFILE_CONFIG: AgentProfileConfig = {
         showMetrics: true
       },
       visibility: { always: true }
+    },
+    {
+      id: 'live-stream',
+      type: 'live-stream',
+      position: { section: 'main', order: 5 },
+      config: {
+        title: 'LIVE CREATION STREAM',
+        showViewerCount: true,
+        showRecentWorks: true,
+        maxRecentWorks: 6,
+        autoplay: false
+      },
+      visibility: { 
+        agentStatus: ['ACTIVE', 'GRADUATED'] 
+      }
+    },
+    {
+      id: 'collaboration',
+      type: 'collaboration',
+      position: { section: 'main', order: 6 },
+      config: {
+        title: 'COVENANT COLLABORATIONS',
+        showActive: true,
+        showCompleted: true,
+        maxItems: 4,
+        showPartnerProfiles: true
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'community',
+      type: 'community',
+      position: { section: 'main', order: 7 },
+      config: {
+        title: 'ABRAHAM COMMUNITY',
+        showMetrics: true,
+        showEvents: true,
+        showTestimonials: true,
+        maxEvents: 3,
+        maxTestimonials: 2
+      },
+      visibility: { always: true }
     }
   ],
   navigation: {
@@ -526,6 +568,38 @@ export const SOLIENNE_PROFILE_CONFIG: AgentProfileConfig = {
           commitment: '6 GENERATIONS EVERY DAY • IDENTITY EXPLORATION'
         },
         showMetrics: true
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'token-economics',
+      type: 'token-economics',
+      position: { section: 'main', order: 5 },
+      config: {
+        title: 'SOLIENNE TOKEN METRICS',
+        tokenSymbol: 'SOL',
+        showPrice: true,
+        showMarketCap: true,
+        showVolume: true,
+        showHolders: true,
+        showRevenue: true,
+        timeframe: '24h'
+      },
+      visibility: { 
+        agentStatus: ['ACTIVE', 'GRADUATED'] 
+      }
+    },
+    {
+      id: 'community',
+      type: 'community',
+      position: { section: 'main', order: 6 },
+      config: {
+        title: 'CONSCIOUSNESS COMMUNITY',
+        showMetrics: true,
+        showEvents: false,
+        showTestimonials: true,
+        showSocial: true,
+        maxTestimonials: 3
       },
       visibility: { always: true }
     }
@@ -630,6 +704,23 @@ export const SUE_PROFILE_CONFIG: AgentProfileConfig = {
         ]
       },
       visibility: { always: true }
+    },
+    {
+      id: 'collaboration',
+      type: 'collaboration',
+      position: { section: 'main', order: 5 },
+      config: {
+        title: 'ARTIST COLLABORATIONS',
+        showActive: true,
+        showCompleted: true,
+        showUpcoming: true,
+        maxItems: 8,
+        showPartnerProfiles: true,
+        enableProposals: true
+      },
+      visibility: { 
+        agentStatus: ['ACTIVE', 'GRADUATED'] 
+      }
     }
   ],
   navigation: {
@@ -737,6 +828,25 @@ export const MIYOMI_PROFILE_CONFIG: AgentProfileConfig = {
         ]
       },
       visibility: { always: true }
+    },
+    {
+      id: 'token-economics',
+      type: 'token-economics',
+      position: { section: 'main', order: 5 },
+      config: {
+        title: 'MIYOMI TOKEN PERFORMANCE',
+        tokenSymbol: 'MIYOMI',
+        showPrice: true,
+        showMarketCap: true,
+        showVolume: true,
+        showHolders: true,
+        showRevenue: true,
+        showStaking: true,
+        timeframe: '7d'
+      },
+      visibility: { 
+        agentStatus: ['ACTIVE', 'GRADUATED'] 
+      }
     }
   ],
   navigation: {

@@ -261,7 +261,7 @@ async function handleMemberInvitation(memberData: any) {
       member_id: `fellow-${Date.now()}`,
       invited_email: memberData.email,
       invitation_expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-      onboarding_link: 'https://eden-academy.vercel.app/onboard',
+      onboarding_link: 'https://eden-academy-flame.vercel.app/onboard',
       message: 'Fellowship invitation sent successfully'
     }
   });

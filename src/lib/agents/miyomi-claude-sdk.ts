@@ -104,7 +104,7 @@ export class MiyomiClaudeSDK {
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20240620',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: 2000,
         temperature: 0.7,
         system: systemPrompt,
@@ -164,7 +164,7 @@ Provide your analysis as JSON with:
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20240620',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: 1000,
         temperature: 0.3,
         messages: [{ role: 'user', content: prompt }]
@@ -220,7 +220,7 @@ Format as JSON:
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20240620',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: 1500,
         temperature: 0.8,
         messages: [{ role: 'user', content: prompt }]

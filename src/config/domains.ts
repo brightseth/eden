@@ -9,7 +9,7 @@
 // Production domains - THE CANONICAL REFERENCES
 export const DOMAINS = {
   // Main Eden Academy site
-  EDEN_ACADEMY: 'eden-academy.vercel.app',
+  EDEN_ACADEMY: 'eden-academy-flame.vercel.app',
   
   // Registry services
   EDEN_GENESIS_REGISTRY: 'eden-genesis-registry.vercel.app',
@@ -65,7 +65,7 @@ export const validateDomain = (url: string): boolean => {
  * These are incorrect domain references that should be replaced
  */
 export const DEPRECATED_DOMAINS = [
-  'eden-academy-flame.vercel.app',
+  'eden-academy.vercel.app',
   'eden-academy-ftf22wjgo-edenprojects.vercel.app',
   // Add other incorrect variations as they're discovered
 ] as const;

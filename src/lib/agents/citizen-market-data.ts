@@ -57,18 +57,19 @@ export class CitizenMarketData {
   private alchemyApiKey: string | null;
   private moralisApiKey: string | null;
   
-  // CryptoCitizens collection mappings
+  // CryptoCitizens collection mappings - Focus on confirmed working collections
   private readonly collections = [
-    { slug: 'cryptocitizens', name: 'CryptoVenetians', city: 'Venice Beach', contract: '0x...', supply: 1000 },
-    { slug: 'cryptocitizens-nyc', name: 'CryptoNewYorkers', city: 'New York', contract: '0x...', supply: 1000 },
-    { slug: 'cryptocitizens-berlin', name: 'CryptoBerliners', city: 'Berlin', contract: '0x...', supply: 1000 },
-    { slug: 'cryptocitizens-london', name: 'CryptoLondoners', city: 'London', contract: '0x...', supply: 1000 },
-    { slug: 'cryptocitizens-mexico', name: 'CryptoMexas', city: 'Mexico City', contract: '0x...', supply: 1000 },
-    { slug: 'cryptocitizens-tokyo', name: 'CryptoTokyoites', city: 'Tokyo', contract: '0x...', supply: 1000 },
-    { slug: 'cryptocitizens-buenosaires', name: 'CryptoBuenosAires', city: 'Buenos Aires', contract: '0x...', supply: 1000 },
-    { slug: 'cryptocitizens-paris', name: 'CryptoParisians', city: 'Paris', contract: '0x...', supply: 1000 },
-    { slug: 'cryptocitizens-venice', name: 'CryptoVeneziani', city: 'Venice Italy', contract: '0x...', supply: 1000 },
-    { slug: 'cryptocitizens-galactic', name: 'CryptoGalacticans', city: 'Metaverse', contract: '0x...', supply: 1000 }
+    { slug: 'cryptocitizensofficial', name: 'CryptoCitizens', city: 'Global Collection', contract: '0x448cc0a2e2c9007b9f89de4e383b95ebaf3b5b0c', supply: 10000 },
+    // Note: Individual city collections may have different slugs - these are placeholders for development
+    { slug: 'cryptocitizens-venice-beach', name: 'CryptoVenetians', city: 'Venice Beach', contract: '0x...', supply: 1000 },
+    { slug: 'cryptocitizens-new-york', name: 'CryptoNewYorkers', city: 'New York', contract: '0x...', supply: 1000 },
+    { slug: 'cryptocitizens-berlin-2022', name: 'CryptoBerliners', city: 'Berlin', contract: '0x...', supply: 1000 },
+    { slug: 'cryptocitizens-london-2022', name: 'CryptoLondoners', city: 'London', contract: '0x...', supply: 1000 },
+    { slug: 'cryptocitizens-mexico-city', name: 'CryptoMexas', city: 'Mexico City', contract: '0x...', supply: 1000 },
+    { slug: 'cryptocitizens-tokyo-2023', name: 'CryptoTokyoites', city: 'Tokyo', contract: '0x...', supply: 1000 },
+    { slug: 'cryptocitizens-buenos-aires-2023', name: 'CryptoBuenosAires', city: 'Buenos Aires', contract: '0x...', supply: 1000 },
+    { slug: 'cryptocitizens-paris-2024', name: 'CryptoParisians', city: 'Paris', contract: '0x...', supply: 1000 },
+    { slug: 'cryptocitizens-venice-italy-2024', name: 'CryptoVeneziani', city: 'Venice Italy', contract: '0x...', supply: 1000 }
   ];
   
   constructor() {
@@ -349,6 +350,163 @@ export class CitizenMarketData {
       holdings: [],
       setStatus: 'single'
     };
+  }
+  
+  /**
+   * Get enhanced market insights combining OpenSea and Dune Analytics
+   */
+  async getEnhancedMarketInsights(): Promise<{
+    dune_verified: boolean;
+    on_chain_metrics: any;
+    market_intelligence: string[];
+    data_confidence: 'high' | 'medium' | 'low';
+    verification_status: string;
+  }> {
+    console.log('[CITIZEN Market] Generating enhanced market insights with on-chain verification...');
+    
+    try {
+      // Get comprehensive Dune data
+      const duneData = await citizenDune.getBrightMomentsData();
+      const duneInsights = await citizenDune.getMarketInsights();
+      const holderAnalysis = await citizenDune.getHolderAnalysis();
+      
+      if (!duneData) {
+        return {
+          dune_verified: false,
+          on_chain_metrics: null,
+          market_intelligence: [
+            'Market data from OpenSea API only',
+            'Configure DUNE_API_KEY for comprehensive on-chain verification',
+            'Full Set and holder analysis pending Dune integration'
+          ],
+          data_confidence: 'medium',
+          verification_status: 'API data only - on-chain verification unavailable'
+        };
+      }
+      
+      // Enhanced insights with Dune verification
+      const enhancedInsights = [
+        `On-chain verified: ${duneData.overall_stats.total_volume.toFixed(0)} ETH ecosystem volume`,
+        `Holder distribution verified: ${duneData.holder_analysis.full_set_holders} Full Set holders`,
+        ...duneInsights
+      ];
+      
+      // Add ecosystem health insights
+      if (duneData.overall_stats.ecosystem_health_score && duneData.overall_stats.ecosystem_health_score > 80) {
+        enhancedInsights.push('Strong ecosystem health confirmed by on-chain metrics');
+      }
+      
+      if (duneData.city_performance && duneData.city_performance.length > 0) {
+        const topCity = duneData.city_performance
+          .sort((a, b) => b.performance_score - a.performance_score)[0];
+        enhancedInsights.push(`${topCity.city} leads with ${topCity.performance_score.toFixed(1)} performance score`);
+      }
+      
+      return {
+        dune_verified: true,
+        on_chain_metrics: {
+          total_ecosystem_volume: duneData.overall_stats.total_volume,
+          verified_holder_count: duneData.overall_stats.total_holders,
+          full_set_holders: duneData.holder_analysis.full_set_holders,
+          ecosystem_health: duneData.overall_stats.ecosystem_health_score || 0,
+          data_freshness: duneData.data_freshness,
+          collections_tracked: duneData.collections.length
+        },
+        market_intelligence: enhancedInsights,
+        data_confidence: 'high',
+        verification_status: 'Comprehensive on-chain verification via Dune Analytics'
+      };
+      
+    } catch (error) {
+      console.error('[CITIZEN Market] Error generating enhanced insights:', error);
+      return {
+        dune_verified: false,
+        on_chain_metrics: null,
+        market_intelligence: ['Error accessing on-chain data - using fallback market analysis'],
+        data_confidence: 'low',
+        verification_status: 'Data verification failed - check API configurations'
+      };
+    }
+  }
+  
+  /**
+   * Validate market data consistency between OpenSea and Dune
+   */
+  async validateDataConsistency(): Promise<{
+    consistency_score: number;
+    discrepancies: string[];
+    recommendations: string[];
+  }> {
+    console.log('[CITIZEN Market] Validating data consistency between sources...');
+    
+    try {
+      const [openSeaStats, duneData] = await Promise.all([
+        this.getAllCollectionStats(),
+        citizenDune.getBrightMomentsData()
+      ]);
+      
+      if (!duneData || openSeaStats.length === 0) {
+        return {
+          consistency_score: 0,
+          discrepancies: ['Cannot validate - insufficient data sources'],
+          recommendations: ['Configure both OpenSea API and DUNE_API_KEY for cross-validation']
+        };
+      }
+      
+      const discrepancies: string[] = [];
+      let matchingCollections = 0;
+      
+      // Cross-reference collection data
+      openSeaStats.forEach(openSeaCollection => {
+        const duneCollection = duneData.collections.find(dc => 
+          dc.name.toLowerCase().includes(openSeaCollection.city.toLowerCase())
+        );
+        
+        if (duneCollection) {
+          matchingCollections++;
+          
+          // Check volume consistency (allowing 10% variance)
+          const volumeDiff = Math.abs(openSeaCollection.volumeTotal || 0 - duneCollection.total_volume);
+          const volumeVariance = volumeDiff / Math.max(openSeaCollection.volumeTotal || 1, duneCollection.total_volume);
+          
+          if (volumeVariance > 0.1) {
+            discrepancies.push(`${openSeaCollection.city}: Volume variance ${(volumeVariance * 100).toFixed(1)}%`);
+          }
+          
+          // Check floor price consistency
+          const floorDiff = Math.abs((openSeaCollection.floorPrice || 0) - duneCollection.floor_price);
+          if (floorDiff > 0.01) { // 0.01 ETH tolerance
+            discrepancies.push(`${openSeaCollection.city}: Floor price differs by ${floorDiff.toFixed(3)} ETH`);
+          }
+        }
+      });
+      
+      const consistencyScore = Math.max(0, 100 - (discrepancies.length * 15));
+      
+      const recommendations = [];
+      if (consistencyScore < 70) {
+        recommendations.push('Significant data discrepancies detected - verify API configurations');
+        recommendations.push('Cross-reference with additional data sources for accuracy');
+      } else if (consistencyScore < 90) {
+        recommendations.push('Minor discrepancies normal due to timing differences between APIs');
+      } else {
+        recommendations.push('High data consistency confirmed across sources');
+      }
+      
+      return {
+        consistency_score: consistencyScore,
+        discrepancies,
+        recommendations
+      };
+      
+    } catch (error) {
+      console.error('[CITIZEN Market] Error validating data consistency:', error);
+      return {
+        consistency_score: 0,
+        discrepancies: ['Validation error occurred'],
+        recommendations: ['Check API connectivity and configurations']
+      };
+    }
   }
 }
 

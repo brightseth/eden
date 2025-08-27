@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
-import UnifiedAgentProfile from '@/components/agent/UnifiedAgentProfile';
-import { agentService } from '@/data/agents-registry';
+import EnhancedAgentProfile from '@/components/agent/EnhancedAgentProfile';
+import { FEATURE_FLAGS } from '@/config/flags';
+import { getAgentBySlug } from '@/data/eden-agents-manifest';
 
 // Force dynamic rendering to avoid build issues
 export const dynamic = 'force-dynamic';
@@ -12,26 +13,32 @@ interface AgentProfilePageProps {
 }
 
 export async function generateStaticParams() {
-  try {
-    const agents = await agentService.getAgents();
-    return agents.map((agent) => ({
-      slug: agent.handle,
-    }));
-  } catch (error) {
-    console.error('Failed to generate static params for agents:', error);
-    return [];
-  }
+  // Generate static params for known agents
+  const agents = [
+    'abraham', 'solienne', 'citizen', 'bertha', 
+    'miyomi', 'geppetto', 'koru', 'sue'
+  ];
+  
+  return agents.map((slug) => ({
+    slug,
+  }));
 }
 
 export default async function AgentProfilePage({ params }: AgentProfilePageProps) {
   const { slug } = await params;
-  const agent = await agentService.getAgentBySlug(slug);
+  
+  // Check if public agent pages are enabled
+  if (!FEATURE_FLAGS.ENABLE_PUBLIC_AGENT_PAGES) {
+    notFound();
+  }
+  
+  const agent = getAgentBySlug(slug);
   
   if (!agent) {
     notFound();
   }
 
-  return <UnifiedAgentProfile agentSlug={slug} />;
+  return <EnhancedAgentProfile agentSlug={slug} />;
 }
 
 export async function generateMetadata({ params }: AgentProfilePageProps) {

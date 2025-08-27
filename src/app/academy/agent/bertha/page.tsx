@@ -33,7 +33,7 @@ export default async function BerthaAgentPage() {
   // Use widget system if feature flag is enabled
   if (isFeatureEnabled(FLAGS.ENABLE_WIDGET_PROFILE_SYSTEM)) {
     try {
-      const configResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/agents/bertha/profile-config`);
+      const configResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'}/api/agents/bertha/profile-config`);
       if (configResponse.ok) {
         const profileConfig = await configResponse.json();
         return <ProfileRenderer agent={agent} config={profileConfig} />;

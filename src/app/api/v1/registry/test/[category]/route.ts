@@ -10,7 +10,7 @@ const testRunners = {
     // Simulate integration tests
     await new Promise(resolve => setTimeout(resolve, 1000))
     
-    const registryUrl = process.env.EDEN_REGISTRY_API_URL || 'http://localhost:3005'
+    const registryUrl = process.env.EDEN_REGISTRY_API_URL || 'https://eden-genesis-registry.vercel.app'
     
     try {
       // Test Registry connectivity
@@ -55,7 +55,7 @@ const testRunners = {
     // Simulate contract tests
     await new Promise(resolve => setTimeout(resolve, 800))
     
-    const registryUrl = process.env.EDEN_REGISTRY_API_URL || 'http://localhost:3005'
+    const registryUrl = process.env.EDEN_REGISTRY_API_URL || 'https://eden-genesis-registry.vercel.app'
     
     try {
       // Test API contract compliance
@@ -129,7 +129,7 @@ const testRunners = {
     // Simulate end-to-end tests with timeout protection
     await new Promise(resolve => setTimeout(resolve, 500)) // Reduced timeout
     
-    const registryUrl = process.env.EDEN_REGISTRY_API_URL || 'http://localhost:3005'
+    const registryUrl = process.env.EDEN_REGISTRY_API_URL || 'https://eden-genesis-registry.vercel.app'
     
     try {
       // Test complete workflow with timeout

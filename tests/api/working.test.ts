@@ -59,7 +59,7 @@ describe('Working API Endpoints', () => {
       expect([200, 500]).toContain(response.status);
       
       if (response.status === 200) {
-        assertProperties(response.data, ['success']);
+        assertProperties(response.data, ['ok', 'timestamp', 'service', 'tests']);
       } else {
         // Database error - that's expected
         console.log('Database connection error (expected):', response.data?.error);

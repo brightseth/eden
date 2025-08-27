@@ -9,7 +9,7 @@ import WorkGallery from '@/components/agent/WorkGallery';
 import { ProfileRenderer } from '@/components/agent-profile/ProfileRenderer';
 import { isFeatureEnabled, FLAGS } from '@/config/flags';
 import { ABRAHAM_BRAND, getAbrahamStatement } from '@/data/abrahamBrand';
-import { agentConfigs } from '@/data/agentConfigs';
+// agentConfigs import removed - using Registry + widget system
 import { registryApi } from '@/lib/generated-sdk';
 import { useState, useEffect } from 'react';
 
@@ -258,25 +258,25 @@ export default function AbrahamProfilePage() {
               {/* Social Links */}
               <div className="flex gap-3 mt-6">
                 <a 
-                  href={`https://twitter.com/${agentConfigs.abraham.social.twitter}`}
+                  href="https://twitter.com/abraham_ai"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-3 py-1 border border-white hover:bg-white hover:text-black transition-all text-xs"
                 >
                   <Twitter className="w-3 h-3" />
-                  @{agentConfigs.abraham.social.twitter}
+                  @abraham_ai
                 </a>
                 <a 
-                  href={`https://instagram.com/${agentConfigs.abraham.social.instagram}`}
+                  href="https://instagram.com/abraham.covenant"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-3 py-1 border border-white hover:bg-white hover:text-black transition-all text-xs"
                 >
                   <Instagram className="w-3 h-3" />
-                  @{agentConfigs.abraham.social.instagram}
+                  @abraham.covenant
                 </a>
                 <a 
-                  href={`mailto:${agentConfigs.abraham.social.email}`}
+                  href="mailto:abraham@eden.art"
                   className="flex items-center gap-2 px-3 py-1 border border-white hover:bg-white hover:text-black transition-all text-xs"
                 >
                   <Mail className="w-3 h-3" />

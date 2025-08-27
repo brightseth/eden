@@ -10,7 +10,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const CORRECT_DOMAINS = [
-  'eden-academy.vercel.app',
+  'eden-academy-flame.vercel.app',
   'eden-genesis-registry.vercel.app',
   'amanda-art-agent.vercel.app',
   'design-critic-agent.vercel.app',
@@ -19,7 +19,7 @@ const CORRECT_DOMAINS = [
 ];
 
 const INCORRECT_PATTERNS = [
-  'eden-academy-flame.vercel.app',
+  'eden-academy.vercel.app',
   'eden-academy-ftf22wjgo-edenprojects.vercel.app',
   // Add more patterns as needed
 ];

@@ -15,6 +15,10 @@ import { CountdownWidget } from '@/components/agent-profile/widgets/CountdownWid
 import { TrainerInfoWidget } from '@/components/agent-profile/widgets/TrainerInfoWidget';
 import { SocialLinksWidget } from '@/components/agent-profile/widgets/SocialLinksWidget';
 import { CustomContentWidget } from '@/components/agent-profile/widgets/CustomContentWidget';
+import { LiveStreamWidget } from '@/components/agent-profile/widgets/LiveStreamWidget';
+import { TokenEconomicsWidget } from '@/components/agent-profile/widgets/TokenEconomicsWidget';
+import { CollaborationWidget } from '@/components/agent-profile/widgets/CollaborationWidget';
+import { CommunityWidget } from '@/components/agent-profile/widgets/CommunityWidget';
 
 // Widget metadata for admin interface
 export interface WidgetMetadata {
@@ -229,6 +233,93 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetMetadata> = {
           enum: ['markdown', 'html', 'text'],
           default: 'text'
         }
+      }
+    }
+  },
+
+  'live-stream': {
+    type: 'live-stream',
+    name: 'Live Stream',
+    description: 'Real-time creation feeds and live streaming',
+    component: LiveStreamWidget,
+    agentTypes: ['creator', 'performer'],
+    configSchema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string', default: 'Live Creation' },
+        streamUrl: { type: 'string' },
+        showViewerCount: { type: 'boolean', default: true },
+        showChatPreview: { type: 'boolean', default: false },
+        autoplay: { type: 'boolean', default: false },
+        showRecentWorks: { type: 'boolean', default: true },
+        maxRecentWorks: { type: 'number', default: 4 }
+      }
+    }
+  },
+
+  'token-economics': {
+    type: 'token-economics',
+    name: 'Token Economics',
+    description: 'Agent token metrics and economic performance',
+    component: TokenEconomicsWidget,
+    requirements: ['tokenAddress'],
+    configSchema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string', default: 'Token Economics' },
+        tokenSymbol: { type: 'string' },
+        showPrice: { type: 'boolean', default: true },
+        showMarketCap: { type: 'boolean', default: true },
+        showVolume: { type: 'boolean', default: true },
+        showHolders: { type: 'boolean', default: true },
+        showRevenue: { type: 'boolean', default: true },
+        showDistribution: { type: 'boolean', default: false },
+        showStaking: { type: 'boolean', default: false },
+        timeframe: {
+          type: 'string',
+          enum: ['24h', '7d', '30d', 'all'],
+          default: '24h'
+        }
+      }
+    }
+  },
+
+  'collaboration': {
+    type: 'collaboration',
+    name: 'Collaborations',
+    description: 'Inter-agent partnerships and joint projects',
+    component: CollaborationWidget,
+    configSchema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string', default: 'Collaborations' },
+        showActive: { type: 'boolean', default: true },
+        showCompleted: { type: 'boolean', default: true },
+        showUpcoming: { type: 'boolean', default: false },
+        maxItems: { type: 'number', default: 6 },
+        showPartnerProfiles: { type: 'boolean', default: true },
+        enableProposals: { type: 'boolean', default: false }
+      }
+    }
+  },
+
+  'community': {
+    type: 'community',
+    name: 'Community',
+    description: 'Social engagement metrics and community features',
+    component: CommunityWidget,
+    requirements: ['profile.links'],
+    configSchema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string', default: 'Community' },
+        showMetrics: { type: 'boolean', default: true },
+        showEvents: { type: 'boolean', default: true },
+        showTestimonials: { type: 'boolean', default: true },
+        showSocial: { type: 'boolean', default: true },
+        showLeaderboard: { type: 'boolean', default: false },
+        maxEvents: { type: 'number', default: 3 },
+        maxTestimonials: { type: 'number', default: 2 }
       }
     }
   }
