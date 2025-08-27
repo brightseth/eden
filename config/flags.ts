@@ -5,6 +5,11 @@
 
 // Environment-based feature flags
 export const FEATURE_FLAGS = {
+  // REGISTRY ENFORCEMENT FLAGS - CRITICAL FOR DATA CONSISTENCY
+  ENABLE_REGISTRY_ENFORCEMENT: process.env.ENABLE_REGISTRY_ENFORCEMENT === 'true' || process.env.NODE_ENV === 'production',
+  ENABLE_REGISTRY_FALLBACK: process.env.ENABLE_REGISTRY_FALLBACK !== 'false', // Enabled by default
+  DISABLE_DIRECT_DB_ACCESS: process.env.DISABLE_DIRECT_DB_ACCESS === 'true' || process.env.NODE_ENV === 'production',
+  
   // CITIZEN Agent Features
   CITIZEN_DUNE_INTEGRATION: process.env.ENABLE_CITIZEN_DUNE === 'true' || process.env.NODE_ENV === 'development',
   CITIZEN_ENHANCED_MARKET_INSIGHTS: true, // Always enabled
