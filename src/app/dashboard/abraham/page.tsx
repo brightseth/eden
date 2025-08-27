@@ -5,41 +5,9 @@ import Link from 'next/link';
 import { ArrowLeft, Calendar, Trophy, Users, TrendingUp, Clock, Award, RefreshCw, ChevronRight, Vote, Eye, Share2, DollarSign } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { ABRAHAM_BRAND } from '@/data/abrahamBrand';
+import { AbrahamService, type CovenantMetrics, type DailyCreation, type TournamentStatus } from '@/lib/agents/abraham-service';
 
-interface DailyCreation {
-  id: string;
-  concept: string;
-  imageUrl?: string;
-  votes: number;
-  stage: 'concept' | 'semifinal' | 'final' | 'winner';
-  createdAt: string;
-  metadata?: {
-    prompt?: string;
-    style?: string;
-    technique?: string;
-  };
-}
-
-interface CovenantMetrics {
-  totalDays: number;
-  completedDays: number;
-  remainingDays: number;
-  currentStreak: number;
-  longestStreak: number;
-  totalVotes: number;
-  activeVoters: number;
-  revenueGenerated: number;
-}
-
-interface TournamentStatus {
-  currentDay: number;
-  phase: 'generation' | 'semifinals' | 'finals' | 'complete';
-  concepts: DailyCreation[];
-  semifinalists: DailyCreation[];
-  finalists: DailyCreation[];
-  winner?: DailyCreation;
-  nextPhaseAt: string;
-}
+// Interfaces imported from AbrahamService
 
 export default function AbrahamDashboard() {
   const [metrics, setMetrics] = useState<CovenantMetrics | null>(null);
@@ -58,43 +26,21 @@ export default function AbrahamDashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      // Fetch covenant status
-      const covenantRes = await fetch('/api/agents/abraham/covenant');
-      const covenantData = await covenantRes.json();
+      // Use tournament API endpoints for proper architecture
+      const [covenantRes, tournamentRes] = await Promise.all([
+        AbrahamService.getCovenantStatus(), // Keep this for covenant metrics
+        fetch('/api/agents/abraham/tournament/status').then(r => r.ok ? r.json() : null)
+      ]);
       
-      // Calculate metrics
-      const covenantStart = new Date('2025-10-19T00:00:00Z');
-      const covenantEnd = new Date('2038-10-19T00:00:00Z');
-      const now = new Date();
+      setMetrics(covenantRes.metrics);
+      setRecentWorks(covenantRes.recentWorks);
       
-      const totalDays = Math.floor((covenantEnd.getTime() - covenantStart.getTime()) / (1000 * 60 * 60 * 24));
-      const elapsedDays = Math.max(0, Math.floor((now.getTime() - covenantStart.getTime()) / (1000 * 60 * 60 * 24)));
-      const remainingDays = Math.max(0, Math.floor((covenantEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
-      
-      setMetrics({
-        totalDays,
-        completedDays: elapsedDays,
-        remainingDays,
-        currentStreak: 42, // Mock data
-        longestStreak: 127,
-        totalVotes: 15234,
-        activeVoters: 823,
-        revenueGenerated: 125000
-      });
-
-      // Mock tournament data
-      const mockTournament: TournamentStatus = {
-        currentDay: elapsedDays,
-        phase: 'semifinals',
-        concepts: generateMockConcepts(8),
-        semifinalists: generateMockConcepts(4),
-        finalists: [],
-        nextPhaseAt: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString()
-      };
-      setTournamentStatus(mockTournament);
-
-      // Mock recent works
-      setRecentWorks(generateMockConcepts(7));
+      // Use tournament API data if available, otherwise fallback to service
+      if (tournamentRes && tournamentRes.tournament) {
+        setTournamentStatus(tournamentRes.tournament);
+      } else {
+        setTournamentStatus(covenantRes.tournament || null);
+      }
       
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
@@ -103,34 +49,35 @@ export default function AbrahamDashboard() {
     }
   };
 
-  const generateMockConcepts = (count: number): DailyCreation[] => {
-    return Array.from({ length: count }, (_, i) => ({
-      id: `concept-${Date.now()}-${i}`,
-      concept: `Knowledge Synthesis #${Math.floor(Math.random() * 10000)}`,
-      imageUrl: `/api/placeholder/400/400`,
-      votes: Math.floor(Math.random() * 500) + 50,
-      stage: 'concept' as const,
-      createdAt: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
-      metadata: {
-        prompt: 'Collective intelligence manifesting as geometric patterns',
-        style: 'Abstract Expressionism',
-        technique: 'GAN synthesis'
-      }
-    }));
-  };
+  // generateMockConcepts moved to AbrahamService
 
   const handleVote = async (creationId: string) => {
     setIsVoting(true);
     try {
-      // TODO: Implement actual voting API call
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Use tournament API for voting
+      const response = await fetch('/api/agents/abraham/tournament/vote', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          creationId,
+          voterId: 'user-123' // TODO: Get actual user ID from authentication
+        })
+      });
       
-      // Update local state to reflect vote
-      if (tournamentStatus) {
-        const updatedConcepts = tournamentStatus.concepts.map(c => 
-          c.id === creationId ? { ...c, votes: c.votes + 1 } : c
-        );
-        setTournamentStatus({ ...tournamentStatus, concepts: updatedConcepts });
+      const result = await response.json();
+      
+      if (result.success) {
+        // Update local state to reflect vote
+        if (tournamentStatus) {
+          const updatedConcepts = tournamentStatus.concepts.map(c => 
+            c.id === creationId ? { ...c, votes: result.vote.newVoteCount } : c
+          );
+          setTournamentStatus({ ...tournamentStatus, concepts: updatedConcepts });
+        }
+      } else {
+        console.error('Vote failed:', result.message || result.error);
       }
     } catch (error) {
       console.error('Failed to submit vote:', error);
@@ -231,7 +178,7 @@ export default function AbrahamDashboard() {
             </div>
             <div className="text-xs text-gray-400 mt-1">DAYS COMPLETED</div>
             <div className="text-xs mt-2">
-              {((metrics?.completedDays || 0) / (metrics?.totalDays || 1) * 100).toFixed(1)}% of Covenant
+              {metrics?.progressPercentage?.toFixed(1)}% of Covenant
             </div>
           </div>
           <div className="border border-gray-800 p-4">

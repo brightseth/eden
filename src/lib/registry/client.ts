@@ -172,8 +172,22 @@ class RegistryClient {
 
     const params = include ? `?include=${include.join(',')}` : '';
     const url = `${this.baseUrl}/agents/${id}${params}`;
-    const response = await this.fetchWithRetry<RegistryResponse<Agent>>(url);
-    return response.data;
+    
+    // Fetch raw response and handle Registry format
+    const response = await this.fetchWithRetry<any>(url);
+    
+    // Single agent endpoint returns agent directly (not wrapped in {data: ...})
+    if (response.id && response.handle) {
+      return response as Agent;
+    }
+    
+    // Fallback to expected {data: ...} format for compatibility
+    if (response.data) {
+      return response.data as Agent;
+    }
+    
+    console.warn('[Registry Client] Unexpected agent response format:', Object.keys(response));
+    throw new Error('Invalid agent response format');
   }
 
   // Helper method to get agent by handle
@@ -188,8 +202,22 @@ class RegistryClient {
     }
 
     const url = `${this.baseUrl}/agents/${id}/profile`;
-    const response = await this.fetchWithRetry<RegistryResponse<Profile>>(url);
-    return response.data;
+    
+    // Fetch raw response and handle Registry format
+    const response = await this.fetchWithRetry<any>(url);
+    
+    // Profile endpoint returns profile directly (not wrapped in {data: ...})
+    if (response.agentId && response.statement !== undefined) {
+      return response as Profile;
+    }
+    
+    // Fallback to expected {data: ...} format for compatibility
+    if (response.data) {
+      return response.data as Profile;
+    }
+    
+    console.warn('[Registry Client] Unexpected profile response format:', Object.keys(response));
+    throw new Error('Invalid profile response format');
   }
 
   async getAgentPersonas(id: string): Promise<Persona[]> {

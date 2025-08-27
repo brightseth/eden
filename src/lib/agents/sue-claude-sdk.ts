@@ -458,9 +458,11 @@ Provide comprehensive annual plan with exhibitions and programs.`;
         status: 'published'
       });
 
-      console.log('Synced exhibition with Registry:', exhibition.id);
+      console.log('✅ Synced exhibition with Registry:', exhibition.id);
     } catch (error) {
-      console.error('Error syncing with Registry:', error);
+      // Registry sync is not critical for agent operation
+      console.warn('⚠️  Registry sync failed (non-critical):', error instanceof Error ? error.message : 'Unknown error');
+      console.log('   📝 Exhibition created successfully in local agent memory');
     }
   }
 

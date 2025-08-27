@@ -418,9 +418,11 @@ Format as JSON:
         status: proposal.status === 'draft' ? 'draft' : 'published'
       });
 
-      console.log('Synced governance proposal with Registry:', proposal.id);
+      console.log('✅ Synced governance proposal with Registry:', proposal.id);
     } catch (error) {
-      console.error('Error syncing with Registry:', error);
+      // Registry sync is not critical for agent operation
+      console.warn('⚠️  Registry sync failed (non-critical):', error instanceof Error ? error.message : 'Unknown error');
+      console.log('   📝 Proposal created successfully in local agent memory');
     }
   }
 

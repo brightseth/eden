@@ -4,6 +4,7 @@
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { miyomiSDK } from '@/lib/agents/miyomi-claude-sdk';
+import { revenueEngine } from '@/lib/agents/miyomi-revenue-engine';
 
 export const runtime = 'nodejs';
 
@@ -34,19 +35,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to generate picks' }, { status: 500 });
     }
 
-    // Step 2: Send to curation queue 
-    const pickId = await submitForCuration(picks[0]); // Take best pick
+    // Step 2: Check for sponsorship opportunities
+    const sponsoredPick = await applySponsorship(picks[0]);
 
-    // Step 3: If auto-approved, trigger Eden video generation
-    const videoUrl = await triggerVideoGeneration(pickId);
+    // Step 3: Send to curation queue 
+    const pickId = await submitForCuration(sponsoredPick);
 
-    // Step 4: Create the drop record
+    // Step 4: If auto-approved, trigger Eden video generation
+    const videoUrl = await triggerVideoGeneration(pickId, sponsoredPick);
+
+    // Step 5: Create the drop record
     const dropId = await createDrop({
       agent_id,
       pick_id: pickId,
       video_url: videoUrl,
       triggered_manually: true,
-      triggered_at: trigger_time
+      triggered_at: trigger_time,
+      is_sponsored: sponsoredPick.isSponsored || false,
+      sponsor_platform: sponsoredPick.sponsorPlatform
     });
 
     return NextResponse.json({ 
@@ -54,6 +60,8 @@ export async function POST(request: NextRequest) {
       dropId,
       pickId,
       videoUrl,
+      isSponsored: sponsoredPick.isSponsored,
+      sponsorPlatform: sponsoredPick.sponsorPlatform,
       message: 'Manual drop completed successfully'
     });
 
@@ -130,30 +138,59 @@ async function submitForCuration(pick: any) {
   return pick.id;
 }
 
-async function triggerVideoGeneration(pickId: string) {
-  // TODO: Call Eden API to generate video for the pick
-  
-  const edenResponse = await fetch(`${process.env.EDEN_BASE_URL}/api/agents/miyomi/generate-video`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${process.env.EDEN_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      agent: 'miyomi',
-      pick_id: pickId,
-      style: 'contrarian-analysis',
-      format: 'vertical-short'
-    })
-  });
+async function triggerVideoGeneration(pickId: string, pick?: any) {
+  try {
+    console.log('Triggering video generation for pick:', pickId);
+    
+    // Use our new video generator
+    const { videoGenerator } = await import('@/lib/agents/miyomi-video-generator');
+    
+    // Generate and distribute videos for all platforms
+    const result = await videoGenerator.generateAndDistribute(pick);
+    
+    console.log('Video generation completed:', result.video.id);
+    console.log('Distribution URLs:', result.distribution);
+    
+    // Store distribution info for tracking
+    await storeVideoDistribution(pickId, result);
+    
+    return result.video.url;
+    
+  } catch (error) {
+    console.error('Video generation failed:', error);
+    
+    // Fallback to basic Eden API if available
+    try {
+      const edenResponse = await fetch(`${process.env.EDEN_BASE_URL}/api/agents/miyomi/generate-video`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.EDEN_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          agent: 'miyomi',
+          pick_id: pickId,
+          style: 'contrarian-analysis',
+          format: 'vertical-short'
+        })
+      });
 
-  if (!edenResponse.ok) {
-    console.error('Eden video generation failed');
+      if (edenResponse.ok) {
+        const result = await edenResponse.json();
+        return result.video_url;
+      }
+    } catch (fallbackError) {
+      console.error('Fallback Eden API also failed:', fallbackError);
+    }
+    
     return null;
   }
+}
 
-  const result = await edenResponse.json();
-  return result.video_url;
+async function storeVideoDistribution(pickId: string, result: any) {
+  // Store video URLs and metadata for tracking
+  console.log(`Storing video distribution for pick ${pickId}:`, result.distribution);
+  // TODO: Save to database
 }
 
 async function createDrop(dropData: any) {
@@ -164,4 +201,45 @@ async function createDrop(dropData: any) {
   console.log('Creating drop record:', dropId);
   
   return dropId;
+}
+
+async function applySponsorship(pick: any) {
+  try {
+    // Get available sponsorship opportunities
+    const opportunities = await revenueEngine.getSponsorshipOpportunities();
+    
+    // Find matching opportunity for this pick's platform
+    const matchingOpp = opportunities.find(opp => 
+      opp.platform === pick.platform && opp.isActive
+    );
+
+    if (matchingOpp) {
+      console.log(`Applying sponsorship from ${matchingOpp.platform} for pick:`, pick.id);
+      
+      // Create sponsored version of the pick
+      const sponsoredPick = await revenueEngine.createSponsoredPick(pick, matchingOpp);
+      
+      // Track sponsorship application event
+      await revenueEngine.trackEvent({
+        type: 'click',
+        platform: matchingOpp.platform,
+        pickId: pick.id,
+        value: matchingOpp.rate,
+        metadata: {
+          sponsorshipType: matchingOpp.type,
+          automaticallyApplied: true
+        }
+      });
+
+      return sponsoredPick;
+    }
+
+    // No sponsorship available, return original pick
+    return pick;
+
+  } catch (error) {
+    console.error('Error applying sponsorship:', error);
+    // Return original pick if sponsorship fails
+    return pick;
+  }
 }

@@ -1,10 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { citizenSDK } from '@/lib/agents/citizen-claude-sdk';
+import { citizenMarketData } from '@/lib/agents/citizen-market-data';
 
 export async function GET(request: NextRequest) {
   try {
     // Get CITIZEN's current governance state and capabilities
     const governanceMetrics = citizenSDK.getGovernanceMetrics();
+    
+    // Get real-time market data for enhanced identity
+    let marketSummary = null;
+    try {
+      marketSummary = await citizenMarketData.getMarketSummary();
+    } catch (marketError) {
+      console.warn('[CITIZEN Identity] Market data unavailable:', marketError);
+    }
     
     const identity = {
       name: "CITIZEN",
@@ -124,6 +133,30 @@ export async function GET(request: NextRequest) {
         active_debates: governanceMetrics.activeDebates,
         fellowship_size: governanceMetrics.fellowshipSize,
         governance_health: Math.round(governanceMetrics.governanceHealth * 100)
+      },
+      
+      // Real-time market intelligence
+      market_intelligence: marketSummary ? {
+        total_collections: marketSummary.totalCollections,
+        total_volume_eth: marketSummary.totalVolume,
+        average_floor_price: marketSummary.averageFloorPrice,
+        top_performing_city: marketSummary.topPerformingCity,
+        market_health_score: marketSummary.marketHealth.score,
+        market_trend: marketSummary.marketHealth.trend,
+        recent_activity_count: marketSummary.recentActivity?.length || 0,
+        price_range: {
+          lowest_floor: marketSummary.priceRanges?.lowest?.price || 0,
+          highest_floor: marketSummary.priceRanges?.highest?.price || 0,
+          spread_percentage: marketSummary.priceRanges?.highest?.price && marketSummary.priceRanges?.lowest?.price 
+            ? Math.round(((marketSummary.priceRanges.highest.price - marketSummary.priceRanges.lowest.price) / marketSummary.priceRanges.lowest.price) * 100)
+            : 0
+        },
+        last_updated: new Date().toISOString(),
+        data_sources: ["OpenSea API", "On-chain analytics"]
+      } : {
+        status: "Market data integration pending",
+        note: "Configure OPENSEA_API_KEY for live pricing data",
+        features: ["Real-time floor prices", "Volume tracking", "Sales analysis", "Market trends"]
       },
 
       // Bright Moments Community Structure

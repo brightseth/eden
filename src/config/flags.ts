@@ -108,6 +108,15 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
     rolloutStrategy: 'full',
     culturalImpact: 'Agent profiles use standardized widget system instead of hardcoded pages',
     rollbackPlan: 'Disable flag, fallback to current hardcoded agent profile pages'
+  },
+
+  ENABLE_ABRAHAM_TOURNAMENT: {
+    key: 'ENABLE_ABRAHAM_TOURNAMENT',
+    description: 'Enable Abraham tournament system with voting and API endpoints',
+    defaultValue: false,
+    rolloutStrategy: 'dev',
+    culturalImpact: 'Enables community voting on daily Abraham creations',
+    rollbackPlan: 'Disable flag, tournament UI shows static content only'
   }
 };
 
@@ -201,4 +210,5 @@ export const FLAGS = {
   ENABLE_SOLIENNE_REGISTRY_INTEGRATION: 'ENABLE_SOLIENNE_REGISTRY_INTEGRATION',
   ENABLE_GEPPETTO_REGISTRY_INTEGRATION: 'ENABLE_GEPPETTO_REGISTRY_INTEGRATION',
   ENABLE_WIDGET_PROFILE_SYSTEM: 'ENABLE_WIDGET_PROFILE_SYSTEM',
+  ENABLE_ABRAHAM_TOURNAMENT: 'ENABLE_ABRAHAM_TOURNAMENT',
 } as const;

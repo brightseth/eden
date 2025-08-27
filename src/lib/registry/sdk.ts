@@ -89,10 +89,15 @@ export class RegistryClient {
   constructor(config: SDKConfig = {}) {
     this.baseUrl = config.baseUrl || DEFAULT_BASE_URL;
     this.timeout = config.timeout || DEFAULT_TIMEOUT;
+    
+    // Get API key from environment or config
+    const apiKey = process.env.REGISTRY_API_KEY || process.env.NEXT_PUBLIC_REGISTRY_API_KEY || 'eden-academy-client';
+    
     this.headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'User-Agent': '@eden/registry-sdk/1.0.0',
+      'X-API-Key': apiKey,
       ...config.headers
     };
     this.onError = config.onError;

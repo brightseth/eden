@@ -10,6 +10,7 @@ import { ProfileRenderer } from '@/components/agent-profile/ProfileRenderer';
 import { isFeatureEnabled, FLAGS } from '@/config/flags';
 import { ABRAHAM_BRAND, getAbrahamStatement } from '@/data/abrahamBrand';
 import { agentConfigs } from '@/data/agentConfigs';
+import { registryApi } from '@/lib/generated-sdk';
 import { useState, useEffect } from 'react';
 
 interface ArtistData {
@@ -45,27 +46,34 @@ export default function AbrahamProfilePage() {
       setLoading(true);
       
       try {
-        console.log('[Abraham Page] Fetching Abraham data from Registry...');
+        console.log('[Abraham Page] Fetching Abraham data from Registry SDK...');
         
-        // Add timeout to prevent hanging
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => {
-          console.log('[Abraham Page] Request timeout - aborting...');
-          controller.abort();
-        }, 5000); // 5 second timeout
+        // Use Registry SDK instead of direct fetch
+        const agentProfile = await registryApi.getAgentProfile('abraham');
+        const agentCreations = await registryApi.getAgentCreations('abraham', 'PUBLISHED');
         
-        // Use new Registry integration endpoint
-        const response = await fetch('/api/registry/agent/abraham', {
-          signal: controller.signal
-        });
-        
-        clearTimeout(timeoutId);
-        
-        if (!response.ok) {
-          throw new Error(`Registry API error: ${response.status}`);
-        }
-        
-        const data: ArtistData = await response.json();
+        // Transform Registry data to expected format
+        const data: ArtistData = {
+          id: agentProfile.id,
+          name: agentProfile.name,
+          handle: agentProfile.handle,
+          profile: {
+            statement: agentProfile.profile?.statement || getAbrahamStatement(),
+            manifesto: agentProfile.profile?.manifesto,
+            tags: agentProfile.profile?.tags || ABRAHAM_BRAND.themes.primary
+          },
+          works: agentCreations,
+          counts: {
+            creations: agentCreations.length,
+            personas: 1,
+            artifacts: agentCreations.filter(c => c.metadata?.dayNumber && c.metadata.dayNumber > 2522).length
+          },
+          crit: {
+            eligibleForCritique: true,
+            hasPublicProfile: !!agentProfile.profile?.statement,
+            hasWorks: agentCreations.length > 0
+          }
+        };
         console.log('[Abraham Page] Registry data received:', {
           worksCount: data.works?.length || 0,
           hasProfile: !!data.profile?.statement,

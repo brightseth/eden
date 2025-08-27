@@ -536,9 +536,11 @@ Format as JSON:
         status: 'published'
       });
 
-      console.log('Synced community event with Registry:', event.id);
+      console.log('✅ Synced community event with Registry:', event.id);
     } catch (error) {
-      console.error('Error syncing with Registry:', error);
+      // Registry sync is not critical for agent operation
+      console.warn('⚠️  Registry sync failed (non-critical):', error instanceof Error ? error.message : 'Unknown error');
+      console.log('   📝 Community event created successfully in local agent memory');
     }
   }
 

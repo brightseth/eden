@@ -454,9 +454,11 @@ Format as JSON:
         status: 'published'
       });
 
-      console.log('Synced toy design with Registry:', toy.id);
+      console.log('✅ Synced toy design with Registry:', toy.id);
     } catch (error) {
-      console.error('Error syncing with Registry:', error);
+      // Registry sync is not critical for agent operation
+      console.warn('⚠️  Registry sync failed (non-critical):', error instanceof Error ? error.message : 'Unknown error');
+      console.log('   📝 Toy design created successfully in local agent memory');
     }
   }
 
