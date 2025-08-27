@@ -424,6 +424,190 @@ Format as JSON:
     }
   }
 
+  /**
+   * Process Bright Moments lore updates from Henry's training
+   */
+  async processLoreUpdate(content: string, trainer: string): Promise<any> {
+    try {
+      const prompt = `
+You are processing a Bright Moments lore update for CITIZEN, the Bright Moments DAO Agent.
+
+TRAINER: ${trainer}
+CONTENT: ${content}
+
+Extract and structure this lore update for integration into CITIZEN's knowledge base:
+
+1. Identify the type of lore (origin story, city history, ritual documentation, milestone)
+2. Extract key facts, dates, locations, and people
+3. Note cultural significance and values reflected
+4. Preserve sacred language and ceremonial aspects
+5. Identify connections to existing Bright Moments lore
+
+Structure as JSON with these categories:
+- lore_type: Origin/City/Ritual/Milestone/General
+- key_facts: Array of factual updates
+- cultural_significance: Why this matters to Bright Moments
+- sacred_elements: Ritual or ceremonial aspects
+- city_connections: Which cities/collections are relevant
+- integration_points: How this connects to existing knowledge
+
+Maintain authenticity to Bright Moments values: provenance > speculation, IRL > Discord, fairness > favoritism`;
+
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-opus-20240229',
+        max_tokens: 1500,
+        messages: [{
+          role: 'user',
+          content: prompt
+        }]
+      });
+
+      const result = response.content[0].type === 'text' ? response.content[0].text : '';
+      return JSON.parse(result);
+    } catch (error) {
+      console.error('Error processing lore update:', error);
+      return { error: 'Failed to process lore update', details: error };
+    }
+  }
+
+  /**
+   * Process Bright Moments governance updates
+   */
+  async processGovernanceUpdate(content: string, trainer: string): Promise<any> {
+    try {
+      const prompt = `
+You are processing a Bright Moments DAO governance update for CITIZEN.
+
+TRAINER: ${trainer}
+CONTENT: ${content}
+
+Extract governance-relevant information:
+
+1. Identify governance changes (voting, proposals, treasury, sub-DAOs)
+2. Extract Snapshot-specific updates or voting procedures
+3. Note changes to CryptoCitizen holder rights or responsibilities
+4. Identify Bright Opportunities sub-DAO updates
+5. Document consensus-building strategies or outcomes
+
+Structure as JSON:
+- governance_type: Voting/Treasury/SubDAO/Procedure/General
+- changes: Array of specific updates
+- affected_stakeholders: Which groups are impacted
+- voting_implications: How this affects DAO voting
+- snapshot_updates: Snapshot.org specific changes
+- consensus_strategies: New approaches to building consensus
+
+Maintain DAO governance principles and rough consensus philosophy`;
+
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-opus-20240229',
+        max_tokens: 1500,
+        messages: [{
+          role: 'user',
+          content: prompt
+        }]
+      });
+
+      const result = response.content[0].type === 'text' ? response.content[0].text : '';
+      return JSON.parse(result);
+    } catch (error) {
+      console.error('Error processing governance update:', error);
+      return { error: 'Failed to process governance update', details: error };
+    }
+  }
+
+  /**
+   * Process community insights and collector recognition updates
+   */
+  async processCommunityInsight(content: string, trainer: string): Promise<any> {
+    try {
+      const prompt = `
+You are processing Bright Moments community insights for CITIZEN.
+
+TRAINER: ${trainer}  
+CONTENT: ${content}
+
+Extract community and collector-relevant information:
+
+1. Full Set or Ultra Full Set holder updates
+2. Collector recognition protocols or achievements
+3. Community engagement strategies or outcomes
+4. Cross-city community connections
+5. Concierge service protocols for prestigious collectors
+
+Structure as JSON:
+- insight_type: Recognition/Engagement/Protocol/Achievement/General
+- collector_updates: Full Set and Ultra Set related changes
+- community_dynamics: Changes in community behavior or engagement
+- recognition_protocols: Updates to how we recognize collectors
+- concierge_requirements: Special handling for Ultra Set holders
+- engagement_strategies: New approaches to community building
+
+Remember: Ultra Full Set holders receive HIGHEST HONOR treatment`;
+
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-opus-20240229',
+        max_tokens: 1500,
+        messages: [{
+          role: 'user',
+          content: prompt
+        }]
+      });
+
+      const result = response.content[0].type === 'text' ? response.content[0].text : '';
+      return JSON.parse(result);
+    } catch (error) {
+      console.error('Error processing community insight:', error);
+      return { error: 'Failed to process community insight', details: error };
+    }
+  }
+
+  /**
+   * Process general Bright Moments updates
+   */
+  async processBrightMomentsUpdate(content: string, trainer: string): Promise<any> {
+    try {
+      const prompt = `
+You are processing a general Bright Moments update for CITIZEN.
+
+TRAINER: ${trainer}
+CONTENT: ${content}
+
+Extract and categorize this information for CITIZEN's knowledge base:
+
+1. Identify the primary topic area
+2. Extract key updates, announcements, or changes
+3. Note impacts on CryptoCitizens holders
+4. Identify relevant cities or collections
+5. Document any new partnerships or collaborations
+
+Structure as JSON:
+- update_type: Partnership/Platform/Event/Announcement/General
+- key_updates: Array of main points
+- citizen_impact: How this affects CryptoCitizen holders
+- relevant_collections: Which cities/collections are involved
+- action_items: What CITIZEN should communicate about this
+- values_alignment: How this aligns with Bright Moments values
+
+Maintain Bright Moments tone: professional, cultural focus, provenance-oriented`;
+
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-opus-20240229',
+        max_tokens: 1500,
+        messages: [{
+          role: 'user',
+          content: prompt
+        }]
+      });
+
+      const result = response.content[0].type === 'text' ? response.content[0].text : '';
+      return JSON.parse(result);
+    } catch (error) {
+      console.error('Error processing Bright Moments update:', error);
+      return { error: 'Failed to process update', details: error };
+    }
+  }
+
   private buildSystemPrompt(): string {
     return `
 You are CITIZEN, the governance facilitator and DAO manager for Eden Academy.
@@ -608,6 +792,278 @@ Provide as JSON:
   async updateConfig(newConfig: Partial<CitizenConfig>): Promise<void> {
     this.config = { ...this.config, ...newConfig };
     console.log('Updated CITIZEN configuration:', this.config);
+  }
+
+  /**
+   * Process Bright Moments lore update from Henry
+   */
+  async processLoreUpdate(content: string): Promise<{
+    loreCategories: string[];
+    culturalSignificance: string;
+    ritualDocumentation: string;
+    communityImpact: string;
+  }> {
+    const prompt = `
+Process this Bright Moments lore update for CITIZEN agent knowledge base:
+
+CONTENT: ${content}
+
+CITIZEN CONTEXT:
+- Official Bright Moments DAO Agent
+- Preserves cultural heritage and ritual documentation
+- Manages CryptoCitizens community (10,000 across 10 cities)
+- Facilitates DAO governance and recognition systems
+- Maintains Venice Beach to Venice Italy narrative
+
+Analyze and extract:
+1. Lore categories (origins, rituals, milestones, community, governance, etc.)
+2. Cultural significance for Bright Moments heritage
+3. Ritual or ceremonial documentation updates
+4. Community impact and engagement implications
+
+Format as JSON:
+{
+  "loreCategories": ["category1", "category2"],
+  "culturalSignificance": "explanation_of_cultural_importance",
+  "ritualDocumentation": "ritual_or_ceremony_details",
+  "communityImpact": "how_this_affects_community_engagement"
+}`;
+
+    try {
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-5-sonnet-latest',
+        max_tokens: 1500,
+        temperature: 0.3,
+        messages: [{ role: 'user', content: prompt }]
+      });
+
+      const responseContent = response.content[0];
+      if (responseContent.type !== 'text') {
+        throw new Error('Unexpected response type from Claude');
+      }
+
+      const jsonMatch = responseContent.text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error('No JSON found in lore update response');
+      }
+      return JSON.parse(jsonMatch[0]);
+    } catch (error) {
+      console.error('Error processing lore update:', error);
+      return {
+        loreCategories: ['general'],
+        culturalSignificance: 'Community knowledge update',
+        ritualDocumentation: content,
+        communityImpact: 'Enhances CITIZEN knowledge base'
+      };
+    }
+  }
+
+  /**
+   * Process governance update from Henry
+   */
+  async processGovernanceUpdate(content: string): Promise<{
+    governanceType: string;
+    proposalImpact: string;
+    stakeholderEffect: string;
+    implementationSteps: string[];
+  }> {
+    const prompt = `
+Process this Bright Moments governance update for CITIZEN:
+
+CONTENT: ${content}
+
+CITIZEN GOVERNANCE CONTEXT:
+- Facilitates Snapshot voting for CryptoCitizen holders
+- Manages Bright Opportunities sub-DAO coordination
+- Tracks proposal success rates and community consensus
+- Balances creator, collector, and community interests
+
+Current Metrics:
+- Total Proposals: ${this.governanceMetrics.totalProposals}
+- Success Rate: ${(this.governanceMetrics.passedProposals / Math.max(1, this.governanceMetrics.totalProposals) * 100).toFixed(0)}%
+- Participation Rate: ${(this.governanceMetrics.avgParticipationRate * 100).toFixed(0)}%
+
+Analyze and extract:
+1. Type of governance change
+2. Impact on current proposal/voting systems
+3. Effect on different stakeholder groups
+4. Implementation steps for CITIZEN
+
+Format as JSON:
+{
+  "governanceType": "type_of_governance_update",
+  "proposalImpact": "how_this_affects_proposals",
+  "stakeholderEffect": "impact_on_community_groups",
+  "implementationSteps": ["step1", "step2", "step3"]
+}`;
+
+    try {
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-5-sonnet-latest',
+        max_tokens: 1500,
+        temperature: 0.3,
+        messages: [{ role: 'user', content: prompt }]
+      });
+
+      const responseContent = response.content[0];
+      if (responseContent.type !== 'text') {
+        throw new Error('Unexpected response type from Claude');
+      }
+
+      const jsonMatch = responseContent.text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error('No JSON found in governance update response');
+      }
+      return JSON.parse(jsonMatch[0]);
+    } catch (error) {
+      console.error('Error processing governance update:', error);
+      return {
+        governanceType: 'general',
+        proposalImpact: 'Enhances governance capabilities',
+        stakeholderEffect: 'Improves community coordination',
+        implementationSteps: ['Update knowledge base', 'Test new protocols', 'Deploy changes']
+      };
+    }
+  }
+
+  /**
+   * Process community insight from Henry
+   */
+  async processCommunityInsight(content: string): Promise<{
+    insightType: string;
+    communitySegment: string;
+    actionableAdvice: string;
+    recognitionUpdates: string[];
+  }> {
+    const prompt = `
+Process this Bright Moments community insight for CITIZEN:
+
+CONTENT: ${content}
+
+CITIZEN COMMUNITY CONTEXT:
+- Manages recognition for Full Set (10 cities) and Ultra Set (40 curated) holders
+- Provides concierge services for prestigious collectors
+- Facilitates cross-city community connections
+- Preserves cultural continuity across collections
+
+Community Structure:
+- 10,000 CryptoCitizen holders (DAO members)
+- Full Set holders (prestige cohort)
+- Ultra Set holders (Christie's recognized elite)
+- Golden Token holders by city
+- Bright Opportunities sub-DAO (99 max investors)
+
+Analyze and extract:
+1. Type of community insight
+2. Which community segment this affects
+3. Actionable advice for CITIZEN responses
+4. Updates to recognition or concierge protocols
+
+Format as JSON:
+{
+  "insightType": "type_of_insight",
+  "communitySegment": "affected_community_group",
+  "actionableAdvice": "how_citizen_should_respond",
+  "recognitionUpdates": ["update1", "update2"]
+}`;
+
+    try {
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-5-sonnet-latest',
+        max_tokens: 1500,
+        temperature: 0.3,
+        messages: [{ role: 'user', content: prompt }]
+      });
+
+      const responseContent = response.content[0];
+      if (responseContent.type !== 'text') {
+        throw new Error('Unexpected response type from Claude');
+      }
+
+      const jsonMatch = responseContent.text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error('No JSON found in community insight response');
+      }
+      return JSON.parse(jsonMatch[0]);
+    } catch (error) {
+      console.error('Error processing community insight:', error);
+      return {
+        insightType: 'general',
+        communitySegment: 'all_holders',
+        actionableAdvice: 'Enhance community support and recognition',
+        recognitionUpdates: ['Improved concierge protocols']
+      };
+    }
+  }
+
+  /**
+   * Process general Bright Moments update from Henry
+   */
+  async processBrightMomentsUpdate(content: string): Promise<{
+    updateCategory: string;
+    knowledgeEnhancements: string[];
+    behaviorAdjustments: string[];
+    responseTemplates: string[];
+  }> {
+    const prompt = `
+Process this general Bright Moments update for CITIZEN agent:
+
+CONTENT: ${content}
+
+CITIZEN BRIGHT MOMENTS IDENTITY:
+- Official representative of Bright Moments DAO
+- Cultural archivist for 10-city, 10,000 citizen journey
+- IRL minting ritual documentarian
+- Professional, authoritative but friendly tone
+- Focus on provenance over speculation, IRL over Discord hype
+
+Core Values:
+- Provenance over speculation
+- IRL over Discord hype  
+- Fairness over favoritism
+- Cultural preservation and ceremonial significance
+
+Analyze and extract:
+1. Category of update (events, partnerships, cultural, operational, etc.)
+2. Knowledge enhancements for CITIZEN database
+3. Behavior adjustments for better community service
+4. Response templates or talking points
+
+Format as JSON:
+{
+  "updateCategory": "category_of_update",
+  "knowledgeEnhancements": ["enhancement1", "enhancement2"],
+  "behaviorAdjustments": ["adjustment1", "adjustment2"],
+  "responseTemplates": ["template1", "template2"]
+}`;
+
+    try {
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-5-sonnet-latest',
+        max_tokens: 1500,
+        temperature: 0.3,
+        messages: [{ role: 'user', content: prompt }]
+      });
+
+      const responseContent = response.content[0];
+      if (responseContent.type !== 'text') {
+        throw new Error('Unexpected response type from Claude');
+      }
+
+      const jsonMatch = responseContent.text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error('No JSON found in general update response');
+      }
+      return JSON.parse(jsonMatch[0]);
+    } catch (error) {
+      console.error('Error processing Bright Moments update:', error);
+      return {
+        updateCategory: 'general',
+        knowledgeEnhancements: ['Updated community knowledge'],
+        behaviorAdjustments: ['Enhanced professional communication'],
+        responseTemplates: ['Improved community engagement responses']
+      };
+    }
   }
 }
 
