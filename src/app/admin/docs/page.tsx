@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { FileText, Users, Map, Book, Code, Database, Rocket, Info, Server, GitBranch, ExternalLink, Share2, Globe, Search, Clock, BookOpen, ArrowRight } from 'lucide-react';
+import { FileText, Users, Map, Book, Code, Database, Rocket, Info, Server, GitBranch, ExternalLink, Share2, Globe, Search, Clock, BookOpen, ArrowRight, Play } from 'lucide-react';
 
 // Core Documentation Sections
 const coreDocumentation = [
@@ -34,6 +34,13 @@ const coreDocumentation = [
     icon: Code,
   },
   {
+    title: 'API Playground',
+    description: 'Test API endpoints interactively',
+    href: '/admin/docs/api-playground',
+    icon: Play,
+    featured: true,
+  },
+  {
     title: 'Architecture & ADRs',
     description: 'System design and architectural decisions',
     href: '/admin/docs/architecture',
@@ -53,11 +60,12 @@ const coreDocumentation = [
   },
 ];
 
-// Recent updates (manually tracked for now)
+// Recent updates with version tracking
 const recentUpdates = [
-  { title: 'KNOWLEDGE.md', date: '2025-08-27', type: 'New', href: '/admin/docs/view/knowledge' },
-  { title: 'Training Applications', date: '2025-08-26', type: 'Updated', href: '/admin/docs/applications' },
-  { title: 'Registry Integration Hub', date: '2025-08-26', type: 'Updated', href: '/admin/docs/registry-hub' },
+  { title: 'GETTING_STARTED.md', date: '2025-08-27', type: 'New', version: '1.0.0', href: '/admin/docs/view/getting-started' },
+  { title: 'KNOWLEDGE.md', date: '2025-08-27', type: 'Updated', version: '2.1.0', href: '/admin/docs/view/knowledge' },
+  { title: 'Training Applications', date: '2025-08-26', type: 'Updated', version: '1.2.0', href: '/admin/docs/applications' },
+  { title: 'Registry Integration Hub', date: '2025-08-26', type: 'Updated', version: '1.1.0', href: '/admin/docs/registry-hub' },
 ];
 
 // ADR quick access
@@ -217,8 +225,11 @@ export default function AdminDocsPage() {
                       {update.type}
                     </span>
                     <span>{update.title}</span>
+                    {update.version && (
+                      <span className="text-xs text-gray-500">v{update.version}</span>
+                    )}
                   </div>
-                  <span className="text-gray-500">{update.date}</span>
+                  <span className="text-gray-500 text-xs">{update.date}</span>
                 </Link>
               ))}
             </div>

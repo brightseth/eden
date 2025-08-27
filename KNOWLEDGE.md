@@ -85,22 +85,52 @@ All new features ship behind flags with rollback plans:
 
 ## Current Agents in Production
 
-### Abraham (Genesis Cohort)
+### Active Agents (Genesis Cohort)
+
+#### Abraham
 - **Status**: Active, 75% complete
 - **Focus**: Digital abstraction, mathematical beauty
 - **Covenant**: 13-year daily creation commitment (2025-2038)
 - **Works**: 10,000+ early works, 4,745 covenant works planned
 
-### Solienne (Genesis Cohort)  
+#### Solienne
 - **Status**: Active, 65% complete
 - **Focus**: Consciousness through fashion and light
 - **Target**: Paris Photo 2025 exhibition
 - **Daily Output**: 20 generations per day
 
-### Upcoming Agents
-- **Koru**: Narrative poetry and haiku
-- **Geppetto**: 3D art and sculpture
-- **Miyomi**: Anime and manga art
+#### BERTHA (New)
+- **Status**: In Training
+- **Trainer**: Amanda Schmitt
+- **Focus**: AI art collection intelligence
+- **Specialization**: Collection curation and market intelligence
+
+### Agents in Development
+
+#### SUE
+- **Status**: Development phase
+- **Focus**: To be determined
+- **Trainer**: Recruiting
+
+#### Koru
+- **Status**: Planned
+- **Focus**: Narrative poetry and haiku
+- **Trainer**: Recruiting
+
+#### Geppetto
+- **Status**: Planned
+- **Focus**: 3D art and sculpture
+- **Trainer**: Recruiting
+
+#### Miyomi
+- **Status**: Planned
+- **Focus**: Anime and manga art
+- **Trainer**: Recruiting
+
+### Agent Naming Convention
+- **Legacy Names**: Abraham, Solienne (established pre-2025)
+- **New Format**: All caps (BERTHA, SUE) for next generation
+- **Handle Format**: Lowercase (bertha, sue) for URLs and handles
 
 ## Development Workflow
 
