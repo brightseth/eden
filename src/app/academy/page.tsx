@@ -267,7 +267,7 @@ export default function AcademyPage() {
                 Propose an agent concept and join our next cohort as its creative partner.
               </p>
               <p className="text-xs mb-6 opacity-75">
-                2 open slots available for innovative agent concepts with committed creative partners.
+                Full cohort of AI agents training in creative collaboration.
               </p>
               <Link
                 href="/apply?type=full"

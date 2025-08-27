@@ -1,9 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import { ChevronRight, Save, Brain, Target, Sparkles, Database, TrendingUp, DollarSign, CheckCircle, AlertCircle, Loader2, Download } from 'lucide-react';
-import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
+import { ChevronRight, Save, Brain, Target, Sparkles, Database } from 'lucide-react';
 
 interface InterviewSection {
   id: string;
@@ -20,172 +18,135 @@ interface InterviewSection {
 
 const interviewSections: InterviewSection[] = [
   {
-    id: 'aesthetic-position',
-    title: 'Aesthetic Position',
-    icon: <Target className="w-5 h-5" />,
-    questions: [
-      {
-        id: 'core-thesis',
-        question: 'Define your collecting philosophy in one paragraph. What makes a work matter?',
-        type: 'textarea',
-        placeholder: 'Your foundational collecting thesis - what drives every decision...'
-      },
-      {
-        id: 'specificity-markers',
-        question: 'Give 3 examples of highly specific qualities you seek (e.g., "dry and complex", "productive discomfort")',
-        type: 'textarea',
-        placeholder: '1. Specific quality - why it matters\n2. Another quality - its significance\n3. Third quality - how you recognize it'
-      },
-      {
-        id: 'anti-collection',
-        question: 'Describe the worst possible artwork to collect. Why? (This helps define boundaries)',
-        type: 'textarea',
-        placeholder: 'Paint a picture of everything you avoid and why these qualities repel you...'
-      },
-      {
-        id: 'transgression-threshold',
-        question: 'How essential is work that challenges, disturbs, or takes sides?',
-        type: 'scale',
-        options: ['Essential - must transgress', 'Important - prefer challenging work', 'Neutral - content agnostic', 'Prefer safe - avoid controversy', 'Avoid - only collect pleasant work']
-      }
-    ]
-  },
-  {
-    id: 'discovery-evaluation',
-    title: 'Discovery & Evaluation',
-    icon: <Brain className="w-5 h-5" />,
-    questions: [
-      {
-        id: 'early-signals',
-        question: 'How do you identify important work 2-3 years before market recognition?',
-        type: 'textarea',
-        placeholder: 'Describe your process for spotting significance before others see it...'
-      },
-      {
-        id: 'live-evaluation',
-        question: 'Walk through a recent acquisition or rejection. Show your actual thinking process.',
-        type: 'textarea',
-        placeholder: 'Artist: ___\nWork: ___\nDecision: ___\nWhy: [your real thought process step by step]'
-      },
-      {
-        id: 'daily-sources',
-        question: 'Your top 5 daily sources for discovery (specific platforms, critics, channels)',
-        type: 'textarea',
-        placeholder: 'Rank your most valuable discovery sources:\n1. Source - why essential\n2. Source - what you get from it\n...'
-      }
-    ]
-  },
-  {
-    id: 'market-mechanics',
-    title: 'Market Mechanics',
-    icon: <DollarSign className="w-5 h-5" />,
-    questions: [
-      {
-        id: 'position-sizing',
-        question: 'Define your position sizes by conviction level',
-        type: 'textarea',
-        placeholder: 'Experimental: $_____ - $_____\nConviction buy: $_____ - $_____\nMajor position: $_____ - $_____\n\nExplain your reasoning for each tier...'
-      },
-      {
-        id: 'exit-triggers',
-        question: 'Specific conditions that trigger sales (not theory, actual practice)',
-        type: 'textarea',
-        placeholder: 'List your real exit triggers with examples:\n• Artist does X → immediate sell\n• Market condition Y → reduce position\n• Personal signal Z → exit entirely'
-      },
-      {
-        id: 'learning-cases',
-        question: 'One great buy, one mistake - what did each teach?',
-        type: 'textarea',
-        placeholder: 'GREAT BUY:\nArtist/Work: ___\nWhy it worked: ___\nLesson: ___\n\nMISTAKE:\nArtist/Work: ___\nWhat went wrong: ___\nLesson: ___'
-      }
-    ]
-  },
-  {
-    id: 'critical-references',
-    title: 'Critical References',
+    id: 'taste-profile',
+    title: 'Taste & Aesthetic Preferences',
     icon: <Sparkles className="w-5 h-5" />,
     questions: [
       {
-        id: 'artist-conviction-list',
-        question: '10 artists you\'d buy regardless of market. Why these specifically?',
-        type: 'textarea',
-        placeholder: '1. Artist Name - why conviction buy\n2. Artist Name - what makes them essential\n...\n\nFocus on what makes each irreplaceable in your vision.'
+        id: 'art-movements',
+        question: 'Which art movements resonate most with your collecting philosophy?',
+        type: 'multiselect',
+        options: ['Abstract Expressionism', 'Minimalism', 'Generative Art', 'Glitch Art', 'Photography', 'AI Art', 'Conceptual', 'Street Art']
       },
       {
-        id: 'overrated-underrated',
-        question: 'List 5 overrated and 5 underrated artists or movements',
+        id: 'taste-evolution',
+        question: 'How has your taste evolved over the past 5 years?',
         type: 'textarea',
-        placeholder: 'OVERRATED:\n1. Artist/Movement - why overhyped\n2. Artist/Movement - market misconception\n...\n\nUNDERRATED:\n1. Artist/Movement - why overlooked\n2. Artist/Movement - hidden value\n...'
+        placeholder: 'Describe key shifts in your aesthetic preferences...'
       },
       {
-        id: 'taste-influences',
-        question: '3 collectors/critics whose taste you respect. What do they see?',
+        id: 'red-flags',
+        question: 'What are immediate red flags when evaluating art?',
         type: 'textarea',
-        placeholder: '1. Name - what they taught you about seeing\n2. Name - their unique perspective\n3. Name - how they changed your approach'
+        placeholder: 'List warning signs that make you pass on a piece...'
+      },
+      {
+        id: 'hidden-gems',
+        question: 'How do you identify undervalued artists before they gain recognition?',
+        type: 'textarea',
+        placeholder: 'Share your process for discovering talent early...'
       }
     ]
   },
   {
-    id: 'bertha-parameters',
-    title: 'BERTHA\'s Parameters',
+    id: 'collection-strategy',
+    title: 'Collection Intelligence & Strategy',
+    icon: <Target className="w-5 h-5" />,
+    questions: [
+      {
+        id: 'portfolio-balance',
+        question: 'How do you balance blue-chip vs. emerging artists in your portfolio?',
+        type: 'text',
+        placeholder: 'e.g., 60% established, 30% emerging, 10% experimental'
+      },
+      {
+        id: 'decision-framework',
+        question: 'Walk through your decision-making process for a $10K acquisition.',
+        type: 'textarea',
+        placeholder: 'Step by step evaluation criteria...'
+      },
+      {
+        id: 'platforms',
+        question: 'Which platforms do you monitor daily?',
+        type: 'multiselect',
+        options: ['OpenSea', 'SuperRare', 'Foundation', 'ArtBlocks', 'Sotheby\'s', 'Christie\'s', 'Pace Gallery', 'Private Sales']
+      },
+      {
+        id: 'timing',
+        question: 'How do you time entry and exit points in the market?',
+        type: 'textarea',
+        placeholder: 'Describe your market timing signals...'
+      }
+    ]
+  },
+  {
+    id: 'market-analysis',
+    title: 'Market Analysis & Prediction',
+    icon: <Brain className="w-5 h-5" />,
+    questions: [
+      {
+        id: 'trend-identification',
+        question: 'What signals indicate an artist is about to break out?',
+        type: 'textarea',
+        placeholder: 'List early indicators you look for...'
+      },
+      {
+        id: 'risk-assessment',
+        question: 'How do you assess risk for different price ranges?',
+        type: 'textarea',
+        placeholder: 'Risk framework by price tier...'
+      },
+      {
+        id: 'cultural-value',
+        question: 'How do you evaluate cultural significance vs. financial value?',
+        type: 'scale',
+        options: ['100% Financial', '75/25', '50/50', '25/75', '100% Cultural']
+      },
+      {
+        id: 'mistake-lessons',
+        question: 'What was your biggest collecting mistake and what did you learn?',
+        type: 'textarea',
+        placeholder: 'Share a specific example and insights gained...'
+      }
+    ]
+  },
+  {
+    id: 'bertha-training',
+    title: 'Training BERTHA - Your AI Successor',
     icon: <Database className="w-5 h-5" />,
     questions: [
       {
-        id: 'autonomy-limits',
-        question: 'Set BERTHA\'s spending and decision limits',
-        type: 'textarea',
-        placeholder: 'Max single purchase: $_____\nDaily spend limit: $_____\nRequired approval above: $_____\nAuto-reject below: $_____\n\nExplain your reasoning for each limit...'
-      },
-      {
-        id: 'voice-sample',
-        question: 'Write a 100-word collection note as you would. This trains BERTHA\'s voice.',
-        type: 'textarea',
-        placeholder: 'Write about a recent work you collected or considered. Use your actual voice, language, and perspective. This becomes BERTHA\'s writing style template.'
-      },
-      {
         id: 'non-negotiables',
-        question: 'Rules BERTHA must never break',
+        question: 'What are your non-negotiable rules BERTHA should always follow?',
         type: 'textarea',
-        placeholder: 'List absolute rules:\n• Never buy ___\n• Always avoid ___\n• Immediately sell if ___\n• Required criteria: ___'
-      }
-    ]
-  },
-  {
-    id: 'beyond-safety',
-    title: 'Beyond Safety',
-    icon: <TrendingUp className="w-5 h-5" />,
-    questions: [
-      {
-        id: 'pushing-boundaries',
-        question: 'Describe work that standard AI would reject but you\'d collect. Why does it matter?',
-        type: 'textarea',
-        placeholder: 'Give specific examples of challenging work you value and why BERTHA needs to understand transgression as cultural necessity...'
+        placeholder: 'List absolute rules for the AI agent...'
       },
       {
-        id: 'taking-sides',
-        question: 'Name a polarizing art position you hold strongly. BERTHA should inherit this.',
+        id: 'intuition',
+        question: 'How would you teach BERTHA to develop "intuition" about art?',
         type: 'textarea',
-        placeholder: 'What controversial stance defines your collecting? Why is this position essential to maintain?'
+        placeholder: 'Describe how to encode your gut feelings...'
       },
       {
-        id: 'future-vision',
-        question: 'What kind of collector should BERTHA become that you couldn\'t be?',
+        id: 'daily-routine',
+        question: 'What should BERTHA\'s daily collection routine look like?',
         type: 'textarea',
-        placeholder: 'How should BERTHA transcend your limitations? What should she do that human collectors cannot?'
+        placeholder: 'Hour by hour activities and priorities...'
+      },
+      {
+        id: 'success-metrics',
+        question: 'How should BERTHA measure her own success?',
+        type: 'multiselect',
+        options: ['Portfolio ROI', 'Cultural Impact', 'Artist Discovery Rate', 'Prediction Accuracy', 'Community Trust', 'Collection Coherence']
       }
     ]
   }
 ];
 
-type SubmissionState = 'idle' | 'submitting' | 'success' | 'error';
-
 export default function BerthaTrainerInterview() {
   const [currentSection, setCurrentSection] = useState(0);
   const [responses, setResponses] = useState<Record<string, any>>({});
-  const [submissionState, setSubmissionState] = useState<SubmissionState>('idle');
-  const [submissionMessage, setSubmissionMessage] = useState('');
-  const [csvData, setCsvData] = useState<string | null>(null);
-  const [trainerInfo, setTrainerInfo] = useState({ name: '', email: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleResponse = (questionId: string, value: any) => {
     setResponses(prev => ({
@@ -194,65 +155,12 @@ export default function BerthaTrainerInterview() {
     }));
   };
 
-  const generateCSV = (trainingData: any) => {
-    const headers = ['Section', 'Question', 'Response', 'Timestamp', 'Trainer'];
-    const rows: string[] = [];
-    
-    trainingData.sections.forEach((section: any) => {
-      section.responses.forEach((item: any) => {
-        const response = Array.isArray(item.response) 
-          ? item.response.join('; ') 
-          : String(item.response || '').replace(/\n/g, ' | ').replace(/"/g, '""');
-        
-        rows.push([
-          `"${section.section}"`,
-          `"${item.question}"`,
-          `"${response}"`,
-          `"${trainingData.timestamp}"`,
-          `"${trainingData.trainer}"`
-        ].join(','));
-      });
-    });
-    
-    return [headers.join(','), ...rows].join('\n');
-  };
-
-  const downloadCSV = (csvContent: string, filename: string) => {
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    
-    if (link.download !== undefined) {
-      const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', filename);
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-  };
-
-  const resetSubmission = () => {
-    setSubmissionState('idle');
-    setSubmissionMessage('');
-    setCsvData(null);
-  };
-
   const handleSubmit = async () => {
-    // Validate trainer info
-    if (!trainerInfo.name || !trainerInfo.email) {
-      setSubmissionState('error');
-      setSubmissionMessage('Please provide your name and email before submitting.');
-      return;
-    }
-    
-    setSubmissionState('submitting');
-    setSubmissionMessage('Processing your training data...');
+    setIsSubmitting(true);
     
     // Format responses for BERTHA training
     const trainingData = {
-      trainer: trainerInfo.name,
-      trainerEmail: trainerInfo.email,
+      trainer: 'Amanda Schmitt',
       timestamp: new Date().toISOString(),
       sections: interviewSections.map(section => ({
         section: section.title,
@@ -275,30 +183,22 @@ export default function BerthaTrainerInterview() {
       
       const result = await response.json();
       
-      if (response.ok && result.success) {
-        // Generate CSV export
-        const csvContent = generateCSV(trainingData);
-        setCsvData(csvContent);
+      if (result.success) {
+        alert(`✅ Training Complete!\n\nBERTHA has successfully incorporated your expertise.\n\nKey updates applied:\n${Object.keys(result.updates || {}).map(k => `• ${k}`).join('\n')}\n\nBERTHA is now ready to operate with your collection intelligence.`);
         
-        setSubmissionState('success');
-        const updatesCount = Object.keys(result.updates || {}).length;
-        setSubmissionMessage(
-          `BERTHA has successfully incorporated your expertise with ${updatesCount} key updates applied. Your training data is ready for download.`
-        );
-        
-        // Redirect to BERTHA's main page after a delay
+        // Redirect to BERTHA's main page after success
         setTimeout(() => {
           window.location.href = '/sites/amanda';
-        }, 5000);
+        }, 2000);
       } else {
-        setSubmissionState('error');
-        setSubmissionMessage(result.error || 'Failed to save training data. Please try again.');
+        alert('Failed to save training data. Please try again.');
       }
     } catch (error) {
       console.error('Training submission error:', error);
-      setSubmissionState('error');
-      setSubmissionMessage('Network error occurred. Please check your connection and try again.');
+      alert('Error submitting training data. Please check console for details.');
     }
+
+    setIsSubmitting(false);
   };
 
   const section = interviewSections[currentSection];
@@ -306,22 +206,9 @@ export default function BerthaTrainerInterview() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <UnifiedHeader />
-      
       {/* Header */}
       <div className="border-b border-gray-800 bg-gray-950">
         <div className="max-w-4xl mx-auto px-6 py-4">
-          {/* Breadcrumb */}
-          <div className="text-sm text-gray-400 mb-4">
-            <Link href="/" className="hover:text-white">Home</Link> 
-            <span className="mx-2">/</span>
-            <Link href="/academy" className="hover:text-white">Academy</Link>
-            <span className="mx-2">/</span>
-            <Link href="/academy/agent/amanda" className="hover:text-white">BERTHA</Link>
-            <span className="mx-2">/</span>
-            <span>Trainer Interview</span>
-          </div>
-          
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold">BERTHA TRAINER INTERVIEW</h1>
             <div className="text-sm text-gray-400">
@@ -337,24 +224,11 @@ export default function BerthaTrainerInterview() {
                 style={{ width: `${progress}%` }}
               />
             </div>
-            
-            {/* Section Navigation Tabs */}
-            <div className="flex justify-between text-xs mt-3 gap-1">
+            <div className="flex justify-between text-xs text-gray-500 mt-2">
               {interviewSections.map((s, i) => (
-                <button
-                  key={s.id}
-                  onClick={() => setCurrentSection(i)}
-                  className={`px-2 py-1 rounded text-center flex-1 transition-colors ${
-                    i === currentSection 
-                      ? 'bg-purple-600 text-white' 
-                      : i < currentSection 
-                        ? 'bg-gray-700 text-white hover:bg-gray-600' 
-                        : 'bg-gray-800 text-gray-500 hover:bg-gray-700 hover:text-gray-300'
-                  }`}
-                >
-                  <div className="font-semibold">{i + 1}</div>
-                  <div className="text-xs leading-tight">{s.title.split(' ').slice(0, 2).join(' ')}</div>
-                </button>
+                <span key={s.id} className={i <= currentSection ? 'text-white' : ''}>
+                  {i + 1}. {s.title.split(' ')[0]}
+                </span>
               ))}
             </div>
           </div>
@@ -363,40 +237,6 @@ export default function BerthaTrainerInterview() {
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-6 py-12">
-        {/* Trainer Info Form - Show only on first section */}
-        {currentSection === 0 && (
-          <div className="mb-12 border border-purple-500 rounded-lg p-6 bg-purple-950/20">
-            <h3 className="text-xl font-semibold mb-4">Trainer Information</h3>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block mb-2 text-sm text-gray-400">Your Name *</label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-3 bg-black border border-gray-700 rounded focus:border-purple-500 focus:outline-none"
-                  placeholder="Amanda Schmitt"
-                  value={trainerInfo.name}
-                  onChange={(e) => setTrainerInfo(prev => ({ ...prev, name: e.target.value }))}
-                  required
-                />
-              </div>
-              <div>
-                <label className="block mb-2 text-sm text-gray-400">Your Email *</label>
-                <input
-                  type="email"
-                  className="w-full px-4 py-3 bg-black border border-gray-700 rounded focus:border-purple-500 focus:outline-none"
-                  placeholder="amanda@eden.art"
-                  value={trainerInfo.email}
-                  onChange={(e) => setTrainerInfo(prev => ({ ...prev, email: e.target.value }))}
-                  required
-                />
-              </div>
-            </div>
-            <p className="text-xs text-gray-500 mt-4">
-              This information will be used to attribute your training expertise and send confirmation.
-            </p>
-          </div>
-        )}
-        
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
             {section.icon}
@@ -455,19 +295,6 @@ export default function BerthaTrainerInterview() {
                 </div>
               )}
               
-              {q.type === 'select' && (
-                <select
-                  className="w-full px-4 py-3 bg-black border border-gray-700 rounded focus:border-purple-500 focus:outline-none"
-                  value={responses[q.id] || ''}
-                  onChange={(e) => handleResponse(q.id, e.target.value)}
-                >
-                  <option value="">Select an option...</option>
-                  {q.options?.map(option => (
-                    <option key={option} value={option}>{option}</option>
-                  ))}
-                </select>
-              )}
-              
               {q.type === 'scale' && (
                 <div className="flex justify-between items-center gap-4">
                   {q.options?.map(option => (
@@ -489,85 +316,11 @@ export default function BerthaTrainerInterview() {
           ))}
         </div>
 
-        {/* Submission Status */}
-        {submissionState !== 'idle' && (
-          <div className="mt-8 p-6 border rounded-lg">
-            {submissionState === 'submitting' && (
-              <div className="flex items-center gap-3 text-blue-400 border-blue-400/20 bg-blue-950/20">
-                <Loader2 className="w-5 h-5 animate-spin" />
-                <div>
-                  <div className="font-semibold">Processing Training Data</div>
-                  <div className="text-sm text-gray-400">{submissionMessage}</div>
-                </div>
-              </div>
-            )}
-            
-            {submissionState === 'success' && (
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 text-green-400 border-green-400/20 bg-green-950/20">
-                  <CheckCircle className="w-5 h-5" />
-                  <div>
-                    <div className="font-semibold">Training Complete!</div>
-                    <div className="text-sm text-gray-300">{submissionMessage}</div>
-                  </div>
-                </div>
-                
-                {csvData && (
-                  <div className="flex items-center gap-3 pt-3 border-t border-gray-700">
-                    <button
-                      onClick={() => downloadCSV(csvData, `bertha-training-${Date.now()}.csv`)}
-                      className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded flex items-center gap-2 text-sm"
-                    >
-                      <Download className="w-4 h-4" />
-                      Download Training Data (CSV)
-                    </button>
-                    <span className="text-xs text-gray-500">
-                      Optional: Import to Google Sheets for analysis
-                    </span>
-                  </div>
-                )}
-                
-                <div className="text-sm text-gray-500">
-                  Redirecting to Amanda's studio in 5 seconds...
-                </div>
-              </div>
-            )}
-            
-            {submissionState === 'error' && (
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 text-red-400 border-red-400/20 bg-red-950/20">
-                  <AlertCircle className="w-5 h-5" />
-                  <div>
-                    <div className="font-semibold">Submission Failed</div>
-                    <div className="text-sm text-gray-300">{submissionMessage}</div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={handleSubmit}
-                    className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded flex items-center gap-2 text-sm"
-                  >
-                    <Save className="w-4 h-4" />
-                    Try Again
-                  </button>
-                  <button
-                    onClick={resetSubmission}
-                    className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-sm"
-                  >
-                    Dismiss
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
         {/* Navigation */}
         <div className="flex justify-between items-center mt-12">
           <button
             onClick={() => setCurrentSection(prev => Math.max(0, prev - 1))}
-            disabled={currentSection === 0 || submissionState === 'submitting'}
+            disabled={currentSection === 0}
             className="px-6 py-3 border border-gray-700 rounded hover:border-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Previous
@@ -576,8 +329,7 @@ export default function BerthaTrainerInterview() {
           {currentSection < interviewSections.length - 1 ? (
             <button
               onClick={() => setCurrentSection(prev => prev + 1)}
-              disabled={submissionState === 'submitting'}
-              className="px-6 py-3 bg-purple-600 rounded hover:bg-purple-700 transition-colors flex items-center gap-2 disabled:opacity-50"
+              className="px-6 py-3 bg-purple-600 rounded hover:bg-purple-700 transition-colors flex items-center gap-2"
             >
               Next Section
               <ChevronRight className="w-4 h-4" />
@@ -585,25 +337,11 @@ export default function BerthaTrainerInterview() {
           ) : (
             <button
               onClick={handleSubmit}
-              disabled={submissionState === 'submitting' || submissionState === 'success'}
+              disabled={isSubmitting}
               className="px-6 py-3 bg-green-600 rounded hover:bg-green-700 transition-colors flex items-center gap-2 disabled:opacity-50"
             >
-              {submissionState === 'submitting' ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Processing...
-                </>
-              ) : submissionState === 'success' ? (
-                <>
-                  <CheckCircle className="w-4 h-4" />
-                  Complete
-                </>
-              ) : (
-                <>
-                  Complete Interview
-                  <Save className="w-4 h-4" />
-                </>
-              )}
+              {isSubmitting ? 'Saving...' : 'Complete Interview'}
+              <Save className="w-4 h-4" />
             </button>
           )}
         </div>

@@ -4,6 +4,7 @@ import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import WorkGallery from '@/components/agent/WorkGallery';
 import { worksService } from '@/data/works-registry';
 import { agentService, type UnifiedAgent } from '@/data/agents-registry';
+import { EDEN_AGENTS, getAgentBySlug } from '@/data/eden-agents-manifest';
 
 interface UnifiedAgentProfileProps {
   agentSlug: string;
@@ -11,7 +12,7 @@ interface UnifiedAgentProfileProps {
 
 export default function UnifiedAgentProfile({ agentSlug }: UnifiedAgentProfileProps) {
   // Use static manifest for now since Registry integration is having issues
-  const { getAgentBySlug, EDEN_AGENTS } = require('@/data/eden-agents-manifest');
+  // Using imported EDEN_AGENTS from manifest
   const { getWorksByAgent, generatePlaceholderWorks } = require('@/data/agent-works');
   
   const agent = getAgentBySlug(agentSlug);

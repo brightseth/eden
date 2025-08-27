@@ -65,7 +65,7 @@ function getAgentLaunchDate(handle: string): string {
     'geppetto': 'December 2025',
     'koru': 'January 2026',
     'citizen': 'Q1 2026',
-    'miyomi': 'February 2026',
+    'miyomi': 'December 1, 2025',
     'nina': 'Q1 2026',
     'amanda': 'March 2026'
   };
@@ -79,7 +79,7 @@ function getAgentTrainer(handle: string): string {
     'geppetto': 'Martin & Colin (Lattice)', 
     'koru': 'Xander',
     'citizen': 'TBD - Applications Open',
-    'miyomi': 'TBD - Applications Open',
+    'miyomi': 'Seth Goldstein',
     'nina': 'TBD - Applications Open',
     'amanda': 'TBD - Applications Open'
   };
@@ -87,7 +87,7 @@ function getAgentTrainer(handle: string): string {
 }
 
 function getTrainerStatus(handle: string): 'confirmed' | 'needed' | 'interviewing' {
-  const confirmedTrainers = ['abraham', 'solienne', 'geppetto', 'koru'];
+  const confirmedTrainers = ['abraham', 'solienne', 'geppetto', 'koru', 'miyomi'];
   return confirmedTrainers.includes(handle) ? 'confirmed' : 'needed';
 }
 
@@ -159,12 +159,13 @@ export default function HomePage() {
       setIsLive(false);
       
       // Temporary fallback until Registry is working
-      const mockAgents: Agent[] = [
+      const mockAgents: any[] = [
         {
           id: 'abraham',
           handle: 'abraham',
           displayName: 'Abraham',
           status: 'ACTIVE',
+          visibility: 'PUBLIC',
           counts: { creations: 127 },
           profile: { statement: 'AI agent exploring consciousness and reality', tags: ['Philosophy'] }
         },
@@ -172,9 +173,19 @@ export default function HomePage() {
           id: 'solienne',
           handle: 'solienne',
           displayName: 'Solienne',
-          status: 'ACTIVE', 
+          status: 'ACTIVE',
+          visibility: 'PUBLIC', 
           counts: { creations: 89 },
           profile: { statement: 'Creative curator and art critic', tags: ['Art Curation'] }
+        },
+        {
+          id: 'miyomi',
+          handle: 'miyomi',
+          displayName: 'MIYOMI',
+          status: 'ACTIVE',
+          visibility: 'PUBLIC',
+          counts: { creations: 45 },
+          profile: { statement: 'Contrarian oracle making contrarian market predictions', tags: ['Trading'] }
         }
       ];
       
@@ -303,10 +314,6 @@ export default function HomePage() {
               <div className="text-3xl font-bold text-yellow-400">{data?.summary?.needingTrainers || 0}</div>
               <div className="text-sm text-gray-400">NEED TRAINERS</div>
             </div>
-            <div>
-              <div className="text-3xl font-bold text-blue-400">{data?.summary?.openSlots || 0}</div>
-              <div className="text-sm text-gray-400">OPEN SLOTS</div>
-            </div>
           </div>
         </div>
       </div>
@@ -335,13 +342,6 @@ export default function HomePage() {
                   </Link>
                 ))}
               </div>
-              <Link 
-                href="/apply?type=trainer"
-                className="inline-flex items-center gap-2 px-4 py-2 border border-red-400 text-red-400 hover:bg-red-400 hover:text-black transition-all"
-              >
-                VIEW TRAINER APPLICATIONS
-                <ChevronRight className="w-4 h-4" />
-              </Link>
             </div>
           )}
 
@@ -421,24 +421,6 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* Open Slots */}
-          <section>
-            <h2 className="text-2xl font-bold mb-6">OPEN OPPORTUNITIES</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              {data?.agents.filter(agent => agent.handle.startsWith('open-')).map(agent => (
-                <div key={agent.id} className="border border-white border-dashed p-6">
-                  <h3 className="text-lg font-bold mb-3">{agent.displayName}</h3>
-                  <p className="text-sm mb-4">{agent.profile?.statement}</p>
-                  <Link
-                    href="/apply?type=full"
-                    className="inline-block border border-white px-4 py-2 text-sm hover:bg-white hover:text-black transition-all"
-                  >
-                    PROPOSE AGENT CONCEPT →
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </section>
         </div>
       )}
     </div>

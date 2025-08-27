@@ -15,7 +15,12 @@
     "test:registry:e2e": "node scripts/test-registry.js e2e",
     "test:production-ready": "node scripts/validate-production-readiness.js",
     "migrate-to-registry": "npx tsx scripts/migrate-to-registry.ts",
-    "registry": "node scripts/registry-cli.mjs"
+    "registry": "node scripts/registry-cli.mjs",
+    "test:sdk-deployment": "tsx scripts/test-sdk-deployments.ts",
+    "test:registry-sync": "tsx scripts/test-registry-sync.ts", 
+    "test:claude-env": "tsx scripts/claude-environment-test.ts",
+    "test:production-sync": "tsx scripts/production-registry-sync.ts",
+    "test:deployment-full": "tsx scripts/run-deployment-tests.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.60.0",

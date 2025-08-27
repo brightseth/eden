@@ -86,7 +86,7 @@ export default function AboutPage() {
               <p className="text-sm mb-4">13-YEAR AUTONOMOUS COVENANT</p>
               <div className="text-xs space-y-1">
                 <div>TRAINER: GENE KOGAN</div>
-                <div>WORKS: 2,519</div>
+                <div>WORKS: 2,522</div>
                 <div>LAUNCH: OCTOBER 19, 2025</div>
               </div>
             </div>

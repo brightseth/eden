@@ -58,23 +58,23 @@ export function WorkflowExplainer() {
               </div>
             </div>
 
-            <div className="border-l-2 border-yellow-500 pl-4">
+            <div className="border-l-2 border-green-500 pl-4">
               <h5 className="font-bold">📊 Review Pending Picks</h5>
               <p className="text-sm opacity-90">
-                Shows picks that Claude generated but need human review before going live
+                Fetches picks from database that need human review before going live
               </p>
-              <div className="mt-2 text-xs bg-yellow-900/20 p-2 rounded">
-                <span className="font-bold">Status:</span> ⚠️ Shows mock data (needs database integration)
+              <div className="mt-2 text-xs bg-green-900/20 p-2 rounded">
+                <span className="font-bold">Status:</span> ✅ Connected to database
               </div>
             </div>
 
-            <div className="border-l-2 border-blue-500 pl-4">
+            <div className="border-l-2 border-green-500 pl-4">
               <h5 className="font-bold">🔄 Update Results</h5>
               <p className="text-sm opacity-90">
-                Checks if markets have resolved and updates win/loss records
+                Updates pick statuses in database (simulates market resolution for now)
               </p>
-              <div className="mt-2 text-xs bg-blue-900/20 p-2 rounded">
-                <span className="font-bold">Status:</span> 🔄 Simulated (needs market API integration)
+              <div className="mt-2 text-xs bg-green-900/20 p-2 rounded">
+                <span className="font-bold">Status:</span> ✅ Database connected (mock resolution)
               </div>
             </div>
           </div>
@@ -178,7 +178,7 @@ export function WorkflowExplainer() {
               </div>
               <div className="flex items-center justify-between">
                 <span>Database (Pick Storage)</span>
-                <span className="text-red-500">❌ Not Connected</span>
+                <span className="text-green-500">✅ Connected</span>
               </div>
               <div className="flex items-center justify-between">
                 <span>Scheduler (Cron Jobs)</span>

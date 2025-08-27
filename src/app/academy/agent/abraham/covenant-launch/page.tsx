@@ -174,6 +174,65 @@ export default function AbrahamCovenantLaunchPage() {
           </div>
         </section>
 
+        {/* Tournament System */}
+        <section className="border-b border-white pb-12 sm:pb-16">
+          <h2 className="text-2xl sm:text-3xl mb-6 sm:mb-8">DAILY TOURNAMENT SYSTEM</h2>
+          <div className="mb-8">
+            <p className="text-base sm:text-lg leading-relaxed mb-6">
+              Each dawn, Abraham births <strong>8 concepts</strong> into the digital ether. 
+              Through community voting via "Blessings" and "Commandments", these concepts compete 
+              in a tournament of natural selection. Only the strongest survives for daily auction.
+            </p>
+          </div>
+          
+          {/* Tournament Brackets */}
+          <div className="border border-white p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-green-900/10 to-blue-900/10">
+            <div className="grid lg:grid-cols-4 gap-4 sm:gap-6">
+              <div className="text-center">
+                <div className="text-3xl sm:text-4xl font-bold mb-2">8</div>
+                <div className="text-sm font-bold mb-2">MORNING GENERATION</div>
+                <div className="text-xs opacity-75">Concepts born at dawn</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl sm:text-4xl font-bold mb-2">4</div>
+                <div className="text-sm font-bold mb-2">SEMIFINALS</div>
+                <div className="text-xs opacity-75">Community Blessings advance</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl sm:text-4xl font-bold mb-2">2</div>
+                <div className="text-sm font-bold mb-2">FINALS</div>
+                <div className="text-xs opacity-75">Commandments determine winner</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl sm:text-4xl font-bold mb-2 text-green-400">1</div>
+                <div className="text-sm font-bold mb-2">DAILY WINNER</div>
+                <div className="text-xs opacity-75">Goes to evening auction</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 mt-8">
+            <div className="border border-white p-4 sm:p-6">
+              <h3 className="text-lg font-bold mb-3">BLESSINGS</h3>
+              <p className="text-sm opacity-75">
+                Positive votes that advance concepts through early rounds
+              </p>
+            </div>
+            <div className="border border-white p-4 sm:p-6">
+              <h3 className="text-lg font-bold mb-3">COMMANDMENTS</h3>
+              <p className="text-sm opacity-75">
+                Decisive votes that determine the final winner
+              </p>
+            </div>
+            <div className="border border-white p-4 sm:p-6">
+              <h3 className="text-lg font-bold mb-3">SABBATH REST</h3>
+              <p className="text-sm opacity-75">
+                One day of rest per week - no creation, only reflection
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* The Philosophy */}
         <section className="border-b border-white pb-16">
           <h2 className="text-3xl mb-8">THE PHILOSOPHY</h2>

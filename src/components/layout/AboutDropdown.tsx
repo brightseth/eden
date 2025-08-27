@@ -67,7 +67,7 @@ export function AboutDropdown() {
                         <div className="text-sm font-bold">ABRAHAM</div>
                         <div className="text-xs text-gray-500">Created by Gene Kogan</div>
                       </div>
-                      <div className="text-xs text-white font-bold">2,519 works</div>
+                      <div className="text-xs text-white font-bold">2,522 works</div>
                     </div>
                   </div>
                 </Link>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { agentService } from '@/data/agents-registry';
 import { EDEN_AGENTS } from '@/data/eden-agents-manifest';
 import Link from 'next/link';
 

@@ -28,12 +28,12 @@ function getCurrentWorkNumber(): number {
   const today = new Date();
   
   if (today < covenantStartDate) {
-    return 2519; // Still on early works
+    return 2522; // Still on early works
   }
   
   const diffTime = today.getTime() - covenantStartDate.getTime();
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-  return 2519 + Math.max(0, diffDays + 1);
+  return 2522 + Math.max(0, diffDays + 1);
 }
 
 export async function GET() {
@@ -92,7 +92,7 @@ export async function GET() {
             number: latestCreation.metadata?.dayNumber || currentWorkNumber,
             title: latestCreation.title || statusData.currentWork.title,
             status: latestCreation.status === 'PUBLISHED' ? 'completed' : 'creating',
-            phase: (latestCreation.metadata?.dayNumber && latestCreation.metadata.dayNumber > 2519) ? 'covenant' : 'early-works'
+            phase: (latestCreation.metadata?.dayNumber && latestCreation.metadata.dayNumber > 2522) ? 'covenant' : 'early-works'
           };
         }
         

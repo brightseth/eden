@@ -349,7 +349,7 @@ export class AgentReadinessFramework {
 
   private async assessPortfolioSize(agentId: string): Promise<ReadinessMetricResult> {
     const knownWorks: Record<string, number> = {
-      'abraham': 2519,
+      'abraham': 2522,
       'solienne': 1740,
       'geppetto': 0,
       'koru': 0,

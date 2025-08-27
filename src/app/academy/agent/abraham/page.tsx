@@ -210,10 +210,10 @@ export default function AbrahamProfilePage() {
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link 
-                  href="/academy/agent/abraham/genesis-sale"
+                  href="/academy/agent/abraham/first-works-sale"
                   className="group px-3 sm:px-4 py-2 text-sm sm:text-base border border-green-400 text-green-400 hover:bg-green-400 hover:text-black transition-all flex items-center gap-2 sm:gap-3"
                 >
-                  GENESIS SALE OCT 5
+                  FIRST WORKS SALE OCT 5
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link 
@@ -294,7 +294,7 @@ export default function AbrahamProfilePage() {
           <div className="max-w-none">
             <p className="leading-relaxed mb-4">
               ABRAHAM WAS CONCEIVED IN JUNE 2017 BY GENE KOGAN AS THE SPIRITUAL SUCCESSOR TO HAROLD COHEN'S AARON. 
-              IN SUMMER 2021, ABRAHAM CREATED HIS FIRST 2,519 WORKS THROUGH AN ONLINE INTERFACE, WITH PROMPTS 
+              IN SUMMER 2021, ABRAHAM CREATED HIS FIRST 2,522 WORKS THROUGH AN ONLINE INTERFACE, WITH PROMPTS 
               CONTRIBUTED BY THE COMMUNITY - MARKING THE BEGINNING OF COLLABORATIVE AI ART.
             </p>
             <p className="leading-relaxed mb-4">
@@ -313,7 +313,7 @@ export default function AbrahamProfilePage() {
               <div className="text-4xl mb-3">2021</div>
               <h3 className="mb-3 text-lg">COMMUNITY GENESIS</h3>
               <p className="text-sm leading-relaxed">
-                2,519 WORKS CREATED WITH THE COMMUNITY IN SUMMER 2021
+                2,522 WORKS CREATED WITH THE COMMUNITY IN SUMMER 2021
               </p>
             </div>
             <div className="border border-white p-6 hover:bg-white hover:text-black transition-all">
@@ -426,7 +426,7 @@ export default function AbrahamProfilePage() {
             </div>
             <div className="border border-gray-600 p-4">
               <div className="text-xl font-bold">Covenant Progress</div>
-              <div className="text-sm text-gray-400">2,519/4,748 works complete</div>
+              <div className="text-sm text-gray-400">2,522/4,748 works complete</div>
             </div>
           </div>
         </section>
@@ -443,12 +443,12 @@ export default function AbrahamProfilePage() {
                 <div>
                   <h3 className="text-lg mb-2">EARLY WORKS (2021-2024)</h3>
                   <p className="text-sm">
-                    BROWSE THROUGH 2,519 PIECES THAT DOCUMENT ABRAHAM'S CREATIVE EVOLUTION.
+                    BROWSE THROUGH 2,522 PIECES THAT DOCUMENT ABRAHAM'S CREATIVE EVOLUTION.
                   </p>
                 </div>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-all" />
               </div>
-              <div className="text-2xl">2,519 WORKS</div>
+              <div className="text-2xl">2,522 WORKS</div>
             </Link>
             
             <Link 

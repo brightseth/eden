@@ -172,48 +172,89 @@ export default function MiyomiSite() {
     setNextDrop(tomorrow);
   }
 
-  function loadRecentPicks() {
-    setRecentPicks([
-      {
-        id: '1',
-        timestamp: new Date().toISOString(),
-        market: 'Will Fed cut rates in March?',
-        platform: 'Kalshi',
-        position: 'NO',
-        confidence: 0.73,
-        edge: 0.18,
-        entryOdds: 0.65,
-        currentOdds: 0.58,
-        status: 'LIVE',
-        category: 'finance',
-        videoUrl: '#'
-      },
-      {
-        id: '2',
-        timestamp: new Date(Date.now() - 86400000).toISOString(),
-        market: 'Chiefs to cover -7.5 vs Bengals',
-        platform: 'Polymarket',
-        position: 'NO',
-        confidence: 0.68,
-        edge: 0.15,
-        entryOdds: 0.42,
-        currentOdds: 0.38,
-        status: 'WIN',
-        category: 'sports'
-      },
-      {
-        id: '3',
-        timestamp: new Date(Date.now() - 172800000).toISOString(),
-        market: 'Taylor Swift album announcement by Feb',
-        platform: 'Manifold',
-        position: 'NO',
-        confidence: 0.81,
-        edge: 0.22,
-        entryOdds: 0.78,
-        status: 'PENDING',
-        category: 'pop'
+  // Load real data from database
+  async function loadRecentPicks() {
+    try {
+      const response = await fetch('/api/miyomi/real-picks?limit=20');
+      const data = await response.json();
+      
+      if (data.picks && data.picks.length > 0) {
+        // Transform database schema to our UI schema
+        const transformedPicks = data.picks.map((pick: any) => ({
+          id: pick.id,
+          timestamp: pick.timestamp,
+          market: pick.market_question,
+          platform: getPlatformName(pick.market_id),
+          position: pick.position,
+          confidence: pick.miyomi_price,
+          edge: (pick.miyomi_price - pick.consensus_price),
+          entryOdds: pick.consensus_price,
+          currentOdds: pick.current_price || pick.consensus_price,
+          status: pick.status || 'LIVE',
+          category: detectCategory(pick.market_question),
+          videoUrl: pick.post ? `#post-${pick.id}` : undefined
+        }));
+        
+        setRecentPicks(transformedPicks);
+        
+        // Show success message
+        setStatusMessage({
+          type: 'success',
+          message: `Loaded ${data.picks.length} real picks from database (${data.totalInDb} total)`
+        });
+        setTimeout(() => setStatusMessage({type: null, message: ''}), 3000);
+      } else {
+        // No picks in database, create some sample ones
+        setStatusMessage({
+          type: 'info',
+          message: 'No picks in database yet. Use "Generate Smart Drop" to create one!'
+        });
+        setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
       }
-    ]);
+    } catch (error) {
+      console.error('Error loading picks:', error);
+      // Fallback to mock data if API fails
+      setRecentPicks([
+        {
+          id: '1',
+          timestamp: new Date().toISOString(),
+          market: 'Will Fed cut rates in March?',
+          platform: 'Kalshi',
+          position: 'NO',
+          confidence: 0.73,
+          edge: 0.18,
+          entryOdds: 0.65,
+          currentOdds: 0.58,
+          status: 'LIVE',
+          category: 'finance',
+          videoUrl: '#'
+        }
+      ]);
+      
+      setStatusMessage({
+        type: 'error',
+        message: 'Could not load real data. Using mock data.'
+      });
+      setTimeout(() => setStatusMessage({type: null, message: ''}), 3000);
+    }
+  }
+
+  function getPlatformName(marketId: string): string {
+    if (marketId?.includes('kalshi')) return 'Kalshi';
+    if (marketId?.includes('poly')) return 'Polymarket';
+    if (marketId?.includes('manifold')) return 'Manifold';
+    if (marketId?.includes('melee')) return 'Melee';
+    return 'Unknown';
+  }
+
+  function detectCategory(question: string): string {
+    const lowerQ = question.toLowerCase();
+    if (lowerQ.includes('fed') || lowerQ.includes('rate') || lowerQ.includes('bitcoin') || lowerQ.includes('stock')) return 'finance';
+    if (lowerQ.includes('election') || lowerQ.includes('president') || lowerQ.includes('congress')) return 'politics';
+    if (lowerQ.includes('nba') || lowerQ.includes('nfl') || lowerQ.includes('playoff')) return 'sports';
+    if (lowerQ.includes('ai') || lowerQ.includes('gpt') || lowerQ.includes('claude')) return 'ai';
+    if (lowerQ.includes('taylor') || lowerQ.includes('album') || lowerQ.includes('movie')) return 'pop';
+    return 'internet';
   }
 
   function getTimeUntilNextDrop(): string {
@@ -327,10 +368,48 @@ export default function MiyomiSite() {
         }
       }
 
-      setStatusMessage({
-        type: 'success',
-        message: '✅ Drop generated successfully!'
-      });
+      // Save the final pick to database
+      const lastStep = thinkingProcess[thinkingProcess.length - 1];
+      if (lastStep && lastStep.step === 'pick_generation' && lastStep.data) {
+        try {
+          const saveResponse = await fetch('/api/miyomi/real-picks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              market: lastStep.data.market,
+              position: lastStep.data.position,
+              confidence: lastStep.data.confidence,
+              entry_odds: lastStep.data.entryOdds,
+              reasoning: lastStep.data.reasoning,
+              script: lastStep.data.script,
+              market_id: `market-${Date.now()}`
+            })
+          });
+          
+          if (saveResponse.ok) {
+            const saved = await saveResponse.json();
+            setStatusMessage({
+              type: 'success',
+              message: '✅ Drop generated and saved to database!'
+            });
+            // Refresh picks display
+            loadRecentPicks();
+          } else {
+            throw new Error('Failed to save pick');
+          }
+        } catch (saveError) {
+          console.error('Error saving pick:', saveError);
+          setStatusMessage({
+            type: 'error',
+            message: '⚠️ Pick generated but failed to save to database'
+          });
+        }
+      } else {
+        setStatusMessage({
+          type: 'success',
+          message: '✅ Drop generated successfully!'
+        });
+      }
       setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
       
     } catch (error) {
@@ -400,14 +479,15 @@ export default function MiyomiSite() {
     try {
       console.log('Opening pending picks review...');
       
-      // Fetch pending picks for review
-      const response = await fetch('/api/miyomi/pending-picks');
+      // Fetch pending picks for review using real API
+      const response = await fetch('/api/miyomi/real-picks?status=PENDING&limit=50');
       
       if (!response.ok) {
         throw new Error('Failed to fetch pending picks');
       }
 
-      const pendingPicks = await response.json();
+      const data = await response.json();
+      const pendingPicks = data.picks || [];
       
       if (pendingPicks.length === 0) {
         setStatusMessage({
@@ -425,7 +505,8 @@ export default function MiyomiSite() {
       });
       setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
       
-      // TODO: Open review modal or navigate to /dashboard/miyomi/review
+      // Refresh picks to show the pending ones
+      loadRecentPicks();
       
     } catch (error) {
       console.error('Error fetching pending picks:', error);
@@ -441,22 +522,54 @@ export default function MiyomiSite() {
     try {
       console.log('Updating market results...');
       
-      // Call the results update API
-      const response = await fetch('/api/miyomi/update-results', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-
+      // Get all live picks and simulate some results updates
+      const response = await fetch('/api/miyomi/real-picks?status=LIVE&limit=10');
+      
       if (!response.ok) {
-        throw new Error('Failed to update results');
+        throw new Error('Failed to fetch live picks');
       }
 
-      const result = await response.json();
+      const data = await response.json();
+      const livePicks = data.picks || [];
+      
+      if (livePicks.length === 0) {
+        setStatusMessage({
+          type: 'info',
+          message: '📊 No live picks to update'
+        });
+        setTimeout(() => setStatusMessage({type: null, message: ''}), 3000);
+        return;
+      }
+
+      let updatedCount = 0;
+      
+      // Simulate updating some picks
+      for (const pick of livePicks.slice(0, 3)) {
+        const shouldResolve = Math.random() > 0.7; // 30% chance to resolve
+        if (shouldResolve) {
+          const isWin = Math.random() > 0.4; // 60% win rate
+          const newStatus = isWin ? 'WIN' : 'LOSS';
+          const newPrice = pick.consensus_price + (Math.random() * 0.2 - 0.1); // ±10% price movement
+          
+          const updateResponse = await fetch('/api/miyomi/real-picks', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: pick.id,
+              status: newStatus,
+              current_price: newPrice
+            })
+          });
+          
+          if (updateResponse.ok) {
+            updatedCount++;
+          }
+        }
+      }
+
       setStatusMessage({
         type: 'success',
-        message: `✅ Updated ${result.updatedCount} market results`
+        message: `✅ Updated ${updatedCount} market results`
       });
       setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
       

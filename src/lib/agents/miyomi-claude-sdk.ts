@@ -6,7 +6,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { marketAggregator, type MarketData } from './market-connectors';
 
-interface MarketPick {
+export interface MarketPick {
   market: string;
   platform: 'Kalshi' | 'Polymarket' | 'Manifold' | 'Melee' | 'Myriad';
   position: 'YES' | 'NO' | 'OVER' | 'UNDER';
@@ -20,7 +20,7 @@ interface MarketPick {
   sources: string[];
 }
 
-interface MiyomiConfig {
+export interface MiyomiConfig {
   riskTolerance: number;
   contrarianDial: number;
   sectorWeights: Record<string, number>;

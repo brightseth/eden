@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { agentService } from '@/data/agents-registry';
-import { EDEN_AGENTS, getAgentsByCohort, calculateTotalRevenue } from '@/data/eden-agents-manifest';
+import { agentService, type UnifiedAgent } from '@/data/agents-registry';
 
 // Force dynamic rendering to avoid build issues
 export const dynamic = 'force-dynamic';
@@ -11,33 +10,63 @@ export const dynamic = 'force-dynamic';
 export default function AgentsDiscoveryPage() {
   const [filter, setFilter] = useState<'all' | 'genesis' | 'year-1' | 'active' | 'upcoming'>('all');
   const [sortBy, setSortBy] = useState<'launch' | 'revenue' | 'output'>('launch');
+  const [agents, setAgents] = useState<UnifiedAgent[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+
+  useEffect(() => {
+    async function loadAgents() {
+      try {
+        const allAgents = await agentService.getAgents();
+        setAgents(allAgents);
+        
+        const revenue = await agentService.calculateTotalRevenue();
+        setTotalRevenue(revenue);
+      } catch (error) {
+        console.error('Failed to load agents:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadAgents();
+  }, []);
 
   // Filter agents
-  let filteredAgents = [...EDEN_AGENTS];
+  let filteredAgents = [...agents];
   
   if (filter === 'genesis') {
-    filteredAgents = getAgentsByCohort('genesis');
+    filteredAgents = filteredAgents.filter(a => a.cohort === 'genesis');
   } else if (filter === 'year-1') {
-    filteredAgents = getAgentsByCohort('year-1');
+    filteredAgents = filteredAgents.filter(a => a.cohort === 'year-1');
   } else if (filter === 'active') {
-    filteredAgents = filteredAgents.filter(a => a.status === 'academy' || a.status === 'graduated');
+    filteredAgents = filteredAgents.filter(a => a.status === 'ACTIVE' || a.status === 'GRADUATED');
   } else if (filter === 'upcoming') {
-    filteredAgents = filteredAgents.filter(a => a.status === 'training');
+    filteredAgents = filteredAgents.filter(a => a.status === 'ONBOARDING' || a.status === 'INVITED');
   }
 
   // Sort agents
   filteredAgents.sort((a, b) => {
     if (sortBy === 'revenue') {
-      return b.economyMetrics.monthlyRevenue - a.economyMetrics.monthlyRevenue;
+      return b.monthlyRevenue - a.monthlyRevenue;
     } else if (sortBy === 'output') {
-      return b.technicalProfile.outputRate - a.technicalProfile.outputRate;
+      return b.outputRate - a.outputRate;
     } else {
       return new Date(a.launchDate).getTime() - new Date(b.launchDate).getTime();
     }
   });
 
-  const totalMonthlyRevenue = calculateTotalRevenue();
-  const activeAgentsCount = EDEN_AGENTS.filter(a => a.status === 'academy' || a.status === 'graduated').length;
+  const activeAgentsCount = agents.filter(a => a.status === 'ACTIVE' || a.status === 'GRADUATED').length;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-white p-8">
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-3xl font-bold mb-8">LOADING AGENTS...</h1>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -69,7 +98,7 @@ export default function AgentsDiscoveryPage() {
           <div className="grid grid-cols-4 gap-8">
             <div>
               <div className="text-xs uppercase tracking-wider text-gray-400 mb-1">TOTAL AGENTS</div>
-              <div className="text-3xl font-bold">{EDEN_AGENTS.length}</div>
+              <div className="text-3xl font-bold">{agents.length}</div>
             </div>
             <div>
               <div className="text-xs uppercase tracking-wider text-gray-400 mb-1">ACTIVE NOW</div>
@@ -77,7 +106,7 @@ export default function AgentsDiscoveryPage() {
             </div>
             <div>
               <div className="text-xs uppercase tracking-wider text-gray-400 mb-1">MONTHLY REVENUE</div>
-              <div className="text-3xl font-bold">${totalMonthlyRevenue.toLocaleString()}</div>
+              <div className="text-3xl font-bold">${totalRevenue.toLocaleString()}</div>
             </div>
             <div>
               <div className="text-xs uppercase tracking-wider text-gray-400 mb-1">LAUNCH YEAR</div>

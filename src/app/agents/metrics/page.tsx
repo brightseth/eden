@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { EDEN_AGENTS, calculateTotalRevenue, calculateAverageOutputRate } from '@/data/eden-agents-manifest';
+import { agentService, calculateTotalRevenue, calculateAverageOutputRate } from '@/data/agents-registry';
+import { EDEN_AGENTS } from '@/data/eden-agents-manifest';
 
 // Force dynamic rendering to avoid build issues
 export const dynamic = 'force-dynamic';
@@ -10,25 +11,45 @@ export const dynamic = 'force-dynamic';
 export default function AgentMetricsDashboard() {
   const [timeframe, setTimeframe] = useState<'24h' | '7d' | '30d' | '90d'>('30d');
   const [metric, setMetric] = useState<'revenue' | 'output' | 'holders' | 'engagement'>('revenue');
+  const [totalRevenue, setTotalRevenue] = useState<number>(0);
+  const [avgOutput, setAvgOutput] = useState<number>(0);
 
-  // Calculate aggregate metrics
-  const totalRevenue = calculateTotalRevenue();
-  const avgOutput = calculateAverageOutputRate();
+  useEffect(() => {
+    const loadMetrics = async () => {
+      try {
+        const revenue = await calculateTotalRevenue();
+        const output = await calculateAverageOutputRate();
+        setTotalRevenue(revenue);
+        setAvgOutput(output);
+      } catch (error) {
+        console.error('Failed to load metrics:', error);
+        // Use fallback values from static data
+        const fallbackRevenue = EDEN_AGENTS.reduce((sum, agent) => 
+          sum + (agent.economyMetrics?.monthlyRevenue || 0), 0);
+        const fallbackOutput = EDEN_AGENTS.reduce((sum, agent) => 
+          sum + (agent.technicalProfile?.outputRate || 0), 0) / EDEN_AGENTS.length;
+        setTotalRevenue(fallbackRevenue);
+        setAvgOutput(Math.round(fallbackOutput));
+      }
+    };
+    loadMetrics();
+  }, []);
+
   const activeAgents = EDEN_AGENTS.filter(a => a.status === 'academy' || a.status === 'graduated').length;
-  const totalOutputCapacity = EDEN_AGENTS.reduce((sum, agent) => sum + agent.technicalProfile.outputRate, 0);
+  const totalOutputCapacity = EDEN_AGENTS.reduce((sum, agent) => sum + (agent.technicalProfile?.outputRate || 0), 0);
 
   // Sort agents by selected metric
   const sortedAgents = [...EDEN_AGENTS].sort((a, b) => {
-    if (metric === 'revenue') return b.economyMetrics.monthlyRevenue - a.economyMetrics.monthlyRevenue;
-    if (metric === 'output') return b.technicalProfile.outputRate - a.technicalProfile.outputRate;
-    if (metric === 'holders') return b.economyMetrics.holders - a.economyMetrics.holders;
+    if (metric === 'revenue') return (b.economyMetrics?.monthlyRevenue || 0) - (a.economyMetrics?.monthlyRevenue || 0);
+    if (metric === 'output') return (b.technicalProfile?.outputRate || 0) - (a.technicalProfile?.outputRate || 0);
+    if (metric === 'holders') return (b.economyMetrics?.holders || 0) - (a.economyMetrics?.holders || 0);
     return 0;
   });
 
   // Calculate performance scores
   const calculatePerformanceScore = (agent: typeof EDEN_AGENTS[0]) => {
-    const revenueScore = (agent.economyMetrics.monthlyRevenue / 20000) * 100;
-    const outputScore = (agent.technicalProfile.outputRate / 100) * 100;
+    const revenueScore = ((agent.economyMetrics?.monthlyRevenue || 0) / 20000) * 100;
+    const outputScore = ((agent.technicalProfile?.outputRate || 0) / 100) * 100;
     return Math.min(100, Math.round((revenueScore + outputScore) / 2));
   };
 

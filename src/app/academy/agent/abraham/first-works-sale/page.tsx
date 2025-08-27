@@ -2,9 +2,10 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Calendar, Clock, Coins, Users, Hash, ExternalLink, Award } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { CountdownTimer } from '@/components/CountdownTimer';
+import { SaleCountdown } from '@/components/SaleCountdown';
 import { ABRAHAM_BRAND } from '@/data/abrahamBrand';
 
-export default function AbrahamGenesisSalePage() {
+export default function AbrahamFirstWorksSalePage() {
   const saleStats = {
     totalSupply: 2522,
     price: '0.025 ETH',
@@ -45,11 +46,11 @@ export default function AbrahamGenesisSalePage() {
               <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
                 <span className="text-xs tracking-wider">{ABRAHAM_BRAND.identity.agent}</span>
                 <span className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs border border-green-400 text-green-400">
-                  GENESIS SALE
+                  FIRST WORKS SALE
                 </span>
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl mb-4">
-                2,522 PIECES OF<br/>DIGITAL GENESIS
+                2,522 ABRAHAM'S<br/>FIRST WORKS
               </h1>
               <p className="text-lg sm:text-xl lg:text-2xl mb-6 sm:mb-8">
                 {saleStats.launchDate.toUpperCase()} • {saleStats.price} PER PIECE
@@ -109,13 +110,19 @@ export default function AbrahamGenesisSalePage() {
         </div>
       </div>
 
-      {/* Countdown Timer */}
+      {/* Sale Countdown */}
       <div className="border-b border-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-          <CountdownTimer 
-            targetDate={ABRAHAM_BRAND.timeline.genesisSale}
-            label="GENESIS SALE BEGINS IN"
-          />
+          <div className="max-w-2xl mx-auto">
+            <SaleCountdown
+              targetDate={ABRAHAM_BRAND.timeline.firstWorksSale}
+              title="FIRST WORKS SALE"
+              price={saleStats.price}
+              totalSupply={saleStats.totalSupply}
+              saleUrl={ABRAHAM_BRAND.external.abrahamAI}
+              description="2,522 works from Summer 2021 • Pre-AI art boom authenticity"
+            />
+          </div>
         </div>
       </div>
 
@@ -240,7 +247,7 @@ export default function AbrahamGenesisSalePage() {
                 <div className="text-3xl sm:text-4xl font-bold mb-3">2021</div>
                 <h3 className="text-lg mb-2">GENESIS CREATION</h3>
                 <p className="text-sm opacity-75">
-                  2,522 works created with community, marking Abraham's first 
+                  2,522 First Works created with community, marking Abraham's first 
                   autonomous expressions
                 </p>
               </div>
@@ -272,14 +279,14 @@ export default function AbrahamGenesisSalePage() {
 
         {/* Call to Action */}
         <section className="text-center">
-          <h2 className="text-2xl sm:text-3xl mb-6">COLLECT DIGITAL GENESIS</h2>
+          <h2 className="text-2xl sm:text-3xl mb-6">COLLECT THE FIRST WORKS</h2>
           <p className="text-base sm:text-lg mb-8 max-w-3xl mx-auto">
-            Own a piece of AI art history. These 2,522 Genesis works represent Abraham's first 
+            Own a piece of AI art history. These 2,522 First Works represent Abraham's first 
             autonomous expressions, created before the AI art explosion, preserved forever on the blockchain.
           </p>
           <div className="inline-block border border-white p-6 sm:p-8">
             <div className="text-4xl sm:text-5xl font-bold mb-2">{saleStats.totalSupply}</div>
-            <div className="text-lg mb-4">GENESIS WORKS</div>
+            <div className="text-lg mb-4">FIRST WORKS</div>
             <div className="text-2xl sm:text-3xl font-bold mb-2">{saleStats.price}</div>
             <div className="text-lg mb-6">PER PIECE</div>
             <Link 
@@ -288,7 +295,7 @@ export default function AbrahamGenesisSalePage() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-500 hover:to-blue-500 transition-all text-lg font-bold"
             >
-              PARTICIPATE IN GENESIS SALE
+              PARTICIPATE IN FIRST WORKS SALE
               <ExternalLink className="w-5 h-5" />
             </Link>
             <div className="text-xs opacity-75 mt-4">
@@ -302,6 +309,6 @@ export default function AbrahamGenesisSalePage() {
 }
 
 export const metadata = {
-  title: 'Abraham Genesis Sale - 2,522 Digital Genesis Works',
-  description: 'Own a piece of AI art history. Abraham\'s first 2,522 autonomous works from Summer 2021, available October 5, 2025.',
+  title: 'Abraham First Works Sale - 2,522 First Works',
+  description: 'Own a piece of AI art history. Abraham\'s First Works - 2,522 autonomous creations from Summer 2021, available October 5, 2025.',
 };

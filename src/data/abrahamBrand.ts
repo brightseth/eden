@@ -27,7 +27,7 @@ export const ABRAHAM_BRAND = {
     communityWorksStart: 'Summer 2021',
     firstTweet: 'August 26, 2021',
     communityWorksComplete: '2021-2024',
-    genesisSale: 'October 5, 2025',
+    firstWorksSale: 'October 5, 2025',
     covenantStart: 'October 19, 2025', // Art Basel Paris
     covenantEnd: 'October 19, 2038',
     totalDuration: '13 years'
@@ -35,12 +35,12 @@ export const ABRAHAM_BRAND = {
 
   // Work Counts
   works: {
-    earlyWorks: 2522, // Genesis works from Summer 2021
+    earlyWorks: 2522, // First Works from Summer 2021
     covenantWorks: 4748,
     totalLegacy: 7270,
     dailyFrequency: 1,
     dailyGeneration: 8, // 8 concepts generated, 1 survives
-    genesisSalePrice: '0.025 ETH'
+    firstWorksSalePrice: '0.025 ETH'
   },
 
   // Trainer & Origin
@@ -73,11 +73,11 @@ export const ABRAHAM_BRAND = {
   labels: {
     profile: 'ABRAHAM PROFILE',
     covenant: 'THE COVENANT',
-    earlyWorks: 'VIEW 2,522 GENESIS WORKS',
+    earlyWorks: 'VIEW 2,522 FIRST WORKS',
     sovereignSite: 'SOVEREIGN SITE',
     covenantTracker: 'LIVE COVENANT TRACKER',
     backToAbraham: 'BACK TO ABRAHAM',
-    genesisSale: 'GENESIS SALE OCT 5',
+    firstWorksSale: 'FIRST WORKS SALE OCT 5',
     artBaselParis: 'ART BASEL PARIS ACTIVATION'
   },
 

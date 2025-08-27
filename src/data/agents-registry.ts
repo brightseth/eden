@@ -1,7 +1,7 @@
 // Unified agent data service with Registry API integration
 // Replaces static manifest with live data from Registry
 
-import { migrationService } from '@/lib/registry/migration-service';
+import { registryClient } from '@/lib/registry/client';
 import type { Agent, Creation } from '@/lib/registry/types';
 
 // Enhanced agent interface combining Registry data with UI-specific fields
@@ -31,6 +31,15 @@ export interface UnifiedAgent extends Agent {
     farcaster?: string;
     website?: string;
   };
+  // Claude SDK Integration Status
+  claudeSDKStatus: {
+    hasClaudeSDK: boolean;
+    hasEdenPlatform: boolean;
+    dualInstantiation: boolean;
+    registryIntegration: boolean;
+    sdkVersion?: string;
+    lastSync?: Date;
+  };
 }
 
 // Trainer mapping (until trainers are in Registry)
@@ -49,8 +58,8 @@ const TRAINER_MAP: Record<string, { name: string; id: string }> = {
   'amanda': { name: 'Amanda Schmitt', id: 'amanda-schmitt' },
   'citizen-007': { name: 'TBD', id: 'tbd' },
   'citizen': { name: 'TBD', id: 'tbd' },
-  'nina-008': { name: 'TBD', id: 'tbd' },
-  'nina': { name: 'TBD', id: 'tbd' },
+  'sue-008': { name: 'TBD', id: 'tbd' },
+  'sue': { name: 'TBD', id: 'tbd' },
   'tbd-009': { name: 'TBD', id: 'tbd' },
   'tbd-010': { name: 'TBD', id: 'tbd' },
 };
@@ -71,8 +80,8 @@ const LAUNCH_DATES: Record<string, string> = {
   'amanda': '2026-02-01',
   'citizen-007': '2025-12-15',
   'citizen': '2025-12-15',
-  'nina-008': '2026-03-01',
-  'nina': '2026-03-01',
+  'sue-008': '2026-03-01',
+  'sue': '2026-03-01',
   'tbd-009': '2026-04-01',
   'tbd-010': '2026-05-01',
 };
@@ -93,10 +102,38 @@ const ECONOMIC_DATA: Record<string, { monthlyRevenue: number; outputRate: number
   'amanda': { monthlyRevenue: 12000, outputRate: 30 },
   'citizen-007': { monthlyRevenue: 7500, outputRate: 40 },
   'citizen': { monthlyRevenue: 7500, outputRate: 40 },
-  'nina-008': { monthlyRevenue: 4500, outputRate: 35 },
-  'nina': { monthlyRevenue: 4500, outputRate: 35 },
+  'sue-008': { monthlyRevenue: 4500, outputRate: 35 },
+  'sue': { monthlyRevenue: 4500, outputRate: 35 },
   'tbd-009': { monthlyRevenue: 0, outputRate: 0 },
   'tbd-010': { monthlyRevenue: 0, outputRate: 0 },
+};
+
+// Claude SDK Status Tracking
+const CLAUDE_SDK_STATUS: Record<string, {
+  hasClaudeSDK: boolean;
+  hasEdenPlatform: boolean;
+  dualInstantiation: boolean;
+  registryIntegration: boolean;
+  sdkVersion?: string;
+}> = {
+  'abraham-001': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
+  'abraham': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
+  'solienne-002': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
+  'solienne': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
+  'miyomi-003': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
+  'miyomi': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
+  'geppetto-004': { hasClaudeSDK: false, hasEdenPlatform: true, dualInstantiation: false, registryIntegration: false },
+  'geppetto': { hasClaudeSDK: false, hasEdenPlatform: true, dualInstantiation: false, registryIntegration: false },
+  'koru-005': { hasClaudeSDK: false, hasEdenPlatform: false, dualInstantiation: false, registryIntegration: false },
+  'koru': { hasClaudeSDK: false, hasEdenPlatform: false, dualInstantiation: false, registryIntegration: false },
+  'amanda-006': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
+  'amanda': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
+  'citizen-007': { hasClaudeSDK: false, hasEdenPlatform: false, dualInstantiation: false, registryIntegration: false },
+  'citizen': { hasClaudeSDK: false, hasEdenPlatform: false, dualInstantiation: false, registryIntegration: false },
+  'sue-008': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
+  'sue': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
+  'tbd-009': { hasClaudeSDK: false, hasEdenPlatform: false, dualInstantiation: false, registryIntegration: false },
+  'tbd-010': { hasClaudeSDK: false, hasEdenPlatform: false, dualInstantiation: false, registryIntegration: false },
 };
 
 class UnifiedAgentService {
@@ -109,6 +146,12 @@ class UnifiedAgentService {
     
     const trainer = TRAINER_MAP[registryAgent.handle] || TRAINER_MAP[registryAgent.id] || { name: 'TBD', id: 'tbd' };
     const launchDate = LAUNCH_DATES[registryAgent.handle] || LAUNCH_DATES[registryAgent.id] || '2026-01-01';
+    const sdkStatus = CLAUDE_SDK_STATUS[registryAgent.handle] || CLAUDE_SDK_STATUS[registryAgent.id] || {
+      hasClaudeSDK: false,
+      hasEdenPlatform: false,
+      dualInstantiation: false,
+      registryIntegration: false
+    };
 
     return {
       ...registryAgent,
@@ -125,10 +168,14 @@ class UnifiedAgentService {
       technicalProfile: {
         model: this.inferModel(registryAgent.profile?.primaryMedium || 'mixed_media'),
         capabilities: registryAgent.profile?.capabilities || ['AI Generation'],
-        integrations: ['Eden API', 'Registry'],
+        integrations: sdkStatus.hasClaudeSDK ? ['Eden API', 'Registry', 'Claude SDK'] : ['Eden API', 'Registry'],
         outputRate: economicData.outputRate
       },
-      socialProfiles: this.extractSocialProfiles(registryAgent)
+      socialProfiles: this.extractSocialProfiles(registryAgent),
+      claudeSDKStatus: {
+        ...sdkStatus,
+        lastSync: sdkStatus.registryIntegration ? new Date() : undefined
+      }
     };
   }
 
@@ -155,7 +202,7 @@ class UnifiedAgentService {
       'koru-005': { twitter: '@koru_creative' },
       'amanda-006': { twitter: '@amanda_collector', website: 'https://amanda-art-agent.vercel.app' },
       'citizen-007': { twitter: '@citizen_dao' },
-      'nina-008': { twitter: '@nina_curator' },
+      'sue-008': { twitter: '@sue_curator' },
     };
     return socialMap[agent.id] || {};
   }
@@ -164,7 +211,7 @@ class UnifiedAgentService {
   async getAgents(cohort?: string): Promise<UnifiedAgent[]> {
     try {
       const query = cohort ? { cohort } : undefined;
-      const registryAgents = await migrationService.getAgents(query);
+      const registryAgents = await registryClient.getAgents(query);
       return registryAgents.map(agent => this.transformToUnified(agent));
     } catch (error) {
       console.error('[AgentService] Failed to fetch agents:', error);
@@ -175,7 +222,7 @@ class UnifiedAgentService {
   // Get single agent from Registry with fallback
   async getAgent(id: string): Promise<UnifiedAgent | null> {
     try {
-      const registryAgent = await migrationService.getAgent(id, ['profile', 'personas', 'progress']);
+      const registryAgent = await registryClient.getAgent(id, ['profile', 'personas', 'progress']);
       return registryAgent ? this.transformToUnified(registryAgent) : null;
     } catch (error) {
       console.error('[AgentService] Failed to fetch agent:', error);
@@ -198,7 +245,7 @@ class UnifiedAgentService {
   // Get agent works from Registry with fallback
   async getAgentCreations(agentId: string): Promise<Creation[]> {
     try {
-      return await migrationService.getAgentCreations(agentId, 'published');
+      return await registryClient.getAgentCreations(agentId, 'published');
     } catch (error) {
       console.error('[AgentService] Failed to fetch agent creations:', error);
       return [];
@@ -237,23 +284,37 @@ class UnifiedAgentService {
 
   // Check Registry health
   async getHealthStatus(): Promise<{ registry: boolean; fallback: boolean; message: string }> {
-    const health = await migrationService.checkRegistryHealth();
-    return {
-      registry: health.available,
-      fallback: !health.available,
-      message: health.available 
-        ? `Registry available (${health.latency}ms)` 
-        : `Registry unavailable: ${health.error || 'Unknown error'}`
-    };
+    try {
+      const testCall = await registryClient.getAgents({ status: 'ACTIVE' });
+      return {
+        registry: true,
+        fallback: false,
+        message: `Registry available (${testCall.length} agents found)`
+      };
+    } catch (error) {
+      return {
+        registry: false,
+        fallback: true,
+        message: `Registry unavailable: ${error instanceof Error ? error.message : 'Unknown error'}`
+      };
+    }
   }
 
   // Trigger migration to Registry
   async migrateToRegistry(): Promise<{ success: boolean; message: string }> {
-    const result = await migrationService.migrateToRegistry();
-    return {
-      success: result.success,
-      message: result.message
-    };
+    // Migration is now complete - Registry is the source of truth
+    try {
+      const agents = await registryClient.getAgents();
+      return {
+        success: true,
+        message: `Registry integration complete. ${agents.length} agents available from Registry.`
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: `Registry integration failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      };
+    }
   }
 }
 

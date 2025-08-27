@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import UnifiedAgentProfile from '@/components/agent/UnifiedAgentProfile';
-import { getAgentBySlug, EDEN_AGENTS } from '@/data/eden-agents-manifest';
+import { agentService } from '@/data/agents-registry';
 
 // Force dynamic rendering to avoid build issues
 export const dynamic = 'force-dynamic';
@@ -12,14 +12,20 @@ interface AgentProfilePageProps {
 }
 
 export async function generateStaticParams() {
-  return EDEN_AGENTS.map((agent) => ({
-    slug: agent.slug,
-  }));
+  try {
+    const agents = await agentService.getAgents();
+    return agents.map((agent) => ({
+      slug: agent.handle,
+    }));
+  } catch (error) {
+    console.error('Failed to generate static params for agents:', error);
+    return [];
+  }
 }
 
 export default async function AgentProfilePage({ params }: AgentProfilePageProps) {
   const { slug } = await params;
-  const agent = getAgentBySlug(slug);
+  const agent = await agentService.getAgentBySlug(slug);
   
   if (!agent) {
     notFound();

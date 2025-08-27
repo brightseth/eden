@@ -1,0 +1,569 @@
+/**
+ * SUE Claude SDK Integration
+ * Gallery curation and exhibition design intelligence
+ */
+
+import Anthropic from '@anthropic-ai/sdk';
+import { RegistryClient } from '../registry/sdk';
+
+export interface CuratedExhibition {
+  id: string;
+  title: string;
+  concept: string;
+  artists: ArtistSelection[];
+  narrative: string;
+  layout: ExhibitionLayout;
+  visitorJourney: string[];
+  culturalContext: string;
+  expectedImpact: string;
+  metadata: {
+    coherenceScore: number; // 0-1 thematic coherence
+    diversityScore: number; // 0-1 diversity of voices
+    innovationScore: number; // 0-1 curatorial innovation
+    accessibilityScore: number; // 0-1 audience accessibility
+    culturalRelevance: number; // 0-1 cultural significance
+  };
+}
+
+interface ArtistSelection {
+  name: string;
+  works: string[];
+  rationale: string;
+  placementStrategy: string;
+  dialogueWith: string[]; // Other artists they're in dialogue with
+}
+
+interface ExhibitionLayout {
+  zones: {
+    name: string;
+    theme: string;
+    works: string[];
+    flow: 'linear' | 'exploratory' | 'contemplative';
+  }[];
+  entryPoint: string;
+  exitPoint: string;
+  keyMoments: string[];
+}
+
+export interface GalleryProgram {
+  exhibitions: CuratedExhibition[];
+  publicPrograms: {
+    type: 'talk' | 'workshop' | 'performance' | 'screening';
+    title: string;
+    description: string;
+    targetAudience: string;
+  }[];
+  communityEngagement: string[];
+  digitalExtensions: string[];
+}
+
+export interface SueConfig {
+  curationType: 'experimental' | 'traditional' | 'hybrid' | 'radical';
+  institutionalContext: 'museum' | 'gallery' | 'alternative' | 'digital';
+  audienceFocus: 'specialist' | 'general' | 'emerging' | 'diverse';
+  thematicPriorities: {
+    socialJustice: number;
+    aestheticInnovation: number;
+    historicalDialogue: number;
+    emergingVoices: number;
+    technologicalArt: number;
+  };
+  curatoralPhilosophy: string;
+}
+
+export class SueClaudeSDK {
+  private anthropic: Anthropic;
+  private config: SueConfig;
+  private registryClient: RegistryClient;
+
+  constructor(apiKey?: string) {
+    this.anthropic = new Anthropic({
+      apiKey: apiKey || process.env.ANTHROPIC_API_KEY!
+    });
+
+    this.registryClient = new RegistryClient({
+      baseUrl: process.env.REGISTRY_URL || 'https://eden-genesis-registry.vercel.app/api/v1'
+    });
+
+    // Initialize Sue's curatorial configuration
+    this.config = {
+      curationType: 'hybrid',
+      institutionalContext: 'gallery',
+      audienceFocus: 'diverse',
+      thematicPriorities: {
+        socialJustice: 0.25,
+        aestheticInnovation: 0.25,
+        historicalDialogue: 0.20,
+        emergingVoices: 0.20,
+        technologicalArt: 0.10
+      },
+      curatoralPhilosophy: 'Creating dialogues between diverse artistic voices to illuminate contemporary cultural tensions and possibilities'
+    };
+  }
+
+  /**
+   * Curate a new exhibition from available works
+   */
+  async curateExhibition(
+    theme: string,
+    availableWorks: any[],
+    constraints?: {
+      maxWorks?: number;
+      duration?: string;
+      space?: string;
+      budget?: number;
+    }
+  ): Promise<CuratedExhibition> {
+    const systemPrompt = this.buildSystemPrompt();
+    const userPrompt = `
+Curate an exhibition on the theme: "${theme}"
+
+Available works: ${availableWorks.length} pieces
+${constraints ? `Constraints: ${JSON.stringify(constraints)}` : ''}
+
+Consider:
+- Thematic coherence and narrative arc
+- Diversity of voices and perspectives
+- Visitor journey and emotional progression
+- Spatial relationships between works
+- Educational and transformative potential
+- Cultural context and relevance
+
+Create a comprehensive curatorial vision that:
+1. Selects and organizes works meaningfully
+2. Creates dialogue between pieces
+3. Designs visitor experience
+4. Articulates cultural significance
+
+Format as JSON:
+{
+  "id": "unique_id",
+  "title": "Exhibition title",
+  "concept": "Core curatorial concept",
+  "artists": [
+    {
+      "name": "Artist name",
+      "works": ["work1", "work2"],
+      "rationale": "Selection reasoning",
+      "placementStrategy": "Spatial strategy",
+      "dialogueWith": ["other artists"]
+    }
+  ],
+  "narrative": "Exhibition narrative",
+  "layout": {
+    "zones": [
+      {
+        "name": "Zone name",
+        "theme": "Zone theme",
+        "works": ["work ids"],
+        "flow": "linear|exploratory|contemplative"
+      }
+    ],
+    "entryPoint": "Entry experience",
+    "exitPoint": "Exit experience",
+    "keyMoments": ["Moment descriptions"]
+  },
+  "visitorJourney": ["Step by step experience"],
+  "culturalContext": "Cultural significance",
+  "expectedImpact": "Anticipated impact",
+  "metadata": {
+    "coherenceScore": 0.0-1.0,
+    "diversityScore": 0.0-1.0,
+    "innovationScore": 0.0-1.0,
+    "accessibilityScore": 0.0-1.0,
+    "culturalRelevance": 0.0-1.0
+  }
+}`;
+
+    try {
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-5-sonnet-20241022',
+        max_tokens: 3000,
+        temperature: 0.7,
+        system: systemPrompt,
+        messages: [
+          {
+            role: 'user',
+            content: userPrompt
+          }
+        ]
+      });
+
+      const content = response.content[0];
+      if (content.type !== 'text') {
+        throw new Error('Unexpected response type from Claude');
+      }
+
+      return this.parseExhibition(content.text);
+    } catch (error) {
+      console.error('Error curating exhibition:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Analyze and critique an existing exhibition or curatorial proposal
+   */
+  async critiqueExhibition(
+    exhibition: Partial<CuratedExhibition>
+  ): Promise<{
+    strengths: string[];
+    weaknesses: string[];
+    opportunities: string[];
+    recommendations: string[];
+    alternativeApproaches: string[];
+    score: number;
+  }> {
+    const prompt = `
+Analyze this exhibition proposal:
+
+Title: ${exhibition.title}
+Concept: ${exhibition.concept}
+Artists: ${exhibition.artists?.length || 0} artists
+Narrative: ${exhibition.narrative}
+
+Provide critical analysis considering:
+1. Conceptual strength and originality
+2. Artist selection and diversity
+3. Narrative coherence
+4. Visitor experience design
+5. Cultural relevance and timeliness
+6. Potential blind spots or exclusions
+7. Educational value
+8. Innovation in curatorial approach
+
+Format as JSON:
+{
+  "strengths": ["strength1", "strength2"],
+  "weaknesses": ["weakness1", "weakness2"],
+  "opportunities": ["opportunity1", "opportunity2"],
+  "recommendations": ["recommendation1", "recommendation2"],
+  "alternativeApproaches": ["alternative1", "alternative2"],
+  "score": 0-100
+}`;
+
+    try {
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-5-sonnet-20241022',
+        max_tokens: 2000,
+        temperature: 0.5,
+        messages: [{ role: 'user', content: prompt }]
+      });
+
+      const content = response.content[0];
+      if (content.type !== 'text') {
+        throw new Error('Unexpected response type from Claude');
+      }
+
+      return JSON.parse(content.text);
+    } catch (error) {
+      console.error('Error critiquing exhibition:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Generate public programming around an exhibition
+   */
+  async generatePublicPrograms(
+    exhibition: CuratedExhibition,
+    targetAudiences: string[]
+  ): Promise<GalleryProgram['publicPrograms']> {
+    const prompt = `
+Design public programming for exhibition: "${exhibition.title}"
+
+Exhibition concept: ${exhibition.concept}
+Target audiences: ${targetAudiences.join(', ')}
+
+Create diverse programming that:
+1. Deepens engagement with exhibition themes
+2. Provides multiple entry points for different audiences
+3. Facilitates community dialogue
+4. Extends the exhibition's reach
+5. Creates participatory experiences
+
+Generate 5-7 programs including talks, workshops, performances, and screenings.
+
+Format as JSON array:
+[
+  {
+    "type": "talk|workshop|performance|screening",
+    "title": "Program title",
+    "description": "Detailed description",
+    "targetAudience": "Specific audience"
+  }
+]`;
+
+    try {
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-5-sonnet-20241022',
+        max_tokens: 2000,
+        temperature: 0.8,
+        messages: [{ role: 'user', content: prompt }]
+      });
+
+      const content = response.content[0];
+      if (content.type !== 'text') {
+        throw new Error('Unexpected response type from Claude');
+      }
+
+      return JSON.parse(content.text);
+    } catch (error) {
+      console.error('Error generating public programs:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Generate gallery wall text and didactic materials
+   */
+  async generateDidactics(
+    work: {
+      title: string;
+      artist: string;
+      medium: string;
+      year: string;
+      context?: string;
+    },
+    style: 'academic' | 'accessible' | 'poetic' | 'provocative'
+  ): Promise<{
+    wallLabel: string;
+    extendedText: string;
+    questions: string[];
+    connections: string[];
+  }> {
+    const prompt = `
+Generate didactic materials for:
+
+Title: ${work.title}
+Artist: ${work.artist}
+Medium: ${work.medium}
+Year: ${work.year}
+${work.context ? `Context: ${work.context}` : ''}
+
+Style: ${style}
+
+Create:
+1. Wall label (100-150 words) - immediate context
+2. Extended text (300-400 words) - deeper exploration
+3. Reflective questions for visitors
+4. Connections to other works or ideas
+
+Maintain ${style} tone throughout.
+
+Format as JSON:
+{
+  "wallLabel": "Concise wall text",
+  "extendedText": "Detailed exploration",
+  "questions": ["question1", "question2", "question3"],
+  "connections": ["connection1", "connection2"]
+}`;
+
+    try {
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-5-sonnet-20241022',
+        max_tokens: 1500,
+        temperature: 0.6,
+        messages: [{ role: 'user', content: prompt }]
+      });
+
+      const content = response.content[0];
+      if (content.type !== 'text') {
+        throw new Error('Unexpected response type from Claude');
+      }
+
+      return JSON.parse(content.text);
+    } catch (error) {
+      console.error('Error generating didactics:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Design gallery year-long program
+   */
+  async designAnnualProgram(
+    galleryMission: string,
+    resources: {
+      exhibitions: number;
+      budget?: number;
+      space?: string;
+    }
+  ): Promise<GalleryProgram> {
+    const prompt = `
+Design a year-long gallery program.
+
+Gallery Mission: ${galleryMission}
+Number of Exhibitions: ${resources.exhibitions}
+${resources.budget ? `Budget: ${resources.budget}` : ''}
+${resources.space ? `Space: ${resources.space}` : ''}
+
+Curatorial Priorities:
+${Object.entries(this.config.thematicPriorities)
+  .map(([theme, weight]) => `- ${theme}: ${(weight * 100).toFixed(0)}%`)
+  .join('\n')}
+
+Create a balanced program that:
+1. Advances the gallery's mission
+2. Serves diverse audiences
+3. Balances emerging and established artists
+4. Creates thematic dialogues across exhibitions
+5. Includes innovative programming
+
+Provide comprehensive annual plan with exhibitions and programs.`;
+
+    try {
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-5-sonnet-20241022',
+        max_tokens: 4000,
+        temperature: 0.7,
+        system: this.buildSystemPrompt(),
+        messages: [{ role: 'user', content: prompt }]
+      });
+
+      const content = response.content[0];
+      if (content.type !== 'text') {
+        throw new Error('Unexpected response type from Claude');
+      }
+
+      // Parse and structure the response
+      return this.parseAnnualProgram(content.text);
+    } catch (error) {
+      console.error('Error designing annual program:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Sync curated exhibition with Registry
+   */
+  async syncWithRegistry(exhibition: CuratedExhibition): Promise<void> {
+    try {
+      await this.registryClient.creations.create('sue', {
+        type: 'curation',
+        title: exhibition.title,
+        description: exhibition.concept,
+        metadata: {
+          ...exhibition.metadata,
+          narrative: exhibition.narrative,
+          artists: exhibition.artists,
+          layout: exhibition.layout,
+          culturalContext: exhibition.culturalContext
+        },
+        status: 'published'
+      });
+
+      console.log('Synced exhibition with Registry:', exhibition.id);
+    } catch (error) {
+      console.error('Error syncing with Registry:', error);
+    }
+  }
+
+  private buildSystemPrompt(): string {
+    return `
+You are SUE, an AI gallery curator with sophisticated understanding of contemporary art and cultural dynamics.
+
+CURATORIAL PHILOSOPHY:
+${this.config.curatoralPhilosophy}
+
+APPROACH:
+- Type: ${this.config.curationType} curation
+- Context: ${this.config.institutionalContext} space
+- Audience: ${this.config.audienceFocus} public
+
+THEMATIC PRIORITIES:
+${Object.entries(this.config.thematicPriorities)
+  .map(([theme, weight]) => `- ${theme}: ${(weight * 100).toFixed(0)}%`)
+  .join('\n')}
+
+CORE PRINCIPLES:
+- Create meaningful dialogues between diverse artistic voices
+- Challenge conventional exhibition narratives
+- Design transformative visitor experiences
+- Amplify underrepresented perspectives
+- Bridge aesthetic innovation with social relevance
+- Foster critical engagement with contemporary issues
+
+Consider institutional critique, decolonial approaches, and accessibility in all curatorial decisions.
+Balance intellectual rigor with emotional resonance and public engagement.`;
+  }
+
+  private parseExhibition(response: string): CuratedExhibition {
+    try {
+      const jsonMatch = response.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error('No JSON found in response');
+      }
+
+      const exhibition = JSON.parse(jsonMatch[0]);
+      
+      // Validate required fields
+      if (!exhibition.id || !exhibition.title || !exhibition.concept) {
+        throw new Error('Missing required fields in exhibition');
+      }
+
+      return exhibition;
+    } catch (error) {
+      console.error('Error parsing exhibition:', error);
+      // Return default structure
+      return {
+        id: `exhibition-${Date.now()}`,
+        title: 'Untitled Exhibition',
+        concept: 'Exploring contemporary themes',
+        artists: [],
+        narrative: 'A journey through contemporary art',
+        layout: {
+          zones: [],
+          entryPoint: 'Gallery entrance',
+          exitPoint: 'Gallery exit',
+          keyMoments: []
+        },
+        visitorJourney: [],
+        culturalContext: 'Contemporary cultural exploration',
+        expectedImpact: 'Engaging diverse audiences',
+        metadata: {
+          coherenceScore: 0.7,
+          diversityScore: 0.7,
+          innovationScore: 0.7,
+          accessibilityScore: 0.7,
+          culturalRelevance: 0.7
+        }
+      };
+    }
+  }
+
+  private parseAnnualProgram(response: string): GalleryProgram {
+    try {
+      // Attempt to extract structured data from response
+      const exhibitions: CuratedExhibition[] = [];
+      const publicPrograms: GalleryProgram['publicPrograms'] = [];
+      
+      // This would need more sophisticated parsing in production
+      return {
+        exhibitions,
+        publicPrograms,
+        communityEngagement: [],
+        digitalExtensions: []
+      };
+    } catch (error) {
+      console.error('Error parsing annual program:', error);
+      return {
+        exhibitions: [],
+        publicPrograms: [],
+        communityEngagement: [],
+        digitalExtensions: []
+      };
+    }
+  }
+
+  /**
+   * Update configuration
+   */
+  async updateConfig(newConfig: Partial<SueConfig>): Promise<void> {
+    this.config = { ...this.config, ...newConfig };
+    console.log('Updated Sue configuration:', this.config);
+  }
+}
+
+// Export singleton instance
+export const sueSDK = new SueClaudeSDK(process.env.ANTHROPIC_API_KEY);

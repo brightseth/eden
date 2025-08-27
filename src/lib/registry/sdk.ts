@@ -20,9 +20,9 @@ export interface Agent {
   id: string;
   handle: string;
   displayName: string;
-  role: 'creator' | 'curator' | 'collector' | 'governance' | 'predictor';
+  role: 'CREATOR' | 'CURATOR' | 'COLLECTOR' | 'ADMIN' | 'INVESTOR' | 'GUEST';
   status: 'INVITED' | 'ONBOARDING' | 'ACTIVE' | 'GRADUATED';
-  visibility: 'PUBLIC' | 'PRIVATE';
+  visibility: 'PUBLIC' | 'PRIVATE' | 'INTERNAL';
   cohort: string;
   profile: AgentProfile;
   counts: AgentCounts;
@@ -263,10 +263,11 @@ export class RegistryClient {
     }
   };
 
-  // Health check
+  // Health check using agents endpoint since /health doesn't exist
   async health(): Promise<{ status: 'ok' | 'degraded' | 'down'; message: string; timestamp: string }> {
     try {
-      const response = await this.request<any>('/health');
+      // Test connectivity by fetching agents list with minimal data
+      await this.request<{ agents: Agent[] }>('/agents?limit=1');
       return {
         status: 'ok',
         message: 'Registry is operational',

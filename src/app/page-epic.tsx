@@ -149,7 +149,7 @@ export default function HomePage() {
                     </div>
                     <div className="flex items-center gap-3">
                       <Palette className="w-5 h-5 text-green-400" />
-                      <span className="text-gray-300">2,519 Early Works Complete</span>
+                      <span className="text-gray-300">2,522 Early Works Complete</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <Brain className="w-5 h-5 text-green-400" />

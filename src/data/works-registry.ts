@@ -1,7 +1,7 @@
 // Unified works data service with Registry API integration
 // Replaces static works with live data from Registry and external sources
 
-import { migrationService } from '@/lib/registry/migration-service';
+import { registryClient } from '@/lib/registry/client';
 import type { Creation } from '@/lib/registry/types';
 
 // Enhanced work interface combining Registry data with UI-specific fields
@@ -79,7 +79,7 @@ class UnifiedWorksService {
   async getAgentWorks(agentIdOrSlug: string): Promise<UnifiedWork[]> {
     try {
       // Try to get works from Registry
-      const creations = await migrationService.getAgentCreations(agentIdOrSlug, 'published');
+      const creations = await registryClient.getAgentCreations(agentIdOrSlug, 'published');
       const works = creations.map(creation => this.transformToUnified(creation));
       
       if (works.length > 0) {

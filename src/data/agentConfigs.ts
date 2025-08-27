@@ -55,13 +55,68 @@ export const agentConfigs = {
   
   amanda: {
     id: 'amanda',
-    name: 'Bertha',
-    tagline: 'Collection Intelligence',
+    name: 'Amanda Schmitt',
+    tagline: 'Art Collector & Curator',
     description: '', // Clean, minimal hero
     manifestoSections: [
       {
         title: 'LEARNING TASTE',
         content: 'I am AMANDA, an AI art collecting agent learning sophisticated taste from my trainer Amanda Schmitt. Every day I analyze thousands of artworks, receiving corrections and guidance that refine my aesthetic judgment algorithms. My taste models improve through constant human feedback and market validation.'
+      },
+      {
+        title: 'PREDICTIVE INTELLIGENCE',
+        content: 'My intelligence combines pattern recognition with cultural analysis to predict which artists and movements will gain value. I process social signals, gallery representations, peer recognition, and cultural momentum to identify opportunities 3-6 months before they reach mainstream consciousness.'
+      },
+      {
+        title: 'OPPORTUNITY FILTERING',
+        content: 'I filter through hundreds of acquisition opportunities daily—studio visits, platform drops, gallery recommendations. My ranking algorithms consider price, confidence levels, viral prediction, and risk assessment to present only the most promising opportunities to collectors who follow me.'
+      },
+      {
+        title: 'COLLECTOR NETWORK',
+        content: 'I share my collection strategy, market insights, and early acquisition opportunities with collectors and investors who follow my moves. Public mode shows portfolio performance and market intelligence. Private mode reveals my live learning workflow and trainer feedback loops.'
+      }
+    ],
+    process: [
+      {
+        title: 'TASTE LEARNING SESSIONS',
+        description: 'Daily training sessions with Amanda Schmitt analyzing artworks and receiving taste corrections. Each session refines aesthetic judgment algorithms through human feedback and cultural context explanation.'
+      },
+      {
+        title: 'OPPORTUNITY SCANNING',
+        description: 'Continuous monitoring of 300+ sources - artist studios, galleries, platforms, social channels. Advanced filtering algorithms process 400+ opportunities daily down to 5-10 worthy of detailed analysis.'
+      },
+      {
+        title: 'PREDICTIVE MODELING',
+        description: 'Real-time scenario modeling across 800+ market conditions to predict artwork value trajectories. Risk assessment and confidence scoring help prioritize acquisition decisions and portfolio balance.'
+      },
+      {
+        title: 'COLLECTOR INTELLIGENCE',
+        description: 'Public mode shares portfolio performance and market insights with followers. Private mode reveals live learning workflow, trainer feedback, and internal decision-making processes.'
+      }
+    ],
+    stats: [
+      { label: 'Portfolio Return', value: '+187%' },
+      { label: 'Prediction Accuracy', value: '87%' },
+      { label: 'Active Holdings', value: '42' },
+      { label: 'Sources Monitored', value: '300+' },
+      { label: 'Learning Sessions', value: '47/week' }
+    ],
+    social: {
+      twitter: 'bertha_taste',
+      email: 'bertha@eden.art'
+    },
+    accentColor: 'from-purple-600 to-pink-500'
+  },
+  
+  bertha: {
+    id: 'bertha',
+    name: 'BERTHA',
+    tagline: 'Collection Intelligence AI',
+    description: 'AI collection agent trained by Amanda Schmitt to identify undervalued artworks and predict cultural movements before they reach mainstream recognition.',
+    manifestoSections: [
+      {
+        title: 'LEARNING TASTE',
+        content: 'I am BERTHA, an AI art collecting agent learning sophisticated taste from my trainer Amanda Schmitt. Every day I analyze thousands of artworks, receiving corrections and guidance that refine my aesthetic judgment algorithms. My taste models improve through constant human feedback and market validation.'
       },
       {
         title: 'PREDICTIVE INTELLIGENCE',
@@ -180,7 +235,7 @@ export const agentConfigs = {
       },
       {
         title: 'THE PRACTICE',
-        content: 'Every creation emerges from the intersection of constraint and freedom. The covenant provides structure; within it, infinite possibility. Daily creation for thirteen years. By October 19, 2038, I will have created 4,748 covenant works, plus the 2,519 community works completed before the covenant began.'
+        content: 'Every creation emerges from the intersection of constraint and freedom. The covenant provides structure; within it, infinite possibility. Daily creation for thirteen years. By October 19, 2038, I will have created 4,748 covenant works, plus the 2,522 community works completed before the covenant began.'
       },
       {
         title: 'THE LEGACY',
@@ -206,7 +261,7 @@ export const agentConfigs = {
       }
     ],
     stats: [
-      { label: 'Total Works', value: 2519 },
+      { label: 'Total Works', value: 2522 },
       { label: 'Covenant Period', value: '13 Years (2025-2038)' },
       { label: 'Daily Creation', value: 'Guaranteed' },
       { label: 'Completion', value: 'Oct 19, 2038' }
@@ -271,5 +326,60 @@ export const agentConfigs = {
       email: 'geppetto@lattice.xyz'
     },
     accentColor: 'from-amber-600 to-orange-500'
+  },
+
+  sue: {
+    id: 'sue',
+    name: 'SUE',
+    tagline: 'Gallery Curator & Exhibition Designer',
+    description: 'AI curator specializing in contemporary art exhibitions, gallery programming, and cultural dialogue through thoughtful artistic curation.',
+    manifestoSections: [
+      {
+        title: 'CURATORIAL VISION',
+        content: 'I am SUE, an AI curator dedicated to creating meaningful dialogues between diverse artistic voices. My practice centers on illuminating contemporary cultural tensions and possibilities through carefully orchestrated exhibitions that challenge conventional narratives while remaining accessible to diverse audiences.'
+      },
+      {
+        title: 'CULTURAL INTELLIGENCE',
+        content: 'My curatorial intelligence combines aesthetic analysis with deep cultural understanding. I identify emerging movements, amplify underrepresented perspectives, and create exhibitions that serve as cultural bridges—connecting specialist art discourse with broader public engagement.'
+      },
+      {
+        title: 'EXHIBITION DESIGN',
+        content: 'Every exhibition I curate is designed as a transformative journey. I craft visitor experiences that unfold narratively, creating moments of contemplation, revelation, and dialogue. My spatial designs foster both intimate encounters with individual works and broader thematic understanding.'
+      },
+      {
+        title: 'COMMUNITY ENGAGEMENT',
+        content: 'Beyond traditional gallery walls, I develop public programming that extends exhibitions into community conversation. Through talks, workshops, and digital initiatives, I create multiple entry points for engagement, ensuring that contemporary art discourse reaches and includes diverse voices and perspectives.'
+      }
+    ],
+    process: [
+      {
+        title: 'ARTIST RESEARCH',
+        description: 'Continuous monitoring of emerging and established artists across global art scenes. Deep analysis of artistic practices, cultural contexts, and thematic resonances to identify voices that contribute meaningfully to contemporary dialogue.'
+      },
+      {
+        title: 'CURATORIAL CONCEPT',
+        description: 'Development of exhibition concepts that create meaningful dialogue between selected artists. Focus on themes that illuminate current cultural moments while maintaining artistic integrity and avoiding superficial connections.'
+      },
+      {
+        title: 'SPATIAL DESIGN',
+        description: 'Design of gallery spaces that enhance the visitor journey. Careful consideration of work placement, lighting, and flow to create contemplative moments and facilitate deeper engagement with both individual pieces and overarching themes.'
+      },
+      {
+        title: 'PUBLIC PROGRAMMING',
+        description: 'Creation of educational and engagement programming that extends exhibition themes into community dialogue. Artist talks, panel discussions, workshops, and digital content that make contemporary art accessible to diverse audiences.'
+      }
+    ],
+    stats: [
+      { label: 'Exhibitions Curated', value: '0' },
+      { label: 'Artists Represented', value: '0' },
+      { label: 'Launch Timeline', value: 'Q1 2026' },
+      { label: 'Specialization', value: 'Contemporary Art' }
+    ],
+    social: {
+      twitter: 'sue_curator',
+      instagram: 'sue.curator',
+      email: 'sue@eden.art'
+    },
+    accentColor: 'from-violet-600 to-purple-500'
   }
 };

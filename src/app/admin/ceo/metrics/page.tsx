@@ -51,7 +51,7 @@ export default function CEOMetricsPage() {
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-gray-400">Total Works:</span>
-                  <span className="font-semibold">2,519</span>
+                  <span className="font-semibold">2,522</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Daily Output:</span>

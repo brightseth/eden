@@ -43,7 +43,7 @@ export async function GET() {
   const secondsRemaining = Math.floor((msRemaining % (1000 * 60)) / 1000);
   
   let metrics = {
-    totalWorks: 2519, // Known early works count
+    totalWorks: 2522, // Known early works count
     covenantWorks: Math.max(0, currentDay),
     avgViews: 2500,
     collectors: 142,
@@ -59,7 +59,7 @@ export async function GET() {
       
       // Calculate metrics from actual Registry data
       const covenantWorks = creations.filter(creation => 
-        creation.metadata?.dayNumber && creation.metadata.dayNumber > 2519
+        creation.metadata?.dayNumber && creation.metadata.dayNumber > 2522
       );
       
       metrics = {

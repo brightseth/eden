@@ -53,8 +53,8 @@ export default function AbrahamSite() {
       collected: false
     },
     {
-      id: 'early-2519',
-      number: 2519,
+      id: 'early-2522',
+      number: 2522,
       date: 'TODAY',
       title: 'Final Community Work',
       status: 'creating',
@@ -108,9 +108,9 @@ export default function AbrahamSite() {
         if (data.works) {
           const transformedWorks = data.works.map((work: any, index: number) => ({
             id: work.id || `work-${index}`,
-            number: work.archive_number || (2519 - index),
+            number: work.archive_number || (2522 - index),
             date: formatWorkDate(work.created_date),
-            title: work.title || `Knowledge Synthesis #${work.archive_number || (2519 - index)}`,
+            title: work.title || `Knowledge Synthesis #${work.archive_number || (2522 - index)}`,
             status: index === 0 ? 'creating' : 'completed',
             views: Math.floor(Math.random() * 5000) + 1000,
             collected: Math.random() > 0.3,
