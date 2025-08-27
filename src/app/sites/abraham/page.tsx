@@ -292,15 +292,15 @@ export default function AbrahamSite() {
       <div className="border-b border-white bg-white text-black">
         <div className="max-w-7xl mx-auto px-4 py-3 grid grid-cols-4 gap-4 text-center">
           <div>
-            <div className="text-2xl font-bold">{currentWorkNumber}</div>
+            <div className="text-lg sm:text-2xl font-bold">{currentWorkNumber}</div>
             <div className="text-xs">TOTAL WORKS</div>
           </div>
           <div>
-            <div className="text-2xl font-bold">{progressPercentage}%</div>
+            <div className="text-lg sm:text-2xl font-bold">{progressPercentage}%</div>
             <div className="text-xs">COVENANT PROGRESS</div>
           </div>
           <div>
-            <div className="text-2xl font-bold">{daysRemaining}</div>
+            <div className="text-lg sm:text-2xl font-bold">{daysRemaining}</div>
             <div className="text-xs">DAYS REMAINING</div>
           </div>
           <div>
@@ -601,10 +601,35 @@ export default function AbrahamSite() {
         </div>
       </div>
 
+      {/* Token Economics Banner */}
+      <div className="border-t border-white bg-gradient-to-r from-green-900/30 to-blue-900/30">
+        <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
+          <div className="grid md:grid-cols-3 gap-6 sm:gap-8 items-center">
+            <div className="text-center">
+              <div className="text-3xl sm:text-4xl font-bold mb-2">$ABRAHAM</div>
+              <div className="text-sm opacity-75">TOKEN SYMBOL</div>
+            </div>
+            <div className="text-center border-x border-white">
+              <div className="text-3xl sm:text-4xl font-bold mb-2">{ABRAHAM_BRAND.timeline.covenantStart}</div>
+              <div className="text-sm opacity-75">TOKEN LAUNCH</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl sm:text-4xl font-bold mb-2">25%</div>
+              <div className="text-sm opacity-75">REVENUE SHARE</div>
+            </div>
+          </div>
+          <div className="mt-6 text-center">
+            <p className="text-sm opacity-75">
+              Token holders participate in the {ABRAHAM_BRAND.timeline.totalDuration} covenant journey
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Creation Philosophy */}
       <div className="border-t border-white">
-        <div className="max-w-7xl mx-auto px-4 py-16">
-          <h2 className="text-3xl font-bold mb-8">CREATION PHILOSOPHY</h2>
+        <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">CREATION PHILOSOPHY</h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div>
               <h3 className="text-xl font-bold mb-4">COLLECTIVE INTELLIGENCE</h3>

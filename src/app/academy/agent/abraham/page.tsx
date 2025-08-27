@@ -197,21 +197,21 @@ export default function AbrahamProfilePage() {
               <div className="flex flex-wrap gap-3">
                 <Link 
                   href="/academy/agent/abraham/early-works"
-                  className="group px-4 py-2 border border-white hover:bg-white hover:text-black transition-all flex items-center gap-3"
+                  className="group px-3 sm:px-4 py-2 text-sm sm:text-base border border-white hover:bg-white hover:text-black transition-all flex items-center gap-2 sm:gap-3"
                 >
                   {ABRAHAM_BRAND.labels.earlyWorks}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link 
                   href="/academy/agent/abraham/covenant"
-                  className="group px-4 py-2 border border-white hover:bg-white hover:text-black transition-all flex items-center gap-3"
+                  className="group px-3 sm:px-4 py-2 text-sm sm:text-base border border-white hover:bg-white hover:text-black transition-all flex items-center gap-2 sm:gap-3"
                 >
                   {ABRAHAM_BRAND.labels.covenant}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link 
                   href="/academy/agent/abraham/covenant-launch"
-                  className="group px-4 py-2 border border-green-400 text-green-400 hover:bg-green-400 hover:text-black transition-all flex items-center gap-3"
+                  className="group px-3 sm:px-4 py-2 text-sm sm:text-base border border-green-400 text-green-400 hover:bg-green-400 hover:text-black transition-all flex items-center gap-2 sm:gap-3"
                 >
                   COVENANT LAUNCH
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -221,7 +221,7 @@ export default function AbrahamProfilePage() {
                     href={ABRAHAM_BRAND.external.eden2038}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`group px-4 py-2 border ${ABRAHAM_BRAND.colors.accent} ${ABRAHAM_BRAND.colors.primary} ${ABRAHAM_BRAND.colors.hover} transition-all flex items-center gap-3`}
+                    className={`group px-3 sm:px-4 py-2 text-sm sm:text-base border ${ABRAHAM_BRAND.colors.accent} ${ABRAHAM_BRAND.colors.primary} ${ABRAHAM_BRAND.colors.hover} transition-all flex items-center gap-2 sm:gap-3`}
                   >
                     {ABRAHAM_BRAND.labels.covenantTracker}
                     <ExternalLink className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
@@ -326,10 +326,81 @@ export default function AbrahamProfilePage() {
           </div>
         </section>
 
+        {/* Token Economics */}
+        <section className="border-b border-white pb-8 sm:pb-12">
+          <h2 className="text-2xl sm:text-3xl mb-6 sm:mb-8">TOKEN ECONOMICS</h2>
+          <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
+            <div className="border border-white p-4 sm:p-6">
+              <h3 className="text-lg sm:text-xl font-bold mb-4">$ABRAHAM TOKEN</h3>
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between">
+                  <span>Symbol:</span>
+                  <span className="font-bold">$ABRAHAM</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Total Supply:</span>
+                  <span>1,000,000,000</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Launch Date:</span>
+                  <span>With Covenant (Oct 2025)</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Revenue Share:</span>
+                  <span>25% to holders</span>
+                </div>
+                <div className="border-t border-white pt-3 mt-3">
+                  <div className="text-xs opacity-75 mb-2">DISTRIBUTION</div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>ABRAHAM: 25%</div>
+                    <div>EDEN: 25%</div>
+                    <div>$SPIRIT: 25%</div>
+                    <div>TRAINER: 25%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="border border-white p-4 sm:p-6">
+              <h3 className="text-lg sm:text-xl font-bold mb-4">REVENUE MODEL</h3>
+              <div className="space-y-3 text-sm">
+                <div className="pb-3 border-b border-white">
+                  <div className="flex justify-between mb-1">
+                    <span>Covenant Works:</span>
+                    <span className="font-bold">{ABRAHAM_BRAND.works.covenantWorks.toLocaleString()}</span>
+                  </div>
+                  <div className="text-xs opacity-75">Daily creation value generation</div>
+                </div>
+                <div className="pb-3 border-b border-white">
+                  <div className="flex justify-between mb-1">
+                    <span>Collection Revenue:</span>
+                    <span className="font-bold">100% to ecosystem</span>
+                  </div>
+                  <div className="text-xs opacity-75">From primary sales & royalties</div>
+                </div>
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span>Token Utility:</span>
+                    <span className="font-bold">Governance + Revenue</span>
+                  </div>
+                  <div className="text-xs opacity-75">Vote on creation parameters</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mt-6 p-4 bg-green-900/20 border border-green-400/50">
+            <p className="text-sm text-center">
+              <strong>$ABRAHAM launches with The Covenant on {ABRAHAM_BRAND.timeline.covenantStart}</strong><br/>
+              <span className="text-xs opacity-75 mt-1 inline-block">
+                Token holders participate in the {ABRAHAM_BRAND.timeline.totalDuration} creation journey and share in the value generated
+              </span>
+            </p>
+          </div>
+        </section>
+
         {/* Management Dashboard */}
-        <section className="border-b border-white pb-12">
+        <section className="border-b border-white pb-8 sm:pb-12">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl">ABRAHAM.AI MANAGEMENT</h2>
+            <h2 className="text-xl sm:text-2xl">ABRAHAM.AI MANAGEMENT</h2>
             <Link 
               href="/dashboard/abraham"
               className="border border-white px-6 py-2 hover:bg-white hover:text-black transition-all"

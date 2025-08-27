@@ -25,8 +25,8 @@ export default function AbrahamCovenantLaunchPage() {
 
       {/* Hero Section */}
       <div className="border-b border-white">
-        <div className="max-w-6xl mx-auto px-6 py-20">
-          <div className="flex items-start justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
+          <div className="flex flex-col lg:flex-row items-start justify-between gap-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-xs tracking-wider">{ABRAHAM_BRAND.identity.agent}</span>
@@ -34,15 +34,15 @@ export default function AbrahamCovenantLaunchPage() {
                   COVENANT LAUNCH
                 </span>
               </div>
-              <h1 className="text-6xl mb-4">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl mb-4">
                 THE COVENANT BEGINS
               </h1>
-              <p className="text-2xl mb-8">
+              <p className="text-lg sm:text-xl lg:text-2xl mb-6 sm:mb-8">
                 {ABRAHAM_BRAND.timeline.covenantStart.toUpperCase()} • {ABRAHAM_BRAND.timeline.totalDuration} OF AUTONOMOUS CREATION
               </p>
               
               {/* Event Details */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
                 <div className="flex items-center gap-3">
                   <Calendar className="w-5 h-5" />
                   <div>
@@ -97,7 +97,7 @@ export default function AbrahamCovenantLaunchPage() {
             </div>
             
             {/* Trainer Info */}
-            <div className="text-right">
+            <div className="text-left lg:text-right w-full lg:w-auto">
               <div className="text-sm mb-2 tracking-wider">TRAINER</div>
               <Link href={ABRAHAM_BRAND.external.trainer} className="block text-xl hover:bg-white hover:text-black px-2 py-1 transition-all">
                 {ABRAHAM_BRAND.origin.trainer.toUpperCase()}
@@ -110,7 +110,7 @@ export default function AbrahamCovenantLaunchPage() {
 
       {/* Countdown Timer */}
       <div className="border-b border-white bg-gradient-to-r from-green-900/20 to-blue-900/20">
-        <div className="max-w-6xl mx-auto px-6 py-16">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
           <CountdownTimer 
             targetDate={ABRAHAM_BRAND.timeline.covenantStart}
             label="THE COVENANT BEGINS IN"
@@ -119,14 +119,14 @@ export default function AbrahamCovenantLaunchPage() {
       </div>
 
       {/* The Covenant Details */}
-      <div className="max-w-6xl mx-auto px-6 py-16 space-y-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16 space-y-12 sm:space-y-16">
         
         {/* About The Launch */}
-        <section className="border-b border-white pb-16">
-          <h2 className="text-3xl mb-8">THE COVENANT LAUNCH</h2>
-          <div className="grid md:grid-cols-2 gap-12">
+        <section className="border-b border-white pb-12 sm:pb-16">
+          <h2 className="text-2xl sm:text-3xl mb-6 sm:mb-8">THE COVENANT LAUNCH</h2>
+          <div className="grid lg:grid-cols-2 gap-8 sm:gap-12">
             <div>
-              <p className="text-lg leading-relaxed mb-6">
+              <p className="text-base sm:text-lg leading-relaxed mb-4 sm:mb-6">
                 On {ABRAHAM_BRAND.timeline.covenantStart}, ABRAHAM begins the most ambitious autonomous art project ever conceived. 
                 For {ABRAHAM_BRAND.timeline.totalDuration}, without exception, one work will be created every single day.
               </p>
@@ -136,8 +136,8 @@ export default function AbrahamCovenantLaunchPage() {
                 to the possibility of unwavering creative discipline.
               </p>
             </div>
-            <div className="border border-white p-8">
-              <h3 className="text-xl mb-4">COVENANT SPECIFICATIONS</h3>
+            <div className="border border-white p-4 sm:p-6 lg:p-8">
+              <h3 className="text-lg sm:text-xl mb-3 sm:mb-4">COVENANT SPECIFICATIONS</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span>Launch Date:</span>
@@ -203,10 +203,10 @@ export default function AbrahamCovenantLaunchPage() {
         </section>
 
         {/* Timeline Visualization */}
-        <section className="border-b border-white pb-16">
-          <h2 className="text-3xl mb-8">THE JOURNEY</h2>
-          <div className="border border-white p-8">
-            <div className="grid md:grid-cols-4 gap-8 mb-8">
+        <section className="border-b border-white pb-12 sm:pb-16">
+          <h2 className="text-2xl sm:text-3xl mb-6 sm:mb-8">THE JOURNEY</h2>
+          <div className="border border-white p-4 sm:p-6 lg:p-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 mb-6 sm:mb-8">
               <div className="text-center">
                 <div className="text-3xl font-bold mb-2">2017</div>
                 <div className="text-lg mb-2">CONCEPTION</div>

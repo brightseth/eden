@@ -65,6 +65,8 @@ export default function MiyomiSite() {
   // Feedback state (no popups!)
   const [statusMessage, setStatusMessage] = useState<{type: 'success' | 'error' | 'info' | null, message: string}>({type: null, message: ''});
   const [isProcessing, setIsProcessing] = useState(false);
+  const [thinkingProcess, setThinkingProcess] = useState<any[]>([]);
+  const [showThinking, setShowThinking] = useState(false);
   
   // Public mode state
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -281,6 +283,69 @@ export default function MiyomiSite() {
 
   // Button handler functions
   async function handleTriggerManualDrop() {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    setShowThinking(true);
+    setThinkingProcess([]);
+    
+    try {
+      // Use the thinking endpoint for real-time display
+      const response = await fetch('/api/miyomi/thinking-drop', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) throw new Error('Failed to start thinking process');
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value);
+          const lines = chunk.split('\n');
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6);
+              if (data === '[DONE]') continue;
+              
+              try {
+                const parsed = JSON.parse(data);
+                setThinkingProcess(prev => [...prev, parsed]);
+              } catch (e) {
+                console.error('Failed to parse:', data);
+              }
+            }
+          }
+        }
+      }
+
+      setStatusMessage({
+        type: 'success',
+        message: '✅ Drop generated successfully!'
+      });
+      setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
+      
+    } catch (error) {
+      console.error('Error in thinking process:', error);
+      setStatusMessage({
+        type: 'error',
+        message: '❌ Failed to generate drop'
+      });
+      setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
+    } finally {
+      setIsProcessing(false);
+    }
+  }
+
+  // Original simple handler for backwards compatibility
+  async function handleSimpleManualDrop() {
     if (isProcessing) return;
     setIsProcessing(true);
     
@@ -685,7 +750,7 @@ export default function MiyomiSite() {
                     disabled={isProcessing}
                     className={`px-6 py-3 bg-red-600 rounded-lg hover:bg-red-700 transition font-bold ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
-                    {isProcessing ? 'Generating...' : 'Trigger Manual Drop'}
+                    {isProcessing ? '🧠 Thinking...' : '🎯 Generate Smart Drop'}
                   </button>
                   <button 
                     onClick={handleReviewPendingPicks}
@@ -719,6 +784,65 @@ export default function MiyomiSite() {
                     ))}
                   </div>
                 </div>
+
+                {/* Thinking Process Display */}
+                {showThinking && thinkingProcess.length > 0 && (
+                  <div className="mt-8 bg-black/50 backdrop-blur rounded-lg p-6 border border-red-600">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-xl font-bold">🧠 MIYOMI's Thinking Process</h3>
+                      <button 
+                        onClick={() => setShowThinking(false)}
+                        className="text-sm hover:text-red-500"
+                      >
+                        Hide
+                      </button>
+                    </div>
+                    <div className="space-y-4 max-h-96 overflow-y-auto">
+                      {thinkingProcess.map((step, idx) => (
+                        <div key={idx} className="border-l-2 border-red-600 pl-4 py-2">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-sm font-bold text-red-500">
+                              {step.step?.replace('_', ' ').toUpperCase()}
+                            </span>
+                            {step.status === 'thinking' && <span className="animate-pulse">⚡</span>}
+                            {step.status === 'complete' && <span>✅</span>}
+                          </div>
+                          <div className="text-sm mb-2">{step.message}</div>
+                          {step.thought && (
+                            <div className="text-xs italic opacity-75 bg-white/5 p-2 rounded">
+                              💭 "{step.thought}"
+                            </div>
+                          )}
+                          {step.data && (
+                            <div className="mt-2 text-xs bg-white/5 p-2 rounded">
+                              {step.step === 'video_script' && (
+                                <div>
+                                  <div className="font-bold mb-1">📝 SCRIPT:</div>
+                                  <div className="whitespace-pre-wrap">{step.data.script}</div>
+                                </div>
+                              )}
+                              {step.step === 'pick_generation' && (
+                                <div>
+                                  <div className="font-bold">Pick: {step.data.market}</div>
+                                  <div>Position: <span className="text-red-500">{step.data.position}</span></div>
+                                  <div>Edge: <span className="text-green-500">+{(step.data.edge * 100).toFixed(0)}%</span></div>
+                                </div>
+                              )}
+                              {step.step === 'video_generation' && step.data.edenRequest && (
+                                <div>
+                                  <div className="font-bold mb-1">🎨 EDEN VIDEO REQUEST:</div>
+                                  <pre className="text-xs overflow-x-auto">
+                                    {JSON.stringify(step.data.edenRequest, null, 2)}
+                                  </pre>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
