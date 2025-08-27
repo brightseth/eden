@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { berthaClaude } from '@/lib/agents/bertha/claude-sdk';
 import { incorporateTrainingData } from '@/lib/agents/bertha/config';
-import { saveTrainingData, sendTrainingNotification, initializeBootstrapData } from '@/lib/agents/bertha/training-storage';
+import { saveTrainingData, sendTrainingNotification, initializeBootstrapData, exportToGoogleSheets } from '@/lib/agents/bertha/training-storage';
 
 export async function POST(request: NextRequest) {
   try {
@@ -40,6 +40,14 @@ export async function POST(request: NextRequest) {
     
     // Send notification (console log for now)
     await sendTrainingNotification('amanda@eden.art', trainingRecord);
+    
+    // Export to Google Sheets (optional)
+    try {
+      const sheetsUrl = await exportToGoogleSheets(trainingRecord);
+      console.log('Training data exported to Google Sheets:', sheetsUrl);
+    } catch (sheetsError) {
+      console.warn('Google Sheets export failed (continuing anyway):', sheetsError);
+    }
     
     console.log('BERTHA training data processed and saved:', trainingRecord);
     

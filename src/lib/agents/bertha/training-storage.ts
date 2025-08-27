@@ -144,3 +144,77 @@ export async function sendTrainingNotification(
     ========================================
   `);
 }
+
+// Google Sheets export function (placeholder implementation)
+export async function exportToGoogleSheets(
+  trainingData: TrainingRecord
+): Promise<string> {
+  // In production, this would use Google Sheets API
+  // For now, we'll format the data for easy manual copy-paste
+  
+  const sheetsData = {
+    metadata: {
+      sessionId: trainingData.id,
+      trainer: trainingData.trainer,
+      timestamp: trainingData.timestamp,
+      status: trainingData.status
+    },
+    responses: trainingData.responses
+  };
+  
+  console.log(`
+    ========================================
+    GOOGLE SHEETS EXPORT DATA
+    ========================================
+    Copy the following data to Google Sheets:
+    
+    METADATA:
+    Session ID: ${trainingData.id}
+    Trainer: ${trainingData.trainer}
+    Timestamp: ${trainingData.timestamp}
+    Status: ${trainingData.status}
+    
+    RESPONSES:
+    ${Object.entries(trainingData.responses)
+      .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`)
+      .join('\n    ')}
+    
+    ========================================
+    
+    To set up Google Sheets integration:
+    1. Create a Google Cloud Project
+    2. Enable Google Sheets API
+    3. Create service account credentials
+    4. Add GOOGLE_SHEETS_API_KEY to environment variables
+    5. Share target spreadsheet with service account email
+    ========================================
+  `);
+  
+  // Return placeholder URL - in production would return actual sheets URL
+  return `https://docs.google.com/spreadsheets/d/placeholder-sheet-id/edit#gid=0`;
+}
+
+// Function to format training data as CSV for easy import
+export function formatAsCSV(trainingData: TrainingRecord): string {
+  const headers = ['Question', 'Response', 'Section', 'Timestamp', 'Trainer'];
+  const rows = Object.entries(trainingData.responses).map(([question, response]) => {
+    const cleanResponse = Array.isArray(response) 
+      ? response.join('; ') 
+      : String(response).replace(/\n/g, ' | ').replace(/,/g, ';');
+    
+    return [
+      question,
+      cleanResponse,
+      'Unknown', // Would need section mapping
+      trainingData.timestamp,
+      trainingData.trainer
+    ];
+  });
+  
+  const csvContent = [
+    headers.join(','),
+    ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+  ].join('\n');
+  
+  return csvContent;
+}

@@ -121,25 +121,37 @@ const interviewSections: InterviewSection[] = [
         id: 'top-digital-artists',
         question: 'Rank your top 10 digital artists by collecting priority (1-10, with 1 being highest priority)',
         type: 'textarea',
-        placeholder: 'List artists with ranking:\n1. Artist Name - reasoning\n2. Artist Name - reasoning\n...'
+        placeholder: 'Consider artists like:\n• Pak, XCOPY, Tyler Hobbs, Dmitri Cherniak\n• Refik Anadol, Casey Reas, Helena Sarin\n• Matt DesLauriers, William Mapan, Rich Lord\n• Zach Lieberman, Mario Klingemann, Memo Akten\n\nRank with reasoning:\n1. Artist Name - why priority #1\n2. Artist Name - collecting rationale\n...'
       },
       {
         id: 'contemporary-artists',
         question: 'Rank your top 10 contemporary (non-digital) artists by collecting interest',
         type: 'textarea',
-        placeholder: 'List artists with ranking:\n1. Artist Name - reasoning\n2. Artist Name - reasoning\n...'
+        placeholder: 'Consider artists like:\n• Kaws, Takashi Murakami, Yayoi Kusama, Jeff Koons\n• Banksy, Kerry James Marshall, Amy Sherald\n• Kara Walker, Julie Mehretu, Peter Halley\n• Cecily Brown, John Currin, Neo Rauch\n• Anselm Kiefer, Gerhard Richter, David Hockney\n\nRank with reasoning:\n1. Artist Name - collecting interest\n2. Artist Name - market position\n...'
       },
       {
         id: 'essential-galleries',
         question: 'Which galleries do you monitor most closely for talent discovery?',
         type: 'multiselect',
-        options: ['Pace Gallery', 'Gagosian', 'David Zwirner', 'Hauser & Wirth', 'Lisson Gallery', 'White Cube', 'Galerie Templon', 'König Galerie', 'bitforms gallery', 'Foxy Production', 'Other (specify in notes)']
+        options: ['Pace Gallery', 'Gagosian', 'David Zwirner', 'Hauser & Wirth', 'Lisson Gallery', 'White Cube', 'Galerie Templon', 'König Galerie', 'bitforms gallery', 'Foxy Production', 'Lumas', 'Unit London', 'Verse Works', 'SuperRare Galleries']
+      },
+      {
+        id: 'additional-galleries',
+        question: 'List any additional galleries not mentioned above that you monitor:',
+        type: 'textarea',
+        placeholder: 'Gallery Name 1 - why important\nGallery Name 2 - focus area\n...'
       },
       {
         id: 'museum-indicators',
         question: 'Which museum acquisitions serve as the strongest market validators?',
         type: 'multiselect',
-        options: ['MoMA', 'Whitney', 'Tate Modern', 'Centre Pompidou', 'Guggenheim', 'LACMA', 'SFMOMA', 'New Museum', 'Stedelijk', 'Other (specify in notes)']
+        options: ['MoMA', 'Whitney', 'Tate Modern', 'Centre Pompidou', 'Guggenheim', 'LACMA', 'SFMOMA', 'New Museum', 'Stedelijk', 'V&A']
+      },
+      {
+        id: 'additional-museums',
+        question: 'List any additional museums/institutions not mentioned above:',
+        type: 'textarea',
+        placeholder: 'Institution Name 1 - why significant\nInstitution Name 2 - validation strength\n...'
       },
       {
         id: 'emerging-platforms',
@@ -231,6 +243,44 @@ export default function BerthaTrainerInterview() {
     }));
   };
 
+  const generateCSV = (trainingData: any) => {
+    const headers = ['Section', 'Question', 'Response', 'Timestamp', 'Trainer'];
+    const rows: string[] = [];
+    
+    trainingData.sections.forEach((section: any) => {
+      section.responses.forEach((item: any) => {
+        const response = Array.isArray(item.response) 
+          ? item.response.join('; ') 
+          : String(item.response || '').replace(/\n/g, ' | ').replace(/"/g, '""');
+        
+        rows.push([
+          `"${section.section}"`,
+          `"${item.question}"`,
+          `"${response}"`,
+          `"${trainingData.timestamp}"`,
+          `"${trainingData.trainer}"`
+        ].join(','));
+      });
+    });
+    
+    return [headers.join(','), ...rows].join('\n');
+  };
+
+  const downloadCSV = (csvContent: string, filename: string) => {
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', filename);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
   const handleSubmit = async () => {
     setIsSubmitting(true);
     
@@ -260,7 +310,11 @@ export default function BerthaTrainerInterview() {
       const result = await response.json();
       
       if (result.success) {
-        alert(`✅ Training Complete!\n\nBERTHA has successfully incorporated your expertise.\n\nKey updates applied:\n${Object.keys(result.updates || {}).map(k => `• ${k}`).join('\n')}\n\nBERTHA is now ready to operate with your collection intelligence.`);
+        // Generate CSV export
+        const csvData = generateCSV(trainingData);
+        downloadCSV(csvData, `bertha-training-${Date.now()}.csv`);
+        
+        alert(`✅ Training Complete!\n\nBERTHA has successfully incorporated your expertise.\n\nKey updates applied:\n${Object.keys(result.updates || {}).map(k => `• ${k}`).join('\n')}\n\nTraining data has been downloaded as CSV for Google Sheets import.\n\nBERTHA is now ready to operate with your collection intelligence.`);
         
         // Redirect to BERTHA's main page after success
         setTimeout(() => {
@@ -313,11 +367,24 @@ export default function BerthaTrainerInterview() {
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <div className="flex justify-between text-xs text-gray-500 mt-2">
+            
+            {/* Section Navigation Tabs */}
+            <div className="flex justify-between text-xs mt-3 gap-1">
               {interviewSections.map((s, i) => (
-                <span key={s.id} className={i <= currentSection ? 'text-white' : ''}>
-                  {i + 1}. {s.title.split(' ')[0]}
-                </span>
+                <button
+                  key={s.id}
+                  onClick={() => setCurrentSection(i)}
+                  className={`px-2 py-1 rounded text-center flex-1 transition-colors ${
+                    i === currentSection 
+                      ? 'bg-purple-600 text-white' 
+                      : i < currentSection 
+                        ? 'bg-gray-700 text-white hover:bg-gray-600' 
+                        : 'bg-gray-800 text-gray-500 hover:bg-gray-700 hover:text-gray-300'
+                  }`}
+                >
+                  <div className="font-semibold">{i + 1}</div>
+                  <div className="text-xs leading-tight">{s.title.split(' ').slice(0, 2).join(' ')}</div>
+                </button>
               ))}
             </div>
           </div>
