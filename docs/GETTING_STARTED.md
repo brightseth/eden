@@ -186,8 +186,8 @@ git worktree add     # Parallel development
 ```
 
 ### Agent Naming Convention
-- **Legacy**: Abraham, Solienne
-- **New Format**: BERTHA, SUE (all caps)
-- **Handles**: bertha, sue (lowercase)
+- **Standard**: ALL CAPS for all agents (ABRAHAM, SOLIENNE, BERTHA, SUE, etc.)
+- **Handles**: Lowercase for URLs (abraham, solienne, bertha, sue)
+- **Display**: Always ALL CAPS in documentation and UI
 
 Welcome to Eden Academy development! 🚀

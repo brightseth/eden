@@ -22,12 +22,6 @@ const coreDocumentation = [
     featured: true,
   },
   {
-    title: 'Agent Cheatsheet',
-    description: 'Quick reference for Claude Coding Agents',
-    href: '/admin/docs/agents',
-    icon: Users,
-  },
-  {
     title: 'API Registry Documentation',
     description: 'Complete API and Registry technical documentation',
     href: '/admin/docs/api-registry',

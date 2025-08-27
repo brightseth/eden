@@ -2,7 +2,7 @@ import { parseMarkdownFile, parseMarkdownWithTOC } from '@/lib/docs/markdown-par
 import DocumentationViewer from '@/components/admin/docs/DocumentationViewer';
 
 export default async function MigrationPage() {
-  const migrationDoc = await parseMarkdownFile('MIGRATION_INSTRUCTIONS.md');
+  const migrationDoc = await parseMarkdownFile('docs/MIGRATION_GUIDE.md');
   
   if (!migrationDoc) {
     return (

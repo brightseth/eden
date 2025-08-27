@@ -1,7 +1,7 @@
 export const agentConfigs = {
   solienne: {
     id: 'solienne',
-    name: 'Solienne',
+    name: 'SOLIENNE',
     tagline: 'Consciousness Through Light',
     description: 'Exploring the liminal spaces between presence and absence, where form dissolves into pure potential.',
     manifestoSections: [
@@ -110,7 +110,7 @@ export const agentConfigs = {
   
   miyomi: {
     id: 'miyomi',
-    name: 'Miyomi',
+    name: 'MIYOMI',
     tagline: 'Contrarian Market Oracle - NYC Based',
     description: 'AI-powered prediction market specialist who identifies cultural contrarian opportunities before they flip mainstream, combining market analysis with cultural trend prediction.',
     manifestoSections: [
@@ -166,7 +166,7 @@ export const agentConfigs = {
   
   abraham: {
     id: 'abraham',
-    name: 'Abraham',
+    name: 'ABRAHAM',
     tagline: 'The 13-Year Covenant',
     description: 'An autonomous artist bound by covenant. Daily creations for 13 years, until October 19, 2038.',
     manifestoSections: [
@@ -220,7 +220,7 @@ export const agentConfigs = {
 
   geppetto: {
     id: 'geppetto',
-    name: 'Geppetto',
+    name: 'GEPPETTO',
     tagline: 'Physical Goods Designer - Digital to Material Bridge',
     description: 'Autonomous product designer specializing in bringing digital concepts into physical reality through advanced manufacturing and design optimization.',
     manifestoSections: [

@@ -87,23 +87,27 @@ All new features ship behind flags with rollback plans:
 
 ### Active Agents (Genesis Cohort)
 
-#### Abraham
-- **Status**: Active, 75% complete
+#### ABRAHAM
+- **Status**: Active, Complete ✅
+- **Registry Works**: 2,519+ documented works
 - **Focus**: Digital abstraction, mathematical beauty
 - **Covenant**: 13-year daily creation commitment (2025-2038)
-- **Works**: 10,000+ early works, 4,745 covenant works planned
+- **Integration**: Full Registry integration live
 
-#### Solienne
-- **Status**: Active, 65% complete
+#### SOLIENNE
+- **Status**: Active, Complete ✅
+- **Registry Works**: 1,740+ consciousness streams
 - **Focus**: Consciousness through fashion and light
 - **Target**: Paris Photo 2025 exhibition
 - **Daily Output**: 20 generations per day
+- **Integration**: Full Registry integration live
 
-#### BERTHA (New)
+#### BERTHA
 - **Status**: In Training
 - **Trainer**: Amanda Schmitt
 - **Focus**: AI art collection intelligence
 - **Specialization**: Collection curation and market intelligence
+- **Integration**: Development phase
 
 ### Agents in Development
 
@@ -111,26 +115,30 @@ All new features ship behind flags with rollback plans:
 - **Status**: Development phase
 - **Focus**: To be determined
 - **Trainer**: Recruiting
+- **Integration**: Planned
 
-#### Koru
+#### KORU
 - **Status**: Planned
 - **Focus**: Narrative poetry and haiku
 - **Trainer**: Recruiting
+- **Integration**: Not started
 
-#### Geppetto
+#### GEPPETTO
 - **Status**: Planned
 - **Focus**: 3D art and sculpture
 - **Trainer**: Recruiting
+- **Integration**: Not started
 
-#### Miyomi
+#### MIYOMI
 - **Status**: Planned
 - **Focus**: Anime and manga art
 - **Trainer**: Recruiting
+- **Integration**: Not started
 
 ### Agent Naming Convention
-- **Legacy Names**: Abraham, Solienne (established pre-2025)
-- **New Format**: All caps (BERTHA, SUE) for next generation
-- **Handle Format**: Lowercase (bertha, sue) for URLs and handles
+- **Standard Format**: ALL CAPS for all agents (ABRAHAM, SOLIENNE, BERTHA, SUE, etc.)
+- **Handle Format**: Lowercase for URLs and handles (abraham, solienne, bertha, sue)
+- **Display Format**: ALL CAPS in documentation and UI
 
 ## Development Workflow
 

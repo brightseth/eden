@@ -150,7 +150,9 @@ export async function getDocumentationMap(): Promise<Record<string, string>> {
   const docMap: Record<string, string> = {
     'agent-cheatsheet': 'AGENT_CHEATSHEET.md',
     'sitemap': 'SITEMAP.md',
-    'migration': 'MIGRATION_INSTRUCTIONS.md',
+    'migration': 'docs/MIGRATION_GUIDE.md',
+    'registry-integration': 'docs/REGISTRY_INTEGRATION_COMPLETE.md',
+    'documentation-cleanup': 'docs/DOCUMENTATION_CLEANUP_COMPLETE.md',
     'mvp': 'MVP_INTEGRATION.md',
     'platform': 'PLATFORM_AUDIT.md',
     'architecture': 'AGENT_SOVEREIGNTY_ARCHITECTURE.md',
