@@ -97,11 +97,26 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const [isLive, setIsLive] = useState(false);
+  
+  // Client-side cache to reduce Registry calls
+  const [cache, setCache] = useState<{data: RegistryResponse; timestamp: number} | null>(null);
 
   const fetchData = async () => {
     try {
       setLoading(true);
+      
+      // Check cache first (5-minute cache)
+      const now = Date.now();
+      if (cache && (now - cache.timestamp) < 5 * 60 * 1000) {
+        console.log('📦 Using cached data');
+        setData(cache.data);
+        setLastUpdate(new Date(cache.timestamp));
+        setIsLive(true);
+        return;
+      }
+      
       console.log('🚀 Starting API call to /api/agents');
+      const startTime = Date.now();
       
       const response = await fetch('/api/agents');
       if (!response.ok) {
@@ -110,8 +125,9 @@ export default function HomePage() {
       
       const apiData = await response.json();
       const agents = apiData.agents || [];
+      const duration = Date.now() - startTime;
       
-      console.log('✅ API Success:', agents.length, 'agents received');
+      console.log('✅ API Success:', agents.length, 'agents received in', duration + 'ms');
       
       const result: RegistryResponse = {
         agents: agents,
@@ -127,6 +143,9 @@ export default function HomePage() {
       setData(result);
       setLastUpdate(new Date());
       setIsLive(true);
+      
+      // Cache the result
+      setCache({ data: result, timestamp: Date.now() });
       
     } catch (error) {
       console.error('❌ API Error:', error);

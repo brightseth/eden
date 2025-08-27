@@ -1,19 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { registryApi } from '@/lib/generated-sdk';
 
+// Simple in-memory cache
+let apiCache: { data: any; timestamp: number } | null = null;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
 // GET /api/agents - List all agents with latest work and status
 // ADR COMPLIANCE: Use Registry SDK instead of direct Supabase access
 export async function GET(request: NextRequest) {
   try {
+    // Check cache first
+    const now = Date.now();
+    if (apiCache && (now - apiCache.timestamp) < CACHE_DURATION) {
+      console.log('API /agents: Returning cached data');
+      return NextResponse.json(apiCache.data);
+    }
+    
     console.log('API /agents: Fetching from Registry SDK...');
+    const startTime = Date.now();
     
     // Use Registry SDK - ADR compliance
     const agents = await registryApi.getAgents({
       include: ['profile', 'creations']
     });
     
+    const duration = Date.now() - startTime;
+    
     console.log('API /agents: Registry data received:', { 
-      agentCount: agents?.length || 0
+      agentCount: agents?.length || 0,
+      duration: duration + 'ms'
     });
     
     // Transform Registry data to Academy API format
@@ -29,10 +44,15 @@ export async function GET(request: NextRequest) {
       created_at: agent.createdAt
     }));
 
-    return NextResponse.json({
+    const result = {
       agents: agentsWithWork,
       count: agentsWithWork.length
-    });
+    };
+    
+    // Cache the result
+    apiCache = { data: result, timestamp: now };
+
+    return NextResponse.json(result);
   } catch (error) {
     console.error('Registry SDK failed:', error);
     return NextResponse.json(

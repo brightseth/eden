@@ -93,7 +93,7 @@ export class RegistryApiClient {
     this.baseUrl = config.baseUrl || 'https://eden-genesis-registry.vercel.app/api/v1';
     this.apiKey = config.apiKey || '';
     this.timeout = config.timeout || 10000; // Increased to 10s for slow Registry responses
-    this.maxRetries = config.maxRetries || 2; // Reduced from 3 to 2
+    this.maxRetries = config.maxRetries || 0; // Disable retries for faster failures
   }
 
   private async request<T>(
