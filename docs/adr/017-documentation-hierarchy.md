@@ -159,5 +159,5 @@ The documentation viewer will:
 - ADR-019: Registry Integration Pattern
 
 ## References
-- Current Documentation: https://eden-academy-flame.vercel.app/admin/docs
+- Current Documentation: https://eden-academy.vercel.app/admin/docs
 - Documentation Viewer Component: /src/components/admin/docs/DocumentationViewer.tsx

@@ -12,6 +12,7 @@ export { BerthaClaudeSDK, berthaClaude } from './bertha/claude-sdk';
 export { SolienneClaudeSDK, solienneSDK } from './solienne-claude-sdk';
 export { AbrahamClaudeSDK, abrahamSDK } from './abraham-claude-sdk';
 export { SueClaudeSDK, sueSDK } from './sue-claude-sdk';
+export { CitizenClaudeSDK, citizenSDK } from './citizen-claude-sdk';
 
 // Type exports for all SDKs
 export type { 
@@ -43,6 +44,13 @@ export type {
   SueConfig
 } from './sue-claude-sdk';
 
+export type {
+  GovernanceProposal,
+  ConsensusAnalysis,
+  CitizenConfig,
+  GovernanceMetrics
+} from './citizen-claude-sdk';
+
 // Agent Registry for SDK lookup
 export const AGENT_SDKS = {
   miyomi: miyomiSDK,
@@ -50,6 +58,7 @@ export const AGENT_SDKS = {
   solienne: solienneSDK,
   abraham: abrahamSDK,
   sue: sueSDK,
+  citizen: citizenSDK,
 } as const;
 
 // SDK Status tracking
@@ -116,10 +125,10 @@ export function getSDKStatuses(): Record<string, SDKStatus> {
     },
     citizen: {
       agentId: 'citizen',
-      hasClaudeSDK: false,
-      hasEdenPlatform: false,
-      dualInstantiation: false,
-      registryIntegration: false
+      hasClaudeSDK: true,
+      hasEdenPlatform: true,
+      dualInstantiation: true,
+      registryIntegration: true
     }
   };
 }

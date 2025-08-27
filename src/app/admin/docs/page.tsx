@@ -73,7 +73,7 @@ const architectureDecisionRecords = [
 export default function AdminDocsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const baseUrl = process.env.NODE_ENV === 'production' 
-    ? 'https://eden-academy-flame.vercel.app' 
+    ? 'https://eden-academy.vercel.app' 
     : 'http://localhost:3000';
 
   // Filter documentation based on search

@@ -90,7 +90,7 @@ export class SolienneClaudeSDK {
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-3-5-sonnet-20240620',
         max_tokens: 2000,
         temperature: this.config.creativityTemperature,
         system: systemPrompt,
@@ -150,7 +150,7 @@ Format as JSON:
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-3-5-sonnet-20240620',
         max_tokens: 1500,
         temperature: 0.3,
         messages: [{ role: 'user', content: prompt }]
@@ -196,7 +196,7 @@ Length: ${context === 'press' ? '150-200' : '300-400'} words`;
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-3-5-sonnet-20240620',
         max_tokens: 1000,
         temperature: 0.6,
         messages: [{ role: 'user', content: prompt }]
@@ -238,7 +238,7 @@ Format: 2-3 concise paragraphs`;
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-3-5-sonnet-20240620',
         max_tokens: 800,
         temperature: 0.5,
         messages: [{ role: 'user', content: prompt }]

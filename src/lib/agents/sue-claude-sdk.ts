@@ -177,7 +177,7 @@ Format as JSON:
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-3-5-sonnet-20240620',
         max_tokens: 3000,
         temperature: 0.7,
         system: systemPrompt,
@@ -244,7 +244,7 @@ Format as JSON:
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-3-5-sonnet-20240620',
         max_tokens: 2000,
         temperature: 0.5,
         messages: [{ role: 'user', content: prompt }]
@@ -296,7 +296,7 @@ Format as JSON array:
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-3-5-sonnet-20240620',
         max_tokens: 2000,
         temperature: 0.8,
         messages: [{ role: 'user', content: prompt }]
@@ -361,7 +361,7 @@ Format as JSON:
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-3-5-sonnet-20240620',
         max_tokens: 1500,
         temperature: 0.6,
         messages: [{ role: 'user', content: prompt }]
@@ -414,7 +414,7 @@ Provide comprehensive annual plan with exhibitions and programs.`;
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-3-5-sonnet-20240620',
         max_tokens: 4000,
         temperature: 0.7,
         system: this.buildSystemPrompt(),

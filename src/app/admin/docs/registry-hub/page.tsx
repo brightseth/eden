@@ -94,7 +94,7 @@ const integrationStatus = [
 
 export default function RegistryHubPage() {
   const baseUrl = process.env.NODE_ENV === 'production' 
-    ? 'https://eden-academy-flame.vercel.app' 
+    ? 'https://eden-academy.vercel.app' 
     : 'http://localhost:3000';
 
   const copyToClipboard = async (text: string) => {

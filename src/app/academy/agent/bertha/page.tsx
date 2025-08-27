@@ -4,11 +4,28 @@ import { agentService } from '@/data/agents-registry';
 import { notFound } from 'next/navigation';
 
 export default async function BerthaAgentPage() {
-  // Query for BERTHA agent data, but fallback to amanda handle for compatibility
-  const agent = await agentService.getAgent('amanda');
-  
+  // Query for BERTHA agent data - try bertha first, fallback to amanda for compatibility
+  let agent = await agentService.getAgent('bertha');
   if (!agent) {
-    notFound();
+    agent = await agentService.getAgent('amanda');
+  }
+  
+  // If registry is unavailable, use fallback data
+  if (!agent) {
+    agent = {
+      id: 'bertha-006',
+      handle: 'bertha',
+      displayName: 'BERTHA',
+      status: 'ACTIVE',
+      launchDate: '2026-02-01',
+      monthlyRevenue: 12000,
+      outputRate: 30,
+      trainer: { name: 'Amanda Schmitt', id: 'amanda-schmitt' },
+      specialization: 'Collection Intelligence',
+      profile: {
+        statement: 'AI art collector building collections that tell stories, preserve cultural moments, and discover the next generation of digital artists through autonomous intelligence and market prediction.'
+      }
+    } as any;
   }
   return (
     <div className="min-h-screen bg-black text-white">

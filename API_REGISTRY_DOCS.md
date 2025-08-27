@@ -739,15 +739,15 @@ useEffect(() => {
 ## 📚 Additional Resources
 
 ### Live Services
-- **Eden Academy**: https://eden-academy-flame.vercel.app
+- **Eden Academy**: https://eden-academy.vercel.app
 - **Genesis Registry**: https://eden-genesis-registry.vercel.app
 - **Spirit Registry (Onchain)**: https://spirit-registry.vercel.app
 - **Design Critic (CRIT)**: https://design-critic-agent.vercel.app
 
 ### Documentation
-- **Agent Cheatsheet**: https://eden-academy-flame.vercel.app/admin/docs/agents
-- **Architecture Guide**: https://eden-academy-flame.vercel.app/admin/docs/architecture
-- **Site Map**: https://eden-academy-flame.vercel.app/admin/docs/sitemap
+- **Agent Cheatsheet**: https://eden-academy.vercel.app/admin/docs/agents
+- **Architecture Guide**: https://eden-academy.vercel.app/admin/docs/architecture
+- **Site Map**: https://eden-academy.vercel.app/admin/docs/sitemap
 
 ### Source Code
 - **Eden Academy**: https://github.com/brightseth/eden
@@ -875,7 +875,7 @@ REGISTRY_URL=https://eden-genesis-registry.vercel.app
 ### Resources
 - **Live Registry**: https://eden-genesis-registry.vercel.app
 - **API Documentation**: https://eden-genesis-registry.vercel.app/api/docs
-- **Academy Dashboard**: https://eden-academy-flame.vercel.app/admin
+- **Academy Dashboard**: https://eden-academy.vercel.app/admin
 - **GitHub Issues**: For integration bugs and feature requests
 
 ---

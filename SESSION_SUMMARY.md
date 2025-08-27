@@ -93,7 +93,7 @@ Created complete migration infrastructure:
 - ✅ Minimal Helvetica typography
 
 ## 🚀 DEPLOYMENT STATUS
-- **Live Site**: https://eden-academy-flame.vercel.app
+- **Live Site**: https://eden-academy.vercel.app
 - **Repository**: https://github.com/brightseth/eden
 - **Latest Commit**: cf35ca3 - Complete minimal aesthetic overhaul
 

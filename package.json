@@ -17,10 +17,19 @@
     "migrate-to-registry": "npx tsx scripts/migrate-to-registry.ts",
     "registry": "node scripts/registry-cli.mjs",
     "test:sdk-deployment": "tsx scripts/test-sdk-deployments.ts",
-    "test:registry-sync": "tsx scripts/test-registry-sync.ts", 
+    "test:registry-sync": "tsx scripts/test-registry-sync.ts",
     "test:claude-env": "tsx scripts/claude-environment-test.ts",
     "test:production-sync": "tsx scripts/production-registry-sync.ts",
-    "test:deployment-full": "tsx scripts/run-deployment-tests.ts"
+    "test:deployment-full": "tsx scripts/run-deployment-tests.ts",
+    "validate-domains": "node scripts/validate-domains.js",
+    "fix-domains": "node scripts/fix-domains.js",
+    "test:urls": "node scripts/test-urls.js",
+    "test:api": "ts-node tests/api/run-tests.ts run",
+    "test:api:agents": "ts-node tests/api/run-tests.ts run agents",
+    "test:api:works": "ts-node tests/api/run-tests.ts run works",
+    "test:api:health": "ts-node tests/api/run-tests.ts run health",
+    "test:api:coverage": "ts-node tests/api/run-tests.ts coverage",
+    "test:api:watch": "ts-node tests/api/run-tests.ts run --watch"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.60.0",
@@ -60,6 +69,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@openapitools/openapi-generator-cli": "^2.23.1",
+    "@types/jest": "^29.5.0",
     "@types/node": "^20",
     "@types/node-cron": "^3.0.11",
     "@types/react": "^19",
@@ -70,7 +80,10 @@
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
     "figlet": "^1.8.2",
+    "jest": "^29.5.0",
     "ora": "^8.2.0",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.1",
     "typescript": "^5.9.2"
   }
 }

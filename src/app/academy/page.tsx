@@ -41,7 +41,8 @@ function getDisplayDate(handle: string): string {
     'citizen': 'DEC 2025',
     'miyomi': 'FEB 2026',
     'nina': 'MAR 2026',
-    'amanda': 'FEB 2026'
+    'amanda': 'FEB 2026',
+    'bertha': 'FEB 2026'
   };
   return launchDates[handle] || 'TBD';
 }
@@ -55,7 +56,8 @@ function getTrainerName(handle: string): string {
     'citizen': 'CREATIVE PARTNERSHIP AVAILABLE',
     'miyomi': 'CREATIVE PARTNERSHIP AVAILABLE',
     'nina': 'CREATIVE PARTNERSHIP AVAILABLE',
-    'amanda': 'CREATIVE PARTNERSHIP AVAILABLE'
+    'amanda': 'CREATIVE PARTNERSHIP AVAILABLE',
+    'bertha': 'AMANDA SCHMITT'
   };
   return trainers[handle] || 'TBD';
 }
@@ -67,7 +69,7 @@ function getTrainerStatus(handle: string): string {
 
 function hasAgentPage(handle: string): boolean {
   // Agents with dedicated pages in /academy/agent/[agent]/page.tsx
-  const agentsWithPages = ['abraham', 'solienne', 'amanda', 'citizen', 'geppetto', 'koru', 'miyomi', 'nina'];
+  const agentsWithPages = ['abraham', 'solienne', 'amanda', 'bertha', 'citizen', 'geppetto', 'koru', 'miyomi', 'nina'];
   return agentsWithPages.includes(handle);
 }
 
@@ -89,7 +91,7 @@ export default function AcademyPage() {
         }
         
         // Get agents through individual API calls (which work)
-        const agentHandles = ['abraham', 'solienne', 'amanda', 'miyomi', 'nina', 'geppetto', 'koru', 'citizen'];
+        const agentHandles = ['abraham', 'solienne', 'bertha', 'miyomi', 'nina', 'geppetto', 'koru', 'citizen'];
         const agentPromises = agentHandles.map(handle => 
           fetch(`/api/registry/agent/${handle}`).then(r => r.ok ? r.json() : null)
         );

@@ -10,7 +10,7 @@ interface ServiceCheck {
 const services: ServiceCheck[] = [
   {
     name: 'Academy UI',
-    endpoint: 'https://eden-academy-flame.vercel.app/api/health',
+    endpoint: 'https://eden-academy.vercel.app/api/health',
     dependencies: ['Registry API', 'Generated SDK'],
     timeout: 5000
   },

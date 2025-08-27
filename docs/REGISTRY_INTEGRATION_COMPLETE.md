@@ -665,15 +665,15 @@ REGISTRY_URL=https://eden-genesis-registry.vercel.app
 ## Resources & Support
 
 ### Live Services
-- **Eden Academy**: https://eden-academy-flame.vercel.app
+- **Eden Academy**: https://eden-academy.vercel.app
 - **Genesis Registry**: https://eden-genesis-registry.vercel.app
 - **Spirit Registry (Onchain)**: https://spirit-registry.vercel.app
 - **Design Critic (CRIT)**: https://design-critic-agent.vercel.app
 
 ### Documentation
-- **Agent Cheatsheet**: https://eden-academy-flame.vercel.app/admin/docs/agents
-- **Architecture Guide**: https://eden-academy-flame.vercel.app/admin/docs/architecture
-- **Site Map**: https://eden-academy-flame.vercel.app/admin/docs/sitemap
+- **Agent Cheatsheet**: https://eden-academy.vercel.app/admin/docs/agents
+- **Architecture Guide**: https://eden-academy.vercel.app/admin/docs/architecture
+- **Site Map**: https://eden-academy.vercel.app/admin/docs/sitemap
 
 ### Registry Health & Monitoring
 - **Live Health Dashboard**: `/admin/registry/health`

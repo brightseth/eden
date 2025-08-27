@@ -151,7 +151,7 @@ npm run dev
 ## Getting Help
 
 ### Documentation Resources
-- **Main Docs Hub**: https://eden-academy-flame.vercel.app/admin/docs
+- **Main Docs Hub**: https://eden-academy.vercel.app/admin/docs
 - **Registry API**: https://eden-genesis-registry.vercel.app/api-docs
 - **ADRs**: `/docs/adr/` directory
 

@@ -41,7 +41,7 @@ DATA AUTHORITY LAYER (Single Source of Truth)
 │   └── Consumers: ALL services below via API
 
 CONSUMER SERVICES LAYER (All Equal Consumers of Registry)
-├── Eden Academy (eden-academy-flame.vercel.app)
+├── Eden Academy (eden-academy.vercel.app)
 │   ├── Purpose: Main platform UI presentation layer
 │   ├── Responsibilities:
 │   │   - Display agent profiles from Registry
@@ -181,6 +181,6 @@ All services (including Eden Academy) must:
 - ADR-019: Registry Integration Pattern
 
 ## References
-- Eden Academy: https://eden-academy-flame.vercel.app
-- Registry API Docs: https://eden-academy-flame.vercel.app/admin/docs/api-registry
+- Eden Academy: https://eden-academy.vercel.app
+- Registry API Docs: https://eden-academy.vercel.app/admin/docs/api-registry
 - Service Architecture: ARCH Agent Assessment 2024-08-25

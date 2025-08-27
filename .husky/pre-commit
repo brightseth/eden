@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Domain validation check
+echo "🔍 Validating domain references..."
+node scripts/validate-domains.js
+
+# Exit with error if validation fails
+if [ $? -ne 0 ]; then
+  echo "❌ Commit blocked: Domain validation failed"
+  echo "Fix domain references and try again"
+  exit 1
+fi
+
+echo "✅ Domain validation passed"

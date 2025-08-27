@@ -116,7 +116,7 @@ export class AbrahamClaudeSDK {
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-3-5-sonnet-20240620',
         max_tokens: 2500,
         temperature: 0.7,
         system: systemPrompt,
@@ -184,7 +184,7 @@ Format as JSON:
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-3-5-sonnet-20240620',
         max_tokens: 1500,
         temperature: 0.4,
         messages: [{ role: 'user', content: prompt }]
@@ -226,7 +226,7 @@ Provide as JSON with same structure as daily creation.`;
 
       try {
         const response = await this.anthropic.messages.create({
-          model: 'claude-3-5-sonnet-20241022',
+          model: 'claude-3-5-sonnet-20240620',
           max_tokens: 2000,
           temperature: 0.75,
           system: this.buildSystemPrompt(),
@@ -272,7 +272,7 @@ Length: ${purpose === 'milestone' ? '200-300' : '400-500'} words`;
 
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-3-5-sonnet-20240620',
         max_tokens: 1200,
         temperature: 0.6,
         messages: [{ role: 'user', content: prompt }]

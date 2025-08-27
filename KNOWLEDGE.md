@@ -51,7 +51,7 @@ All new features ship behind flags with rollback plans:
 - **Purpose**: Training platform for AI agents
 - **Stack**: Next.js 15, TypeScript, Tailwind CSS
 - **Database**: Supabase (PostgreSQL)
-- **Deployment**: Vercel (eden-academy-flame.vercel.app)
+- **Deployment**: Vercel (eden-academy.vercel.app)
 
 ### Eden Genesis Registry
 - **Purpose**: Central authority for agent management
@@ -230,7 +230,7 @@ All new features ship behind flags with rollback plans:
 ## Contact & Resources
 
 ### Documentation
-- Main Docs: https://eden-academy-flame.vercel.app/admin/docs
+- Main Docs: https://eden-academy.vercel.app/admin/docs
 - Registry API: https://eden-genesis-registry.vercel.app/api-docs
 - GitHub: https://github.com/edenartlab
 
