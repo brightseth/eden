@@ -73,6 +73,22 @@ const ceoTools = [
     icon: Calendar,
     category: 'Productivity',
     priority: 'high'
+  },
+  {
+    title: 'Documentation Hub',
+    description: 'System docs, ADRs, and deployment guides',
+    href: '/admin/docs',
+    icon: FileText,
+    category: 'Development',
+    priority: 'high'
+  },
+  {
+    title: 'API Explorer',
+    description: 'Interactive API documentation and testing',
+    href: '/dashboard/api-explorer',
+    icon: Settings,
+    category: 'Development',
+    priority: 'medium'
   }
 ];
 
@@ -236,12 +252,76 @@ export default function CEODashboard() {
           })}
         </div>
 
-        {/* Recent Activity Feed */}
-        <div className="mt-12 p-6 bg-gray-900/30 border border-gray-800 rounded-lg">
-          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Clock className="w-5 h-5 text-blue-400" />
-            Recent Activity
-          </h2>
+        {/* Documentation & Activity */}
+        <div className="mt-12 grid gap-6 lg:grid-cols-2">
+          
+          {/* Quick Documentation Access */}
+          <div className="p-6 bg-gray-900/30 border border-gray-800 rounded-lg">
+            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <FileText className="w-5 h-5 text-purple-400" />
+              Documentation & Guides
+            </h2>
+            <div className="space-y-3">
+              <Link 
+                href="/admin/docs" 
+                className="block p-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <FileText className="w-4 h-4 text-purple-400" />
+                  <div>
+                    <div className="font-semibold">System Documentation</div>
+                    <div className="text-xs text-gray-400">ADRs, architecture, deployment guides</div>
+                  </div>
+                </div>
+              </Link>
+              
+              <Link 
+                href="/CEO-DASHBOARD.md" 
+                className="block p-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <BarChart3 className="w-4 h-4 text-green-400" />
+                  <div>
+                    <div className="font-semibold">CEO Dashboard Report</div>
+                    <div className="text-xs text-gray-400">Complete agent status & deployment guide</div>
+                  </div>
+                </div>
+              </Link>
+              
+              <Link 
+                href="/dashboard/api-explorer" 
+                className="block p-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <Settings className="w-4 h-4 text-blue-400" />
+                  <div>
+                    <div className="font-semibold">API Explorer</div>
+                    <div className="text-xs text-gray-400">Interactive API testing & documentation</div>
+                  </div>
+                </div>
+              </Link>
+              
+              <Link 
+                href="/admin/ceo/live-status" 
+                className="block p-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <Activity className="w-4 h-4 text-yellow-400" />
+                  <div>
+                    <div className="font-semibold">Live Agent Status</div>
+                    <div className="text-xs text-gray-400">Real-time 8-agent deployment dashboard</div>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          </div>
+
+          {/* Recent Activity Feed */}
+          <div className="p-6 bg-gray-900/30 border border-gray-800 rounded-lg">
+            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <Clock className="w-5 h-5 text-blue-400" />
+              Recent Activity
+            </h2>
           <div className="space-y-3 text-sm">
             <div className="flex items-center gap-3 text-gray-400">
               <CheckCircle className="w-4 h-4 text-green-400" />
@@ -264,6 +344,8 @@ export default function CEODashboard() {
               <span className="text-xs text-gray-500">8 hours ago</span>
             </div>
           </div>
+        </div>
+        
         </div>
 
       </div>
