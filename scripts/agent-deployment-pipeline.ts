@@ -69,6 +69,19 @@ const AGENTS: Record<string, AgentDeployment> = {
     ],
     requiredChecks: ['identity', 'works', 'curation'],
     productionUrl: 'https://eden-academy-flame.vercel.app'
+  },
+  citizen: {
+    name: 'CITIZEN',
+    handle: 'citizen',
+    endpoints: [
+      '/api/agents/citizen',
+      '/api/agents/citizen/works',
+      '/api/agents/citizen/proposals',
+      '/api/agents/citizen/consensus',
+      '/api/agents/citizen/fellowship'
+    ],
+    requiredChecks: ['identity', 'works', 'proposals', 'consensus', 'fellowship'],
+    productionUrl: 'https://eden-academy-flame.vercel.app'
   }
 };
 
@@ -166,6 +179,39 @@ class AgentDeploymentPipeline {
           details: 'Works endpoint responding'
         });
         this.log(`✅ Registry integration ready`, 'success');
+      }
+    }
+    
+    if (agent.handle === 'citizen') {
+      // Test governance capabilities
+      const proposalsCheck = await this.testEndpoint(`${this.baseUrl}/api/agents/citizen/proposals`);
+      if (proposalsCheck.status === 200) {
+        checks.push({
+          name: 'Governance Proposals System',
+          status: 'passed',
+          details: 'Proposal generation and listing operational'
+        });
+        this.log(`✅ Governance proposals system ready`, 'success');
+      }
+      
+      const consensusCheck = await this.testEndpoint(`${this.baseUrl}/api/agents/citizen/consensus`);
+      if (consensusCheck.status === 405) { // POST endpoint, so 405 Method Not Allowed is expected for GET
+        checks.push({
+          name: 'Consensus Analysis Engine',
+          status: 'passed',
+          details: 'Consensus analysis endpoint available'
+        });
+        this.log(`✅ Consensus analysis engine ready`, 'success');
+      }
+      
+      const fellowshipCheck = await this.testEndpoint(`${this.baseUrl}/api/agents/citizen/fellowship`);
+      if (fellowshipCheck.status === 200 && fellowshipCheck.data?.fellowship) {
+        checks.push({
+          name: 'Fellowship Management System',
+          status: 'passed',
+          details: `Fellowship size: ${fellowshipCheck.data.fellowship.overview.total_members}`
+        });
+        this.log(`✅ Fellowship management system ready`, 'success');
       }
     }
     
