@@ -120,23 +120,31 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString()
     });
 
-    // TODO: When Registry API supports agent creation, use:
-    // const result = await registryClient.createAgent(agentData);
+    // Try to create agent in Registry
+    let registryResult = null;
+    try {
+      // Use Registry SDK to create agent
+      const { registryApi } = await import('@/lib/generated-sdk');
+      
+      registryResult = await registryApi.createAgent({
+        handle: body.agentHandle,
+        displayName: body.agentName,
+        cohortId: body.cohortPreference === 'flexible' ? 'genesis' : body.cohortPreference
+      });
+      
+      console.log('[Onboarding] Agent created in Registry:', registryResult);
+    } catch (registryError) {
+      console.warn('[Onboarding] Registry creation failed, continuing with fallback:', registryError);
+    }
 
-    // For now, simulate success and store in temporary queue
+    // Generate application ID
     const applicationId = `app-${Date.now().toString(36)}`;
     
-    // In a real implementation, this would:
-    // 1. Create agent record in Registry with status 'INVITED'
-    // 2. Send confirmation email to trainer
-    // 3. Notify Eden team of new application
-    // 4. Create onboarding checklist
-    
-    // Simulate Registry API response
-    const simulatedResponse = {
+    // Create response
+    const response = {
       applicationId,
-      agentId,
-      status: 'submitted',
+      agentId: registryResult?.id || agentId,
+      status: registryResult ? 'registered' : 'submitted',
       message: 'Application submitted successfully. You will receive a confirmation email shortly.',
       nextSteps: [
         'Review by Eden Academy team (1-2 business days)',
@@ -145,13 +153,16 @@ export async function POST(request: NextRequest) {
         'Testing and validation',
         'Academy enrollment'
       ],
-      estimatedTimeline: body.launchTimeframe
+      estimatedTimeline: body.launchTimeframe,
+      registryId: registryResult?.id
     };
 
-    // Log for manual processing
-    console.log('[Onboarding] Application data for manual processing:', JSON.stringify(agentData, null, 2));
+    // Store application data for manual processing if Registry failed
+    if (!registryResult) {
+      console.log('[Onboarding] Application data for manual processing:', JSON.stringify(agentData, null, 2));
+    }
 
-    return NextResponse.json(simulatedResponse, { status: 201 });
+    return NextResponse.json(response, { status: 201 });
 
   } catch (error) {
     console.error('[Onboarding] Application submission failed:', error);

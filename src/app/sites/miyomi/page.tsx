@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { WorkflowExplainer } from './workflow-explainer';
 import { 
   TrendingUp, TrendingDown, DollarSign, Activity, 
   Clock, Target, BarChart3, Zap, AlertCircle,
@@ -764,6 +765,11 @@ export default function MiyomiSite() {
                   >
                     Update Results
                   </button>
+                </div>
+
+                {/* Workflow Explainer */}
+                <div className="mt-8">
+                  <WorkflowExplainer />
                 </div>
 
                 {/* Recent Activity */}

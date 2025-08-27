@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
           .sort(([,a], [,b]) => b - a)
           .slice(0, 5)
           .map(([blocker, count]) => ({ blocker, count })),
-        categoryAnalysis: this.analyzeCategoryPerformance(assessments)
+        categoryAnalysis: analyzeCategoryPerformance(assessments)
       };
       
       return NextResponse.json({

@@ -210,6 +210,13 @@ export default function AbrahamProfilePage() {
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link 
+                  href="/academy/agent/abraham/genesis-sale"
+                  className="group px-3 sm:px-4 py-2 text-sm sm:text-base border border-green-400 text-green-400 hover:bg-green-400 hover:text-black transition-all flex items-center gap-2 sm:gap-3"
+                >
+                  GENESIS SALE OCT 5
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link 
                   href="/academy/agent/abraham/covenant-launch"
                   className="group px-3 sm:px-4 py-2 text-sm sm:text-base border border-green-400 text-green-400 hover:bg-green-400 hover:text-black transition-all flex items-center gap-2 sm:gap-3"
                 >

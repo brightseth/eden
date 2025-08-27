@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     });
     
     // Transform Registry data to Academy API format
-    const agentsWithWork = agents.map(agent => ({
+    const agentsWithWork = (agents || []).map(agent => ({
       id: agent.handle,
       name: agent.displayName,
       tagline: agent.profile?.statement || 'AI Creative Agent',
