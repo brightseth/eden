@@ -1038,8 +1038,8 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
         </section>
       )}
 
-      {/* Selected Works - Streamlined for Amanda */}
-      {agent.id === 'amanda' && recentWorks.length > 0 && (
+      {/* Selected Works - Removed for Amanda/BERTHA */}
+      {false && agent.id === 'amanda' && recentWorks.length > 0 && (
         <section id="works" className="py-24 px-6 bg-gray-950">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-8">

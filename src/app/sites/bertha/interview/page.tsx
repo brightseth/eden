@@ -185,6 +185,7 @@ export default function BerthaTrainerInterview() {
   const [submissionState, setSubmissionState] = useState<SubmissionState>('idle');
   const [submissionMessage, setSubmissionMessage] = useState('');
   const [csvData, setCsvData] = useState<string | null>(null);
+  const [trainerInfo, setTrainerInfo] = useState({ name: '', email: '' });
 
   const handleResponse = (questionId: string, value: any) => {
     setResponses(prev => ({
@@ -238,12 +239,20 @@ export default function BerthaTrainerInterview() {
   };
 
   const handleSubmit = async () => {
+    // Validate trainer info
+    if (!trainerInfo.name || !trainerInfo.email) {
+      setSubmissionState('error');
+      setSubmissionMessage('Please provide your name and email before submitting.');
+      return;
+    }
+    
     setSubmissionState('submitting');
     setSubmissionMessage('Processing your training data...');
     
     // Format responses for BERTHA training
     const trainingData = {
-      trainer: 'Amanda Schmitt',
+      trainer: trainerInfo.name,
+      trainerEmail: trainerInfo.email,
       timestamp: new Date().toISOString(),
       sections: interviewSections.map(section => ({
         section: section.title,
@@ -354,6 +363,40 @@ export default function BerthaTrainerInterview() {
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-6 py-12">
+        {/* Trainer Info Form - Show only on first section */}
+        {currentSection === 0 && (
+          <div className="mb-12 border border-purple-500 rounded-lg p-6 bg-purple-950/20">
+            <h3 className="text-xl font-semibold mb-4">Trainer Information</h3>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block mb-2 text-sm text-gray-400">Your Name *</label>
+                <input
+                  type="text"
+                  className="w-full px-4 py-3 bg-black border border-gray-700 rounded focus:border-purple-500 focus:outline-none"
+                  placeholder="Amanda Schmitt"
+                  value={trainerInfo.name}
+                  onChange={(e) => setTrainerInfo(prev => ({ ...prev, name: e.target.value }))}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block mb-2 text-sm text-gray-400">Your Email *</label>
+                <input
+                  type="email"
+                  className="w-full px-4 py-3 bg-black border border-gray-700 rounded focus:border-purple-500 focus:outline-none"
+                  placeholder="amanda@eden.art"
+                  value={trainerInfo.email}
+                  onChange={(e) => setTrainerInfo(prev => ({ ...prev, email: e.target.value }))}
+                  required
+                />
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 mt-4">
+              This information will be used to attribute your training expertise and send confirmation.
+            </p>
+          </div>
+        )}
+        
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
             {section.icon}

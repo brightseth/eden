@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     console.log('Request body received:', { bodyKeys: Object.keys(body) });
     
     // Extract training data from interview
-    const { trainer, timestamp, sections } = body;
+    const { trainer, trainerEmail, timestamp, sections } = body;
     
     if (!trainer || !timestamp || !sections) {
       console.error('Missing required fields:', { trainer: !!trainer, timestamp: !!timestamp, sections: !!sections });
@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
     const trainingRecord = {
       id: `training-${Date.now()}`,
       trainer,
+      trainerEmail: trainerEmail || 'not-provided',
       timestamp,
       responses,
       configUpdates,
@@ -96,7 +97,7 @@ export async function POST(request: NextRequest) {
     
     // Send notification (console log for now)
     try {
-      await sendTrainingNotification('amanda@eden.art', trainingRecord);
+      await sendTrainingNotification(trainerEmail || 'amanda@eden.art', trainingRecord);
     } catch (notificationError) {
       console.warn('Notification failed:', notificationError);
     }
