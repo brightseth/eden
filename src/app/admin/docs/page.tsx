@@ -27,6 +27,12 @@ const coreDocumentation = [
     icon: Users,
   },
   {
+    title: 'API Registry Documentation',
+    description: 'Complete API and Registry technical documentation',
+    href: '/admin/docs/api-registry',
+    icon: Code,
+  },
+  {
     title: 'Architecture & ADRs',
     description: 'System design and architectural decisions',
     href: '/admin/docs/architecture',
