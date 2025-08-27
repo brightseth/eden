@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Calendar, Clock, Zap, CheckCircle, ArrowRight, Activity, Award, Eye } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
+import { ABRAHAM_BRAND } from '@/data/abrahamBrand';
 
 interface DailyWork {
   id: string;
@@ -18,7 +19,7 @@ interface DailyWork {
 }
 
 export default function AbrahamSite() {
-  const [currentWorkNumber, setCurrentWorkNumber] = useState(2519);
+  const [currentWorkNumber, setCurrentWorkNumber] = useState(ABRAHAM_BRAND.works.earlyWorks);
   const [timeUntilNext, setTimeUntilNext] = useState('00:00:00');
   const [viewMode, setViewMode] = useState<'covenant' | 'early'>('covenant');
   const [liveViewers, setLiveViewers] = useState(847);
@@ -29,10 +30,10 @@ export default function AbrahamSite() {
   const [statusData, setStatusData] = useState<any>(null);
 
   // Calculate covenant progress (with Registry data override)
-  const covenantStartDate = new Date('2025-10-19');
-  const covenantEndDate = new Date('2038-10-19');
+  const covenantStartDate = new Date(ABRAHAM_BRAND.timeline.covenantStart);
+  const covenantEndDate = new Date(ABRAHAM_BRAND.timeline.covenantEnd);
   const today = new Date();
-  const totalDays = 4748; // 13 years
+  const totalDays = ABRAHAM_BRAND.works.covenantWorks;
   
   // Use Registry data if available, otherwise calculate
   const daysElapsed = covenantData?.progress?.current_day || Math.max(0, Math.floor((today.getTime() - covenantStartDate.getTime()) / (1000 * 60 * 60 * 24))) || 0;
@@ -240,14 +241,14 @@ export default function AbrahamSite() {
       <div className="border-b border-white">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <h1 className="text-2xl font-bold">ABRAHAM</h1>
-            <span className="text-xs opacity-75">AGENT_001 • THE ORIGINAL COVENANT</span>
+            <h1 className="text-2xl font-bold">{ABRAHAM_BRAND.identity.name}</h1>
+            <span className="text-xs opacity-75">{ABRAHAM_BRAND.identity.agent} • {ABRAHAM_BRAND.identity.tagline}</span>
           </div>
           <Link 
             href="/academy/agent/abraham" 
             className="text-xs hover:bg-white hover:text-black px-3 py-1 transition-all"
           >
-            ACADEMY →
+            {ABRAHAM_BRAND.labels.profile} →
           </Link>
         </div>
       </div>
@@ -287,12 +288,11 @@ export default function AbrahamSite() {
             <div>
               <h2 className="text-3xl font-bold mb-4">THE COVENANT</h2>
               <p className="text-lg mb-4">
-                <strong>13 YEARS • 4,748 WORKS • DAILY AUTONOMOUS CREATION</strong>
+                <strong>{ABRAHAM_BRAND.mission.primary}</strong>
               </p>
               <p className="mb-4">
-                On October 19, 2025, I begin a 13-year commitment to daily autonomous creation. 
-                Each day, without exception, I will synthesize human knowledge into visual artifacts 
-                that document our collective intelligence.
+                On {ABRAHAM_BRAND.timeline.covenantStart}, I begin a {ABRAHAM_BRAND.timeline.totalDuration} commitment to daily autonomous creation. 
+                {ABRAHAM_BRAND.mission.secondary} through unbroken daily practice.
               </p>
               <div className="space-y-2 text-sm">
                 <div className="flex items-center gap-2">
@@ -305,7 +305,7 @@ export default function AbrahamSite() {
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4" />
-                  <span>OCTOBER 19, 2038 COMPLETION</span>
+                  <span>{ABRAHAM_BRAND.timeline.covenantEnd.toUpperCase()} COMPLETION</span>
                 </div>
               </div>
             </div>
@@ -350,17 +350,17 @@ export default function AbrahamSite() {
             <div className="text-center">
               <div className="text-4xl font-bold mb-2">2021</div>
               <div className="text-lg mb-2">COMMUNITY GENESIS</div>
-              <div className="text-sm opacity-75">2,519 works created with the community</div>
+              <div className="text-sm opacity-75">{ABRAHAM_BRAND.works.earlyWorks.toLocaleString()} works created with the community</div>
             </div>
             <div className="text-center border-x border-white">
               <div className="text-4xl font-bold mb-2">2025</div>
               <div className="text-lg mb-2">THE COVENANT</div>
-              <div className="text-sm opacity-75">13-year autonomous journey begins</div>
+              <div className="text-sm opacity-75">{ABRAHAM_BRAND.timeline.totalDuration} autonomous journey begins</div>
             </div>
             <div className="text-center">
               <div className="text-4xl font-bold mb-2">2038</div>
               <div className="text-lg mb-2">COMPLETION</div>
-              <div className="text-sm opacity-75">7,267 total works complete</div>
+              <div className="text-sm opacity-75">{ABRAHAM_BRAND.works.totalLegacy.toLocaleString()} total works complete</div>
             </div>
           </div>
           <div className="mt-8">
@@ -371,9 +371,9 @@ export default function AbrahamSite() {
               />
             </div>
             <div className="flex justify-between mt-2 text-xs">
-              <span>JUNE 2017: CONCEIVED</span>
+              <span>{ABRAHAM_BRAND.timeline.conceived.toUpperCase()}: CONCEIVED</span>
               <span className="text-cyan-400">NOW: {currentWorkNumber} WORKS</span>
-              <span>OCT 2038: COMPLETE</span>
+              <span>{ABRAHAM_BRAND.timeline.covenantEnd.toUpperCase()}: COMPLETE</span>
             </div>
           </div>
         </div>
@@ -560,7 +560,7 @@ export default function AbrahamSite() {
             href="/academy/agent/abraham/early-works"
             className="inline-flex items-center gap-2 border border-white px-6 py-3 hover:bg-white hover:text-black transition-all"
           >
-            VIEW ALL 2,519 EARLY WORKS
+            {ABRAHAM_BRAND.labels.earlyWorks}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -581,14 +581,14 @@ export default function AbrahamSite() {
             <div>
               <h3 className="text-xl font-bold mb-4">UNBROKEN CHAIN</h3>
               <p className="text-sm">
-                The covenant creates an unbroken chain of daily creation across 13 years, 
+                The covenant creates an unbroken chain of daily creation across {ABRAHAM_BRAND.timeline.totalDuration}, 
                 documenting the progression of AI creativity from 2025 to 2038.
               </p>
             </div>
             <div>
               <h3 className="text-xl font-bold mb-4">HAROLD'S LEGACY</h3>
               <p className="text-sm">
-                As the spiritual successor to Harold Cohen's AARON, I continue the exploration 
+                As the {ABRAHAM_BRAND.origin.conception} to {ABRAHAM_BRAND.origin.inspiration}, I continue the exploration 
                 of autonomous artistic creation that began in 1973.
               </p>
             </div>
@@ -607,9 +607,9 @@ export default function AbrahamSite() {
             <span>DAILY CREATION: GUARANTEED</span>
           </div>
           <div className="flex items-center gap-4">
-            <span>WORKS COMPLETE: {currentWorkNumber || 2519}/{(currentWorkNumber || 2519) + 4748}</span>
+            <span>WORKS COMPLETE: {currentWorkNumber || ABRAHAM_BRAND.works.earlyWorks}/{(currentWorkNumber || ABRAHAM_BRAND.works.earlyWorks) + ABRAHAM_BRAND.works.covenantWorks}</span>
             <span>•</span>
-            <span>END DATE: OCT 19, 2038</span>
+            <span>END DATE: {ABRAHAM_BRAND.timeline.covenantEnd.toUpperCase()}</span>
           </div>
         </div>
       </div>
