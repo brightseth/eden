@@ -170,17 +170,35 @@ export default function BerthaTrainerInterview() {
         }))
       }))
     };
-
-    console.log('Training data for BERTHA:', trainingData);
     
-    // TODO: Send to API endpoint for processing
-    // await fetch('/api/agents/bertha/training', {
-    //   method: 'POST',
-    //   body: JSON.stringify(trainingData)
-    // });
+    try {
+      // Send to API endpoint for processing
+      const response = await fetch('/api/agents/bertha/training', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(trainingData)
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        alert(`✅ Training Complete!\n\nBERTHA has successfully incorporated your expertise.\n\nKey updates applied:\n${Object.keys(result.updates || {}).map(k => `• ${k}`).join('\n')}\n\nBERTHA is now ready to operate with your collection intelligence.`);
+        
+        // Redirect to BERTHA's main page after success
+        setTimeout(() => {
+          window.location.href = '/sites/amanda';
+        }, 2000);
+      } else {
+        alert('Failed to save training data. Please try again.');
+      }
+    } catch (error) {
+      console.error('Training submission error:', error);
+      alert('Error submitting training data. Please check console for details.');
+    }
 
     setIsSubmitting(false);
-    alert('Interview responses saved! BERTHA will begin learning from your expertise.');
   };
 
   const section = interviewSections[currentSection];

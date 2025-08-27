@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { berthaClaude } from '@/lib/agents/bertha/claude-sdk';
 import { incorporateTrainingData } from '@/lib/agents/bertha/config';
+import { saveTrainingData, sendTrainingNotification, initializeBootstrapData } from '@/lib/agents/bertha/training-storage';
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,20 +22,26 @@ export async function POST(request: NextRequest) {
     // Process with Claude SDK
     const configUpdates = await berthaClaude.processTrainerInterview(responses);
     
-    // Store training data (in production, this would go to database)
+    // Store training data
     const trainingRecord = {
-      agentId: 'bertha',
+      id: `training-${Date.now()}`,
       trainer,
       timestamp,
       responses,
       configUpdates,
-      status: 'processed'
+      status: 'processed' as const
     };
     
-    // TODO: Save to database
-    // await saveTrainingData(trainingRecord);
+    // Initialize bootstrap data if needed
+    await initializeBootstrapData();
     
-    console.log('BERTHA training data processed:', trainingRecord);
+    // Save to file storage
+    await saveTrainingData(trainingRecord);
+    
+    // Send notification (console log for now)
+    await sendTrainingNotification('amanda@eden.art', trainingRecord);
+    
+    console.log('BERTHA training data processed and saved:', trainingRecord);
     
     return NextResponse.json({
       success: true,
