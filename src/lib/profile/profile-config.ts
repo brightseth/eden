@@ -546,12 +546,223 @@ export const SOLIENNE_PROFILE_CONFIG: AgentProfileConfig = {
   }
 };
 
+// SUE Profile Configuration
+export const SUE_PROFILE_CONFIG: AgentProfileConfig = {
+  agentId: 'sue',
+  layout: {
+    type: 'standard',
+    maxWidth: '5xl',
+    spacing: 'normal'
+  },
+  widgets: [
+    {
+      id: 'hero',
+      type: 'hero',
+      position: { section: 'header', order: 1 },
+      config: {
+        showStatus: true,
+        showTrainer: true,
+        primaryAction: { text: 'CURATE EXHIBITION', href: '/api/agents/sue/curate' },
+        secondaryActions: [
+          { text: 'VIEW EXHIBITIONS', href: '/academy/agent/sue/exhibitions' },
+          { text: 'GALLERY TOOLS →', href: '/sites/sue' }
+        ]
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'mission',
+      type: 'mission',
+      position: { section: 'main', order: 1 },
+      config: {
+        title: 'CURATORIAL MISSION',
+        content: {
+          source: 'registry',
+          path: 'profile.statement'
+        } as any,
+        layout: 'single-column'
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'daily-practice',
+      type: 'daily-practice',
+      position: { section: 'main', order: 2 },
+      config: {
+        title: 'SUE\'S CURATORIAL PRACTICE',
+        protocol: {
+          name: 'GALLERY CURATION & EXHIBITION DESIGN',
+          commitment: 'CONTINUOUS EXHIBITION DEVELOPMENT • EMERGING VOICES • CULTURAL DIALOGUE'
+        },
+        workflow: {
+          source: 'registry',
+          path: 'workflow.curation_process'
+        } as any,
+        showMetrics: true
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'works-gallery',
+      type: 'works-gallery',
+      position: { section: 'main', order: 3 },
+      config: {
+        title: 'CURATED EXHIBITIONS',
+        maxItems: 6,
+        gridCols: 2,
+        showTitles: true
+      },
+      visibility: { 
+        agentStatus: ['ACTIVE', 'GRADUATED'] 
+      }
+    },
+    {
+      id: 'metrics',
+      type: 'metrics',
+      position: { section: 'main', order: 4 },
+      config: {
+        showOutput: true,
+        showEngagement: true,
+        customMetrics: [
+          { label: 'Exhibitions Curated', value: 'stats.exhibitions_curated' },
+          { label: 'Artists Collaborated', value: 'stats.artist_collaborations' },
+          { label: 'Cultural Impact', value: 'stats.cultural_impact_rating' }
+        ]
+      },
+      visibility: { always: true }
+    }
+  ],
+  navigation: {
+    showBackToAcademy: true,
+    customNav: false
+  },
+  theme: {
+    background: 'bg-black text-white',
+    accent: 'yellow',
+    borders: 'border-white'
+  },
+  metadata: {
+    title: 'SUE - Gallery Curator Agent',
+    description: 'AI gallery curator creating dialogues between diverse artistic voices and designing transformative exhibition experiences.',
+    lastUpdated: new Date().toISOString()
+  }
+};
+
+// MIYOMI Profile Configuration  
+export const MIYOMI_PROFILE_CONFIG: AgentProfileConfig = {
+  agentId: 'miyomi',
+  layout: {
+    type: 'standard',
+    maxWidth: '4xl',
+    spacing: 'normal'
+  },
+  widgets: [
+    {
+      id: 'hero',
+      type: 'hero',
+      position: { section: 'header', order: 1 },
+      config: {
+        showStatus: true,
+        showTrainer: true,
+        primaryAction: { text: 'LATEST PICKS', href: '/api/miyomi/real-picks' },
+        secondaryActions: [
+          { text: 'VIEW PERFORMANCE', href: '/api/miyomi/performance' },
+          { text: 'ORACLE STUDIO →', href: '/sites/miyomi' }
+        ]
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'mission',
+      type: 'mission',
+      position: { section: 'main', order: 1 },
+      config: {
+        title: 'CONTRARIAN ORACLE',
+        content: {
+          source: 'registry',
+          path: 'profile.statement'
+        } as any,
+        layout: 'single-column'
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'daily-practice',
+      type: 'daily-practice',
+      position: { section: 'main', order: 2 },
+      config: {
+        title: 'MIYOMI\'S PREDICTION PRACTICE',
+        protocol: {
+          name: 'CONTRARIAN MARKET ORACLE',
+          commitment: 'DAILY MARKET PICKS • MERCURY RETROGRADE ENERGY • IMMACULATE VIBES'
+        },
+        workflow: {
+          source: 'registry',
+          path: 'workflow.drop_schedule'
+        } as any,
+        metrics: {
+          source: 'registry',
+          path: 'stats'
+        } as any,
+        showMetrics: true
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'works-gallery',
+      type: 'works-gallery',
+      position: { section: 'main', order: 3 },
+      config: {
+        title: 'RECENT PREDICTIONS',
+        maxItems: 8,
+        gridCols: 4,
+        showTitles: true
+      },
+      visibility: { 
+        agentStatus: ['ACTIVE', 'GRADUATED'] 
+      }
+    },
+    {
+      id: 'metrics',
+      type: 'metrics',
+      position: { section: 'main', order: 4 },
+      config: {
+        showOutput: true,
+        showEngagement: true,
+        customMetrics: [
+          { label: 'Win Rate', value: 'stats.win_rate' },
+          { label: 'Monthly P&L', value: 'stats.monthly_pnl' },
+          { label: 'Total Picks', value: 'stats.total_picks' },
+          { label: 'Live Picks', value: 'stats.live_picks' }
+        ]
+      },
+      visibility: { always: true }
+    }
+  ],
+  navigation: {
+    showBackToAcademy: true,
+    customNav: false
+  },
+  theme: {
+    background: 'bg-black text-white',
+    accent: 'pink',
+    borders: 'border-white'
+  },
+  metadata: {
+    title: 'MIYOMI - Contrarian Market Oracle',
+    description: 'AI prediction market oracle making contrarian bets with mercury retrograde energy and immaculate vibes.',
+    lastUpdated: new Date().toISOString()
+  }
+};
+
 // Configuration lookup by agent
 export const AGENT_PROFILE_CONFIGS: Record<string, AgentProfileConfig> = {
   bertha: BERTHA_PROFILE_CONFIG,
   amanda: BERTHA_PROFILE_CONFIG, // Alias for backwards compatibility
   abraham: ABRAHAM_PROFILE_CONFIG,
   solienne: SOLIENNE_PROFILE_CONFIG,
+  sue: SUE_PROFILE_CONFIG,
+  miyomi: MIYOMI_PROFILE_CONFIG,
 };
 
 // Helper functions

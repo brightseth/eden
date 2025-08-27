@@ -5,7 +5,7 @@
 import { ApiTestClient } from './base/api-test-client';
 
 async function debugTest() {
-  const client = new ApiTestClient('http://localhost:3002/api');
+  const client = new ApiTestClient('http://localhost:3007/api');
   
   console.log('🔍 Debugging API client...\n');
   
@@ -32,7 +32,7 @@ async function debugTest() {
     
     // Test direct fetch for comparison
     console.log('2. Testing direct fetch...');
-    const directResponse = await fetch('http://localhost:3002/api/health');
+    const directResponse = await fetch('http://localhost:3007/api/health');
     const directData = await directResponse.json();
     
     console.log('Direct fetch:');
