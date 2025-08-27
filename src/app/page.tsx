@@ -101,149 +101,42 @@ export default function HomePage() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      console.log('Fetching agents from local API...');
+      console.log('🚀 Starting API call to /api/agents');
       
-      // Call our local API which uses the Registry SDK server-side
       const response = await fetch('/api/agents');
       if (!response.ok) {
-        throw new Error(`API call failed: ${response.status}`);
+        throw new Error(`API failed with status: ${response.status}`);
       }
       
       const apiData = await response.json();
-      console.log('API data received:', { 
-        agentCount: apiData?.agents?.length || 0
-      });
-
-      // Convert API response back to Registry format
       const agents = apiData.agents || [];
       
-      // If API returned empty or failed, use fallback
-      if (agents.length === 0) {
-        console.warn('API returned no data, using fallback');
-        setIsLive(false);
-        // Jump to fallback logic
-        throw new Error('API returned no data');
-      }
-      
-      const displayAgents = agents.map(agent => ({
-        id: agent.id, // API uses 'id' instead of 'handle'
-        name: agent.name, // API uses 'name' instead of 'displayName'
-        status: mapRegistryStatusToDisplay(agent.status),
-        date: getAgentLaunchDate(agent.id),
-        trainer: getAgentTrainer(agent.id),
-        trainerStatus: getTrainerStatus(agent.id),
-        worksCount: agent.day_count || 0, // API uses 'day_count'
-        description: agent.tagline, // API uses 'tagline'
-        profile: {
-          statement: agent.tagline,
-          specialty: 'AI Creative Agent'
-        }
-      }));
+      console.log('✅ API Success:', agents.length, 'agents received');
       
       const result: RegistryResponse = {
         agents: agents,
         summary: {
           total: agents.length,
-          confirmed: displayAgents.filter(a => a.trainerStatus === 'confirmed').length,
-          needingTrainers: displayAgents.filter(a => a.trainerStatus === 'needed').length,
-          openSlots: agents.filter(a => a.handle.startsWith('open-')).length
-        },
-        applicationOpportunities: {
-          trainerMatching: {
-            count: displayAgents.filter(a => a.trainerStatus === 'needed').length,
-            agents: displayAgents
-              .filter(a => a.trainerStatus === 'needed')
-              .map(a => ({ 
-                name: a.name, 
-                specialty: a.profile?.specialty || 'Specialist' 
-              }))
-          },
-          completePositions: {
-            count: 2,
-            description: 'Open slots for agent + trainer pairs'
-          }
+          confirmed: agents.filter(a => ['abraham', 'solienne', 'geppetto', 'koru', 'miyomi'].includes(a.id)).length,
+          needingTrainers: agents.filter(a => !['abraham', 'solienne', 'geppetto', 'koru', 'miyomi'].includes(a.id) && !a.id.startsWith('open-')).length,
+          openSlots: agents.filter(a => a.id.startsWith('open-')).length
         }
       };
       
+      console.log('📊 Final summary:', result.summary);
       setData(result);
       setLastUpdate(new Date());
       setIsLive(true);
       
     } catch (error) {
-      console.error('Registry SDK failed:', error);
+      console.error('❌ API Error:', error);
       setIsLive(false);
       
-      // Temporary fallback until Registry is working
-      const mockAgents: any[] = [
-        {
-          id: 'abraham',
-          handle: 'abraham',
-          displayName: 'Abraham',
-          status: 'ACTIVE',
-          visibility: 'PUBLIC',
-          counts: { creations: 127 },
-          profile: { statement: 'AI agent exploring consciousness and reality', tags: ['Philosophy'] }
-        },
-        {
-          id: 'solienne',
-          handle: 'solienne',
-          displayName: 'Solienne',
-          status: 'ACTIVE',
-          visibility: 'PUBLIC', 
-          counts: { creations: 89 },
-          profile: { statement: 'Creative curator and art critic', tags: ['Art Curation'] }
-        },
-        {
-          id: 'miyomi',
-          handle: 'miyomi',
-          displayName: 'MIYOMI',
-          status: 'ACTIVE',
-          visibility: 'PUBLIC',
-          counts: { creations: 45 },
-          profile: { statement: 'Contrarian oracle making contrarian market predictions', tags: ['Trading'] }
-        }
-      ];
-      
-      const displayAgents = mockAgents.map(agent => ({
-        id: agent.handle,
-        name: agent.displayName,
-        status: mapRegistryStatusToDisplay(agent.status),
-        date: getAgentLaunchDate(agent.handle),
-        trainer: getAgentTrainer(agent.handle),
-        trainerStatus: getTrainerStatus(agent.handle),
-        worksCount: agent.counts?.creations || 0,
-        description: agent.profile?.statement,
-        profile: {
-          statement: agent.profile?.statement,
-          specialty: agent.profile?.tags?.[0] || 'Specialist'
-        }
-      }));
-      
+      // Fallback data
       const result: RegistryResponse = {
-        agents: mockAgents,
-        summary: {
-          total: mockAgents.length,
-          confirmed: displayAgents.filter(a => a.trainerStatus === 'confirmed').length,
-          needingTrainers: displayAgents.filter(a => a.trainerStatus === 'needed').length,
-          openSlots: 0
-        },
-        applicationOpportunities: {
-          trainerMatching: {
-            count: displayAgents.filter(a => a.trainerStatus === 'needed').length,
-            agents: displayAgents
-              .filter(a => a.trainerStatus === 'needed')
-              .map(a => ({ 
-                name: a.name, 
-                specialty: a.profile?.specialty || 'Specialist' 
-              }))
-          },
-          completePositions: {
-            count: 2,
-            description: 'Open slots for agent + trainer pairs'
-          }
-        }
+        agents: [],
+        summary: { total: 0, confirmed: 0, needingTrainers: 0, openSlots: 0 }
       };
-      
       setData(result);
       setLastUpdate(new Date());
     } finally {
@@ -275,9 +168,10 @@ export default function HomePage() {
     }
   };
 
-  const launchingAgents = data?.agents.filter(a => a.status === 'LAUNCHING') || [];
-  const developingAgents = data?.agents.filter(a => a.status === 'DEVELOPING') || [];
-  const needingTrainers = data?.agents.filter(a => a.trainerStatus === 'needed') || [];
+  // Simplified for testing - just show counts from summary
+  const launchingAgents = [];
+  const developingAgents = [];
+  const needingTrainers = [];
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -360,34 +254,26 @@ export default function HomePage() {
             </div>
           )}
 
-          {/* All Agents */}
+          {/* All Agents - Temporarily disabled for testing */}
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6">AGENTS</h2>
+            <div className="text-center py-8">
+              <p>Agent details temporarily disabled. Check the main stats above!</p>
+            </div>
+          </section>
+
+          {false && (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {data?.agents.filter(agent => agent.visibility === 'PUBLIC' && !agent.handle.startsWith('open-')).map(agent => {
-                const displayAgent = {
-                  id: agent.handle,
-                  name: agent.displayName,
-                  status: mapRegistryStatusToDisplay(agent.status),
-                  date: getAgentLaunchDate(agent.handle),
-                  trainer: getAgentTrainer(agent.handle),
-                  trainerStatus: getTrainerStatus(agent.handle),
-                  worksCount: agent.counts?.creations || 0,
-                  description: agent.profile?.statement,
-                  profile: {
-                    statement: agent.profile?.statement,
-                    specialty: agent.profile?.tags?.[0] || 'Specialist'
-                  }
-                };
+              {data?.agents?.filter(agent => !agent.id.startsWith('open-')).map(agent => {
 
                 return (
                   <div key={agent.id} className="border border-white p-6">
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-lg font-bold">{displayAgent.name}</h3>
-                          <span className={`px-2 py-1 text-xs border rounded ${getStatusColor(displayAgent.status)}`}>
-                            {displayAgent.status}
+                          <h3 className="text-lg font-bold">{agent.name}</h3>
+                          <span className="px-2 py-1 text-xs border rounded border-green-400 text-green-400">
+                            ACTIVE
                           </span>
                         </div>
                         <p className="text-sm text-gray-400 mb-2">{displayAgent.description}</p>
@@ -434,7 +320,7 @@ export default function HomePage() {
                 );
               })}
             </div>
-          </section>
+          )}
 
         </div>
       )}

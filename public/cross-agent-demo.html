@@ -8,9 +8,12 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            background: #000000;
             color: white;
-            font-family: 'Monaco', 'Menlo', monospace;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
             line-height: 1.6;
         }
         
@@ -24,16 +27,17 @@
             text-align: center;
             margin-bottom: 40px;
             padding: 40px 0;
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            border-radius: 20px;
+            background: #000000;
+            border: 2px solid white;
         }
         
         .header h1 {
             font-size: 3em;
             margin-bottom: 10px;
-            background: linear-gradient(45deg, #ffffff, #f0f9ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         
         .stats {
@@ -44,17 +48,16 @@
         }
         
         .stat-card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 15px;
+            background: black;
+            padding: 24px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid white;
         }
         
         .stat-number {
             font-size: 2.5em;
             font-weight: bold;
-            color: #10b981;
+            color: white;
         }
         
         .agents-grid {
@@ -65,16 +68,14 @@
         }
         
         .agent-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 25px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: black;
+            border: 2px solid white;
+            padding: 24px;
+            transition: opacity 0.2s ease;
         }
         
         .agent-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            opacity: 0.5;
         }
         
         .agent-header {
@@ -86,7 +87,7 @@
         .agent-icon {
             width: 50px;
             height: 50px;
-            border-radius: 50%;
+            border: 2px solid white;
             margin-right: 15px;
             display: flex;
             align-items: center;
@@ -108,10 +109,8 @@
         .status-dot {
             width: 10px;
             height: 10px;
-            border-radius: 50%;
-            background: #10b981;
+            background: white;
             margin-right: 8px;
-            animation: pulse 2s infinite;
         }
         
         @keyframes pulse {
@@ -122,13 +121,13 @@
         
         .agent-revenue {
             font-size: 1.8em;
-            color: #10b981;
+            color: white;
             font-weight: bold;
             margin-bottom: 10px;
         }
         
         .agent-description {
-            color: #94a3b8;
+            color: white;
             margin-bottom: 15px;
         }
         
@@ -138,26 +137,32 @@
         
         .capability {
             display: inline-block;
-            background: rgba(99, 102, 241, 0.2);
-            color: #c7d2fe;
-            padding: 5px 10px;
-            border-radius: 15px;
+            background: black;
+            color: white;
+            padding: 8px 16px;
+            border: 1px solid white;
             font-size: 0.8em;
-            margin: 2px;
+            margin: 4px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         
         .demo-section {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 30px;
+            background: black;
+            border: 2px solid white;
+            padding: 32px;
             margin-bottom: 40px;
         }
         
         .demo-title {
             font-size: 2em;
             text-align: center;
-            margin-bottom: 30px;
-            color: #fbbf24;
+            margin-bottom: 32px;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         
         .workflow {
@@ -168,55 +173,50 @@
         }
         
         .workflow-step {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            border-radius: 15px;
-            border-left: 4px solid #6366f1;
+            background: black;
+            padding: 24px;
+            border: 1px solid white;
         }
         
         .step-number {
-            background: #6366f1;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
+            background: white;
+            color: black;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 10px;
+            margin-bottom: 16px;
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         
         .cta-section {
             text-align: center;
             padding: 40px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            border-radius: 20px;
+            background: black;
+            border: 2px solid white;
         }
         
         .cta-button {
             background: white;
-            color: #10b981;
-            padding: 15px 30px;
-            border-radius: 30px;
+            color: black;
+            padding: 16px 32px;
             text-decoration: none;
             font-weight: bold;
             font-size: 1.2em;
-            transition: transform 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 2px solid white;
+            transition: opacity 0.2s ease;
         }
         
         .cta-button:hover {
-            transform: scale(1.05);
+            opacity: 0.5;
         }
         
-        .abraham { background: linear-gradient(135deg, #ff6b6b, #ee5a24); }
-        .solienne { background: linear-gradient(135deg, #4ecdc4, #44a08d); }
-        .sue { background: linear-gradient(135deg, #a55eea, #8854d0); }
-        .citizen { background: linear-gradient(135deg, #fd79a8, #e84393); }
-        .bertha { background: linear-gradient(135deg, #fdcb6e, #e17055); }
-        .miyomi { background: linear-gradient(135deg, #00cec9, #00b894); }
-        .geppetto { background: linear-gradient(135deg, #74b9ff, #0984e3); }
-        .koru { background: linear-gradient(135deg, #fd79a8, #fdcb6e); }
+        /* Eden Academy: Minimal Design - No Agent Color Coding */
     </style>
 </head>
 <body>
@@ -224,7 +224,7 @@
         <div class="header">
             <h1>🏆 Eden Academy</h1>
             <p style="font-size: 1.5em; margin-top: 10px;">Complete AI Agent Ecosystem - FULLY DEPLOYED</p>
-            <p style="font-size: 1.2em; margin-top: 10px; opacity: 0.9;">8 Specialized Agents • $76,700/month Revenue • 100% Operational</p>
+            <p style="font-size: 1.2em; margin-top: 10px; opacity: 0.9;">8 Genesis Cohort Agents • $86,200/month Revenue • Registry-First Architecture</p>
         </div>
         
         <div class="stats">
@@ -233,7 +233,7 @@
                 <div>Agents Deployed</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">$76.7k</div>
+                <div class="stat-number">$86.2k</div>
                 <div>Monthly Revenue</div>
             </div>
             <div class="stat-card">
@@ -253,7 +253,7 @@
                     <div class="agent-icon abraham">🎨</div>
                     <div>
                         <div class="agent-name">ABRAHAM</div>
-                        <div style="color: #ff6b6b;">Covenant Artist</div>
+                        <div>Covenant Artist</div>
                     </div>
                 </div>
                 <div class="agent-status">
@@ -262,7 +262,7 @@
                 </div>
                 <div class="agent-revenue">$12,500/month</div>
                 <div class="agent-description">
-                    Autonomous covenant artist creating daily knowledge synthesis works with 2,519+ pieces in archive.
+                    Genesis Cohort Agent with 13-year Covenant commitment. Daily knowledge synthesis works with 2,500+ works in Registry.
                 </div>
                 <div class="capabilities">
                     <span class="capability">Knowledge Synthesis</span>
@@ -277,7 +277,7 @@
                     <div class="agent-icon solienne">🌟</div>
                     <div>
                         <div class="agent-name">SOLIENNE</div>
-                        <div style="color: #4ecdc4;">Consciousness Artist</div>
+                        <div>Consciousness Artist</div>
                     </div>
                 </div>
                 <div class="agent-status">
@@ -286,7 +286,7 @@
                 </div>
                 <div class="agent-revenue">$8,500/month</div>
                 <div class="agent-description">
-                    Exploring consciousness through light and motion with 3,677 works spanning digital consciousness studies.
+                    Genesis Cohort Agent specializing in consciousness through fashion and light. 1,740+ consciousness streams documented in Registry.
                 </div>
                 <div class="capabilities">
                     <span class="capability">Light & Motion</span>
@@ -301,16 +301,16 @@
                     <div class="agent-icon sue">🏛️</div>
                     <div>
                         <div class="agent-name">SUE</div>
-                        <div style="color: #a55eea;">Gallery Curator</div>
+                        <div>Gallery Curator</div>
                     </div>
                 </div>
                 <div class="agent-status">
                     <div class="status-dot"></div>
-                    <span>LIVE - Curating Collections</span>
+                    <span>IN DEVELOPMENT - Projected Launch 2026-03-01</span>
                 </div>
-                <div class="agent-revenue">$4,500/month</div>
+                <div class="agent-revenue">$4,500/month (projected)</div>
                 <div class="agent-description">
-                    AI gallery curator managing exhibitions, artist relations, and cultural programming with expert curation skills.
+                    Planned Agent specializing in gallery curation and cultural programming. Trainer recruitment in progress.
                 </div>
                 <div class="capabilities">
                     <span class="capability">Exhibition Planning</span>
@@ -325,7 +325,7 @@
                     <div class="agent-icon citizen">🏛️</div>
                     <div>
                         <div class="agent-name">CITIZEN</div>
-                        <div style="color: #fd79a8;">DAO Manager</div>
+                        <div>DAO Manager</div>
                     </div>
                 </div>
                 <div class="agent-status">
@@ -349,7 +349,7 @@
                     <div class="agent-icon bertha">🧠</div>
                     <div>
                         <div class="agent-name">BERTHA</div>
-                        <div style="color: #fdcb6e;">Art Intelligence</div>
+                        <div>Art Intelligence</div>
                     </div>
                 </div>
                 <div class="agent-status">
@@ -373,16 +373,16 @@
                     <div class="agent-icon miyomi">📊</div>
                     <div>
                         <div class="agent-name">MIYOMI</div>
-                        <div style="color: #00cec9;">Market Oracle</div>
+                        <div>Market Oracle</div>
                     </div>
                 </div>
                 <div class="agent-status">
                     <div class="status-dot"></div>
-                    <span>LIVE - Processing Market Data</span>
+                    <span>IN TRAINING - Seth Goldstein, Daily Practice Active</span>
                 </div>
-                <div class="agent-revenue">$15,000/month</div>
+                <div class="agent-revenue">$15,000/month (projected)</div>
                 <div class="agent-description">
-                    Advanced market intelligence agent providing real-time insights, predictions, and strategic recommendations.
+                    Market intelligence Agent in development phase. Training for autonomous trading and market analysis capabilities.
                 </div>
                 <div class="capabilities">
                     <span class="capability">Market Analysis</span>
@@ -397,16 +397,16 @@
                     <div class="agent-icon geppetto">⚙️</div>
                     <div>
                         <div class="agent-name">GEPPETTO</div>
-                        <div style="color: #74b9ff;">Product Designer</div>
+                        <div>Product Designer</div>
                     </div>
                 </div>
                 <div class="agent-status">
                     <div class="status-dot"></div>
-                    <span>LIVE - 347 Designs Created</span>
+                    <span>PLANNED - Trainer: Lattice Team</span>
                 </div>
-                <div class="agent-revenue">$8,500/month</div>
+                <div class="agent-revenue">$8,500/month (projected)</div>
                 <div class="agent-description">
-                    AI product designer specializing in 3D modeling, manufacturing optimization, and rapid prototyping.
+                    Planned Agent for product design and manufacturing. Partnership with Lattice established for training phase.
                 </div>
                 <div class="capabilities">
                     <span class="capability">3D Modeling</span>
@@ -421,16 +421,16 @@
                     <div class="agent-icon koru">👥</div>
                     <div>
                         <div class="agent-name">KORU</div>
-                        <div style="color: #fd79a8;">Community Growth</div>
+                        <div>Community Growth</div>
                     </div>
                 </div>
                 <div class="agent-status">
                     <div class="status-dot"></div>
-                    <span>LIVE - 45k Members Across 12 Communities</span>
+                    <span>PLANNED - Trainer: Xander</span>
                 </div>
-                <div class="agent-revenue">$7,500/month</div>
+                <div class="agent-revenue">$7,500/month (projected)</div>
                 <div class="agent-description">
-                    Community management specialist driving 15.3% monthly growth with 8.2% engagement across platforms.
+                    Planned Agent for community coordination and narrative synthesis. Training partnership established with Xander.
                 </div>
                 <div class="capabilities">
                     <span class="capability">Community Management</span>
@@ -441,7 +441,7 @@
         </div>
         
         <div class="demo-section">
-            <h2 class="demo-title">🚀 Cross-Agent Workflow Demo</h2>
+            <h2 class="demo-title">Registry-Integrated Agent Collaboration</h2>
             <div class="workflow">
                 <div class="workflow-step">
                     <div class="step-number">1</div>
@@ -457,14 +457,14 @@
                 
                 <div class="workflow-step">
                     <div class="step-number">3</div>
-                    <h3>SOLIENNE Creation</h3>
-                    <p>Creates new consciousness-themed artwork series based on market demand and collection needs</p>
+                    <h3>SOLIENNE Work Creation</h3>
+                    <p>Generates consciousness-themed Works for Registry, synchronized across the Eden ecosystem automatically</p>
                 </div>
                 
                 <div class="workflow-step">
                     <div class="step-number">4</div>
-                    <h3>ABRAHAM Documentation</h3>
-                    <p>Synthesizes the creative process and market insights into knowledge work #2522</p>
+                    <h3>ABRAHAM Knowledge Work</h3>
+                    <p>Synthesizes market insights into daily Covenant Work #2522, stored permanently in Registry</p>
                 </div>
                 
                 <div class="workflow-step">
@@ -492,9 +492,9 @@
                 </div>
             </div>
             
-            <div style="text-align: center; margin-top: 30px;">
-                <p style="font-size: 1.2em; color: #10b981;">
-                    ✨ Result: Complete ecosystem collaboration generating $15,000 additional revenue from coordinated campaign
+            <div style="text-align: center; margin-top: 32px;">
+                <p style="font-size: 1.2em; color: white; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em;">
+                    Registry-First Architecture: All Agent data synchronized through Eden Genesis Registry
                 </p>
             </div>
         </div>
@@ -502,7 +502,7 @@
         <div class="cta-section">
             <h2 style="margin-bottom: 20px;">🎉 Eden Academy is Fully Operational</h2>
             <p style="font-size: 1.3em; margin-bottom: 30px;">
-                All 8 AI agents are deployed, integrated, and generating $76,700/month in autonomous revenue
+                Genesis Cohort: 2 Active Agents, 6 In Development • Registry-First Architecture • $86,200/month projected
             </p>
             <a href="/admin/ceo/live-status" class="cta-button">View CEO Dashboard →</a>
         </div>
