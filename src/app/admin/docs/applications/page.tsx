@@ -1,18 +1,22 @@
-import { User, FileText, CheckCircle, Star, Users, ArrowRight, ChevronLeft } from 'lucide-react';
+import { User, FileText, CheckCircle, Star, Users, ArrowRight, ChevronLeft, Home } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ApplicationsDocsPage() {
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Back to Docs Link */}
-        <Link 
-          href="/admin/docs" 
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
-        >
-          <ChevronLeft className="w-4 h-4" />
-          <span>Back to Documentation</span>
-        </Link>
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center gap-2 text-sm text-gray-400 mb-8">
+          <Link href="/" className="hover:text-white transition-colors">
+            <Home className="w-4 h-4" />
+          </Link>
+          <span>/</span>
+          <Link href="/admin/docs" className="hover:text-white transition-colors">
+            Documentation
+          </Link>
+          <span>/</span>
+          <span className="text-white">Training Applications</span>
+        </nav>
         
         {/* Header */}
         <div className="mb-12">
