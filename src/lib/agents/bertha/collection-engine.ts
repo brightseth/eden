@@ -4,6 +4,7 @@
 import { readFileSync } from 'fs';
 import { berthaClaude, type MarketAnalysis } from './claude-sdk';
 import { berthaConfig, type BerthaConfig } from './config';
+import { marketIntelligence } from './market-intelligence';
 
 export interface CollectionDecision {
   decision: 'buy' | 'pass' | 'watch' | 'sell';
@@ -85,9 +86,26 @@ export class BerthaCollectionEngine {
     return decisions;
   }
   
-  // Get consensus decision from all archetypes
+  // Get consensus decision from all archetypes with market intelligence
   async getConsensusDecision(evaluation: ArtworkEvaluation): Promise<CollectionDecision> {
-    const decisions = await this.evaluateArtwork(evaluation);
+    // Get real-time market intelligence first
+    const marketSignals = await marketIntelligence.getMarketSignalsForArtwork({
+      artist: evaluation.artwork.artist,
+      category: evaluation.metadata.medium,
+      platform: evaluation.artwork.platform,
+      currentPrice: evaluation.artwork.currentPrice
+    });
+    
+    // Update evaluation with enhanced market signals
+    const enhancedEvaluation = {
+      ...evaluation,
+      signals: {
+        ...evaluation.signals,
+        market: Math.max(evaluation.signals.market, marketSignals.marketScore)
+      }
+    };
+    
+    const decisions = await this.evaluateArtwork(enhancedEvaluation);
     
     // Weight decisions by confidence and combine
     const weightedScores = {
@@ -108,6 +126,11 @@ export class BerthaCollectionEngine {
       allRisks.push(...decision.riskFactors);
     }
     
+    // Add market intelligence insights
+    allReasons.push(...marketSignals.trends);
+    allReasons.push(...marketSignals.opportunities);
+    allRisks.push(...marketSignals.risks);
+    
     // Get highest weighted decision
     const bestDecision = Object.entries(weightedScores)
       .sort(([,a], [,b]) => b - a)[0][0] as 'buy' | 'pass' | 'watch' | 'sell';
@@ -118,10 +141,10 @@ export class BerthaCollectionEngine {
       decision: bestDecision,
       confidence: avgConfidence,
       reasoning: this.consolidateReasons(allReasons),
-      archetype: 'Consensus',
+      archetype: 'Consensus + Market Intelligence',
       riskFactors: this.consolidateRisks(allRisks),
       urgency: this.calculateUrgency(bestDecision, avgConfidence),
-      priceTarget: this.calculatePriceTarget(evaluation, decisions)
+      priceTarget: this.calculatePriceTarget(enhancedEvaluation, decisions)
     };
   }
   

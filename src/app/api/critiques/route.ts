@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@/utils/supabase/server';
 
 // POST /api/critiques - Create critique (auto-curates on INCLUDE)
 export async function POST(request: NextRequest) {

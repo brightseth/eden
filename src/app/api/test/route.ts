@@ -1,49 +1,98 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/server';
 
+/**
+ * Database connectivity and schema validation endpoint
+ * Tests actual database connections and returns structured data
+ */
 export async function GET() {
-  try {
-    // Test 1: Check if we can connect to agent_archives table
-    const { data: archives, error: archivesError } = await supabase
-      .from('agent_archives')
-      .select('id, agent_id, title, created_date')
-      .limit(5);
+  const startTime = Date.now();
+  const tests = {
+    database: { healthy: false, latency: 0, error: null as string | null },
+    schemas: { 
+      agent_archives: { exists: false, count: 0, error: null as string | null },
+      critiques: { exists: false, count: 0, error: null as string | null }
+    }
+  };
 
-    if (archivesError) {
-      return NextResponse.json({ 
-        success: false, 
-        error: 'Failed to fetch agent archives',
-        details: archivesError.message,
-        hint: archivesError.hint
-      }, { status: 500 });
+  try {
+    const supabase = await createClient();
+    
+    // Test 1: Agent Archives table
+    const archivesStart = Date.now();
+    try {
+      const { data: archives, error: archivesError, count: archivesCount } = await supabase
+        .from('agent_archives')
+        .select('id, agent_id, title, created_date', { count: 'exact' })
+        .limit(3);
+
+      if (archivesError) {
+        tests.schemas.agent_archives.error = archivesError.message;
+      } else {
+        tests.schemas.agent_archives.exists = true;
+        tests.schemas.agent_archives.count = archivesCount || 0;
+      }
+      
+    } catch (error) {
+      tests.schemas.agent_archives.error = error instanceof Error ? error.message : 'Unknown error';
     }
 
-    // Test 2: Count tables (use tables that actually exist)
-    const { count: archivesCount } = await supabase
-      .from('agent_archives')
-      .select('*', { count: 'exact', head: true });
+    // Test 2: Critiques table  
+    try {
+      const { count: critiquesCount, error: critiquesError } = await supabase
+        .from('critiques')
+        .select('*', { count: 'exact', head: true });
 
-    // Test if other tables exist
-    const { count: critiquesCount } = await supabase
-      .from('critiques')
-      .select('*', { count: 'exact', head: true });
+      if (critiquesError) {
+        tests.schemas.critiques.error = critiquesError.message;
+      } else {
+        tests.schemas.critiques.exists = true;
+        tests.schemas.critiques.count = critiquesCount || 0;
+      }
+    } catch (error) {
+      tests.schemas.critiques.error = error instanceof Error ? error.message : 'Unknown error';
+    }
 
-    return NextResponse.json({ 
-      success: true,
-      data: {
-        archives: archives || [],
-        archiveCount: archives?.length || 0,
-        archivesTotal: archivesCount,
-        critiquesTotal: critiquesCount,
-        connectionStatus: 'Connected successfully!',
-        schemaDetected: 'agent_archives schema (works-based)'
+    tests.database.healthy = tests.schemas.agent_archives.exists || tests.schemas.critiques.exists;
+    tests.database.latency = Date.now() - startTime;
+
+    const gitSha = process.env.VERCEL_GIT_COMMIT_SHA || 
+                  process.env.GIT_SHA || 
+                  'development';
+
+    return NextResponse.json({
+      ok: tests.database.healthy,
+      timestamp: new Date().toISOString(),
+      service: 'Eden Academy - Database Test',
+      version: '1.0.0', 
+      git: gitSha.substring(0, 8),
+      latency: tests.database.latency,
+      tests,
+      environment: {
+        hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+        hasSupabaseKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+        hasServiceKey: !!process.env.SUPABASE_SERVICE_KEY,
+        nodeEnv: process.env.NODE_ENV
+      }
+    }, {
+      status: tests.database.healthy ? 200 : 503,
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
       }
     });
+
   } catch (error) {
-    return NextResponse.json({ 
-      success: false, 
-      error: 'Server error',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 });
+    return NextResponse.json({
+      ok: false,
+      timestamp: new Date().toISOString(),
+      service: 'Eden Academy - Database Test',
+      error: error instanceof Error ? error.message : 'Unknown error',
+      latency: Date.now() - startTime
+    }, { 
+      status: 500,
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
+      }
+    });
   }
 }

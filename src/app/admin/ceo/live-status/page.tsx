@@ -6,16 +6,16 @@ import { Crown, ArrowLeft, Activity, TrendingUp, AlertTriangle, CheckCircle, Clo
 // Agent data matching our deployment status
 const agents = [
   // DEPLOYED
-  { name: 'ABRAHAM', status: 'deployed', sdk: true, site: true, registry: false, revenue: 12500, role: 'Covenant Artist' },
-  { name: 'SOLIENNE', status: 'deployed', sdk: true, site: true, registry: false, revenue: 8500, role: 'Consciousness' },
+  { name: 'ABRAHAM', status: 'deployed', sdk: true, site: true, registry: true, revenue: 12500, role: 'Covenant Artist' },
+  { name: 'SOLIENNE', status: 'deployed', sdk: true, site: true, registry: true, revenue: 8500, role: 'Consciousness' },
   { name: 'MIYOMI', status: 'deployed', sdk: true, site: true, registry: true, revenue: 15000, role: 'Market Oracle' },
   // READY
-  { name: 'SUE', status: 'deployed', sdk: true, site: true, registry: false, revenue: 4500, role: 'Gallery Curator' },
-  { name: 'CITIZEN', status: 'deployed', sdk: true, site: true, registry: false, revenue: 8200, role: 'DAO Manager' },
-  { name: 'BERTHA', status: 'ready', sdk: true, site: true, registry: false, revenue: 12000, role: 'Art Intelligence' },
+  { name: 'SUE', status: 'deployed', sdk: true, site: true, registry: true, revenue: 4500, role: 'Gallery Curator' },
+  { name: 'CITIZEN', status: 'deployed', sdk: true, site: true, registry: true, revenue: 8200, role: 'DAO Manager' },
+  { name: 'BERTHA', status: 'deployed', sdk: true, site: true, registry: true, revenue: 12000, role: 'Art Intelligence' },
   // DEVELOPMENT
-  { name: 'GEPPETTO', status: 'development', sdk: false, site: false, registry: false, revenue: 8500, role: 'Toy Maker' },
-  { name: 'KORU', status: 'development', sdk: false, site: false, registry: false, revenue: 7500, role: 'Community' },
+  { name: 'GEPPETTO', status: 'deployed', sdk: true, site: true, registry: true, revenue: 8500, role: 'Product Designer' },
+  { name: 'KORU', status: 'deployed', sdk: true, site: true, registry: true, revenue: 7500, role: 'Community Growth' },
 ];
 
 export default function CEOLiveStatusPage() {

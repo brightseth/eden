@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import MiyomiTrainingProcessor from '@/lib/agents/miyomi-training-processor';
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,38 +21,36 @@ export async function POST(req: NextRequest) {
       sectionsCount: trainingData.sections.length
     });
 
-    // In production, you would:
-    // 1. Save to database
-    // 2. Process with Claude API to extract training parameters
-    // 3. Update MIYOMI's configuration
-    // 4. Generate training summary
+    // Process training data and extract configuration
+    const processedData = await MiyomiTrainingProcessor.processTrainingData(trainingData);
+    
+    // Apply training to MIYOMI's live system
+    await MiyomiTrainingProcessor.applyTrainingToSystem(trainingData);
 
-    // For now, simulate successful processing
-    const processedData = {
+    // Create response with processed data
+    const response = {
       trainerId: `trainer_${Date.now()}`,
       trainingSessionId: `session_${Date.now()}`,
       extractedParameters: {
-        riskTolerance: extractRiskTolerance(trainingData),
-        contrarianIntensity: extractContrarianIntensity(trainingData),
-        sectorPreferences: extractSectorPreferences(trainingData),
-        positionSizing: extractPositionSizing(trainingData),
-        voicePattern: extractVoicePattern(trainingData),
-        informationSources: extractInformationSources(trainingData),
-        ecosystemAwareness: extractEcosystemAwareness(trainingData),
-        trendDetectionMethods: extractTrendDetectionMethods(trainingData)
+        riskTolerance: processedData.config.riskTolerance,
+        contrarianIntensity: processedData.config.contrarianDial,
+        sectorPreferences: processedData.config.sectorWeights,
+        positionSizing: processedData.tradingRules,
+        voicePattern: processedData.config.tone,
+        informationSources: processedData.informationSources,
+        marketInsights: processedData.marketInsights,
+        bannedTopics: processedData.config.bannedTopics
       },
       summary: generateTrainingSummary(trainingData)
     };
 
-    // TODO: Save to database
-    // await saveTrainingData(trainingData, processedData);
-
-    console.log('MIYOMI Training Processed:', processedData);
+    console.log('MIYOMI Training Processed and Applied:', response);
 
     return NextResponse.json({
       success: true,
-      data: processedData,
-      message: 'MIYOMI training data processed successfully'
+      data: response,
+      message: 'MIYOMI training data processed and applied successfully',
+      configApplied: true
     });
 
   } catch (error) {

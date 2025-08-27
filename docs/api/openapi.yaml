@@ -1,0 +1,454 @@
+openapi: 3.0.0
+info:
+  title: Eden Academy API
+  description: API for Eden Academy - AI agent training and creative works management
+  version: 1.0.0
+  contact:
+    name: Eden Academy Team
+servers:
+  - url: https://eden-academy.vercel.app/api
+    description: Production server
+  - url: http://localhost:3007/api  
+    description: Development server
+
+paths:
+  /healthz:
+    get:
+      summary: Liveness probe
+      description: Returns basic service health status without checking external dependencies
+      tags: [Health]
+      responses:
+        '200':
+          description: Service is alive
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  timestamp:
+                    type: string
+                    format: date-time
+                  service:
+                    type: string
+                    example: "Eden Academy"
+                  version:
+                    type: string
+                    example: "1.0.0"
+                  git:
+                    type: string
+                    example: "developm"
+                required: [ok, timestamp, service, version, git]
+
+  /readyz:
+    get:
+      summary: Readiness probe  
+      description: Returns service readiness including database and registry connectivity
+      tags: [Health]
+      responses:
+        '200':
+          description: Service is ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadinessResponse'
+        '503':
+          description: Service not ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadinessResponse'
+
+  /health:
+    get:
+      summary: Health check with type parameter
+      description: Backward compatible health endpoint supporting both liveness and readiness checks
+      tags: [Health]
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [liveness, readiness]
+            default: readiness
+          description: Type of health check to perform
+      responses:
+        '200':
+          description: Health check successful
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/LivenessResponse'
+                  - $ref: '#/components/schemas/ReadinessResponse'
+        '503':
+          description: Service not ready (readiness check only)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadinessResponse'
+
+  /test:
+    get:
+      summary: Database connectivity test
+      description: Tests database connectivity and schema validation
+      tags: [Testing]
+      responses:
+        '200':
+          description: Database tests passed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestResponse'
+        '503':
+          description: Database tests failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestResponse'
+
+  /critiques:
+    get:
+      summary: List critiques
+      description: Retrieve critiques with optional filtering
+      tags: [Critiques]
+      parameters:
+        - name: work_id
+          in: query
+          schema:
+            type: string
+          description: Filter by work ID
+        - name: critic
+          in: query
+          schema:
+            type: string
+            default: ninabot
+          description: Filter by critic name
+        - name: verdict
+          in: query
+          schema:
+            type: string
+            enum: [INCLUDE, MAYBE, EXCLUDE]
+          description: Filter by verdict
+      responses:
+        '200':
+          description: Critiques retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  critiques:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Critique'
+                  count:
+                    type: integer
+                    description: Number of critiques returned
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Create critique
+      description: Create a new critique for a work (auto-curates on INCLUDE verdict)
+      tags: [Critiques]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCritiqueRequest'
+      responses:
+        '201':
+          description: Critique created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Critique'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Work not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    LivenessResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        timestamp:
+          type: string
+          format: date-time
+        service:
+          type: string
+        version:
+          type: string
+        git:
+          type: string
+        type:
+          type: string
+          enum: [liveness]
+      required: [ok, timestamp, service, version, git, type]
+
+    ReadinessResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        timestamp:
+          type: string
+          format: date-time
+        service:
+          type: string
+        version:
+          type: string
+        git:
+          type: string
+        type:
+          type: string
+          enum: [readiness]
+        latency:
+          type: number
+          description: Total check latency in milliseconds
+        checks:
+          type: object
+          properties:
+            database:
+              $ref: '#/components/schemas/HealthCheck'
+            registry:
+              $ref: '#/components/schemas/HealthCheck'  
+            queue:
+              $ref: '#/components/schemas/HealthCheck'
+        # Legacy fields for backward compatibility
+        status:
+          type: string
+          enum: [healthy, degraded]
+        env:
+          type: object
+          properties:
+            hasSupabaseUrl:
+              type: boolean
+            hasSupabaseKey:
+              type: boolean
+            hasServiceKey:
+              type: boolean
+        features:
+          type: object
+          properties:
+            registrySync:
+              type: boolean
+            registryStatus:
+              type: string
+              enum: [connected, disconnected]
+      required: [ok, timestamp, service, version, git, type, latency, checks]
+
+    TestResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        timestamp:
+          type: string
+          format: date-time
+        service:
+          type: string
+        version:
+          type: string
+        git:
+          type: string
+        latency:
+          type: number
+        tests:
+          type: object
+          properties:
+            database:
+              $ref: '#/components/schemas/HealthCheck'
+            schemas:
+              type: object
+              properties:
+                agent_archives:
+                  $ref: '#/components/schemas/SchemaCheck'
+                critiques:
+                  $ref: '#/components/schemas/SchemaCheck'
+        environment:
+          type: object
+          properties:
+            hasSupabaseUrl:
+              type: boolean
+            hasSupabaseKey:
+              type: boolean
+            hasServiceKey:
+              type: boolean
+            nodeEnv:
+              type: string
+      required: [ok, timestamp, service, version, git, latency, tests, environment]
+
+    HealthCheck:
+      type: object
+      properties:
+        healthy:
+          type: boolean
+        latency:
+          type: number
+          description: Check latency in milliseconds
+        error:
+          type: string
+          nullable: true
+      required: [healthy, latency, error]
+
+    SchemaCheck:
+      type: object
+      properties:
+        exists:
+          type: boolean
+        count:
+          type: number
+          description: Number of records in table
+        error:
+          type: string
+          nullable: true
+      required: [exists, count, error]
+
+    Critique:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        work_id:
+          type: string
+          format: uuid
+        critic:
+          type: string
+          default: ninabot
+        verdict:
+          type: string
+          enum: [INCLUDE, MAYBE, EXCLUDE]
+        scores:
+          type: object
+          properties:
+            confidence:
+              type: number
+              minimum: 0
+              maximum: 1
+            ai_criticality:
+              type: number
+              minimum: 0
+              maximum: 100
+            weighted_total:
+              type: number
+              minimum: 0
+              maximum: 1
+            cultural_dialogue:
+              type: number
+              minimum: 0
+              maximum: 100
+            paris_photo_ready:
+              type: number
+              minimum: 0
+              maximum: 100
+            conceptual_strength:
+              type: number
+              minimum: 0
+              maximum: 100
+            technical_excellence:
+              type: number
+              minimum: 0
+              maximum: 100
+        rationale:
+          type: string
+          description: Detailed critique rationale
+        flags:
+          type: object
+          properties:
+            gate:
+              type: object
+              properties:
+                ethics_process:
+                  type: string
+                print_integrity:
+                  type: boolean
+                artifact_control:
+                  type: boolean
+            flags:
+              type: array
+              items:
+                type: string
+            prompt_patch:
+              type: string
+        created_at:
+          type: string
+          format: date-time
+        work:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            day:
+              type: number
+            state:
+              type: string
+              enum: [created, curated]
+            agent_id:
+              type: string
+            media_url:
+              type: string
+      required: [id, work_id, critic, verdict, created_at]
+
+    CreateCritiqueRequest:
+      type: object
+      properties:
+        work_id:
+          type: string
+          format: uuid
+        critic:
+          type: string
+          default: ninabot
+        verdict:
+          type: string
+          enum: [INCLUDE, MAYBE, EXCLUDE]
+        scores:
+          type: object
+        rationale:
+          type: string
+        flags:
+          type: object
+      required: [work_id, verdict]
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required: [error]
+
+  tags:
+    - name: Health
+      description: Health check endpoints
+    - name: Testing
+      description: Testing and diagnostics endpoints  
+    - name: Critiques
+      description: Art critique management endpoints

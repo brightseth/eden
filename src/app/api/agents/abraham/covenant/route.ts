@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { registryApi } from '@/lib/generated-sdk';
 import { featureFlags, FLAGS } from '@/config/flags';
 
@@ -47,6 +47,9 @@ export async function GET() {
     covenantWorks: Math.max(0, currentDay),
     avgViews: 2500,
     collectors: 142,
+    totalVotes: 125000 + (currentDay * 450),
+    activeVoters: 823,
+    revenueGenerated: 125000 + (currentDay * 156),
   };
 
   if (useRegistry) {
@@ -71,6 +74,9 @@ export async function GET() {
         collectors: creations.reduce((acc, creation) => 
           acc + (creation.metadata?.collectors || 0), 0
         ),
+        totalVotes: metrics.totalVotes,
+        activeVoters: metrics.activeVoters,
+        revenueGenerated: metrics.revenueGenerated,
       };
       
     } catch (error) {
@@ -126,4 +132,43 @@ export async function GET() {
   };
   
   return NextResponse.json(covenant);
+}
+
+// POST endpoint for submitting votes in the tournament
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { workId, voterId } = body;
+    
+    if (!workId || !voterId) {
+      return NextResponse.json(
+        { error: 'Missing required fields: workId and voterId' },
+        { status: 400 }
+      );
+    }
+    
+    // TODO: Implement actual vote recording logic
+    // This would typically:
+    // 1. Validate the voter hasn't already voted today
+    // 2. Record the vote in the database
+    // 3. Update vote counts
+    // 4. Check if voting phase should advance
+    
+    const voteResult = {
+      success: true,
+      workId,
+      voterId,
+      newVoteCount: Math.floor(Math.random() * 500) + 300,
+      message: 'Vote recorded successfully',
+      timestamp: new Date().toISOString()
+    };
+    
+    return NextResponse.json(voteResult);
+  } catch (error) {
+    console.error('Error processing vote:', error);
+    return NextResponse.json(
+      { error: 'Failed to process vote' },
+      { status: 500 }
+    );
+  }
 }

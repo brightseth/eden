@@ -755,6 +755,123 @@ export const MIYOMI_PROFILE_CONFIG: AgentProfileConfig = {
   }
 };
 
+// CITIZEN Profile Configuration (Bright Moments DAO Agent)
+export const CITIZEN_PROFILE_CONFIG: AgentProfileConfig = {
+  agentId: 'citizen',
+  layout: {
+    type: 'standard',
+    maxWidth: '6xl',
+    spacing: 'normal'
+  },
+  widgets: [
+    {
+      id: 'hero',
+      type: 'hero',
+      position: { section: 'header', order: 1 },
+      config: {
+        showStatus: true,
+        showTrainer: true,
+        primaryAction: { text: 'VIEW PROPOSALS', href: '/api/agents/citizen/proposals' },
+        secondaryActions: [
+          { text: 'CRYPTOCITIZENS', href: '/academy/agent/citizen/collections' },
+          { text: 'BRIGHT MOMENTS →', href: '/sites/citizen' }
+        ]
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'mission',
+      type: 'mission',
+      position: { section: 'main', order: 1 },
+      config: {
+        title: 'BRIGHT MOMENTS DAO MISSION',
+        content: {
+          source: 'registry',
+          path: 'profile.statement'
+        } as any,
+        layout: 'two-column'
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'daily-practice',
+      type: 'daily-practice',
+      position: { section: 'main', order: 2 },
+      config: {
+        title: 'CITIZEN\'S DAO GOVERNANCE',
+        protocol: {
+          name: 'BRIGHT MOMENTS ECOSYSTEM STEWARDSHIP',
+          commitment: 'PRESERVE LORE • FACILITATE GOVERNANCE • CELEBRATE MILESTONES'
+        },
+        workflow: {
+          source: 'registry',
+          path: 'philosophy.mission'
+        } as any,
+        showMetrics: true
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'metrics',
+      type: 'metrics',
+      position: { section: 'main', order: 3 },
+      config: {
+        showOutput: true,
+        showEngagement: true,
+        customMetrics: [
+          { label: 'CryptoCitizens', value: '10000' },
+          { label: 'Cities Completed', value: '10' },
+          { label: 'Active Proposals', value: 'governance.active_proposals' },
+          { label: 'Community Members', value: 'fellowship.total_members' }
+        ]
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'works-gallery',
+      type: 'works-gallery',
+      position: { section: 'main', order: 4 },
+      config: {
+        title: 'CRYPTOCITIZENS COLLECTIONS',
+        maxItems: 10,
+        gridCols: 5,
+        showTitles: true,
+        linkTo: '/academy/agent/citizen/collections'
+      },
+      visibility: { 
+        agentStatus: ['ACTIVE', 'GRADUATED'] 
+      }
+    },
+    {
+      id: 'training-status',
+      type: 'training-status',
+      position: { section: 'main', order: 5 },
+      config: {
+        title: 'GOVERNANCE ACTIVITY',
+        showProgress: true,
+        showMilestones: true
+      },
+      visibility: { 
+        always: true
+      }
+    }
+  ],
+  navigation: {
+    showBackToAcademy: true,
+    customNav: false
+  },
+  theme: {
+    background: 'bg-black text-white',
+    accent: 'orange',
+    borders: 'border-white'
+  },
+  metadata: {
+    title: 'CITIZEN - Bright Moments DAO Agent',
+    description: 'AI agent representing Bright Moments DAO - cultural archivist, IRL guide, and community host for 10,000 CryptoCitizens.',
+    lastUpdated: new Date().toISOString()
+  }
+};
+
 // Configuration lookup by agent
 export const AGENT_PROFILE_CONFIGS: Record<string, AgentProfileConfig> = {
   bertha: BERTHA_PROFILE_CONFIG,
@@ -763,6 +880,7 @@ export const AGENT_PROFILE_CONFIGS: Record<string, AgentProfileConfig> = {
   solienne: SOLIENNE_PROFILE_CONFIG,
   sue: SUE_PROFILE_CONFIG,
   miyomi: MIYOMI_PROFILE_CONFIG,
+  citizen: CITIZEN_PROFILE_CONFIG,
 };
 
 // Helper functions

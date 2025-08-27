@@ -1,12 +1,13 @@
 /**
  * Market Data Connectors for MIYOMI
  * Integrates with multiple prediction market platforms
+ * Enhanced with real Kalshi and Polymarket APIs
  */
 
-interface MarketData {
+export interface MarketData {
   id: string;
   question: string;
-  platform: string;
+  platform: 'Kalshi' | 'Polymarket' | 'Manifold' | 'Metaculus';
   yes_price: number;
   no_price: number;
   volume: number;
@@ -15,6 +16,9 @@ interface MarketData {
   category: string;
   status: 'open' | 'closed' | 'resolved';
   resolution?: 'YES' | 'NO';
+  url?: string;
+  tradersCount?: number;
+  lastUpdate?: string;
 }
 
 export class ManifoldConnector {

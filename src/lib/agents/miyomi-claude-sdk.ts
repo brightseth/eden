@@ -35,13 +35,14 @@ export interface MiyomiConfig {
 export class MiyomiClaudeSDK {
   private anthropic: Anthropic;
   private config: MiyomiConfig;
+  private configLoaded: boolean = false;
 
   constructor(apiKey: string) {
     this.anthropic = new Anthropic({
       apiKey: apiKey || process.env.ANTHROPIC_API_KEY!
     });
     
-    // Load default config - in production this would come from API
+    // Load default config - will be overridden by trained config if available
     this.config = {
       riskTolerance: 0.65,
       contrarianDial: 0.95,
@@ -61,10 +62,31 @@ export class MiyomiClaudeSDK {
         profanity: 0.2
       }
     };
+    
+    // Attempt to load trained configuration
+    this.loadTrainedConfig();
+  }
+
+  async loadTrainedConfig() {
+    try {
+      // Try to load from API
+      const response = await fetch('/api/agents/miyomi/config');
+      if (response.ok) {
+        const trainedConfig = await response.json();
+        if (trainedConfig && trainedConfig.config) {
+          this.config = { ...this.config, ...trainedConfig.config };
+          this.configLoaded = true;
+          console.log('Loaded trained MIYOMI configuration');
+        }
+      }
+    } catch (error) {
+      console.log('Using default MIYOMI configuration');
+    }
   }
 
   async updateConfig(newConfig: Partial<MiyomiConfig>) {
     this.config = { ...this.config, ...newConfig };
+    this.configLoaded = true;
   }
 
   /**
@@ -74,8 +96,11 @@ export class MiyomiClaudeSDK {
     // First fetch current market data to inform picks
     const marketData = await this.fetchRelevantMarkets();
     
+    // Get contrarian opportunities from real markets
+    const contrarianOpportunities = await this.findContrarianOpportunities(marketData);
+    
     const systemPrompt = this.buildSystemPrompt();
-    const userPrompt = this.buildPickGenerationPrompt(maxPicks, marketData);
+    const userPrompt = this.buildPickGenerationPrompt(maxPicks, marketData, contrarianOpportunities);
 
     try {
       const response = await this.anthropic.messages.create({
@@ -256,7 +281,31 @@ Always explain WHY you think the market is wrong, not just WHAT your pick is.
     }
   }
 
-  private buildPickGenerationPrompt(maxPicks: number, marketData: MarketData[]): string {
+  private async findContrarianOpportunities(markets: MarketData[]): Promise<MarketData[]> {
+    // Find markets with extreme pricing that might be wrong
+    const opportunities = markets.filter(market => {
+      const isExtreme = market.yes_price > 0.85 || market.yes_price < 0.15;
+      const hasVolume = market.volume > 10000; // Minimum volume for liquidity
+      const hasTime = new Date(market.end_date) > new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // At least 7 days out
+      
+      // Check if it matches our sector preferences
+      const sectorWeight = this.config.sectorWeights[market.category] || 0.05;
+      const meetsThreshold = sectorWeight > 0.1;
+      
+      return isExtreme && hasVolume && hasTime && meetsThreshold;
+    });
+    
+    console.log(`Found ${opportunities.length} contrarian opportunities from ${markets.length} markets`);
+    
+    // Sort by potential edge (distance from 0.5 * volume)
+    return opportunities.sort((a, b) => {
+      const aEdge = Math.abs(0.5 - a.yes_price) * Math.log10(a.volume + 1);
+      const bEdge = Math.abs(0.5 - b.yes_price) * Math.log10(b.volume + 1);
+      return bEdge - aEdge;
+    });
+  }
+
+  private buildPickGenerationPrompt(maxPicks: number, marketData: MarketData[], contrarianOpps: MarketData[] = []): string {
     const currentDate = new Date().toISOString().split('T')[0];
     
     const marketContext = marketData.length > 0 ? `
@@ -265,10 +314,21 @@ ${marketData.slice(0, 20).map(m =>
   `- ${m.question} (${m.platform}) - YES: ${(m.yes_price * 100).toFixed(0)}%, Volume: $${Math.round(m.volume)}`
 ).join('\n')}
 ` : '';
+
+    const contrarianContext = contrarianOpps.length > 0 ? `
+
+IDENTIFIED CONTRARIAN OPPORTUNITIES (extreme pricing that might be wrong):
+${contrarianOpps.slice(0, 10).map(m =>
+  `🎯 ${m.question} (${m.platform})
+   Current: YES ${(m.yes_price * 100).toFixed(0)}% | Volume: $${Math.round(m.volume).toLocaleString()}
+   Why it's interesting: ${m.yes_price > 0.85 ? 'Market extremely confident, potential for black swan' : 'Market extremely pessimistic, potential for surprise'}
+  `
+).join('\n')}
+` : '';
     
     return `
 Generate ${maxPicks} contrarian prediction market picks for ${currentDate}.
-${marketContext}
+${marketContext}${contrarianContext}
 
 Requirements:
 - Focus on markets where crowd psychology is creating inefficiencies

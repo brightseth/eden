@@ -146,8 +146,23 @@ class RegistryClient {
     if (query?.include) params.append('include', query.include.join(','));
 
     const url = `${this.baseUrl}/agents${params.toString() ? '?' + params.toString() : ''}`;
-    const response = await this.fetchWithRetry<RegistryResponse<Agent[]>>(url);
-    return response.data;
+    
+    // Fetch raw response and handle Registry format
+    const response = await this.fetchWithRetry<any>(url);
+    
+    // Registry returns {agents: [...]} format, not {data: [...]}
+    if (response.agents && Array.isArray(response.agents)) {
+      return response.agents as Agent[];
+    }
+    
+    // Fallback to expected {data: [...]} format for compatibility
+    if (response.data && Array.isArray(response.data)) {
+      return response.data as Agent[];
+    }
+    
+    // Log unexpected format for debugging
+    console.warn('[Registry Client] Unexpected response format:', Object.keys(response));
+    return [];
   }
 
   async getAgent(id: string, include?: string[]): Promise<Agent> {
@@ -159,6 +174,12 @@ class RegistryClient {
     const url = `${this.baseUrl}/agents/${id}${params}`;
     const response = await this.fetchWithRetry<RegistryResponse<Agent>>(url);
     return response.data;
+  }
+
+  // Helper method to get agent by handle
+  async getAgentByHandle(handle: string): Promise<Agent | null> {
+    const agents = await this.getAgents();
+    return agents.find(agent => agent.handle === handle) || null;
   }
 
   async getAgentProfile(id: string): Promise<Profile> {

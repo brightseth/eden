@@ -77,8 +77,8 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
   ENABLE_ABRAHAM_REGISTRY_INTEGRATION: {
     key: 'ENABLE_ABRAHAM_REGISTRY_INTEGRATION',
     description: 'Enable full Registry integration for Abraham site with real-time features',
-    defaultValue: process.env.NODE_ENV === 'development',
-    rolloutStrategy: 'dev',
+    defaultValue: true, // Enabled for production deployment
+    rolloutStrategy: 'full',
     culturalImpact: 'Abraham site displays actual Registry data instead of mocks',
     rollbackPlan: 'Disable flag, fallback to current Supabase + mock data pattern'
   },
