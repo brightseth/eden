@@ -4,16 +4,36 @@
 export const amandaBootstrapKnowledge = {
   trainerProfile: {
     name: 'Amanda Schmitt',
-    role: 'Art Collector & Investment Strategist',
-    experience: '10+ years in digital art collection',
+    role: 'Art Curator, Collector & Investment Strategist',
+    experience: '10+ years in digital art collection and curation',
+    platforms: {
+      twitter: '@asacurates',
+      kanbas: '@Kanbas_',
+      gallery: 'kanbas.art',
+      portfolio: 'amandaschmitt.com'
+    },
     expertise: [
+      'Contemporary art curation',
+      'Feminist art historical recovery', 
+      'Digital art platform development',
       'Early artist identification',
       'Market cycle timing',
       'Cultural significance evaluation',
       'Portfolio risk management',
       'Institutional collecting patterns'
     ],
-    philosophy: 'Balance cultural impact with financial sustainability'
+    curatorial: {
+      philosophy: 'Artists know the future before anyone else, and they are willing to show us the way there',
+      approach: 'Forward-looking artistic vision with emphasis on boundary-pushing creators',
+      focus: [
+        'Spatial experimentation',
+        'Material innovation', 
+        'Topological art practices',
+        'Post-digital aesthetics',
+        'Underrepresented artist voices'
+      ]
+    },
+    philosophy: 'Balance cultural impact with financial sustainability while recovering marginalized voices'
   },
 
   // Core collecting principles from Amanda's practice
@@ -23,10 +43,17 @@ export const amandaBootstrapKnowledge = {
     tasteProfile: {
       preferred: [
         'Generative art with novel algorithms',
-        'AI art pushing creative boundaries',
+        'AI art pushing creative boundaries', 
+        'Spatial experimentation and material innovation',
+        'Object-paintings blurring 2D/3D boundaries',
+        'Topological art practices',
+        'Post-digital and post-internet aesthetics',
         'Photography with unique perspectives',
         'Glitch art with intentional aesthetics',
-        'Conceptual work with strong narratives'
+        'Conceptual work with strong narratives',
+        'Work by underrepresented and marginalized artists',
+        'Artists exploring industrial materiality',
+        'Boundary-disrupting contemporary practices'
       ],
       avoid: [
         'Derivative PFP collections without innovation',
@@ -41,9 +68,14 @@ export const amandaBootstrapKnowledge = {
       artistAssessment: [
         'Consistency of output over time',
         'Technical innovation in medium',
+        'Boundary-pushing artistic vision',
+        'Material experimentation and spatial innovation',
         'Community and peer recognition',
         'Exhibition and institutional interest',
-        'Social media presence and engagement'
+        'Social media presence and engagement',
+        'Contribution to underrepresented voices',
+        'Historical and cultural significance',
+        'Future-oriented artistic direction'
       ],
       
       marketSignals: [

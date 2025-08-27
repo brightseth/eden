@@ -106,7 +106,8 @@ export function AgentCard({ agent, variant, showOnchainBadges = true }: AgentCar
 
   // Launching agents - large cards with full details
   if (variant === 'launching') {
-    const href = agent.hasProfile ? `/academy/agent/${agent.name.toLowerCase()}` : '#';
+    // Use agent.id for consistent URL routing - matches [agent] dynamic route
+    const href = agent.hasProfile ? `/academy/agent/${agent.id}` : '#';
     
     return (
       <Link 

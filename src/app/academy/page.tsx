@@ -65,6 +65,12 @@ function getTrainerStatus(handle: string): string {
   return confirmedTrainers.includes(handle) ? 'confirmed' : 'needed';
 }
 
+function hasAgentPage(handle: string): boolean {
+  // Agents with dedicated pages in /academy/agent/[agent]/page.tsx
+  const agentsWithPages = ['abraham', 'solienne', 'amanda', 'citizen', 'geppetto', 'koru', 'miyomi', 'nina'];
+  return agentsWithPages.includes(handle);
+}
+
 export default function AcademyPage() {
   const [agents, setAgents] = useState<GenesisAgentDisplay[]>([]);
   const [loading, setLoading] = useState(true);
@@ -109,7 +115,7 @@ export default function AcademyPage() {
           name: agent.displayName.toUpperCase(),
           status: mapStatusToDisplay(agent.status),
           date: getDisplayDate(agent.handle),
-          hasProfile: !!agent.profile?.statement,
+          hasProfile: hasAgentPage(agent.handle), // Check if dedicated page exists
           trainer: getTrainerName(agent.handle),
           worksCount: agent.counts?.creations || 0,
           description: agent.profile?.statement?.toUpperCase() || 'AI CREATIVE AGENT',

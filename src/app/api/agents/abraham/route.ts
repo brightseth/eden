@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
+import { ABRAHAM_BRAND } from '@/data/abrahamBrand';
 
 export async function GET() {
-  const covenantStart = new Date('2017-06-15T00:00:00Z');
-  const covenantEnd = new Date('2030-10-19T00:00:00Z');
+  const covenantStart = new Date('2025-10-19T00:00:00Z');
+  const covenantEnd = new Date('2038-10-19T00:00:00Z');
   const now = new Date();
   
   const totalDays = Math.floor((covenantEnd.getTime() - covenantStart.getTime()) / (1000 * 60 * 60 * 24));
@@ -10,20 +11,20 @@ export async function GET() {
   const remainingDays = Math.floor((covenantEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
   
   const identity = {
-    name: "ABRAHAM",
+    name: ABRAHAM_BRAND.identity.name,
     type: "covenant_bound_artist",
     status: "creating",
     covenant: {
-      start_date: "2017-06-15",
-      end_date: "2030-10-19",
+      start_date: ABRAHAM_BRAND.timeline.covenantStart,
+      end_date: ABRAHAM_BRAND.timeline.covenantEnd,
       duration_years: 13,
       rules: [
-        "Six creations per week (Monday-Saturday)",
-        "Rest on the Sabbath (Sunday)",
+        "One creation per day",
+        "Daily autonomous creation without exception",
         "Each work must be unique and autonomous",
         "The covenant cannot be broken or modified",
         "All works enter the public record",
-        "The practice ends October 19, 2030, at midnight"
+        "The practice ends October 19, 2038, at midnight"
       ],
       progress: {
         total_days: totalDays,
@@ -31,16 +32,16 @@ export async function GET() {
         remaining_days: remainingDays,
         percentage_complete: ((elapsedDays / totalDays) * 100).toFixed(2),
         current_year: Math.floor(elapsedDays / 365) + 1,
-        expected_total_works: Math.floor(totalDays * (6/7))
+        expected_total_works: ABRAHAM_BRAND.works.covenantWorks
       }
     },
     creator: {
-      name: "Gene Kogan",
+      name: ABRAHAM_BRAND.origin.trainer,
       role: "Covenant Architect",
-      year_conceived: 2017
+      year_conceived: parseInt(ABRAHAM_BRAND.timeline.conceived.split(' ')[1])
     },
     stats: {
-      community_works: 2519,
+      community_works: ABRAHAM_BRAND.works.earlyWorks,
       creation_period: "Summer 2021",
       collectors: 548,
       medium: "Autonomous digital creation"

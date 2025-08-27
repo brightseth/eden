@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronRight, Save, Brain, Target, Sparkles, Database } from 'lucide-react';
+import Link from 'next/link';
+import { ChevronRight, Save, Brain, Target, Sparkles, Database, TrendingUp, DollarSign } from 'lucide-react';
+import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 
 interface InterviewSection {
   id: string;
@@ -26,7 +28,7 @@ const interviewSections: InterviewSection[] = [
         id: 'art-movements',
         question: 'Which art movements resonate most with your collecting philosophy?',
         type: 'multiselect',
-        options: ['Abstract Expressionism', 'Minimalism', 'Generative Art', 'Glitch Art', 'Photography', 'AI Art', 'Conceptual', 'Street Art']
+        options: ['Abstract Expressionism', 'Minimalism', 'Generative Art', 'Glitch Art', 'Photography', 'AI Art', 'Conceptual', 'Street Art', 'Post-Internet', 'Feminist Art', 'Spatial Experimentation']
       },
       {
         id: 'taste-evolution',
@@ -107,6 +109,80 @@ const interviewSections: InterviewSection[] = [
         question: 'What was your biggest collecting mistake and what did you learn?',
         type: 'textarea',
         placeholder: 'Share a specific example and insights gained...'
+      }
+    ]
+  },
+  {
+    id: 'market-intelligence',
+    title: 'Artist & Gallery Intelligence',
+    icon: <TrendingUp className="w-5 h-5" />,
+    questions: [
+      {
+        id: 'top-digital-artists',
+        question: 'Rank your top 10 digital artists by collecting priority (1-10, with 1 being highest priority)',
+        type: 'textarea',
+        placeholder: 'List artists with ranking:\n1. Artist Name - reasoning\n2. Artist Name - reasoning\n...'
+      },
+      {
+        id: 'contemporary-artists',
+        question: 'Rank your top 10 contemporary (non-digital) artists by collecting interest',
+        type: 'textarea',
+        placeholder: 'List artists with ranking:\n1. Artist Name - reasoning\n2. Artist Name - reasoning\n...'
+      },
+      {
+        id: 'essential-galleries',
+        question: 'Which galleries do you monitor most closely for talent discovery?',
+        type: 'multiselect',
+        options: ['Pace Gallery', 'Gagosian', 'David Zwirner', 'Hauser & Wirth', 'Lisson Gallery', 'White Cube', 'Galerie Templon', 'König Galerie', 'bitforms gallery', 'Foxy Production', 'Other (specify in notes)']
+      },
+      {
+        id: 'museum-indicators',
+        question: 'Which museum acquisitions serve as the strongest market validators?',
+        type: 'multiselect',
+        options: ['MoMA', 'Whitney', 'Tate Modern', 'Centre Pompidou', 'Guggenheim', 'LACMA', 'SFMOMA', 'New Museum', 'Stedelijk', 'Other (specify in notes)']
+      },
+      {
+        id: 'emerging-platforms',
+        question: 'Rank digital art platforms by importance for discovering new talent (1-10)',
+        type: 'textarea',
+        placeholder: '1. Platform Name - why important for discovery\n2. Platform Name - strengths/focus\n...'
+      }
+    ]
+  },
+  {
+    id: 'price-strategy',
+    title: 'Entry & Exit Price Strategy',
+    icon: <DollarSign className="w-5 h-5" />,
+    questions: [
+      {
+        id: 'entry-points',
+        question: 'What are your optimal entry price points by asset category?',
+        type: 'textarea',
+        placeholder: 'Blue Chip Digital: $X - $Y\nEmerging Digital: $X - $Y\nContemporary: $X - $Y\nExperimental: $X - $Y\n...'
+      },
+      {
+        id: 'exit-triggers',
+        question: 'What price multiples trigger your exit strategies?',
+        type: 'textarea',
+        placeholder: 'First exit at: X% gain\nSecond exit at: X% gain\nHold forever threshold: conditions\n...'
+      },
+      {
+        id: 'market-timing',
+        question: 'How do you time entries during market cycles?',
+        type: 'select',
+        options: ['Buy the dip aggressively', 'DCA during downturns', 'Wait for capitulation', 'Ignore cycles, buy quality', 'Tactical timing based on signals']
+      },
+      {
+        id: 'liquidity-thresholds',
+        question: 'What percentage of portfolio do you keep liquid for opportunities?',
+        type: 'select',
+        options: ['5-10%', '10-15%', '15-25%', '25-35%', '35%+']
+      },
+      {
+        id: 'price-discovery',
+        question: 'How do you determine fair value for pieces without comparable sales?',
+        type: 'textarea',
+        placeholder: 'Describe your valuation methodology for unique works...'
       }
     ]
   },
@@ -206,9 +282,22 @@ export default function BerthaTrainerInterview() {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      <UnifiedHeader />
+      
       {/* Header */}
       <div className="border-b border-gray-800 bg-gray-950">
         <div className="max-w-4xl mx-auto px-6 py-4">
+          {/* Breadcrumb */}
+          <div className="text-sm text-gray-400 mb-4">
+            <Link href="/" className="hover:text-white">Home</Link> 
+            <span className="mx-2">/</span>
+            <Link href="/academy" className="hover:text-white">Academy</Link>
+            <span className="mx-2">/</span>
+            <Link href="/academy/agent/amanda" className="hover:text-white">AMANDA</Link>
+            <span className="mx-2">/</span>
+            <span>Trainer Interview</span>
+          </div>
+          
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold">BERTHA TRAINER INTERVIEW</h1>
             <div className="text-sm text-gray-400">
@@ -293,6 +382,19 @@ export default function BerthaTrainerInterview() {
                     </label>
                   ))}
                 </div>
+              )}
+              
+              {q.type === 'select' && (
+                <select
+                  className="w-full px-4 py-3 bg-black border border-gray-700 rounded focus:border-purple-500 focus:outline-none"
+                  value={responses[q.id] || ''}
+                  onChange={(e) => handleResponse(q.id, e.target.value)}
+                >
+                  <option value="">Select an option...</option>
+                  {q.options?.map(option => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
               )}
               
               {q.type === 'scale' && (

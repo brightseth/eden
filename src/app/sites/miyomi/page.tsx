@@ -275,6 +275,96 @@ export default function MiyomiSite() {
     alert('Configuration saved successfully!');
   }
 
+  // Button handler functions
+  async function handleTriggerManualDrop() {
+    try {
+      console.log('Triggering manual drop for MIYOMI...');
+      
+      // Call the manual drop API
+      const response = await fetch('/api/miyomi/manual-drop', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          agent_id: 'miyomi',
+          trigger_time: new Date().toISOString()
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to trigger manual drop');
+      }
+
+      const result = await response.json();
+      alert(`Manual drop triggered successfully! Drop ID: ${result.dropId}`);
+      
+      // Refresh the picks data
+      loadRecentPicks();
+      
+    } catch (error) {
+      console.error('Error triggering manual drop:', error);
+      alert('Failed to trigger manual drop. Please try again.');
+    }
+  }
+
+  async function handleReviewPendingPicks() {
+    try {
+      console.log('Opening pending picks review...');
+      
+      // Fetch pending picks for review
+      const response = await fetch('/api/miyomi/pending-picks');
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch pending picks');
+      }
+
+      const pendingPicks = await response.json();
+      
+      if (pendingPicks.length === 0) {
+        alert('No pending picks to review.');
+        return;
+      }
+
+      // For now, show count - could open a modal or navigate to review page
+      alert(`Found ${pendingPicks.length} pending picks for review. Opening review interface...`);
+      
+      // TODO: Open review modal or navigate to /dashboard/miyomi/review
+      
+    } catch (error) {
+      console.error('Error fetching pending picks:', error);
+      alert('Failed to fetch pending picks. Please try again.');
+    }
+  }
+
+  async function handleUpdateResults() {
+    try {
+      console.log('Updating market results...');
+      
+      // Call the results update API
+      const response = await fetch('/api/miyomi/update-results', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update results');
+      }
+
+      const result = await response.json();
+      alert(`Updated ${result.updatedCount} market results successfully!`);
+      
+      // Refresh the picks data to show updated results
+      loadRecentPicks();
+      
+    } catch (error) {
+      console.error('Error updating results:', error);
+      alert('Failed to update results. Please try again.');
+    }
+  }
+
   const categories = ['all', 'politics', 'sports', 'finance', 'ai', 'pop', 'geo', 'internet'];
   const filteredPicks = selectedCategory === 'all' 
     ? recentPicks 
@@ -536,13 +626,22 @@ export default function MiyomiSite() {
 
                 {/* Action Buttons */}
                 <div className="flex gap-4">
-                  <button className="px-6 py-3 bg-red-600 rounded-lg hover:bg-red-700 transition font-bold">
+                  <button 
+                    onClick={handleTriggerManualDrop}
+                    className="px-6 py-3 bg-red-600 rounded-lg hover:bg-red-700 transition font-bold"
+                  >
                     Trigger Manual Drop
                   </button>
-                  <button className="px-6 py-3 bg-white/10 rounded-lg hover:bg-white/20 transition font-bold">
+                  <button 
+                    onClick={handleReviewPendingPicks}
+                    className="px-6 py-3 bg-white/10 rounded-lg hover:bg-white/20 transition font-bold"
+                  >
                     Review Pending Picks
                   </button>
-                  <button className="px-6 py-3 bg-white/10 rounded-lg hover:bg-white/20 transition font-bold">
+                  <button 
+                    onClick={handleUpdateResults}
+                    className="px-6 py-3 bg-white/10 rounded-lg hover:bg-white/20 transition font-bold"
+                  >
                     Update Results
                   </button>
                 </div>
