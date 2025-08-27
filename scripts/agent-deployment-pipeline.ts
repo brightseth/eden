@@ -71,16 +71,16 @@ const AGENTS: Record<string, AgentDeployment> = {
     productionUrl: 'https://eden-academy-flame.vercel.app'
   },
   citizen: {
-    name: 'CITIZEN',
+    name: 'CITIZEN (Bright Moments DAO Agent)',
     handle: 'citizen',
     endpoints: [
       '/api/agents/citizen',
-      '/api/agents/citizen/works',
-      '/api/agents/citizen/proposals',
-      '/api/agents/citizen/consensus',
-      '/api/agents/citizen/fellowship'
+      '/api/agents/citizen/collections',
+      '/api/agents/citizen/lore',
+      '/api/agents/citizen/recognition',
+      '/api/agents/citizen/governance'
     ],
-    requiredChecks: ['identity', 'works', 'proposals', 'consensus', 'fellowship'],
+    requiredChecks: ['identity', 'collections', 'lore', 'recognition', 'governance'],
     productionUrl: 'https://eden-academy-flame.vercel.app'
   }
 };
@@ -183,35 +183,45 @@ class AgentDeploymentPipeline {
     }
     
     if (agent.handle === 'citizen') {
-      // Test governance capabilities
-      const proposalsCheck = await this.testEndpoint(`${this.baseUrl}/api/agents/citizen/proposals`);
-      if (proposalsCheck.status === 200) {
+      // Test Bright Moments DAO capabilities
+      const collectionsCheck = await this.testEndpoint(`${this.baseUrl}/api/agents/citizen/collections`);
+      if (collectionsCheck.status === 200 && collectionsCheck.data?.collections) {
         checks.push({
-          name: 'Governance Proposals System',
+          name: 'CryptoCitizens Collections System',
           status: 'passed',
-          details: 'Proposal generation and listing operational'
+          details: `${collectionsCheck.data.collections.overview?.total_cryptocitizens || 10000} CryptoCitizens across ${collectionsCheck.data.collections.overview?.cities_completed || 10} cities`
         });
-        this.log(`✅ Governance proposals system ready`, 'success');
+        this.log(`✅ CryptoCitizens collections system ready`, 'success');
       }
       
-      const consensusCheck = await this.testEndpoint(`${this.baseUrl}/api/agents/citizen/consensus`);
-      if (consensusCheck.status === 405) { // POST endpoint, so 405 Method Not Allowed is expected for GET
+      const loreCheck = await this.testEndpoint(`${this.baseUrl}/api/agents/citizen/lore`);
+      if (loreCheck.status === 200 && loreCheck.data?.lore) {
         checks.push({
-          name: 'Consensus Analysis Engine',
+          name: 'Bright Moments Lore Preservation',
           status: 'passed',
-          details: 'Consensus analysis endpoint available'
+          details: 'Cultural archive and lore preservation system operational'
         });
-        this.log(`✅ Consensus analysis engine ready`, 'success');
+        this.log(`✅ Bright Moments lore system ready`, 'success');
       }
       
-      const fellowshipCheck = await this.testEndpoint(`${this.baseUrl}/api/agents/citizen/fellowship`);
-      if (fellowshipCheck.status === 200 && fellowshipCheck.data?.fellowship) {
+      const recognitionCheck = await this.testEndpoint(`${this.baseUrl}/api/agents/citizen/recognition`);
+      if (recognitionCheck.status === 200 && recognitionCheck.data?.recognition) {
         checks.push({
-          name: 'Fellowship Management System',
+          name: 'Full Set Recognition System',
           status: 'passed',
-          details: `Fellowship size: ${fellowshipCheck.data.fellowship.overview.total_members}`
+          details: 'Full Set and Ultra Full Set recognition system operational'
         });
-        this.log(`✅ Fellowship management system ready`, 'success');
+        this.log(`✅ Collector recognition system ready`, 'success');
+      }
+      
+      const governanceCheck = await this.testEndpoint(`${this.baseUrl}/api/agents/citizen/governance`);
+      if (governanceCheck.status === 200) {
+        checks.push({
+          name: 'DAO Governance System',
+          status: 'passed',
+          details: 'Bright Moments DAO governance and Snapshot integration ready'
+        });
+        this.log(`✅ DAO governance system ready`, 'success');
       }
     }
     
