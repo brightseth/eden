@@ -1,7 +1,7 @@
 // Registry Client - Manages connection to Eden Genesis Registry
 // Implements ADR-025: Registry-First Architecture with graceful fallbacks
 
-import { Agent, AgentProfileConfig, Widget } from '@/lib/profile/types';
+import { Agent, AgentProfileConfig } from '@/lib/profile/types';
 import * as profileConfigs from '@/lib/profile/profile-config';
 
 export interface RegistryResponse<T> {

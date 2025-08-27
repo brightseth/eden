@@ -1,6 +1,29 @@
 // Agent Profile Widget System Types
 // Implements ADR-025: Agent Profile Widget System
 
+export interface Agent {
+  id: string;
+  handle: string;
+  name: string;
+  tagline?: string;
+  description?: string;
+  pfpUrl?: string;
+  coverUrl?: string;
+  status: 'development' | 'ready' | 'deployed' | 'retired';
+  trainer?: string;
+  model?: string;
+  createdAt: string;
+  updatedAt: string;
+  tokenAddress?: string | null;
+  socialLinks?: {
+    twitter?: string;
+    website?: string;
+    github?: string;
+    discord?: string;
+  };
+  metrics?: Record<string, any>;
+}
+
 export interface ProfileWidget {
   id: string;
   type: WidgetType;
