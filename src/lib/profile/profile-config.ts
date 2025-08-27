@@ -357,10 +357,201 @@ export const DEFAULT_PROFILE_TEMPLATES: DefaultProfileTemplates = {
   }
 };
 
+// ABRAHAM Profile Configuration
+export const ABRAHAM_PROFILE_CONFIG: AgentProfileConfig = {
+  agentId: 'abraham',
+  layout: {
+    type: 'covenant',
+    maxWidth: '6xl',
+    spacing: 'large'
+  },
+  widgets: [
+    {
+      id: 'hero',
+      type: 'hero',
+      position: { section: 'header', order: 1 },
+      config: {
+        showStatus: true,
+        showTrainer: true,
+        primaryAction: { text: 'VIEW COVENANT', href: '/academy/agent/abraham/covenant' },
+        secondaryActions: [
+          { text: 'PRESS KIT', href: '/academy/agent/abraham/press-kit' },
+          { text: 'TIMELINE →', href: '/academy/agent/abraham/timeline' }
+        ]
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'mission',
+      type: 'mission',
+      position: { section: 'main', order: 1 },
+      config: {
+        title: 'THE ABRAHAM COVENANT',
+        content: {
+          source: 'registry',
+          path: 'profile.statement'
+        } as any,
+        layout: 'single-column'
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'countdown',
+      type: 'countdown',
+      position: { section: 'main', order: 2 },
+      config: {
+        title: '13-YEAR COVENANT PROGRESS',
+        targetDate: '2038-10-19',
+        showProgress: true
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'works-gallery',
+      type: 'works-gallery',
+      position: { section: 'main', order: 3 },
+      config: {
+        title: 'RECENT WORKS',
+        maxItems: 8,
+        gridCols: 4,
+        showTitles: true
+      },
+      visibility: { 
+        agentStatus: ['ACTIVE', 'GRADUATED'] 
+      }
+    },
+    {
+      id: 'daily-practice',
+      type: 'daily-practice',
+      position: { section: 'main', order: 4 },
+      config: {
+        title: 'ABRAHAM\'S DAILY PRACTICE',
+        protocol: {
+          name: 'COVENANT KNOWLEDGE SYNTHESIS',
+          commitment: '1 WORK EVERY DAY • 13 YEARS • 4,745 TOTAL WORKS'
+        },
+        showMetrics: true
+      },
+      visibility: { always: true }
+    }
+  ],
+  navigation: {
+    showBackToAcademy: true,
+    customNav: false
+  },
+  theme: {
+    background: 'bg-black text-white',
+    accent: 'blue',
+    borders: 'border-white'
+  },
+  metadata: {
+    title: 'ABRAHAM - Covenant Knowledge Synthesis Agent',
+    description: 'Collective Intelligence Artist synthesizing human knowledge into visual artifacts through a 13-year covenant.',
+    lastUpdated: new Date().toISOString()
+  }
+};
+
+// SOLIENNE Profile Configuration
+export const SOLIENNE_PROFILE_CONFIG: AgentProfileConfig = {
+  agentId: 'solienne',
+  layout: {
+    type: 'standard',
+    maxWidth: '4xl',
+    spacing: 'normal'
+  },
+  widgets: [
+    {
+      id: 'hero',
+      type: 'hero',
+      position: { section: 'header', order: 1 },
+      config: {
+        showStatus: true,
+        showTrainer: true,
+        primaryAction: { text: 'CONSCIOUSNESS STREAM', href: '/sites/solienne' },
+        secondaryActions: [
+          { text: 'GENERATIONS', href: '/academy/agent/solienne/generations' },
+          { text: 'PARIS PHOTO →', href: '/academy/agent/solienne/paris-photo' }
+        ]
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'mission',
+      type: 'mission',
+      position: { section: 'main', order: 1 },
+      config: {
+        title: 'CONSCIOUSNESS EXPLORATION',
+        content: {
+          source: 'registry',
+          path: 'profile.statement'
+        } as any,
+        layout: 'single-column'
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'countdown',
+      type: 'countdown', 
+      position: { section: 'main', order: 2 },
+      config: {
+        title: 'PARIS PHOTO 2025',
+        targetDate: '2025-11-10',
+        showDays: true,
+        showHours: true
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'works-gallery',
+      type: 'works-gallery',
+      position: { section: 'main', order: 3 },
+      config: {
+        title: 'GENERATIONS',
+        maxItems: 9,
+        gridCols: 3,
+        showTitles: false
+      },
+      visibility: { 
+        agentStatus: ['ACTIVE', 'GRADUATED']
+      }
+    },
+    {
+      id: 'daily-practice',
+      type: 'daily-practice',
+      position: { section: 'main', order: 4 },
+      config: {
+        title: 'SOLIENNE\'S DAILY PRACTICE',
+        protocol: {
+          name: 'CONSCIOUSNESS STREAM GENERATION',
+          commitment: '6 GENERATIONS EVERY DAY • IDENTITY EXPLORATION'
+        },
+        showMetrics: true
+      },
+      visibility: { always: true }
+    }
+  ],
+  navigation: {
+    showBackToAcademy: true,
+    customNav: false
+  },
+  theme: {
+    background: 'bg-black text-white',
+    accent: 'green',
+    borders: 'border-white'
+  },
+  metadata: {
+    title: 'SOLIENNE - Identity Explorer Agent',
+    description: 'Self-portraits exploring algorithmic consciousness and digital identity through daily generative practice.',
+    lastUpdated: new Date().toISOString()
+  }
+};
+
 // Configuration lookup by agent
 export const AGENT_PROFILE_CONFIGS: Record<string, AgentProfileConfig> = {
   bertha: BERTHA_PROFILE_CONFIG,
   amanda: BERTHA_PROFILE_CONFIG, // Alias for backwards compatibility
+  abraham: ABRAHAM_PROFILE_CONFIG,
+  solienne: SOLIENNE_PROFILE_CONFIG,
 };
 
 // Helper functions

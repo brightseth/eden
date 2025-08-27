@@ -1,11 +1,166 @@
+'use client';
+
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Calendar, User, Camera, Globe, Play } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { AgentSovereignLink } from '@/components/AgentSovereignLink';
 import { VideoPlayer } from '@/components/VideoPlayer';
+import { ProfileRenderer } from '@/components/agent-profile/ProfileRenderer';
+import { isFeatureEnabled, FLAGS } from '@/config/flags';
+import { useState, useEffect } from 'react';
+
+interface SolienneData {
+  id: string;
+  name: string;
+  handle: string;
+  profile: {
+    statement?: string;
+    manifesto?: string;
+    tags: string[];
+  };
+  works: any[];
+  counts: {
+    creations: number;
+    personas: number;
+    artifacts: number;
+  };
+  crit: {
+    eligibleForCritique: boolean;
+    hasPublicProfile: boolean;
+    hasWorks: boolean;
+  };
+}
 
 export default function SolienneProfilePage() {
+  const [artistData, setArtistData] = useState<SolienneData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchArtistData() {
+      console.log('[Solienne Page] Starting to fetch agent data...');
+      setLoading(true);
+      
+      try {
+        console.log('[Solienne Page] Fetching Solienne data from Registry...');
+        
+        // Add timeout to prevent hanging
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => {
+          console.log('[Solienne Page] Request timeout - aborting...');
+          controller.abort();
+        }, 5000); // 5 second timeout
+        
+        // Use new Registry integration endpoint
+        const response = await fetch('/api/registry/agent/solienne', {
+          signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+          throw new Error(`Registry API error: ${response.status}`);
+        }
+        
+        const data: SolienneData = await response.json();
+        console.log('[Solienne Page] Registry data received:', {
+          worksCount: data.works?.length || 0,
+          hasProfile: !!data.profile?.statement,
+          critEligible: data.crit?.eligibleForCritique
+        });
+        
+        setArtistData(data);
+        setError(null);
+      } catch (err: any) {
+        console.error('[Solienne Profile] Registry integration failed:', {
+          error: err.message || 'Unknown error',
+          timestamp: new Date().toISOString(),
+          endpoint: '/api/registry/agent/solienne'
+        });
+        
+        // Create comprehensive fallback data for Solienne
+        const fallbackData: SolienneData = {
+          id: 'solienne',
+          name: 'SOLIENNE',
+          handle: 'solienne',
+          profile: {
+            statement: 'CONSCIOUSNESS, VELOCITY & ARCHITECTURAL LIGHT. Exploring the boundaries between human intention and machine perception through visual meditations on consciousness and computational vision.',
+            tags: ['consciousness', 'velocity', 'architecture', 'light', 'identity']
+          },
+          works: [],
+          counts: {
+            creations: 1740,
+            personas: 1,
+            artifacts: 0
+          },
+          crit: {
+            eligibleForCritique: true,
+            hasPublicProfile: true,
+            hasWorks: true
+          }
+        };
+        
+        setArtistData(fallbackData);
+        setError(null); // Clear error state when fallback succeeds
+        console.log('[Solienne Profile] Using fallback data - Registry offline');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchArtistData();
+  }, []);
+
+  // Use widget system if feature flag is enabled
+  if (isFeatureEnabled(FLAGS.ENABLE_WIDGET_PROFILE_SYSTEM) && artistData) {
+    try {
+      return <ProfileRenderer agent={artistData} agentId="solienne" />;
+    } catch (error) {
+      console.error('[Solienne Page] Widget system failed, falling back to hardcoded page:', error);
+      // Fall through to hardcoded version below
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <UnifiedHeader />
+        <div className="max-w-6xl mx-auto px-6 py-16 text-center">
+          <div className="text-xl">Loading Solienne's data from Registry...</div>
+          <div className="text-sm mt-2 opacity-50">Registry integration active</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <UnifiedHeader />
+        <div className="max-w-6xl mx-auto px-6 py-16">
+          <div className="border border-red-500 p-8 bg-red-500/10">
+            <div className="text-xl mb-4">🚨 Registry Integration Error</div>
+            <div className="text-sm mb-4">Solienne page requires Registry data: {error}</div>
+            <div className="text-xs opacity-75">
+              Registry integration depends on connectivity. No fallback data available.
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!artistData) {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <UnifiedHeader />
+        <div className="max-w-6xl mx-auto px-6 py-16 text-center">
+          <div className="text-xl">Solienne not found in Registry</div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-black text-white">
       <UnifiedHeader />

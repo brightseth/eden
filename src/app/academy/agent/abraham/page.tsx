@@ -6,6 +6,7 @@ import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { AgentSovereignLink } from '@/components/AgentSovereignLink';
 import WorkGallery from '@/components/agent/WorkGallery';
+import { ProfileRenderer } from '@/components/agent-profile/ProfileRenderer';
 import { isFeatureEnabled, FLAGS } from '@/config/flags';
 import { ABRAHAM_BRAND, getAbrahamStatement } from '@/data/abrahamBrand';
 import { agentConfigs } from '@/data/agentConfigs';
@@ -40,16 +41,16 @@ export default function AbrahamProfilePage() {
 
   useEffect(() => {
     async function fetchArtistData() {
-      console.log('[Artist Page] Starting to fetch Abraham data...');
+      console.log('[Abraham Page] Starting to fetch agent data...');
       setLoading(true);
       
       try {
-        console.log('[Artist Page] Fetching Abraham data from Registry...');
+        console.log('[Abraham Page] Fetching Abraham data from Registry...');
         
         // Add timeout to prevent hanging
         const controller = new AbortController();
         const timeoutId = setTimeout(() => {
-          console.log('[Artist Page] Request timeout - aborting...');
+          console.log('[Abraham Page] Request timeout - aborting...');
           controller.abort();
         }, 5000); // 5 second timeout
         
@@ -65,7 +66,7 @@ export default function AbrahamProfilePage() {
         }
         
         const data: ArtistData = await response.json();
-        console.log('[Artist Page] Registry data received:', {
+        console.log('[Abraham Page] Registry data received:', {
           worksCount: data.works?.length || 0,
           hasProfile: !!data.profile?.statement,
           critEligible: data.crit?.eligibleForCritique
@@ -112,6 +113,16 @@ export default function AbrahamProfilePage() {
 
     fetchArtistData();
   }, []);
+
+  // Use widget system if feature flag is enabled
+  if (isFeatureEnabled(FLAGS.ENABLE_WIDGET_PROFILE_SYSTEM) && artistData) {
+    try {
+      return <ProfileRenderer agent={artistData} agentId="abraham" />;
+    } catch (error) {
+      console.error('[Abraham Page] Widget system failed, falling back to hardcoded page:', error);
+      // Fall through to hardcoded version below
+    }
+  }
 
   if (loading) {
     return (
