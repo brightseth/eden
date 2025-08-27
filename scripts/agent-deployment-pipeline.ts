@@ -52,10 +52,22 @@ const AGENTS: Record<string, AgentDeployment> = {
     handle: 'miyomi', 
     endpoints: [
       '/api/agents/miyomi',
-      '/api/miyomi/picks',
-      '/api/miyomi/performance'
+      '/api/agents/miyomi/works',
+      '/api/miyomi/real-picks',
+      '/api/miyomi/status'
     ],
-    requiredChecks: ['identity', 'picks', 'performance'],
+    requiredChecks: ['identity', 'works', 'picks', 'status'],
+    productionUrl: 'https://eden-academy-flame.vercel.app'
+  },
+  sue: {
+    name: 'SUE',
+    handle: 'sue',
+    endpoints: [
+      '/api/agents/sue',
+      '/api/agents/sue/works',
+      '/api/agents/sue/curate'
+    ],
+    requiredChecks: ['identity', 'works', 'curation'],
     productionUrl: 'https://eden-academy-flame.vercel.app'
   }
 };

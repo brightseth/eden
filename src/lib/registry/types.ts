@@ -1,6 +1,25 @@
 // Shared types for Eden Genesis Registry
 // These types are used by both Academy and Registry services
 
+// Application types for experimental forms
+export interface ExperimentalApplication {
+  applicantEmail: string;
+  applicantName: string;
+  track: string;
+  payload: Record<string, unknown>;
+  source?: string;
+  experimental?: boolean;
+}
+
+export interface ApplicationGatewayResponse {
+  success: boolean;
+  applicationId: string;
+  message: string;
+  experimental?: boolean;
+  validationErrors?: string[];
+  recommendedEndpoint?: string;
+}
+
 export type AgentStatus = 'INVITED' | 'APPLYING' | 'ONBOARDING' | 'ACTIVE' | 'GRADUATED' | 'ARCHIVED';
 export type Visibility = 'PRIVATE' | 'INTERNAL' | 'PUBLIC';
 

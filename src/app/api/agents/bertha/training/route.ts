@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { berthaClaude } from '@/lib/agents/bertha/claude-sdk';
 import { incorporateTrainingData } from '@/lib/agents/bertha/config';
 import { saveTrainingData, sendTrainingNotification, initializeBootstrapData, exportToGoogleSheets } from '@/lib/agents/bertha/training-storage';
+import { registryClient } from '@/lib/registry/client';
 
 export async function POST(request: NextRequest) {
   try {
@@ -108,6 +109,34 @@ export async function POST(request: NextRequest) {
       console.log('Training data exported to Google Sheets:', sheetsUrl);
     } catch (sheetsError) {
       console.warn('Google Sheets export failed (continuing anyway):', sheetsError);
+    }
+    
+    // NEW: Submit to Registry as experimental application
+    try {
+      console.log('Submitting to Registry as experimental application...');
+      const registrySubmission = await registryClient.submitExperimentalApplication({
+        applicantEmail: trainerEmail || 'amanda@eden.art',
+        applicantName: trainer,
+        track: 'TRAINER',
+        payload: {
+          source: 'bertha-trainer-interview',
+          targetAgent: 'bertha',
+          interviewId: trainingRecord.id,
+          responses: trainingRecord.responses,
+          configUpdates: trainingRecord.configUpdates,
+          timestamp: trainingRecord.timestamp,
+          metadata: {
+            sectionCount: sections.length,
+            responseCount: Object.keys(responses).length,
+            claudeProcessed: Object.keys(configUpdates).length > 0
+          }
+        },
+        experimental: true
+      });
+      
+      console.log('Registry submission successful:', registrySubmission);
+    } catch (registryError) {
+      console.warn('Registry submission failed (continuing anyway):', registryError);
     }
     
     console.log('BERTHA training completed successfully');

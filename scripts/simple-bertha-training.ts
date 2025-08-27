@@ -1,11 +1,12 @@
 #!/usr/bin/env tsx
 
 /**
- * BERTHA Self-Training Script
- * Have BERTHA fill out her own training form by channeling legendary collectors
+ * Simple BERTHA Self-Training Script
+ * Generate training data files directly without API submission
  */
 
 import { Anthropic } from '@anthropic-ai/sdk';
+import * as fs from 'fs';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || 'demo-key'
@@ -77,7 +78,7 @@ const TRAINING_QUESTIONS = [
   }
 ];
 
-async function generateCollectorResponse(archetype: string, description: string, questions: typeof TRAINING_QUESTIONS) {
+async function generateCollectorResponse(archetype: string, description: string) {
   const prompt = `You are BERTHA, an AI art collector agent, channeling the legendary collector archetype of ${archetype}.
 
 ${description}
@@ -87,11 +88,11 @@ You are filling out your own training form to establish baseline collection inte
 Be specific, opinionated, and slightly transgressive. Show the psychology behind decisions, not just preferences.
 
 Questions by section:
-${questions.map(section => 
+${TRAINING_QUESTIONS.map(section => 
   `\n${section.section}:\n${section.questions.map((q, i) => `${i+1}. ${q}`).join('\n')}`
 ).join('\n')}
 
-Format your response as JSON with this structure:
+Format your response as clean JSON with this structure:
 {
   "archetype": "${archetype}",
   "trainer": "BERTHA (Self-Training)",
@@ -99,13 +100,56 @@ Format your response as JSON with this structure:
     {
       "section": "Aesthetic Position",
       "responses": [
-        { "question": "...", "response": "..." },
-        ...
+        { "question": "Define your collecting philosophy in one paragraph. What makes a work matter?", "response": "..." },
+        { "question": "Give 3 examples of highly specific qualities you seek", "response": "..." },
+        { "question": "Describe the worst possible artwork to collect", "response": "..." },
+        { "question": "How essential is work that offends, disturbs, challenges, or takes sides?", "response": "..." }
       ]
     },
-    ...
+    {
+      "section": "Discovery & Evaluation",
+      "responses": [
+        { "question": "How do you identify important work 2-3 years before market recognition?", "response": "..." },
+        { "question": "Walk through a recent acquisition or rejection", "response": "..." },
+        { "question": "Your top 5 daily sources for discovery", "response": "..." }
+      ]
+    },
+    {
+      "section": "Market Mechanics",
+      "responses": [
+        { "question": "Define your position sizing thresholds", "response": "..." },
+        { "question": "Specific conditions that trigger sales", "response": "..." },
+        { "question": "One great buy, one mistake - what did each teach?", "response": "..." }
+      ]
+    },
+    {
+      "section": "Critical References",
+      "responses": [
+        { "question": "10 artists you'd buy regardless of market", "response": "..." },
+        { "question": "List 5 overrated and 5 underrated artists/movements", "response": "..." },
+        { "question": "3 collectors/critics whose taste you respect", "response": "..." }
+      ]
+    },
+    {
+      "section": "BERTHA's Parameters",
+      "responses": [
+        { "question": "Define spending authority", "response": "..." },
+        { "question": "Write a 100-word collection note", "response": "..." },
+        { "question": "Rules you must never break", "response": "..." }
+      ]
+    },
+    {
+      "section": "Beyond Safety",
+      "responses": [
+        { "question": "Describe work that standard AI would reject but you'd collect", "response": "..." },
+        { "question": "Name a polarizing art position you hold strongly", "response": "..." },
+        { "question": "What kind of collector should you become that humans couldn't be?", "response": "..." }
+      ]
+    }
   ]
-}`;
+}
+
+Make sure the JSON is valid and complete.`;
 
   try {
     const response = await anthropic.messages.create({
@@ -121,69 +165,48 @@ Format your response as JSON with this structure:
   }
 }
 
-async function submitTrainingData(trainingData: any) {
-  try {
-    const response = await fetch('http://localhost:3000/api/agents/bertha/training', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(trainingData)
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-      console.log(`✅ Training data submitted for ${trainingData.archetype}`);
-      return result;
-    } else {
-      console.error(`❌ Failed to submit ${trainingData.archetype}: ${response.statusText}`);
-      return null;
-    }
-  } catch (error) {
-    console.error(`❌ Network error submitting ${trainingData.archetype}:`, error);
-    return null;
-  }
-}
-
 async function main() {
-  console.log('🎯 BERTHA Self-Training: Channeling Legendary Collectors');
+  console.log('🎯 BERTHA Simple Self-Training: Channeling Legendary Collectors');
   console.log('=' .repeat(60));
 
   for (const [key, description] of Object.entries(COLLECTOR_ARCHETYPES)) {
     console.log(`\n🔮 Channeling ${key.toUpperCase()}...`);
     
-    const response = await generateCollectorResponse(key, description, TRAINING_QUESTIONS);
+    const response = await generateCollectorResponse(key, description);
     
     if (response) {
       try {
-        const trainingData = JSON.parse(response);
+        // Clean the response to ensure it's valid JSON
+        let cleanResponse = response.trim();
+        if (cleanResponse.startsWith('```json')) {
+          cleanResponse = cleanResponse.replace(/```json\n?/, '').replace(/```$/, '').trim();
+        }
         
-        // Add timestamp and format for API
+        const trainingData = JSON.parse(cleanResponse);
+        
+        // Format for saving
         const formattedData = {
-          trainer: trainingData.trainer,
+          trainer: "BERTHA (Channeling " + key.charAt(0).toUpperCase() + key.slice(1) + ")",
           email: `bertha+${key}@eden.art`,
           timestamp: new Date().toISOString(),
-          archetype: key,
-          sections: trainingData.sections.map((section: any) => ({
-            section: section.section,
-            responses: section.responses
-          }))
+          archetype: key.charAt(0).toUpperCase() + key.slice(1) + " - " + description.split(' - ')[1],
+          sections: trainingData.sections
         };
-
-        // Submit to training API
-        const result = await submitTrainingData(formattedData);
         
-        if (result) {
-          console.log(`   💾 Saved ${trainingData.sections.length} sections`);
-          
-          // Save to file as backup
-          const filename = `bertha-${key}-training-${Date.now()}.json`;
-          const fs = require('fs');
-          fs.writeFileSync(`./data/bertha-training/${filename}`, JSON.stringify(formattedData, null, 2));
-          console.log(`   📁 Backed up to ${filename}`);
-        }
+        // Save to file
+        const filename = `bertha-${key}-training.json`;
+        fs.writeFileSync(`./data/bertha-training/${filename}`, JSON.stringify(formattedData, null, 2));
+        
+        console.log(`   ✅ Generated and saved ${trainingData.sections.length} sections`);
+        console.log(`   📁 Saved to ${filename}`);
         
       } catch (parseError) {
         console.error(`❌ Failed to parse response for ${key}:`, parseError);
-        console.log('Raw response:', response.substring(0, 500) + '...');
+        
+        // Save raw response for debugging
+        const filename = `bertha-${key}-raw-${Date.now()}.txt`;
+        fs.writeFileSync(`./data/bertha-training/${filename}`, response);
+        console.log(`   📁 Saved raw response to ${filename} for debugging`);
       }
     }
     
@@ -192,12 +215,10 @@ async function main() {
   }
 
   console.log('\n🎉 BERTHA self-training complete!');
-  console.log('📊 View results at: http://localhost:3000/admin/bertha-training');
+  console.log('📁 Check ./data/bertha-training/ for generated files');
 }
 
 // Run the script
 if (require.main === module) {
   main().catch(console.error);
 }
-
-export { generateCollectorResponse, submitTrainingData };

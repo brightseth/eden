@@ -9,17 +9,22 @@ import {
   Artifact,
   Progress,
   RegistryResponse, 
-  RegistryError 
+  RegistryError,
+  ExperimentalApplication,
+  ApplicationGatewayResponse
 } from './types';
 
-const DEFAULT_TIMEOUT = 10000; // 10 seconds
-const MAX_RETRIES = 3;
+const DEFAULT_TIMEOUT = 3000; // 3 seconds - faster timeout for better UX
+const MAX_RETRIES = 2; // Reduce retries for faster failure
 const RETRY_DELAY = 1000; // Start with 1 second
 
 class RegistryClient {
   private baseUrl: string;
   private apiKey: string;
   private useRegistry: boolean;
+  private isHealthy: boolean = true;
+  private lastHealthCheck: number = 0;
+  private healthCheckInterval: number = 30000; // 30 seconds
 
   constructor() {
     this.baseUrl = process.env.REGISTRY_BASE_URL || 'https://eden-genesis-registry.vercel.app/api/v1';
@@ -29,6 +34,38 @@ class RegistryClient {
 
   private generateTraceId(): string {
     return `reg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  // Circuit breaker - quickly fail if Registry is known to be unhealthy
+  private async checkHealth(): Promise<boolean> {
+    const now = Date.now();
+    
+    // Use cached health status if recent
+    if (now - this.lastHealthCheck < this.healthCheckInterval) {
+      return this.isHealthy;
+    }
+
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 2000); // Very short timeout for health check
+      
+      const response = await fetch(`${this.baseUrl}/health`, {
+        signal: controller.signal,
+        headers: { 'x-eden-client': 'eden-academy-health' }
+      });
+      
+      clearTimeout(timeout);
+      this.isHealthy = response.ok;
+      this.lastHealthCheck = now;
+      
+      return this.isHealthy;
+    } catch (error) {
+      this.isHealthy = false;
+      this.lastHealthCheck = now;
+      
+      console.log(`[Registry] Health check failed - will use fallback for ${this.healthCheckInterval}ms`);
+      return false;
+    }
   }
 
   private async fetchWithRetry<T>(
@@ -218,6 +255,16 @@ class RegistryClient {
       };
     }
 
+    // Quick health check with circuit breaker
+    const isHealthy = await this.checkHealth();
+    if (!isHealthy) {
+      return { 
+        agents: [], 
+        isFromRegistry: false, 
+        error: 'Registry is currently unhealthy - skipping to save time' 
+      };
+    }
+
     try {
       const agents = await this.getAgents(query);
       
@@ -247,6 +294,89 @@ class RegistryClient {
   // Check if Registry is enabled
   isEnabled(): boolean {
     return this.useRegistry;
+  }
+
+  // Get health status information
+  getHealthStatus(): { 
+    isEnabled: boolean, 
+    isHealthy: boolean, 
+    lastCheck: number, 
+    nextCheck: number 
+  } {
+    return {
+      isEnabled: this.useRegistry,
+      isHealthy: this.isHealthy,
+      lastCheck: this.lastHealthCheck,
+      nextCheck: this.lastHealthCheck + this.healthCheckInterval
+    };
+  }
+
+  // Manually reset health status (for testing/admin purposes)
+  resetHealth(): void {
+    this.isHealthy = true;
+    this.lastHealthCheck = 0;
+    console.log('[Registry] Health status reset - will re-check on next request');
+  }
+
+  // NEW METHODS FOR EXPERIMENTAL APPLICATIONS
+  
+  /**
+   * Submit experimental application form (like Bertha trainer form)
+   */
+  async submitExperimentalApplication(application: ExperimentalApplication): Promise<ApplicationGatewayResponse> {
+    if (!this.useRegistry) {
+      throw new Error('Registry is not enabled. Set USE_REGISTRY=true');
+    }
+
+    const url = `${this.baseUrl}/applications/experimental`;
+    const response = await this.fetchWithRetry<ApplicationGatewayResponse>(url, {
+      method: 'POST',
+      body: JSON.stringify(application),
+    });
+    return response;
+  }
+
+  /**
+   * Submit application through Gateway (intelligent routing)
+   */
+  async submitApplicationThroughGateway(application: ExperimentalApplication): Promise<ApplicationGatewayResponse> {
+    if (!this.useRegistry) {
+      throw new Error('Registry is not enabled. Set USE_REGISTRY=true');
+    }
+
+    const url = `${this.baseUrl}/applications/gateway`;
+    const response = await this.fetchWithRetry<ApplicationGatewayResponse>(url, {
+      method: 'POST',
+      body: JSON.stringify(application),
+    });
+    return response;
+  }
+
+  /**
+   * Get experimental applications for review
+   */
+  async getExperimentalApplications(includeExperimental: boolean = true) {
+    if (!this.useRegistry) {
+      throw new Error('Registry is not enabled. Set USE_REGISTRY=true');
+    }
+
+    const params = includeExperimental ? '?experimental=true' : '';
+    const url = `${this.baseUrl}/applications/experimental${params}`;
+    const response = await this.fetchWithRetry<RegistryResponse<any[]>>(url);
+    return response.data;
+  }
+
+  /**
+   * Check system health with all new features
+   */
+  async getSystemHealth() {
+    if (!this.useRegistry) {
+      return { status: 'disabled', message: 'Registry is not enabled' };
+    }
+
+    const url = `${this.baseUrl}/monitoring/health`;
+    const response = await this.fetchWithRetry<any>(url);
+    return response;
   }
 }
 

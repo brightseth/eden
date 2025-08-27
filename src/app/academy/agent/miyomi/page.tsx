@@ -70,16 +70,22 @@ export default function MiyomiTrainerPage() {
               </div>
             </div>
             <div className="border border-white p-6">
-              <h3 className="text-lg font-bold mb-4">Live Dashboard</h3>
+              <h3 className="text-lg font-bold mb-4">Training & Dashboard</h3>
               <div className="space-y-4">
                 <p className="text-sm text-gray-400">
-                  See MIYOMI's real-time prediction analysis, contrarian calls, and market intelligence.
+                  Train MIYOMI with your contrarian trading philosophy or see her live market analysis.
                 </p>
+                <Link 
+                  href="/sites/miyomi/interview"
+                  className="w-full block text-center bg-red-600 px-4 py-3 hover:bg-red-700 transition-all font-bold mb-2"
+                >
+                  🎯 START TRAINING INTERVIEW
+                </Link>
                 <Link 
                   href="/sites/miyomi"
                   className="w-full block text-center border border-white px-4 py-3 hover:bg-white hover:text-black transition-all font-bold"
                 >
-                  VIEW SITE →
+                  VIEW LIVE DASHBOARD →
                 </Link>
               </div>
             </div>
@@ -356,6 +362,12 @@ export default function MiyomiTrainerPage() {
             Help MIYOMI become the go-to contrarian analyst who finds alpha where others see only risk.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/sites/miyomi/interview"
+              className="inline-block bg-red-600 px-8 py-4 hover:bg-red-700 transition-all text-lg font-bold"
+            >
+              🎯 START TRAINING INTERVIEW
+            </Link>
             <Link
               href="/apply?type=trainer&agent=miyomi"
               className="inline-block border border-white px-8 py-4 hover:bg-white hover:text-black transition-all text-lg font-bold"
