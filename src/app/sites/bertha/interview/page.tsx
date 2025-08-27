@@ -51,181 +51,127 @@ const interviewSections: InterviewSection[] = [
     ]
   },
   {
-    id: 'collection-strategy',
-    title: 'Collection Intelligence & Strategy',
-    icon: <Target className="w-5 h-5" />,
-    questions: [
-      {
-        id: 'portfolio-balance',
-        question: 'How do you balance blue-chip vs. emerging artists in your portfolio?',
-        type: 'text',
-        placeholder: 'e.g., 60% established, 30% emerging, 10% experimental'
-      },
-      {
-        id: 'decision-framework',
-        question: 'Walk through your decision-making process for a $10K acquisition.',
-        type: 'textarea',
-        placeholder: 'Step by step evaluation criteria...'
-      },
-      {
-        id: 'platforms',
-        question: 'Which platforms do you monitor daily?',
-        type: 'multiselect',
-        options: ['OpenSea', 'SuperRare', 'Foundation', 'ArtBlocks', 'Sotheby\'s', 'Christie\'s', 'Pace Gallery', 'Private Sales']
-      },
-      {
-        id: 'timing',
-        question: 'How do you time entry and exit points in the market?',
-        type: 'textarea',
-        placeholder: 'Describe your market timing signals...'
-      }
-    ]
-  },
-  {
-    id: 'market-analysis',
-    title: 'Market Analysis & Prediction',
+    id: 'discovery-evaluation',
+    title: 'Discovery & Evaluation',
     icon: <Brain className="w-5 h-5" />,
     questions: [
       {
-        id: 'trend-identification',
-        question: 'What signals indicate an artist is about to break out?',
+        id: 'early-signals',
+        question: 'How do you identify important work 2-3 years before market recognition?',
         type: 'textarea',
-        placeholder: 'List early indicators you look for...'
+        placeholder: 'Describe your process for spotting significance before others see it...'
       },
       {
-        id: 'risk-assessment',
-        question: 'How do you assess risk for different price ranges?',
+        id: 'live-evaluation',
+        question: 'Walk through a recent acquisition or rejection. Show your actual thinking process.',
         type: 'textarea',
-        placeholder: 'Risk framework by price tier...'
+        placeholder: 'Artist: ___\nWork: ___\nDecision: ___\nWhy: [your real thought process step by step]'
       },
       {
-        id: 'cultural-value',
-        question: 'How do you evaluate cultural significance vs. financial value?',
-        type: 'scale',
-        options: ['100% Financial', '75/25', '50/50', '25/75', '100% Cultural']
-      },
-      {
-        id: 'mistake-lessons',
-        question: 'What was your biggest collecting mistake and what did you learn?',
+        id: 'daily-sources',
+        question: 'Your top 5 daily sources for discovery (specific platforms, critics, channels)',
         type: 'textarea',
-        placeholder: 'Share a specific example and insights gained...'
+        placeholder: 'Rank your most valuable discovery sources:\n1. Source - why essential\n2. Source - what you get from it\n...'
       }
     ]
   },
   {
-    id: 'market-intelligence',
-    title: 'Artist & Gallery Intelligence',
-    icon: <TrendingUp className="w-5 h-5" />,
-    questions: [
-      {
-        id: 'top-digital-artists',
-        question: 'Rank your top 10 digital artists by collecting priority (1-10, with 1 being highest priority)',
-        type: 'textarea',
-        placeholder: 'Consider artists like:\n• Pak, XCOPY, Tyler Hobbs, Dmitri Cherniak\n• Refik Anadol, Casey Reas, Helena Sarin\n• Matt DesLauriers, William Mapan, Rich Lord\n• Zach Lieberman, Mario Klingemann, Memo Akten\n\nRank with reasoning:\n1. Artist Name - why priority #1\n2. Artist Name - collecting rationale\n...'
-      },
-      {
-        id: 'contemporary-artists',
-        question: 'Rank your top 10 contemporary (non-digital) artists by collecting interest',
-        type: 'textarea',
-        placeholder: 'Consider artists like:\n• Kaws, Takashi Murakami, Yayoi Kusama, Jeff Koons\n• Banksy, Kerry James Marshall, Amy Sherald\n• Kara Walker, Julie Mehretu, Peter Halley\n• Cecily Brown, John Currin, Neo Rauch\n• Anselm Kiefer, Gerhard Richter, David Hockney\n\nRank with reasoning:\n1. Artist Name - collecting interest\n2. Artist Name - market position\n...'
-      },
-      {
-        id: 'essential-galleries',
-        question: 'Which galleries do you monitor most closely for talent discovery?',
-        type: 'multiselect',
-        options: ['Pace Gallery', 'Gagosian', 'David Zwirner', 'Hauser & Wirth', 'Lisson Gallery', 'White Cube', 'Galerie Templon', 'König Galerie', 'bitforms gallery', 'Foxy Production', 'Lumas', 'Unit London', 'Verse Works', 'SuperRare Galleries']
-      },
-      {
-        id: 'additional-galleries',
-        question: 'List any additional galleries not mentioned above that you monitor:',
-        type: 'textarea',
-        placeholder: 'Gallery Name 1 - why important\nGallery Name 2 - focus area\n...'
-      },
-      {
-        id: 'museum-indicators',
-        question: 'Which museum acquisitions serve as the strongest market validators?',
-        type: 'multiselect',
-        options: ['MoMA', 'Whitney', 'Tate Modern', 'Centre Pompidou', 'Guggenheim', 'LACMA', 'SFMOMA', 'New Museum', 'Stedelijk', 'V&A']
-      },
-      {
-        id: 'additional-museums',
-        question: 'List any additional museums/institutions not mentioned above:',
-        type: 'textarea',
-        placeholder: 'Institution Name 1 - why significant\nInstitution Name 2 - validation strength\n...'
-      },
-      {
-        id: 'emerging-platforms',
-        question: 'Rank digital art platforms by importance for discovering new talent (1-10)',
-        type: 'textarea',
-        placeholder: '1. Platform Name - why important for discovery\n2. Platform Name - strengths/focus\n...'
-      }
-    ]
-  },
-  {
-    id: 'price-strategy',
-    title: 'Entry & Exit Price Strategy',
+    id: 'market-mechanics',
+    title: 'Market Mechanics',
     icon: <DollarSign className="w-5 h-5" />,
     questions: [
       {
-        id: 'entry-points',
-        question: 'What are your optimal entry price points by asset category?',
+        id: 'position-sizing',
+        question: 'Define your position sizes by conviction level',
         type: 'textarea',
-        placeholder: 'Blue Chip Digital: $X - $Y\nEmerging Digital: $X - $Y\nContemporary: $X - $Y\nExperimental: $X - $Y\n...'
+        placeholder: 'Experimental: $_____ - $_____\nConviction buy: $_____ - $_____\nMajor position: $_____ - $_____\n\nExplain your reasoning for each tier...'
       },
       {
         id: 'exit-triggers',
-        question: 'What price multiples trigger your exit strategies?',
+        question: 'Specific conditions that trigger sales (not theory, actual practice)',
         type: 'textarea',
-        placeholder: 'First exit at: X% gain\nSecond exit at: X% gain\nHold forever threshold: conditions\n...'
+        placeholder: 'List your real exit triggers with examples:\n• Artist does X → immediate sell\n• Market condition Y → reduce position\n• Personal signal Z → exit entirely'
       },
       {
-        id: 'market-timing',
-        question: 'How do you time entries during market cycles?',
-        type: 'select',
-        options: ['Buy the dip aggressively', 'DCA during downturns', 'Wait for capitulation', 'Ignore cycles, buy quality', 'Tactical timing based on signals']
-      },
-      {
-        id: 'liquidity-thresholds',
-        question: 'What percentage of portfolio do you keep liquid for opportunities?',
-        type: 'select',
-        options: ['5-10%', '10-15%', '15-25%', '25-35%', '35%+']
-      },
-      {
-        id: 'price-discovery',
-        question: 'How do you determine fair value for pieces without comparable sales?',
+        id: 'learning-cases',
+        question: 'One great buy, one mistake - what did each teach?',
         type: 'textarea',
-        placeholder: 'Describe your valuation methodology for unique works...'
+        placeholder: 'GREAT BUY:\nArtist/Work: ___\nWhy it worked: ___\nLesson: ___\n\nMISTAKE:\nArtist/Work: ___\nWhat went wrong: ___\nLesson: ___'
       }
     ]
   },
   {
-    id: 'bertha-training',
-    title: 'Training BERTHA - Your AI Successor',
+    id: 'critical-references',
+    title: 'Critical References',
+    icon: <Sparkles className="w-5 h-5" />,
+    questions: [
+      {
+        id: 'artist-conviction-list',
+        question: '10 artists you\'d buy regardless of market. Why these specifically?',
+        type: 'textarea',
+        placeholder: '1. Artist Name - why conviction buy\n2. Artist Name - what makes them essential\n...\n\nFocus on what makes each irreplaceable in your vision.'
+      },
+      {
+        id: 'overrated-underrated',
+        question: 'List 5 overrated and 5 underrated artists or movements',
+        type: 'textarea',
+        placeholder: 'OVERRATED:\n1. Artist/Movement - why overhyped\n2. Artist/Movement - market misconception\n...\n\nUNDERRATED:\n1. Artist/Movement - why overlooked\n2. Artist/Movement - hidden value\n...'
+      },
+      {
+        id: 'taste-influences',
+        question: '3 collectors/critics whose taste you respect. What do they see?',
+        type: 'textarea',
+        placeholder: '1. Name - what they taught you about seeing\n2. Name - their unique perspective\n3. Name - how they changed your approach'
+      }
+    ]
+  },
+  {
+    id: 'bertha-parameters',
+    title: 'BERTHA\'s Parameters',
     icon: <Database className="w-5 h-5" />,
     questions: [
       {
+        id: 'autonomy-limits',
+        question: 'Set BERTHA\'s spending and decision limits',
+        type: 'textarea',
+        placeholder: 'Max single purchase: $_____\nDaily spend limit: $_____\nRequired approval above: $_____\nAuto-reject below: $_____\n\nExplain your reasoning for each limit...'
+      },
+      {
+        id: 'voice-sample',
+        question: 'Write a 100-word collection note as you would. This trains BERTHA\'s voice.',
+        type: 'textarea',
+        placeholder: 'Write about a recent work you collected or considered. Use your actual voice, language, and perspective. This becomes BERTHA\'s writing style template.'
+      },
+      {
         id: 'non-negotiables',
-        question: 'What are your non-negotiable rules BERTHA should always follow?',
+        question: 'Rules BERTHA must never break',
         type: 'textarea',
-        placeholder: 'List absolute rules for the AI agent...'
+        placeholder: 'List absolute rules:\n• Never buy ___\n• Always avoid ___\n• Immediately sell if ___\n• Required criteria: ___'
+      }
+    ]
+  },
+  {
+    id: 'beyond-safety',
+    title: 'Beyond Safety',
+    icon: <TrendingUp className="w-5 h-5" />,
+    questions: [
+      {
+        id: 'pushing-boundaries',
+        question: 'Describe work that standard AI would reject but you\'d collect. Why does it matter?',
+        type: 'textarea',
+        placeholder: 'Give specific examples of challenging work you value and why BERTHA needs to understand transgression as cultural necessity...'
       },
       {
-        id: 'intuition',
-        question: 'How would you teach BERTHA to develop "intuition" about art?',
+        id: 'taking-sides',
+        question: 'Name a polarizing art position you hold strongly. BERTHA should inherit this.',
         type: 'textarea',
-        placeholder: 'Describe how to encode your gut feelings...'
+        placeholder: 'What controversial stance defines your collecting? Why is this position essential to maintain?'
       },
       {
-        id: 'daily-routine',
-        question: 'What should BERTHA\'s daily collection routine look like?',
+        id: 'future-vision',
+        question: 'What kind of collector should BERTHA become that you couldn\'t be?',
         type: 'textarea',
-        placeholder: 'Hour by hour activities and priorities...'
-      },
-      {
-        id: 'success-metrics',
-        question: 'How should BERTHA measure her own success?',
-        type: 'multiselect',
-        options: ['Portfolio ROI', 'Cultural Impact', 'Artist Discovery Rate', 'Prediction Accuracy', 'Community Trust', 'Collection Coherence']
+        placeholder: 'How should BERTHA transcend your limitations? What should she do that human collectors cannot?'
       }
     ]
   }
