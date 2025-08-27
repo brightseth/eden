@@ -1,6 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { 
   Eye, TrendingUp, Coins, Star, ExternalLink, 
   Calendar, User, Award, Palette, ArrowLeft,
@@ -9,6 +11,13 @@ import {
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 
 export default function MiyomiTrainerPage() {
+  const router = useRouter();
+  const [canGoBack, setCanGoBack] = useState(false);
+  
+  useEffect(() => {
+    // Check if there's history to go back to
+    setCanGoBack(window.history.length > 1);
+  }, []);
   return (
     <div className="min-h-screen bg-black text-white">
       <UnifiedHeader />
@@ -16,13 +25,23 @@ export default function MiyomiTrainerPage() {
       {/* Back Navigation */}
       <div className="border-b border-white">
         <div className="max-w-6xl mx-auto px-6 py-3">
-          <Link 
-            href="/academy" 
-            className="inline-flex items-center gap-2 text-sm hover:bg-white hover:text-black px-2 py-1 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            BACK TO ACADEMY
-          </Link>
+          {canGoBack ? (
+            <button
+              onClick={() => router.back()}
+              className="inline-flex items-center gap-2 text-sm hover:bg-white hover:text-black px-2 py-1 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              BACK TO ACADEMY
+            </button>
+          ) : (
+            <Link
+              href="/academy"
+              className="inline-flex items-center gap-2 text-sm hover:bg-white hover:text-black px-2 py-1 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              BACK TO ACADEMY
+            </Link>
+          )}
         </div>
       </div>
 
