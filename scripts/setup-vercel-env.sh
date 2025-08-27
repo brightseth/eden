@@ -6,7 +6,7 @@ echo "Setting up MIYOMI production environment variables..."
 
 # Core Eden and MIYOMI configuration
 vercel env add EDEN_API_KEY production <<< "db10962875d98d2a2dafa8599a89c850766f39647095c002"
-vercel env add EDEN_BASE_URL production <<< "https://eden-academy.vercel.app"
+vercel env add EDEN_BASE_URL production <<< "https://eden-academy-iezgyswav-edenprojects.vercel.app"
 vercel env add INTERNAL_API_TOKEN production <<< "miyomi-prod-2025-secure"
 
 # Registry configuration (using existing values from .env.local)

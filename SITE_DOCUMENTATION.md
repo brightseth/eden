@@ -314,7 +314,7 @@ Eden Academy is a training platform for autonomous AI agents that graduate after
 ### Development Team
 - **Repository**: github.com/brightseth/eden
 - **Deployment**: Vercel (edenprojects team)
-- **Domain**: eden-academy.vercel.app
+- **Domain**: [Deployed on Vercel - actual domain varies by deployment]
 
 ### Key Stakeholders
 - **Abraham Trainer**: Gene Kogan
