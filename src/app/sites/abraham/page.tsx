@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Calendar, Clock, Zap, CheckCircle, ArrowRight, Activity, Award, Eye } from 'lucide-react';
+import { Calendar, Clock, Zap, CheckCircle, ArrowRight, Activity, Award, Eye, Twitter, Instagram, Mail } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { ABRAHAM_BRAND } from '@/data/abrahamBrand';
+import { agentConfigs } from '@/data/agentConfigs';
 
 interface DailyWork {
   id: string;
@@ -129,56 +130,43 @@ export default function AbrahamSite() {
     fetchActualWorks();
   }, [isClient]);
 
-  // Fetch covenant data from Registry-integrated API
+  // Consolidated data fetching functions
+  const fetchCovenantData = async () => {
+    try {
+      const response = await fetch('/api/agents/abraham/covenant');
+      const data = await response.json();
+      setCovenantData(data);
+      
+      // Update current work number from covenant data
+      if (data.metrics?.totalWorks) {
+        setCurrentWorkNumber(data.metrics.totalWorks);
+      }
+    } catch (error) {
+      console.error('Failed to fetch Abraham covenant data:', error);
+    }
+  };
+
+  const fetchStatusData = async () => {
+    try {
+      const response = await fetch('/api/agents/abraham/status');
+      const data = await response.json();
+      setStatusData(data);
+      
+      // Update live metrics
+      if (data.liveMetrics?.viewers) {
+        setLiveViewers(data.liveMetrics.viewers);
+      }
+    } catch (error) {
+      console.error('Failed to fetch Abraham status data:', error);
+    }
+  };
+
+  // Initial data load
   useEffect(() => {
     if (!isClient) return;
     
-    const fetchCovenantData = async () => {
-      try {
-        const response = await fetch('/api/agents/abraham/covenant');
-        const data = await response.json();
-        setCovenantData(data);
-        
-        // Update current work number from covenant data
-        if (data.metrics?.totalWorks) {
-          setCurrentWorkNumber(data.metrics.totalWorks);
-        }
-      } catch (error) {
-        console.error('Failed to fetch Abraham covenant data:', error);
-      }
-    };
-
     fetchCovenantData();
-    
-    // Refresh covenant data every 30 seconds
-    const interval = setInterval(fetchCovenantData, 30000);
-    return () => clearInterval(interval);
-  }, [isClient]);
-
-  // Fetch real-time status from Registry-integrated API
-  useEffect(() => {
-    if (!isClient) return;
-    
-    const fetchStatusData = async () => {
-      try {
-        const response = await fetch('/api/agents/abraham/status');
-        const data = await response.json();
-        setStatusData(data);
-        
-        // Update live metrics
-        if (data.liveMetrics?.viewers) {
-          setLiveViewers(data.liveMetrics.viewers);
-        }
-      } catch (error) {
-        console.error('Failed to fetch Abraham status data:', error);
-      }
-    };
-
     fetchStatusData();
-    
-    // Refresh status every 10 seconds for real-time updates
-    const interval = setInterval(fetchStatusData, 10000);
-    return () => clearInterval(interval);
   }, [isClient]);
 
   // Helper function to format dates
@@ -195,18 +183,16 @@ export default function AbrahamSite() {
     return date.toLocaleDateString();
   };
 
-  // Simulate real-time updates
+  // Consolidated timer system with optimized intervals
   useEffect(() => {
     if (!isClient) return;
     
+    let secondCount = 0;
+    
     const interval = setInterval(() => {
-      setLiveViewers(prev => {
-        const current = prev || 847; // Fallback value
-        const change = Math.floor(Math.random() * 10) - 5;
-        return Math.max(0, current + change); // Ensure non-negative
-      });
+      secondCount++;
       
-      // Update countdown - use Registry data if available
+      // Update countdown every second (1s)
       try {
         if (statusData?.nextWork?.timeUntil) {
           setTimeUntilNext(statusData.nextWork.timeUntil);
@@ -231,7 +217,27 @@ export default function AbrahamSite() {
         console.error('Countdown calculation error:', error);
         setTimeUntilNext('--:--:--');
       }
+      
+      // Update live viewers every 5 seconds (reduced frequency)
+      if (secondCount % 5 === 0) {
+        setLiveViewers(prev => {
+          const current = prev || 847;
+          const change = Math.floor(Math.random() * 10) - 5;
+          return Math.max(0, current + change);
+        });
+      }
+      
+      // Fetch status data every 10 seconds
+      if (secondCount % 10 === 0) {
+        fetchStatusData();
+      }
+      
+      // Fetch covenant data every 30 seconds
+      if (secondCount % 30 === 0) {
+        fetchCovenantData();
+      }
     }, 1000);
+    
     return () => clearInterval(interval);
   }, [isClient, statusData]);
 
@@ -243,6 +249,35 @@ export default function AbrahamSite() {
           <div className="flex items-center gap-6">
             <h1 className="text-2xl font-bold">{ABRAHAM_BRAND.identity.name}</h1>
             <span className="text-xs opacity-75">{ABRAHAM_BRAND.identity.agent} • {ABRAHAM_BRAND.identity.tagline}</span>
+            
+            {/* Social Links */}
+            <div className="flex gap-2">
+              <a 
+                href={`https://twitter.com/${agentConfigs.abraham.social.twitter}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1 hover:bg-white hover:text-black transition-all"
+                title="Twitter"
+              >
+                <Twitter className="w-4 h-4" />
+              </a>
+              <a 
+                href={`https://instagram.com/${agentConfigs.abraham.social.instagram}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1 hover:bg-white hover:text-black transition-all"
+                title="Instagram"
+              >
+                <Instagram className="w-4 h-4" />
+              </a>
+              <a 
+                href={`mailto:${agentConfigs.abraham.social.email}`}
+                className="p-1 hover:bg-white hover:text-black transition-all"
+                title="Email"
+              >
+                <Mail className="w-4 h-4" />
+              </a>
+            </div>
           </div>
           <Link 
             href="/academy/agent/abraham" 

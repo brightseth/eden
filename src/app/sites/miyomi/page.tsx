@@ -62,6 +62,10 @@ export default function MiyomiSite() {
   const [isPrivateMode, setIsPrivateMode] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'training' | 'performance' | 'revenue'>('overview');
   
+  // Feedback state (no popups!)
+  const [statusMessage, setStatusMessage] = useState<{type: 'success' | 'error' | 'info' | null, message: string}>({type: null, message: ''});
+  const [isProcessing, setIsProcessing] = useState(false);
+  
   // Public mode state
   const [currentTime, setCurrentTime] = useState(new Date());
   const [nextDrop, setNextDrop] = useState<Date | null>(null);
@@ -277,8 +281,14 @@ export default function MiyomiSite() {
 
   // Button handler functions
   async function handleTriggerManualDrop() {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    
     try {
-      console.log('Triggering manual drop for MIYOMI...');
+      setStatusMessage({
+        type: 'info',
+        message: '🎲 Generating contrarian pick...'
+      });
       
       // Call the manual drop API
       const response = await fetch('/api/miyomi/manual-drop', {
@@ -297,14 +307,26 @@ export default function MiyomiSite() {
       }
 
       const result = await response.json();
-      alert(`Manual drop triggered successfully! Drop ID: ${result.dropId}`);
+      setStatusMessage({
+        type: 'success',
+        message: `✅ Manual drop triggered! Pick generated: ${result.pickId}`
+      });
       
       // Refresh the picks data
       loadRecentPicks();
       
+      // Clear message after 5 seconds
+      setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
+      
     } catch (error) {
       console.error('Error triggering manual drop:', error);
-      alert('Failed to trigger manual drop. Please try again.');
+      setStatusMessage({
+        type: 'error',
+        message: '❌ Failed to trigger manual drop. Please try again.'
+      });
+      setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
+    } finally {
+      setIsProcessing(false);
     }
   }
 
@@ -322,18 +344,30 @@ export default function MiyomiSite() {
       const pendingPicks = await response.json();
       
       if (pendingPicks.length === 0) {
-        alert('No pending picks to review.');
+        setStatusMessage({
+          type: 'info',
+          message: '📊 No pending picks to review'
+        });
+        setTimeout(() => setStatusMessage({type: null, message: ''}), 3000);
         return;
       }
 
-      // For now, show count - could open a modal or navigate to review page
-      alert(`Found ${pendingPicks.length} pending picks for review. Opening review interface...`);
+      // Show pending picks inline
+      setStatusMessage({
+        type: 'success',
+        message: `📊 Found ${pendingPicks.length} pending picks for review`
+      });
+      setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
       
       // TODO: Open review modal or navigate to /dashboard/miyomi/review
       
     } catch (error) {
       console.error('Error fetching pending picks:', error);
-      alert('Failed to fetch pending picks. Please try again.');
+      setStatusMessage({
+        type: 'error',
+        message: '❌ Failed to fetch pending picks'
+      });
+      setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
     }
   }
 
@@ -354,14 +388,22 @@ export default function MiyomiSite() {
       }
 
       const result = await response.json();
-      alert(`Updated ${result.updatedCount} market results successfully!`);
+      setStatusMessage({
+        type: 'success',
+        message: `✅ Updated ${result.updatedCount} market results`
+      });
+      setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
       
       // Refresh the picks data to show updated results
       loadRecentPicks();
       
     } catch (error) {
       console.error('Error updating results:', error);
-      alert('Failed to update results. Please try again.');
+      setStatusMessage({
+        type: 'error',
+        message: '❌ Failed to update results'
+      });
+      setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
     }
   }
 
@@ -378,8 +420,20 @@ export default function MiyomiSite() {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      {/* Status Message Bar */}
+      {statusMessage.type && (
+        <div className={`
+          fixed top-0 left-0 right-0 z-50 px-6 py-3 text-center font-bold
+          ${statusMessage.type === 'success' ? 'bg-green-600' : ''}
+          ${statusMessage.type === 'error' ? 'bg-red-600' : ''}
+          ${statusMessage.type === 'info' ? 'bg-blue-600' : ''}
+        `}>
+          {statusMessage.message}
+        </div>
+      )}
+      
       {/* Header */}
-      <header className="border-b border-white/20">
+      <header className={`border-b border-white/20 ${statusMessage.type ? 'mt-12' : ''}`}>
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/academy/agent/miyomi" className="text-2xl font-bold">
@@ -628,9 +682,10 @@ export default function MiyomiSite() {
                 <div className="flex gap-4">
                   <button 
                     onClick={handleTriggerManualDrop}
-                    className="px-6 py-3 bg-red-600 rounded-lg hover:bg-red-700 transition font-bold"
+                    disabled={isProcessing}
+                    className={`px-6 py-3 bg-red-600 rounded-lg hover:bg-red-700 transition font-bold ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
-                    Trigger Manual Drop
+                    {isProcessing ? 'Generating...' : 'Trigger Manual Drop'}
                   </button>
                   <button 
                     onClick={handleReviewPendingPicks}

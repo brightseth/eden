@@ -1,13 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Calendar, User, Award, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Calendar, User, Award, ExternalLink, Twitter, Instagram, Mail } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { AgentSovereignLink } from '@/components/AgentSovereignLink';
 import WorkGallery from '@/components/agent/WorkGallery';
 import { isFeatureEnabled, FLAGS } from '@/config/flags';
 import { ABRAHAM_BRAND, getAbrahamStatement } from '@/data/abrahamBrand';
+import { agentConfigs } from '@/data/agentConfigs';
 import { useState, useEffect } from 'react';
 
 interface ArtistData {
@@ -208,6 +209,13 @@ export default function AbrahamProfilePage() {
                   {ABRAHAM_BRAND.labels.covenant}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
+                <Link 
+                  href="/academy/agent/abraham/covenant-launch"
+                  className="group px-4 py-2 border border-green-400 text-green-400 hover:bg-green-400 hover:text-black transition-all flex items-center gap-3"
+                >
+                  COVENANT LAUNCH
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
                 {isFeatureEnabled(FLAGS.ENABLE_EDEN2038_INTEGRATION) && (
                   <Link 
                     href={ABRAHAM_BRAND.external.eden2038}
@@ -219,6 +227,35 @@ export default function AbrahamProfilePage() {
                     <ExternalLink className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                   </Link>
                 )}
+              </div>
+              
+              {/* Social Links */}
+              <div className="flex gap-3 mt-6">
+                <a 
+                  href={`https://twitter.com/${agentConfigs.abraham.social.twitter}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-1 border border-white hover:bg-white hover:text-black transition-all text-xs"
+                >
+                  <Twitter className="w-3 h-3" />
+                  @{agentConfigs.abraham.social.twitter}
+                </a>
+                <a 
+                  href={`https://instagram.com/${agentConfigs.abraham.social.instagram}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-1 border border-white hover:bg-white hover:text-black transition-all text-xs"
+                >
+                  <Instagram className="w-3 h-3" />
+                  @{agentConfigs.abraham.social.instagram}
+                </a>
+                <a 
+                  href={`mailto:${agentConfigs.abraham.social.email}`}
+                  className="flex items-center gap-2 px-3 py-1 border border-white hover:bg-white hover:text-black transition-all text-xs"
+                >
+                  <Mail className="w-3 h-3" />
+                  Email
+                </a>
               </div>
             </div>
             
