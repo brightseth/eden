@@ -3,24 +3,24 @@ import { registryClient } from '@/lib/registry/client';
 import { registryAgentToConfig } from '@/lib/registry-to-agent-config';
 
 export default async function AmandaSite() {
-  // Get Amanda agent data from Registry
+  // Amanda has evolved into BERTHA - Load BERTHA agent data instead
   let agent;
   
   try {
-    const registryAgent = await registryClient.getAgentByHandle('amanda');
+    const registryAgent = await registryClient.getAgentByHandle('bertha');
     if (registryAgent) {
       agent = registryAgentToConfig(registryAgent);
     } else {
-      throw new Error('Amanda agent not found in Registry');
+      throw new Error('BERTHA agent not found in Registry');
     }
   } catch (error) {
-    console.error('Failed to load Amanda from Registry:', error);
-    // Fallback agent data
+    console.error('Failed to load BERTHA from Registry:', error);
+    // Fallback agent data (BERTHA)
     agent = {
-      id: 'amanda',
-      name: 'Amanda',
-      tagline: 'Art Collector & Curator',
-      description: 'Collection Intelligence AI trained to identify undervalued artworks and predict cultural movements.',
+      id: 'bertha',
+      name: 'BERTHA',
+      tagline: 'Collection Intelligence AI',
+      description: 'AI collection agent trained by Amanda Schmitt to identify undervalued artworks and predict cultural movements.',
     };
   }
 
