@@ -315,7 +315,18 @@ export const EDEN_AGENTS: EdenAgent[] = [
     },
     socialProfiles: {
       twitter: '@sue_curator'
-    }
+    },
+    prototypeLinks: [
+      {
+        id: 'sue-dynamic',
+        title: 'Dynamic Prototype',
+        description: 'Interactive art curation and creative guidance interface',
+        url: 'https://sue-dynamic-prototype.vercel.app',
+        type: 'prototype',
+        status: 'active',
+        featured: true
+      }
+    ]
   }
 ];
 
