@@ -154,9 +154,18 @@ export default function MiyomiDashboard() {
   }
 
   // Helper functions for video generation
+  const [selectedConcept, setSelectedConcept] = useState<any>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+
   const handleGenerateVideo = (concept: any) => {
-    // Navigate to video generation with the concept
-    window.location.href = `/video-generation/${concept.id}`;
+    setSelectedConcept(concept);
+    setIsGenerating(true);
+    
+    // Simulate video generation process
+    setTimeout(() => {
+      setIsGenerating(false);
+      alert(`Video "${concept.title}" generated successfully!`);
+    }, 3000);
   };
 
   const getUrgencyColor = (urgency: number) => {
@@ -415,6 +424,32 @@ export default function MiyomiDashboard() {
                 </div>
               ))}
             </div>
+
+            {/* Video Generation Status */}
+            {isGenerating && selectedConcept && (
+              <div className="bg-purple-900/20 border border-purple-500/30 rounded-xl p-8">
+                <div className="text-center">
+                  <div className="mb-4">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-600/20 rounded-full mb-4">
+                      <Sparkles className="w-8 h-8 text-purple-400 animate-spin" />
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold text-purple-300 mb-2">Generating Cinematic Video...</h3>
+                  <p className="text-lg text-white mb-2">
+                    <strong>Concept:</strong> {selectedConcept.title}
+                  </p>
+                  <p className="text-sm text-white/70 mb-4">{selectedConcept.description}</p>
+                  <div className="bg-white/5 rounded-lg p-4">
+                    <p className="text-xs text-white/80 mb-2">
+                      <strong>Artistic Statement:</strong> Transforming market anomalies into visual narratives that reveal the hidden patterns beneath surface volatility.
+                    </p>
+                    <p className="text-xs text-white/60">
+                      Framework: Dynamic Narrative Video • Style: Cinematic Market Analysis • Duration: 60-90 seconds
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Recent Videos */}
             <div className="mt-12">
