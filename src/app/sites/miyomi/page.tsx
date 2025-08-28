@@ -60,7 +60,7 @@ interface PerformanceData {
 export default function MiyomiSite() {
   // Mode toggle
   const [isPrivateMode, setIsPrivateMode] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'training' | 'performance' | 'revenue' | 'videos'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'trading' | 'videos' | 'performance'>('overview');
   
   // Public mode state
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -476,7 +476,7 @@ export default function MiyomiSite() {
           <div className="border-b border-white/20">
             <div className="max-w-7xl mx-auto px-6">
               <div className="flex gap-8">
-                {['overview', 'training', 'performance', 'revenue', 'videos'].map(tab => (
+                {['overview', 'trading', 'videos', 'performance'].map(tab => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab as any)}
@@ -569,7 +569,7 @@ export default function MiyomiSite() {
               </div>
             )}
 
-            {activeTab === 'training' && (
+            {activeTab === 'trading' && (
               <div className="space-y-8">
                 {/* Risk Controls */}
                 <div className="bg-white/5 backdrop-blur rounded-lg p-6">
@@ -629,6 +629,42 @@ export default function MiyomiSite() {
                   </div>
                 </div>
 
+                {/* Revenue & Business Metrics */}
+                <div className="bg-white/5 backdrop-blur rounded-lg p-6">
+                  <h3 className="text-xl font-bold mb-6">Revenue & Business Metrics</h3>
+                  <div className="grid md:grid-cols-3 gap-6 mb-6">
+                    <div className="bg-black/20 p-4 rounded-lg">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-lg font-bold">Subscriptions</h4>
+                        <DollarSign className="w-5 h-5 text-green-500" />
+                      </div>
+                      <div className="text-3xl font-bold mb-2">{revenueData.subscriptions}</div>
+                      <div className="text-sm text-gray-400">Active subscribers</div>
+                      <div className="text-2xl font-bold text-green-500 mt-4">
+                        ${revenueData.monthlyRevenue}/mo
+                      </div>
+                    </div>
+                    
+                    <div className="bg-black/20 p-4 rounded-lg">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-lg font-bold">Tips</h4>
+                        <Target className="w-5 h-5 text-yellow-500" />
+                      </div>
+                      <div className="text-3xl font-bold mb-2">${revenueData.tips}</div>
+                      <div className="text-sm text-gray-400">This month</div>
+                    </div>
+                    
+                    <div className="bg-black/20 p-4 rounded-lg">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-lg font-bold">Referrals</h4>
+                        <TrendingUp className="w-5 h-5 text-blue-500" />
+                      </div>
+                      <div className="text-3xl font-bold mb-2">{revenueData.referralClicks}</div>
+                      <div className="text-sm text-gray-400">Clicks this month</div>
+                    </div>
+                  </div>
+                </div>
+
                 <button
                   onClick={saveConfig}
                   className="px-6 py-3 bg-red-600 rounded-lg hover:bg-red-700 transition font-bold"
@@ -672,43 +708,6 @@ export default function MiyomiSite() {
                       ))}
                     </tbody>
                   </table>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'revenue' && (
-              <div className="space-y-8">
-                {/* Revenue Stats */}
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-bold">Subscriptions</h3>
-                      <DollarSign className="w-5 h-5 text-green-500" />
-                    </div>
-                    <div className="text-3xl font-bold mb-2">{revenueData.subscriptions}</div>
-                    <div className="text-sm text-gray-400">Active subscribers</div>
-                    <div className="text-2xl font-bold text-green-500 mt-4">
-                      ${revenueData.monthlyRevenue}/mo
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-bold">Tips</h3>
-                      <Target className="w-5 h-5 text-yellow-500" />
-                    </div>
-                    <div className="text-3xl font-bold mb-2">${revenueData.tips}</div>
-                    <div className="text-sm text-gray-400">This month</div>
-                  </div>
-                  
-                  <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-bold">Referrals</h3>
-                      <TrendingUp className="w-5 h-5 text-blue-500" />
-                    </div>
-                    <div className="text-3xl font-bold mb-2">{revenueData.referralClicks}</div>
-                    <div className="text-sm text-gray-400">Clicks this month</div>
-                  </div>
                 </div>
               </div>
             )}
