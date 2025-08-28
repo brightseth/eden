@@ -9,6 +9,7 @@ export interface Agent {
   visibility: 'PRIVATE' | 'INTERNAL' | 'PUBLIC';
   cohort: string; // API returns cohort, not cohortId
   role?: string;
+  prototypeUrl?: string; // Optional URL for agent prototype/demo site
   createdAt: string;
   updatedAt: string;
   profile?: Profile;

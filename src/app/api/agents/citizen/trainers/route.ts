@@ -49,6 +49,17 @@ const AUTHORIZED_TRAINERS: Record<string, TrainerProfile> = {
     status: 'active',
     trainingCount: 0,
     joinedAt: '2025-08-27T21:00:00Z'
+  },
+  'amanda': {
+    id: 'amanda-schmitt',
+    name: 'Amanda Schmitt',
+    email: 'amanda@kanbas.art',
+    role: 'Collection Intelligence Trainer - BERTHA',
+    level: 'primary',
+    permissions: ['train', 'review', 'approve', 'sync', 'manage_bertha', 'collection_analysis'],
+    status: 'active',
+    trainingCount: 47, // Based on existing training data
+    joinedAt: '2025-08-27T21:00:00Z'
   }
 };
 

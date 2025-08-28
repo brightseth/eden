@@ -68,4 +68,16 @@ export const trainers: Record<string, TrainerProfile> = {
     email: 'colin@lattice.xyz',
     linkedin: 'colin-mcbride',
   },
+
+  'Amanda Schmitt': {
+    name: 'Amanda Schmitt',
+    role: 'Art Curator & Collection Intelligence Specialist',
+    bio: 'Amanda Schmitt is an expert art collector and curator with 10+ years of experience in digital art curation and market analysis. As the founder of Kanbas.art, she operates under the philosophy that "Artists know the future before anyone else, and they are willing to show us the way there." Amanda trains BERTHA in sophisticated taste algorithms, cultural significance evaluation, and autonomous collection intelligence.',
+    profileImage: '/images/trainers/placeholder.svg',
+    email: 'amanda@kanbas.art',
+    website: 'https://kanbas.art',
+    twitter: 'asacurates',
+    instagram: 'kanbas_',
+    linkedin: 'amanda-schmitt-art',
+  },
 };

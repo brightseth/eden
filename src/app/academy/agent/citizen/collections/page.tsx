@@ -1,0 +1,328 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { ArrowLeft, ExternalLink, MapPin, Calendar, Users, Trophy, Zap } from 'lucide-react';
+import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
+
+interface CityCollection {
+  city: string;
+  collection_name: string;
+  supply: number;
+  year: string | number;
+  venue: string;
+  significance: string;
+  cultural_context: string;
+  golden_token?: string;
+  opensea_slug: string;
+  historical_note?: string;
+}
+
+interface CollectionsData {
+  overview: {
+    total_cryptocitizens: number;
+    cities_completed: number;
+    project_status: string;
+    artist: string;
+    governance_model: string;
+  };
+  city_collections: CityCollection[];
+  prestigious_sets: {
+    full_set: {
+      definition: string;
+      recognition: string;
+      governance_weight: string;
+      cultural_significance: string;
+    };
+    ultra_full_set: {
+      definition: string;
+      recognition: string;
+      status: string;
+      governance_weight: string;
+      cultural_significance: string;
+    };
+  };
+  mechanics: any;
+  official_links?: {
+    docs: string;
+    portal: string;
+    opensea: string;
+    snapshot: string;
+  };
+}
+
+export default function CitizenCollectionsPage() {
+  const [collectionsData, setCollectionsData] = useState<CollectionsData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedCity, setSelectedCity] = useState<string>('all');
+
+  useEffect(() => {
+    async function fetchCollections() {
+      try {
+        const response = await fetch('/api/agents/citizen/collections?stats=true');
+        if (!response.ok) throw new Error('Failed to fetch');
+        
+        const data = await response.json();
+        setCollectionsData(data.collections);
+      } catch (error) {
+        console.error('Failed to load collections:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchCollections();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <UnifiedHeader />
+        <div className="max-w-6xl mx-auto px-6 py-16 text-center">
+          <div className="text-xl">Loading CryptoCitizens Collections...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!collectionsData) {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <UnifiedHeader />
+        <div className="max-w-6xl mx-auto px-6 py-16 text-center">
+          <div className="text-xl text-red-400">Failed to load collections data</div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <UnifiedHeader />
+      
+      {/* Back Navigation */}
+      <div className="border-b border-white">
+        <div className="max-w-6xl mx-auto px-6 py-3">
+          <Link 
+            href="/academy/agent/citizen" 
+            className="inline-flex items-center gap-2 text-sm hover:bg-white hover:text-black px-2 py-1 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            BACK TO CITIZEN
+          </Link>
+        </div>
+      </div>
+
+      {/* Header */}
+      <div className="border-b border-white">
+        <div className="max-w-6xl mx-auto px-6 py-20">
+          <div className="text-center">
+            <h1 className="text-6xl mb-4">CRYPTOCITIZENS COLLECTIONS</h1>
+            <p className="text-2xl mb-8">
+              {collectionsData.overview.project_status}
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              <div className="text-center">
+                <div className="text-4xl mb-2">{collectionsData.overview.total_cryptocitizens.toLocaleString()}</div>
+                <div className="text-sm text-gray-400">TOTAL CRYPTOCITIZENS</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl mb-2">{collectionsData.overview.cities_completed}</div>
+                <div className="text-sm text-gray-400">CITIES COMPLETED</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl mb-2">2021-2024</div>
+                <div className="text-sm text-gray-400">JOURNEY YEARS</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        {/* Overview */}
+        <section className="mb-16">
+          <h2 className="text-3xl mb-8">PROJECT OVERVIEW</h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="border border-white p-6">
+              <h3 className="text-xl mb-4">ARTIST</h3>
+              <p className="text-lg">{collectionsData.overview.artist}</p>
+            </div>
+            <div className="border border-white p-6">
+              <h3 className="text-xl mb-4">GOVERNANCE MODEL</h3>
+              <p className="text-lg">{collectionsData.overview.governance_model}</p>
+            </div>
+          </div>
+        </section>
+
+        {/* City Collections */}
+        <section className="mb-16">
+          <h2 className="text-3xl mb-8">CITY COLLECTIONS</h2>
+          <div className="grid gap-6">
+            {collectionsData.city_collections.map((collection, index) => (
+              <div key={collection.city} className="border border-white p-6 hover:bg-white hover:text-black transition-all group">
+                <div className="flex flex-col md:flex-row md:items-start gap-6">
+                  <div className="md:w-1/3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <MapPin className="w-5 h-5" />
+                      <h3 className="text-2xl font-bold">{collection.city}</h3>
+                    </div>
+                    <div className="text-lg mb-2">{collection.collection_name}</div>
+                    <div className="flex items-center gap-4 text-sm text-gray-400 group-hover:text-gray-600 mb-4">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4" />
+                        {collection.year}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Users className="w-4 h-4" />
+                        {collection.supply.toLocaleString()}
+                      </div>
+                    </div>
+                    {collection.golden_token && (
+                      <div className="inline-block px-3 py-1 border border-yellow-500 text-yellow-500 text-xs font-bold mb-4">
+                        {collection.golden_token}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="md:w-2/3">
+                    <div className="mb-4">
+                      <h4 className="text-sm text-gray-400 group-hover:text-gray-600 mb-1">VENUE</h4>
+                      <p className="mb-3">{collection.venue}</p>
+                    </div>
+                    
+                    <div className="mb-4">
+                      <h4 className="text-sm text-gray-400 group-hover:text-gray-600 mb-1">SIGNIFICANCE</h4>
+                      <p className="mb-3">{collection.significance}</p>
+                    </div>
+                    
+                    <div className="mb-4">
+                      <h4 className="text-sm text-gray-400 group-hover:text-gray-600 mb-1">CULTURAL CONTEXT</h4>
+                      <p>{collection.cultural_context}</p>
+                    </div>
+
+                    {collection.historical_note && (
+                      <div className="mb-4 p-3 bg-red-900/20 border border-red-400 rounded">
+                        <h4 className="text-sm text-red-400 mb-1">HISTORICAL NOTE</h4>
+                        <p className="text-sm">{collection.historical_note}</p>
+                      </div>
+                    )}
+
+                    <div className="flex gap-3 mt-4">
+                      <a
+                        href={`https://opensea.io/collection/${collection.opensea_slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-3 py-2 border border-white hover:bg-white hover:text-black group-hover:border-black text-sm transition-all"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        VIEW ON OPENSEA
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Prestigious Sets */}
+        <section className="mb-16">
+          <h2 className="text-3xl mb-8">PRESTIGIOUS SETS</h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="border border-white p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <Trophy className="w-6 h-6 text-yellow-500" />
+                <h3 className="text-2xl">FULL SET</h3>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <div className="text-sm text-gray-400 mb-1">DEFINITION</div>
+                  <div>{collectionsData.prestigious_sets.full_set.definition}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-400 mb-1">GOVERNANCE</div>
+                  <div>{collectionsData.prestigious_sets.full_set.governance_weight}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-400 mb-1">RECOGNITION</div>
+                  <div>{collectionsData.prestigious_sets.full_set.recognition}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="border border-white p-6 bg-gradient-to-br from-purple-900/20 to-yellow-900/20">
+              <div className="flex items-center gap-3 mb-4">
+                <Trophy className="w-6 h-6 text-yellow-400" />
+                <h3 className="text-2xl">ULTRA FULL SET</h3>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <div className="text-sm text-gray-400 mb-1">DEFINITION</div>
+                  <div>{collectionsData.prestigious_sets.ultra_full_set.definition}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-400 mb-1">STATUS</div>
+                  <div>{collectionsData.prestigious_sets.ultra_full_set.status}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-400 mb-1">RECOGNITION</div>
+                  <div>{collectionsData.prestigious_sets.ultra_full_set.recognition}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-400 mb-1">GOVERNANCE</div>
+                  <div>{collectionsData.prestigious_sets.ultra_full_set.governance_weight}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Official Links */}
+        {collectionsData.official_links && (
+          <section className="mb-16">
+            <h2 className="text-3xl mb-8">OFFICIAL RESOURCES</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <a
+                href={collectionsData.official_links.docs}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 p-4 border border-white hover:bg-white hover:text-black transition-all"
+              >
+                <ExternalLink className="w-4 h-4" />
+                DOCS
+              </a>
+              <a
+                href={collectionsData.official_links.portal}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 p-4 border border-white hover:bg-white hover:text-black transition-all"
+              >
+                <ExternalLink className="w-4 h-4" />
+                PORTAL
+              </a>
+              <a
+                href={collectionsData.official_links.opensea}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 p-4 border border-white hover:bg-white hover:text-black transition-all"
+              >
+                <ExternalLink className="w-4 h-4" />
+                OPENSEA
+              </a>
+              <a
+                href={collectionsData.official_links.snapshot}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 p-4 border border-white hover:bg-white hover:text-black transition-all"
+              >
+                <Zap className="w-4 h-4" />
+                SNAPSHOT
+              </a>
+            </div>
+          </section>
+        )}
+      </div>
+    </div>
+  );
+}
