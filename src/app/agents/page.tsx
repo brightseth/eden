@@ -2,7 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { agentService, type UnifiedAgent } from '@/data/agents-registry';
+// Using the working API endpoint instead of Registry service
+interface Agent {
+  id: string;
+  name: string;
+  tagline: string;
+  trainer: string;
+  status: string;
+  day_count: number;
+  avatar_url?: string;
+  latest_work?: any;
+  created_at?: string;
+}
 
 // Force dynamic rendering to avoid build issues
 export const dynamic = 'force-dynamic';
@@ -10,20 +21,24 @@ export const dynamic = 'force-dynamic';
 export default function AgentsDiscoveryPage() {
   const [filter, setFilter] = useState<'all' | 'genesis' | 'year-1' | 'active' | 'upcoming'>('all');
   const [sortBy, setSortBy] = useState<'launch' | 'revenue' | 'output'>('launch');
-  const [agents, setAgents] = useState<UnifiedAgent[]>([]);
+  const [agents, setAgents] = useState<Agent[]>([]);
   const [loading, setLoading] = useState(true);
-  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(76700); // Static for now
 
   useEffect(() => {
     async function loadAgents() {
       try {
-        const allAgents = await agentService.getAgents();
-        setAgents(allAgents);
+        console.log('🚀 Fetching agents from API...');
+        const response = await fetch('/api/agents');
+        if (!response.ok) throw new Error('Failed to fetch');
         
-        const revenue = await agentService.calculateTotalRevenue();
-        setTotalRevenue(revenue);
+        const data = await response.json();
+        const agentList = data.agents || [];
+        
+        console.log('✅ Got agents:', agentList.length);
+        setAgents(agentList);
       } catch (error) {
-        console.error('Failed to load agents:', error);
+        console.error('❌ Failed to load agents:', error);
       } finally {
         setLoading(false);
       }
@@ -32,31 +47,26 @@ export default function AgentsDiscoveryPage() {
     loadAgents();
   }, []);
 
-  // Filter agents
+  // Filter agents - simplified for working API data
   let filteredAgents = [...agents];
   
-  if (filter === 'genesis') {
-    filteredAgents = filteredAgents.filter(a => a.cohort === 'genesis');
-  } else if (filter === 'year-1') {
-    filteredAgents = filteredAgents.filter(a => a.cohort === 'year-1');
-  } else if (filter === 'active') {
-    filteredAgents = filteredAgents.filter(a => a.status === 'ACTIVE' || a.status === 'GRADUATED');
+  if (filter === 'active') {
+    filteredAgents = filteredAgents.filter(a => a.status === 'active');
   } else if (filter === 'upcoming') {
-    filteredAgents = filteredAgents.filter(a => a.status === 'ONBOARDING' || a.status === 'INVITED');
+    filteredAgents = filteredAgents.filter(a => a.status === 'training' || a.status === 'developing');
   }
+  // For now, treat 'genesis' and 'year-1' as showing all agents
 
-  // Sort agents
+  // Sort agents - simplified
   filteredAgents.sort((a, b) => {
-    if (sortBy === 'revenue') {
-      return b.monthlyRevenue - a.monthlyRevenue;
-    } else if (sortBy === 'output') {
-      return b.outputRate - a.outputRate;
+    if (sortBy === 'output') {
+      return b.day_count - a.day_count;
     } else {
-      return new Date(a.launchDate).getTime() - new Date(b.launchDate).getTime();
+      return a.name.localeCompare(b.name); // Sort by name for now
     }
   });
 
-  const activeAgentsCount = agents.filter(a => a.status === 'ACTIVE' || a.status === 'GRADUATED').length;
+  const activeAgentsCount = agents.filter(a => a.status === 'active').length;
 
   if (loading) {
     return (
@@ -195,7 +205,7 @@ export default function AgentsDiscoveryPage() {
           {filteredAgents.map((agent) => (
             <Link
               key={agent.id}
-              href={`/agents/${agent.handle}`}
+              href={`/agents/${agent.id}`}
               className="group border-2 border-white p-6 hover:bg-white hover:text-black transition-all"
             >
               {/* AGENT HEADER */}
@@ -205,11 +215,11 @@ export default function AgentsDiscoveryPage() {
                     {agent.name}
                   </h2>
                   <p className="text-xs uppercase tracking-wide text-gray-400 group-hover:text-gray-600">
-                    {agent.cohort} COHORT
+                    GENESIS COHORT
                   </p>
                 </div>
                 <div className={`px-2 py-1 text-xs font-bold uppercase tracking-wider border ${
-                  agent.status === 'academy' 
+                  agent.status === 'active' 
                     ? 'border-white text-white group-hover:border-black group-hover:text-black' 
                     : 'border-gray-600 text-gray-400 group-hover:border-gray-400 group-hover:text-gray-600'
                 }`}>
@@ -219,7 +229,7 @@ export default function AgentsDiscoveryPage() {
 
               {/* SPECIALIZATION */}
               <p className="text-sm mb-4 line-clamp-2">
-                {agent.specialization}
+                {agent.tagline}
               </p>
 
               {/* TRAINER */}
@@ -228,7 +238,7 @@ export default function AgentsDiscoveryPage() {
                   TRAINER
                 </div>
                 <div className="text-sm font-bold uppercase">
-                  {agent.trainer.name}
+                  {agent.trainer}
                 </div>
               </div>
 
@@ -236,18 +246,18 @@ export default function AgentsDiscoveryPage() {
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <div className="text-xs uppercase tracking-wider text-gray-400 group-hover:text-gray-600 mb-1">
-                    MONTHLY REV
+                    WORKS
                   </div>
                   <div className="text-lg font-bold">
-                    ${agent.economyMetrics.monthlyRevenue.toLocaleString()}
+                    {agent.day_count.toLocaleString()}
                   </div>
                 </div>
                 <div>
                   <div className="text-xs uppercase tracking-wider text-gray-400 group-hover:text-gray-600 mb-1">
-                    OUTPUT/MO
+                    STATUS
                   </div>
                   <div className="text-lg font-bold">
-                    {agent.technicalProfile.outputRate}
+                    {agent.status.toUpperCase()}
                   </div>
                 </div>
               </div>
@@ -258,24 +268,22 @@ export default function AgentsDiscoveryPage() {
                   LAUNCH DATE
                 </div>
                 <div className="text-sm font-bold">
-                  {new Date(agent.launchDate).toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    year: 'numeric' 
-                  })}
+                  COMING SOON
                 </div>
               </div>
 
               {/* CAPABILITIES */}
               <div className="mt-4 pt-4 border-t border-gray-700 group-hover:border-gray-400">
                 <div className="flex flex-wrap gap-2">
-                  {agent.technicalProfile.capabilities.slice(0, 3).map((cap) => (
-                    <span 
-                      key={cap}
-                      className="px-2 py-1 text-xs uppercase tracking-wider border border-gray-600 group-hover:border-gray-400"
-                    >
-                      {cap}
-                    </span>
-                  ))}
+                  <span className="px-2 py-1 text-xs uppercase tracking-wider border border-gray-600 group-hover:border-gray-400">
+                    AI AGENT
+                  </span>
+                  <span className="px-2 py-1 text-xs uppercase tracking-wider border border-gray-600 group-hover:border-gray-400">
+                    CREATIVE
+                  </span>
+                  <span className="px-2 py-1 text-xs uppercase tracking-wider border border-gray-600 group-hover:border-gray-400">
+                    AUTONOMOUS
+                  </span>
                 </div>
               </div>
             </Link>

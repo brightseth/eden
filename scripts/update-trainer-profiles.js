@@ -38,6 +38,26 @@ async function updateTrainerProfiles() {
       socials: {
         twitter: 'sethgoldstein'
       }
+    },
+    {
+      id: 'martin',
+      display_name: 'Martin Antiquel',
+      bio: 'Physical Design Lead at Lattice, specializing in bridging digital creativity with physical manufacturing. Co-trains Geppetto in parametric design, manufacturing constraints, and functional object creation.',
+      socials: {
+        website: 'https://lattice.xyz',
+        twitter: 'lattice',
+        email: 'martin@lattice.xyz'
+      }
+    },
+    {
+      id: 'colin',
+      display_name: 'Colin McBride',
+      bio: 'Manufacturing Intelligence specialist at Lattice, focused on production optimization and manufacturing processes. Co-trains Geppetto in technical aspects of bringing digital designs into physical reality.',
+      socials: {
+        website: 'https://lattice.xyz',
+        twitter: 'lattice', 
+        email: 'colin@lattice.xyz'
+      }
     }
   ];
 
@@ -57,7 +77,9 @@ async function updateTrainerProfiles() {
   const relationships = [
     { agent_id: 'abraham', trainer_id: 'gene' },
     { agent_id: 'solienne', trainer_id: 'kristi' },
-    { agent_id: 'solienne', trainer_id: 'seth' }
+    { agent_id: 'solienne', trainer_id: 'seth' },
+    { agent_id: 'geppetto', trainer_id: 'martin' },
+    { agent_id: 'geppetto', trainer_id: 'colin' }
   ];
 
   for (const rel of relationships) {

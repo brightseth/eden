@@ -59,6 +59,28 @@ const TRAINERS = [
     bio: 'Community architect, training Koru in collective coordination',
     avatar_url: '/images/trainers/xander.jpg',
     socials: {}
+  },
+  {
+    id: 'martin',
+    display_name: 'Martin Antiquel',
+    bio: 'Physical Design Lead at Lattice, co-training Geppetto in parametric design and manufacturing intelligence',
+    avatar_url: '/images/trainers/martin.jpg',
+    socials: {
+      website: 'https://lattice.xyz',
+      twitter: 'lattice',
+      email: 'martin@lattice.xyz'
+    }
+  },
+  {
+    id: 'colin',
+    display_name: 'Colin McBride', 
+    bio: 'Manufacturing Intelligence specialist at Lattice, co-training Geppetto in production optimization and physical manufacturing',
+    avatar_url: '/images/trainers/colin.jpg',
+    socials: {
+      website: 'https://lattice.xyz',
+      twitter: 'lattice',
+      email: 'colin@lattice.xyz'
+    }
   }
 ];
 
@@ -81,8 +103,8 @@ async function seedTrainers() {
   // Update agents with primary trainers
   const agentTrainerMap = {
     'abraham': 'genekogan',
-    'solienne': 'kristi',
-    'geppetto': 'lattice',
+    'solienne': 'kristi', 
+    'geppetto': 'martin', // Martin as primary, Colin as secondary
     'koru': 'xander'
   };
 
@@ -122,6 +144,22 @@ async function seedTrainers() {
     if (relationError && !relationError.message.includes('not found')) {
       console.error(`⚠️  Relation ${agentId} ↔ ${trainerId}:`, relationError.message);
     }
+  }
+
+  // Add Colin as secondary trainer for Geppetto
+  console.log('\n🔗 Adding secondary trainer relationships...\n');
+  
+  const { error: colinRelError } = await supabase
+    .from('agent_trainers')
+    .upsert(
+      { agent_id: 'geppetto', trainer_id: 'colin' },
+      { onConflict: 'agent_id,trainer_id' }
+    );
+  
+  if (colinRelError && !colinRelError.message.includes('not found')) {
+    console.error(`⚠️  Relation geppetto ↔ colin:`, colinRelError.message);
+  } else {
+    console.log(`✅ geppetto → colin (secondary)`);
   }
 
   console.log('\n✨ Trainer seeding complete!');

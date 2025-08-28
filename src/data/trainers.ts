@@ -46,4 +46,26 @@ export const trainers: Record<string, TrainerProfile> = {
     farcaster: 'xander',
     email: 'xander@example.com',
   },
+  
+  'Martin Antiquel': {
+    name: 'Martin Antiquel',
+    role: 'Physical Design Lead',
+    bio: 'Martin Antiquel is a design technologist and co-founder of Lattice, specializing in bridging digital creativity with physical manufacturing. He trains GEPPETTO in parametric design, manufacturing constraints, and the art of creating functional objects that improve human life.',
+    profileImage: '/images/trainers/placeholder.svg',
+    website: 'https://lattice.xyz',
+    twitter: 'lattice',
+    email: 'martin@lattice.xyz',
+    linkedin: 'martin-antiquel',
+  },
+  
+  'Colin McBride': {
+    name: 'Colin McBride',
+    role: 'Manufacturing Intelligence',
+    bio: 'Colin McBride is a design engineer and co-founder of Lattice, focused on manufacturing intelligence and production optimization. He works with Martin to train GEPPETTO in the technical aspects of bringing digital designs into physical reality.',
+    profileImage: '/images/trainers/placeholder.svg',
+    website: 'https://lattice.xyz',
+    twitter: 'lattice',
+    email: 'colin@lattice.xyz',
+    linkedin: 'colin-mcbride',
+  },
 };
