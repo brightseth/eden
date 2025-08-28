@@ -117,9 +117,9 @@ export default function AcademyPage() {
               <h1 className="text-6xl md:text-8xl font-bold mb-4">EDEN ACADEMY</h1>
               <p className="text-xl mb-2">TRAINING AUTONOMOUS ARTISTS</p>
               <div className="flex items-center gap-4 text-sm text-gray-400">
-                <span>8 AGENTS</span>
+                <span>10 AGENTS</span>
                 <span>•</span>
-                <span>4 CONFIRMED TRAINERS</span>
+                <span>5 CONFIRMED TRAINERS</span>
                 <span>•</span>
                 <span>COHORT 2025-2026</span>
               </div>
@@ -127,7 +127,7 @@ export default function AcademyPage() {
             <div className="hidden md:block text-right text-sm">
               <div className="text-gray-400 mb-2">STATUS</div>
               <div className="text-lg font-bold">PHASE 1: TRAINING</div>
-              <div className="text-gray-400">2 LAUNCHING, 6 DEVELOPING</div>
+              <div className="text-gray-400">10 ACTIVE AGENTS</div>
             </div>
           </div>
         </div>
@@ -140,52 +140,19 @@ export default function AcademyPage() {
             <h2 id="agent-roster-title" className="text-3xl mb-2">AGENT ROSTER</h2>
             <p className="text-sm text-gray-400">Genesis Cohort • 2025-2026</p>
           </div>
-          <div className="hidden md:flex items-center gap-6 text-sm" role="legend" aria-label="Agent status indicators">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full" aria-hidden="true"></div>
-              <span className="text-gray-400">LAUNCHING</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-yellow-500 rounded-full" aria-hidden="true"></div>
-              <span className="text-gray-400">DEVELOPING</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-blue-500 rounded-full" aria-hidden="true"></div>
-              <span className="text-gray-400">PARTNERSHIP AVAILABLE</span>
-            </div>
-          </div>
         </div>
         
-        {/* Loading State - Improved with skeleton UI */}
+        {/* Loading State - 10 agent skeleton UI */}
         {loading && (
-          <div>
-            <h3 className="text-xl mb-8">LAUNCHING</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-              {[1, 2].map((i) => (
-                <div key={i} className="border border-white p-8 animate-pulse">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="h-8 bg-gray-700 w-48 rounded"></div>
-                    <div className="h-6 bg-gray-700 w-24 rounded"></div>
-                  </div>
-                  <div className="h-4 bg-gray-700 w-full mb-2 rounded"></div>
-                  <div className="h-4 bg-gray-700 w-3/4 mb-4 rounded"></div>
-                  <div className="space-y-1">
-                    <div className="h-3 bg-gray-700 w-32 rounded"></div>
-                    <div className="h-3 bg-gray-700 w-20 rounded"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <h3 className="text-xl mb-8">DEVELOPING</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="border border-white p-6 animate-pulse">
-                  <div className="h-6 bg-gray-700 w-32 mb-2 rounded"></div>
-                  <div className="h-4 bg-gray-700 w-20 mb-2 rounded"></div>
-                  <div className="h-3 bg-gray-700 w-full mb-2 rounded"></div>
-                </div>
-              ))}
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-16">
+            {[...Array(10)].map((_, i) => (
+              <div key={i} className="border border-white p-6 animate-pulse">
+                <div className="h-6 bg-gray-700 w-32 mb-2 rounded"></div>
+                <div className="h-4 bg-gray-700 w-20 mb-2 rounded"></div>
+                <div className="h-3 bg-gray-700 w-full mb-2 rounded"></div>
+                <div className="h-3 bg-gray-700 w-3/4 rounded"></div>
+              </div>
+            ))}
           </div>
         )}
 
@@ -237,36 +204,11 @@ export default function AcademyPage() {
           </div>
         )}
 
-        {/* Launching Agents */}
+        {/* All Agents - Equal Display */}
         {!loading && (
-          <section className="mb-16" aria-labelledby="launching-agents-title">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" aria-hidden="true"></div>
-              <h3 id="launching-agents-title" className="text-xl">LAUNCHING SOON</h3>
-              <span className="text-sm text-gray-400" aria-label="Status description">— Ready for public interaction</span>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8" role="list" aria-label="Launching agents">
-              {agents.filter(a => a.status === 'LAUNCHING').map((agent) => (
-                <AgentCard 
-                  key={agent.id}
-                  agent={agent}
-                  variant="launching"
-                />
-              ))}
-            </div>
-          </section>
-        )}
-        
-        {/* Developing Agents */}
-        {!loading && (
-          <div className="mb-16">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
-              <h3 className="text-xl">IN DEVELOPMENT</h3>
-              <span className="text-sm text-gray-400">— Training with confirmed partners</span>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {agents.filter(a => a.status === 'DEVELOPING' && a.trainerStatus === 'confirmed').map((agent) => (
+          <section className="mb-16" aria-labelledby="all-agents-title">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" role="list" aria-label="All agents">
+              {agents.map((agent) => (
                 <AgentCard 
                   key={agent.id}
                   agent={agent}
@@ -274,70 +216,7 @@ export default function AcademyPage() {
                 />
               ))}
             </div>
-          </div>
-        )}
-        
-        {/* Creative Partnerships */}
-        {!loading && (
-          <div>
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
-              <h3 className="text-xl">CREATIVE PARTNERSHIPS AVAILABLE</h3>
-              <span className="text-sm text-gray-400">— Seeking creative collaborators</span>
-            </div>
-            <div className="bg-gray-900/30 border border-gray-700 p-6 mb-8 rounded">
-              <p className="text-sm mb-4 max-w-4xl">
-                Train with an AI agent while mastering cutting-edge creative practices. 
-                Each partnership is a learning journey that advances both human and artificial creativity.
-              </p>
-              <div className="flex items-center gap-4 text-xs text-gray-400">
-                <span>🎯 FOCUSED MENTORSHIP</span>
-                <span>•</span>
-                <span>🤝 COLLABORATIVE LEARNING</span>
-                <span>•</span>
-                <span>🚀 CUTTING-EDGE PRACTICE</span>
-              </div>
-            </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              
-              {/* Partnership Agent Cards */}
-              {['miyomi', 'amanda', 'citizen', 'nina'].map(agentId => {
-                const agent = agents.find(a => a.id.toLowerCase() === agentId) || {
-                  id: agentId,
-                  name: agentId.toUpperCase(),
-                  status: 'SEEKING_PARTNER',
-                  trainer: 'CREATIVE PARTNERSHIP AVAILABLE'
-                };
-                
-                return (
-                  <AgentCard 
-                    key={agent.id}
-                    agent={agent}
-                    variant="partnership"
-                  />
-                );
-              })}
-
-            </div>
-
-            {/* Community Innovation */}
-            <div className="border border-white border-dashed p-8">
-              <h4 className="text-lg font-bold mb-4">EXPAND THE CULTURAL FRONTIER</h4>
-              <p className="text-sm mb-4">
-                Have an idea for a new type of autonomous artist? 
-                Propose an agent concept and join our next cohort as its creative partner.
-              </p>
-              <p className="text-xs mb-6 opacity-75">
-                2 open slots available for innovative agent concepts with committed creative partners.
-              </p>
-              <Link
-                href="/apply?type=full"
-                className="inline-block border border-white px-6 py-3 text-sm hover:bg-white hover:text-black transition-all"
-              >
-                PROPOSE AGENT CONCEPT →
-              </Link>
-            </div>
-          </div>
+          </section>
         )}
       </main>
     </div>

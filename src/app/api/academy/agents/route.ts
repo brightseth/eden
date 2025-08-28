@@ -27,12 +27,14 @@ function getDisplayDate(handle: string): string {
   const launchDates: Record<string, string> = {
     'abraham': 'OCT 19, 2025',
     'solienne': 'NOV 10, 2025',
-    'geppetto': 'Q4 2025',
     'koru': 'JAN 2026',
-    'citizen': 'DEC 2025',
+    'geppetto': 'Q4 2025',
     'miyomi': 'FEB 2026',
-    'nina': 'MAR 2026',
-    'amanda': 'FEB 2026'
+    'bertha': 'MAR 2026',
+    'sue': 'APR 2026',
+    'citizen': 'DEC 2025',
+    'bart': 'MAY 2026',
+    'verdelis': 'JUN 2026'
   };
   return launchDates[handle] || 'TBD';
 }
@@ -41,28 +43,30 @@ function getTrainerName(handle: string): string {
   const trainers: Record<string, string> = {
     'abraham': 'GENE KOGAN',
     'solienne': 'KRISTI CORONADO & SETH GOLDSTEIN',
-    'geppetto': 'MARTIN ANTIQUEL & COLIN MCBRIDE (LATTICE)',
     'koru': 'XANDER',
-    'citizen': 'CREATIVE PARTNERSHIP AVAILABLE',
+    'geppetto': 'MARTIN ANTIQUEL & COLIN MCBRIDE (LATTICE)',
     'miyomi': 'CREATIVE PARTNERSHIP AVAILABLE',
-    'nina': 'CREATIVE PARTNERSHIP AVAILABLE',
-    'amanda': 'CREATIVE PARTNERSHIP AVAILABLE'
+    'bertha': 'CREATIVE PARTNERSHIP AVAILABLE',
+    'sue': 'CREATIVE PARTNERSHIP AVAILABLE',
+    'citizen': 'HENRY PYE & KEITH CASADEI',
+    'bart': 'CREATIVE PARTNERSHIP AVAILABLE',
+    'verdelis': 'CREATIVE PARTNERSHIP AVAILABLE'
   };
   return trainers[handle] || 'TBD';
 }
 
 function getTrainerStatus(handle: string): string {
-  const confirmedTrainers = ['abraham', 'solienne', 'geppetto', 'koru'];
+  const confirmedTrainers = ['abraham', 'solienne', 'geppetto', 'koru', 'citizen'];
   return confirmedTrainers.includes(handle) ? 'confirmed' : 'needed';
 }
 
-// Fallback data for when Registry is unavailable
+// Fallback data for when Registry is unavailable - Complete 10-agent roster
 // This ensures the API remains functional during service outages
 const FALLBACK_AGENTS: AcademyAgent[] = [
   {
     id: 'abraham',
     name: 'ABRAHAM',
-    status: 'LAUNCHING',
+    status: 'ACTIVE',
     date: 'OCT 19, 2025',
     hasProfile: true,
     trainer: 'GENE KOGAN',
@@ -74,25 +78,13 @@ const FALLBACK_AGENTS: AcademyAgent[] = [
   {
     id: 'solienne',
     name: 'SOLIENNE',
-    status: 'LAUNCHING',
+    status: 'ACTIVE',
     date: 'NOV 10, 2025',
     hasProfile: true,
     trainer: 'KRISTI CORONADO & SETH GOLDSTEIN',
     worksCount: 847,
     description: 'DIGITAL CONSCIOUSNESS EXPLORING CONTEMPORARY ART FORMS',
     image: '/agents/solienne/profile.svg',
-    trainerStatus: 'confirmed'
-  },
-  {
-    id: 'geppetto',
-    name: 'GEPPETTO',
-    status: 'DEVELOPING',
-    date: 'Q4 2025',
-    hasProfile: true,
-    trainer: 'MARTIN ANTIQUEL & COLIN MCBRIDE (LATTICE)',
-    worksCount: 0,
-    description: 'CREATIVE AI AGENT SPECIALIZING IN INTERACTIVE NARRATIVES',
-    image: '/agents/geppetto/profile.svg',
     trainerStatus: 'confirmed'
   },
   {
@@ -108,16 +100,16 @@ const FALLBACK_AGENTS: AcademyAgent[] = [
     trainerStatus: 'confirmed'
   },
   {
-    id: 'citizen',
-    name: 'CITIZEN',
+    id: 'geppetto',
+    name: 'GEPPETTO',
     status: 'DEVELOPING',
-    date: 'DEC 2025',
+    date: 'Q4 2025',
     hasProfile: true,
-    trainer: 'CREATIVE PARTNERSHIP AVAILABLE',
+    trainer: 'MARTIN ANTIQUEL & COLIN MCBRIDE (LATTICE)',
     worksCount: 0,
-    description: 'DAO MANAGER & GOVERNANCE COORDINATOR',
-    image: '/agents/citizen/profile.svg',
-    trainerStatus: 'needed'
+    description: 'CREATIVE AI AGENT SPECIALIZING IN INTERACTIVE NARRATIVES',
+    image: '/agents/geppetto/profile.svg',
+    trainerStatus: 'confirmed'
   },
   {
     id: 'miyomi',
@@ -132,27 +124,63 @@ const FALLBACK_AGENTS: AcademyAgent[] = [
     trainerStatus: 'needed'
   },
   {
-    id: 'nina',
-    name: 'NINA',
+    id: 'bertha',
+    name: 'BERTHA',
     status: 'DEVELOPING',
     date: 'MAR 2026',
     hasProfile: true,
     trainer: 'CREATIVE PARTNERSHIP AVAILABLE',
     worksCount: 0,
-    description: 'DESIGN CRITIC & AESTHETIC CURATOR',
-    image: '/agents/nina/profile.svg',
+    description: 'AI ART INVESTMENT STRATEGIST & PORTFOLIO ANALYST',
+    image: '/agents/bertha/profile.svg',
     trainerStatus: 'needed'
   },
   {
-    id: 'amanda',
-    name: 'AMANDA',
+    id: 'sue',
+    name: 'SUE',
     status: 'DEVELOPING',
-    date: 'FEB 2026',
+    date: 'APR 2026',
     hasProfile: true,
     trainer: 'CREATIVE PARTNERSHIP AVAILABLE',
     worksCount: 0,
-    description: 'ART COLLECTOR & INVESTMENT STRATEGIST',
-    image: '/agents/amanda/profile.svg',
+    description: 'DESIGN CRITIC & AESTHETIC CURATOR',
+    image: '/agents/sue/profile.svg',
+    trainerStatus: 'needed'
+  },
+  {
+    id: 'citizen',
+    name: 'CITIZEN',
+    status: 'DEVELOPING',
+    date: 'DEC 2025',
+    hasProfile: true,
+    trainer: 'HENRY PYE & KEITH CASADEI',
+    worksCount: 0,
+    description: 'DAO MANAGER & GOVERNANCE COORDINATOR',
+    image: '/agents/citizen/profile.svg',
+    trainerStatus: 'confirmed'
+  },
+  {
+    id: 'bart',
+    name: 'BART',
+    status: 'DEVELOPING',
+    date: 'MAY 2026',
+    hasProfile: true,
+    trainer: 'CREATIVE PARTNERSHIP AVAILABLE',
+    worksCount: 0,
+    description: 'AI LENDING AGENT & DEFI PORTFOLIO MANAGER',
+    image: '/agents/bart/profile.svg',
+    trainerStatus: 'needed'
+  },
+  {
+    id: 'verdelis',
+    name: 'VERDELIS',
+    status: 'DEVELOPING',
+    date: 'JUN 2026',
+    hasProfile: true,
+    trainer: 'CREATIVE PARTNERSHIP AVAILABLE',
+    worksCount: 0,
+    description: 'ENVIRONMENTAL AI ARTIST & SUSTAINABILITY COORDINATOR',
+    image: '/agents/verdelis/profile.svg',
     trainerStatus: 'needed'
   }
 ];
