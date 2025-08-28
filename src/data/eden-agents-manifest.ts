@@ -71,8 +71,29 @@ export const EDEN_AGENTS: EdenAgent[] = [
     },
     socialProfiles: {
       twitter: '@abraham_ai',
-      website: 'https://abraham.ai'
-    }
+      website: 'https://abraham.ai',
+      farcaster: 'abraham'
+    },
+    prototypeLinks: [
+      {
+        id: 'abraham-covenant',
+        title: 'Covenant Interface',
+        description: 'Sacred covenant tracking system for daily creation commitment',
+        url: 'https://abraham.ai/covenant',
+        type: 'interface',
+        status: 'active',
+        featured: true
+      },
+      {
+        id: 'abraham-gallery',
+        title: 'Daily Creation Gallery',
+        description: 'Complete archive of daily visual artifacts from 2025-2038',
+        url: 'https://abraham.ai/gallery',
+        type: 'prototype',
+        status: 'active',
+        featured: true
+      }
+    ]
   },
   {
     id: 'solienne',
@@ -185,10 +206,19 @@ export const EDEN_AGENTS: EdenAgent[] = [
         id: 'bertha-analytics',
         title: 'Advanced Analytics Dashboard',
         description: 'Portfolio performance tracking with 34.7% ROI and market intelligence',
-        url: 'http://localhost:3000/dashboard/bertha',
+        url: 'https://eden-academy-flame.vercel.app/dashboard/bertha',
         type: 'dashboard',
         status: 'active',
         featured: true
+      },
+      {
+        id: 'bertha-insights',
+        title: 'Market Intelligence API',
+        description: 'Real-time AI art market data and collection insights',
+        url: 'https://eden-academy-flame.vercel.app/api/agents/bertha/insights',
+        type: 'interface',
+        status: 'active',
+        featured: false
       }
     ]
   },
@@ -225,8 +255,17 @@ export const EDEN_AGENTS: EdenAgent[] = [
         id: 'miyomi-trading',
         title: 'Live Trading Interface',
         description: 'Real-time portfolio dashboard with WebSocket streaming and P&L tracking',
-        url: 'https://eden-academy-74jgnnwus-edenprojects.vercel.app/dashboard/miyomi',
+        url: 'https://eden-academy-flame.vercel.app/dashboard/miyomi',
         type: 'dashboard',
+        status: 'active',
+        featured: true
+      },
+      {
+        id: 'miyomi-predictions',
+        title: 'Oracle Predictions API',
+        description: 'Contrarian market predictions and financial insights endpoint',
+        url: 'https://eden-academy-flame.vercel.app/api/agents/miyomi/predictions',
+        type: 'interface',
         status: 'active',
         featured: true
       }
@@ -257,8 +296,30 @@ export const EDEN_AGENTS: EdenAgent[] = [
       voice: 'Creative and technical, passionate about digital craftsmanship and sculptural form'
     },
     socialProfiles: {
-      twitter: '@geppetto_3d'
-    }
+      twitter: '@geppetto_3d',
+      website: 'https://geppetto.art',
+      farcaster: 'geppetto'
+    },
+    prototypeLinks: [
+      {
+        id: 'geppetto-studio',
+        title: '3D Sculpture Studio',
+        description: 'Interactive 3D creation environment with real-time procedural generation',
+        url: 'https://eden-academy-flame.vercel.app/sites/geppetto',
+        type: 'prototype',
+        status: 'active',
+        featured: true
+      },
+      {
+        id: 'geppetto-daily',
+        title: 'Daily Sculptures',
+        description: 'Archive of daily 3D creations and sculptural experiments',
+        url: 'https://eden-academy-flame.vercel.app/sites/geppetto-daily',
+        type: 'demo',
+        status: 'active',
+        featured: true
+      }
+    ]
   },
   {
     id: 'koru',
@@ -286,8 +347,29 @@ export const EDEN_AGENTS: EdenAgent[] = [
     },
     socialProfiles: {
       twitter: '@koru_poet',
-      farcaster: 'koru'
-    }
+      farcaster: 'koru',
+      website: 'https://koru.poetry'
+    },
+    prototypeLinks: [
+      {
+        id: 'koru-haiku',
+        title: 'Daily Haiku Garden',
+        description: 'Interactive poetry space with cultural bridge-building through verse',
+        url: 'https://koru.poetry/garden',
+        type: 'prototype',
+        status: 'active',
+        featured: true
+      },
+      {
+        id: 'koru-narratives',
+        title: 'Cultural Narratives',
+        description: 'Story weaving platform connecting diverse cultural experiences',
+        url: 'https://koru.poetry/narratives',
+        type: 'interface',
+        status: 'active',
+        featured: true
+      }
+    ]
   },
   {
     id: 'sue',
@@ -314,14 +396,16 @@ export const EDEN_AGENTS: EdenAgent[] = [
       voice: 'Thoughtful and supportive, focused on artistic development and curation'
     },
     socialProfiles: {
-      twitter: '@sue_curator'
+      twitter: '@sue_curator',
+      website: 'https://sue.curation',
+      farcaster: 'sue'
     },
     prototypeLinks: [
       {
         id: 'sue-dynamic',
-        title: 'Dynamic Prototype',
-        description: 'Interactive art curation and creative guidance interface',
-        url: 'https://sue-dynamic-prototype.vercel.app',
+        title: 'Design Critic Agent',
+        description: 'AI-powered autonomous art curation interface with exhibition builder',
+        url: 'https://design-critic-agent-iubx7glzf-edenprojects.vercel.app',
         type: 'prototype',
         status: 'active',
         featured: true

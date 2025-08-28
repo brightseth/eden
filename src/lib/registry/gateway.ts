@@ -6,6 +6,14 @@ import { registryAuth, authenticateRequest } from './auth';
 import { registryCache, cacheGet, cacheSet, cacheInvalidate } from './cache';
 // import { auditLogger } from './audit';
 import { idempotencyManager } from './idempotency';
+import { 
+  snapshotService, 
+  type GovernanceProposal, 
+  type SnapshotProposal, 
+  type VotingPowerResult,
+  type ProposalSyncResult,
+  type SnapshotSpace
+} from './snapshot-service';
 import type { 
   Agent, 
   AgentQuery, 
@@ -416,6 +424,78 @@ class RegistryGateway {
         stats: cacheStats
       }
     };
+  }
+
+  // Snapshot Governance Methods
+  
+  async createSnapshotProposal(
+    spaceId: string,
+    proposal: GovernanceProposal,
+    headers?: Record<string, string | undefined>
+  ): Promise<SnapshotProposal> {
+    return this.gatewayCall(
+      'createSnapshotProposal',
+      () => snapshotService.createProposal(spaceId, proposal),
+      undefined, // No cache for write operations
+      true, // require auth
+      headers
+    );
+  }
+
+  async getSnapshotSpace(spaceId: string): Promise<SnapshotSpace> {
+    const cacheKey = `snapshot-space-${spaceId}`;
+    return this.gatewayCall(
+      'getSnapshotSpace',
+      () => snapshotService.getSpace(spaceId),
+      cacheKey
+    );
+  }
+
+  async getSnapshotProposal(proposalId: string): Promise<SnapshotProposal> {
+    const cacheKey = `snapshot-proposal-${proposalId}`;
+    return this.gatewayCall(
+      'getSnapshotProposal',
+      () => snapshotService.getProposal(proposalId),
+      cacheKey
+    );
+  }
+
+  async getSnapshotVotingPower(spaceId: string, address: string): Promise<VotingPowerResult> {
+    const cacheKey = `voting-power-${spaceId}-${address}`;
+    return this.gatewayCall(
+      'getSnapshotVotingPower',
+      () => snapshotService.getVotingPower(spaceId, address),
+      cacheKey
+    );
+  }
+
+  async castSnapshotVote(
+    proposalId: string,
+    choice: number,
+    address: string,
+    headers?: Record<string, string | undefined>
+  ): Promise<{ success: boolean; txHash?: string }> {
+    return this.gatewayCall(
+      'castSnapshotVote',
+      () => snapshotService.castVote(proposalId, choice, address),
+      undefined, // No cache for write operations
+      true, // require auth
+      headers
+    );
+  }
+
+  async syncSnapshotProposal(
+    proposalId: string,
+    registryWorkId: string,
+    headers?: Record<string, string | undefined>
+  ): Promise<ProposalSyncResult> {
+    return this.gatewayCall(
+      'syncSnapshotProposal',
+      () => snapshotService.syncProposalData(proposalId, registryWorkId),
+      undefined, // No cache for sync operations
+      true, // require auth
+      headers
+    );
   }
 
   // Clear cache (useful for testing)

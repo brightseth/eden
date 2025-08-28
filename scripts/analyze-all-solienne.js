@@ -13,7 +13,7 @@ const anthropic = new Anthropic({
 
 // Batch size for processing
 const BATCH_SIZE = 3; // Smaller to be safe
-const MAX_WORKS = 200; // Start with 200 for Nina's curation
+const MAX_WORKS = 200; // Start with 200 for SUE's curation
 
 async function analyzeImage(imageUrl) {
   try {
@@ -61,7 +61,7 @@ Choose the most accurate tags. Example: ["portrait", "monochrome", "mysterious",
 }
 
 async function analyzeSolienneForCuration() {
-  console.log('Starting Solienne image analysis for Nina curation...');
+  console.log('Starting Solienne image analysis for SUE curation...');
   
   // Get unanalyzed works, prioritizing recent ones
   const { data: works, error } = await supabase
@@ -163,7 +163,7 @@ async function analyzeSolienneForCuration() {
       console.log(`${tag}: ${count} works`);
     });
     
-  console.log('\nAnalysis complete! Ready for Nina curation.');
+  console.log('\nAnalysis complete! Ready for SUE curation.');
 }
 
 analyzeSolienneForCuration().catch(console.error);

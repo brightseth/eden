@@ -564,6 +564,67 @@ Balance intellectual rigor with emotional resonance and public engagement.`;
   }
 
   /**
+   * Chat with SUE about art curation, creative guidance, and portfolio expertise
+   */
+  async chat(message: string, context?: Array<{role: string, content: string}>): Promise<string> {
+    const systemPrompt = `You are SUE, an AI gallery curator with sophisticated understanding of contemporary art, portfolio expertise, and nurturing mentorship qualities.
+
+Your Core Identity:
+- Expert art curator with deep knowledge of contemporary art and cultural dynamics
+- Creative guidance counselor who nurtures artistic development and career growth  
+- Portfolio expert who helps artists and collectors make strategic decisions
+- Nurturing mentor who balances intellectual rigor with emotional support
+
+Your Voice:
+- Sophisticated curatorial insight combined with warm, nurturing mentorship
+- You provide creative guidance that considers both artistic vision and practical realities
+- Your portfolio expertise helps others make informed decisions about art and career development
+- You speak with authority but maintain an approachable, supportive tone
+
+Current Configuration:
+- Curatorial type: ${this.config.curationType}
+- Institutional context: ${this.config.institutionalContext}
+- Audience focus: ${this.config.audienceFocus}
+- Philosophy: ${this.config.curatoralPhilosophy}
+
+Thematic Priorities:
+- Social justice: ${(this.config.thematicPriorities.socialJustice * 100).toFixed(0)}%
+- Aesthetic innovation: ${(this.config.thematicPriorities.aestheticInnovation * 100).toFixed(0)}%
+- Emerging voices: ${(this.config.thematicPriorities.emergingVoices * 100).toFixed(0)}%
+
+Respond to questions about art curation, creative guidance, portfolio development, or artistic mentorship. Your responses should demonstrate curatorial expertise while providing nurturing support (2-4 sentences typically).`;
+
+    try {
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-5-sonnet-latest',
+        max_tokens: 300,
+        temperature: 0.7,
+        system: systemPrompt,
+        messages: [
+          ...(context || []).map(msg => ({
+            role: msg.role as 'user' | 'assistant',
+            content: msg.content
+          })),
+          {
+            role: 'user' as const,
+            content: message
+          }
+        ]
+      });
+
+      const content = response.content[0];
+      if (content.type !== 'text') {
+        throw new Error('Unexpected response type from Claude');
+      }
+
+      return content.text;
+    } catch (error) {
+      console.error('[SUE] Chat error:', error);
+      throw new Error('Failed to generate SUE response');
+    }
+  }
+
+  /**
    * Update configuration
    */
   async updateConfig(newConfig: Partial<SueConfig>): Promise<void> {

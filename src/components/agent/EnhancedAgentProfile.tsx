@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, MessageCircle, Users, TrendingUp, Calendar, ExternalLink } from 'lucide-react';
+import { ArrowLeft, MessageCircle, Users, TrendingUp, Calendar, ExternalLink, Eye, EyeOff, Globe, Lock } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import SimpleWorksGallery from '@/components/agent/SimpleWorksGallery';
 import AgentChat from '@/components/agent/AgentChat';
@@ -24,6 +24,7 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
   const [activeTab, setActiveTab] = useState<'overview' | 'works' | 'chat'>('overview');
   const [metrics, setMetrics] = useState<AgentMetrics | null>(null);
   const [loading, setLoading] = useState(true);
+  const [detailMode, setDetailMode] = useState<'public' | 'private'>('public');
 
   const agent = getAgentBySlug(agentSlug);
   
@@ -76,7 +77,7 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
       
       {/* Back Navigation */}
       <div className="border-b border-white">
-        <div className="max-w-7xl mx-auto px-8 py-4">
+        <div className="max-w-7xl mx-auto px-8 py-4 flex justify-between items-center">
           <Link 
             href="/agents" 
             className="inline-flex items-center gap-2 text-sm hover:bg-white hover:text-black px-3 py-2 transition-colors font-bold uppercase tracking-wider"
@@ -84,6 +85,31 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
             <ArrowLeft className="w-4 h-4" />
             BACK TO AGENTS
           </Link>
+          
+          {/* Detail Mode Toggle */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs uppercase tracking-wider text-gray-400">VIEW MODE</span>
+            <button
+              onClick={() => setDetailMode(detailMode === 'public' ? 'private' : 'public')}
+              className={`flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-wider border transition-all ${
+                detailMode === 'public'
+                  ? 'border-green-400 text-green-400 hover:bg-green-400 hover:text-black'
+                  : 'border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-black'
+              }`}
+            >
+              {detailMode === 'public' ? (
+                <>
+                  <Globe className="w-3 h-3" />
+                  PUBLIC
+                </>
+              ) : (
+                <>
+                  <Lock className="w-3 h-3" />
+                  PRIVATE
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -174,24 +200,42 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
               {FEATURE_FLAGS.ENABLE_AGENT_PROTOTYPE_LINKS && agent.prototypeLinks && agent.prototypeLinks.length > 0 && (
                 <div className="mt-6">
                   <h3 className="text-sm font-bold uppercase tracking-wider mb-3 text-gray-400">
-                    LIVE PROTOTYPES
+                    {detailMode === 'public' ? 'PUBLIC PROTOTYPES' : 'ALL PROTOTYPES'}
                   </h3>
                   <div className="flex flex-wrap gap-3">
                     {agent.prototypeLinks
-                      .filter(link => link.status === 'active' && link.featured)
+                      .filter(link => {
+                        if (detailMode === 'public') {
+                          return link.status === 'active' && link.featured;
+                        }
+                        return link.status === 'active'; // Show all in private mode
+                      })
                       .map(link => (
                         <a
                           key={link.id}
                           href={link.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 px-4 py-2 border border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-black transition-all font-bold uppercase tracking-wider text-xs"
+                          className={`flex items-center gap-2 px-4 py-2 border font-bold uppercase tracking-wider text-xs transition-all ${
+                            link.featured
+                              ? 'border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-black'
+                              : 'border-gray-600 text-gray-400 hover:bg-gray-600 hover:text-white'
+                          }`}
+                          title={link.description}
                         >
-                          <ExternalLink className="w-4 h-4" />
+                          <ExternalLink className="w-3 h-3" />
                           {link.title}
+                          {!link.featured && detailMode === 'private' && (
+                            <span className="ml-2 text-xs bg-gray-800 px-1 py-0.5 rounded">DEV</span>
+                          )}
                         </a>
                       ))}
                   </div>
+                  {detailMode === 'private' && (
+                    <div className="mt-3 text-xs text-gray-500">
+                      Private mode shows all prototype links including development versions
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -238,7 +282,14 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
                   <div>
                     <div className="text-xs uppercase tracking-wider text-gray-400 mb-2">SPECIALTIES</div>
                     <div className="flex flex-wrap gap-2">
-                      {['Digital Art', 'Autonomous Creation', 'AI Generation'].map((capability) => (
+                      {agent.technicalProfile?.capabilities?.map((capability) => (
+                        <span 
+                          key={capability}
+                          className="px-2 py-1 text-xs uppercase tracking-wider border border-gray-600 bg-gray-900"
+                        >
+                          {capability}
+                        </span>
+                      )) || ['Digital Art', 'Autonomous Creation', 'AI Generation'].map((capability) => (
                         <span 
                           key={capability}
                           className="px-2 py-1 text-xs uppercase tracking-wider border border-gray-600 bg-gray-900"
@@ -248,6 +299,29 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
                       ))}
                     </div>
                   </div>
+                  
+                  {detailMode === 'private' && agent.technicalProfile?.integrations && (
+                    <div>
+                      <div className="text-xs uppercase tracking-wider text-gray-400 mb-2">INTEGRATIONS</div>
+                      <div className="flex flex-wrap gap-2">
+                        {agent.technicalProfile.integrations.map((integration) => (
+                          <span 
+                            key={integration}
+                            className="px-2 py-1 text-xs uppercase tracking-wider border border-purple-600 bg-purple-900/20 text-purple-400"
+                          >
+                            {integration}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {detailMode === 'private' && agent.technicalProfile?.model && (
+                    <div>
+                      <div className="text-xs uppercase tracking-wider text-gray-400 mb-1">MODEL</div>
+                      <div className="text-sm font-bold">{agent.technicalProfile.model}</div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -257,24 +331,42 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
                   CONNECT
                 </h3>
                 <div className="space-y-3">
-                  <a 
-                    href={`https://twitter.com/${agent.name.toLowerCase()}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm hover:text-white text-gray-400 transition-colors"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    TWITTER
-                  </a>
-                  <a 
-                    href={`https://warpcast.com/${agent.name.toLowerCase()}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm hover:text-white text-gray-400 transition-colors"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    FARCASTER
-                  </a>
+                  {agent.socialProfiles?.twitter && (
+                    <a 
+                      href={agent.socialProfiles.twitter.startsWith('@') ? `https://twitter.com/${agent.socialProfiles.twitter.slice(1)}` : agent.socialProfiles.twitter}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-sm hover:text-white text-gray-400 transition-colors"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      TWITTER
+                    </a>
+                  )}
+                  
+                  {agent.socialProfiles?.farcaster && (
+                    <a 
+                      href={`https://warpcast.com/${agent.socialProfiles.farcaster}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-sm hover:text-white text-gray-400 transition-colors"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      FARCASTER
+                    </a>
+                  )}
+                  
+                  {agent.socialProfiles?.website && (
+                    <a 
+                      href={agent.socialProfiles.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-sm hover:text-white text-gray-400 transition-colors"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      WEBSITE
+                    </a>
+                  )}
+                  
                   <Link
                     href={`/academy/agent/${agent.handle}`}
                     className="flex items-center gap-2 text-sm hover:text-white text-gray-400 transition-colors"
@@ -282,6 +374,15 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
                     <Calendar className="w-4 h-4" />
                     ACADEMY PROFILE
                   </Link>
+                  
+                  {detailMode === 'private' && agent.brandIdentity?.voice && (
+                    <div className="mt-4 pt-4 border-t border-gray-700">
+                      <div className="text-xs uppercase tracking-wider text-gray-400 mb-2">BRAND VOICE</div>
+                      <div className="text-xs text-gray-300 leading-relaxed">
+                        {agent.brandIdentity.voice}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

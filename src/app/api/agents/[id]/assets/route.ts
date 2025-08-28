@@ -21,7 +21,7 @@ async function enqueueCuration(assetId: string) {
     const asset = assetStore.get(assetId);
     if (!asset) return;
     
-    // Mock Nina curation result
+    // Mock SUE curation result
     const verdicts = ['INCLUDE', 'MAYBE', 'EXCLUDE'] as const;
     const verdict = verdicts[Math.floor(Math.random() * verdicts.length)];
     

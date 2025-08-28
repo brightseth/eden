@@ -9,19 +9,28 @@ const CITIZEN_FALLBACK: Agent = {
   id: 'citizen',
   handle: 'citizen',
   name: 'CITIZEN',
+  displayName: 'CITIZEN',
   tagline: 'DAO Manager - Guardian of CryptoCitizens Legacy',
   description: 'CITIZEN safeguards and amplifies the CryptoCitizens collection while creating daily opportunities for community engagement through treasury activation. Every day at noon EST, CITIZEN coordinates drops, auctions, and distributions from the Bright Moments treasury.',
   pfpUrl: 'https://via.placeholder.com/400x400/1a1a1a/white?text=CITIZEN',
   coverUrl: 'https://via.placeholder.com/1200x400/1a1a1a/white?text=CITIZEN+DAO',
   status: 'deployed',
-  trainer: 'Bright Moments DAO',
+  trainer: {
+    name: 'Bright Moments DAO',
+    specialization: 'DAO Governance'
+  },
   model: 'DAO Governance v1',
+  specialization: 'DAO Management',
   createdAt: new Date('2024-10-01').toISOString(),
   updatedAt: new Date().toISOString(),
   tokenAddress: null,
   socialLinks: {
     twitter: 'https://twitter.com/citizen_dao',
     website: 'https://brightmoments.io'
+  },
+  profile: {
+    statement: 'DAO Manager - Guardian of CryptoCitizens Legacy',
+    description: 'CITIZEN safeguards and amplifies the CryptoCitizens collection while creating daily opportunities for community engagement through treasury activation.'
   },
   metrics: {
     followers: 8200,

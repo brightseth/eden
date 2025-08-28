@@ -5,12 +5,13 @@ export interface Agent {
   id: string;
   handle: string;
   name: string;
+  displayName?: string; // For widget compatibility
   tagline?: string;
   description?: string;
   pfpUrl?: string;
   coverUrl?: string;
   status: 'development' | 'ready' | 'deployed' | 'retired';
-  trainer?: string;
+  trainer?: string | { name: string; specialization?: string }; // Support both string and object
   model?: string;
   createdAt: string;
   updatedAt: string;
@@ -22,6 +23,12 @@ export interface Agent {
     discord?: string;
   };
   metrics?: Record<string, any>;
+  profile?: {
+    statement?: string;
+    description?: string;
+  }; // For widget compatibility
+  launchDate?: string; // For countdown widget
+  specialization?: string; // For hero widget
 }
 
 export interface ProfileWidget {

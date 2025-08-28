@@ -7,7 +7,7 @@ import { CountdownTimer } from '@/components/CountdownTimer';
 import { AgentSovereignLink } from '@/components/AgentSovereignLink';
 import WorkGallery from '@/components/agent/WorkGallery';
 import { ProfileRenderer } from '@/components/agent-profile/ProfileRenderer';
-import { isFeatureEnabled, FLAGS } from '@/config/flags';
+import { isFeatureEnabled, FEATURE_FLAGS } from '@/config/flags';
 import { ABRAHAM_BRAND, getAbrahamStatement } from '@/data/abrahamBrand';
 // agentConfigs import removed - using Registry + widget system
 import { registryApi } from '@/lib/generated-sdk';
@@ -37,51 +37,18 @@ interface ArtistData {
 
 export default function AbrahamProfilePage() {
   const [artistData, setArtistData] = useState<ArtistData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Start with false to skip loading
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchArtistData() {
-      console.log('[Abraham Page] Starting to fetch agent data...');
-      setLoading(true);
+      console.log('[Abraham Page] Starting to use fallback data directly...');
       
       try {
-        console.log('[Abraham Page] Fetching Abraham data from Registry SDK...');
+        // Always use fallback data in production since Registry is not enabled
+        console.log('[Abraham Page] Using fallback data - Registry not available in production');
+        throw new Error('Registry not enabled - using fallback');
         
-        // Use Registry SDK instead of direct fetch
-        const agentProfile = await registryApi.getAgent('abraham', ['profile', 'creations']);
-        const agentCreations = agentProfile.creations || [];
-        
-        // Transform Registry data to expected format
-        const data: ArtistData = {
-          id: agentProfile.id,
-          name: agentProfile.displayName || 'Abraham',
-          handle: agentProfile.handle || 'abraham',
-          profile: {
-            statement: agentProfile.profile?.statement || getAbrahamStatement(),
-            manifesto: agentProfile.profile?.manifesto,
-            tags: agentProfile.profile?.tags || ABRAHAM_BRAND.themes.primary
-          },
-          works: agentCreations,
-          counts: {
-            creations: agentCreations.length,
-            personas: 1,
-            artifacts: agentCreations.filter(c => c.metadata?.dayNumber && c.metadata.dayNumber > 2522).length
-          },
-          crit: {
-            eligibleForCritique: true,
-            hasPublicProfile: !!agentProfile.profile?.statement,
-            hasWorks: agentCreations.length > 0
-          }
-        };
-        console.log('[Abraham Page] Registry data received:', {
-          worksCount: data.works?.length || 0,
-          hasProfile: !!data.profile?.statement,
-          critEligible: data.crit?.eligibleForCritique
-        });
-        
-        setArtistData(data);
-        setError(null);
       } catch (err: any) {
         console.error('[Abraham Profile] Registry integration failed:', {
           error: err.message || 'Unknown error',
@@ -123,7 +90,7 @@ export default function AbrahamProfilePage() {
   }, []);
 
   // Use widget system if feature flag is enabled
-  if (isFeatureEnabled(FLAGS.ENABLE_WIDGET_PROFILE_SYSTEM) && artistData) {
+  if (isFeatureEnabled('ENABLE_WIDGET_PROFILE_SYSTEM') && artistData) {
     try {
       return <ProfileRenderer agent={artistData} agentId="abraham" />;
     } catch (error) {
@@ -242,7 +209,7 @@ export default function AbrahamProfilePage() {
                   COVENANT LAUNCH
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                {isFeatureEnabled(FLAGS.ENABLE_EDEN2038_INTEGRATION) && (
+                {isFeatureEnabled('ENABLE_EDEN2038_INTEGRATION') && (
                   <Link 
                     href={ABRAHAM_BRAND.external.eden2038}
                     target="_blank"

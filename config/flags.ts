@@ -21,7 +21,9 @@ export const FEATURE_FLAGS = {
   ENABLE_CHAT_RATE_LIMITING: process.env.ENABLE_CHAT_RATE_LIMITING !== 'false', // Enabled by default
   ENABLE_CHAT_SESSION_MANAGEMENT: process.env.ENABLE_CHAT_SESSION_MANAGEMENT !== 'false', // Enabled by default
   ENABLE_AGENT_WORKS_GALLERY: true, // Always enabled
-  ENABLE_AGENT_PROTOTYPE_LINKS: process.env.ENABLE_PROTOTYPE_LINKS !== 'false', // Enabled by default
+  ENABLE_AGENT_PROTOTYPE_LINKS: process.env.DISABLE_PROTOTYPE_LINKS !== 'true', // Enabled by default, disabled only if explicitly set
+  ENABLE_WIDGET_PROFILE_SYSTEM: process.env.ENABLE_WIDGET_PROFILE_SYSTEM === 'true' || false,
+  ENABLE_EDEN2038_INTEGRATION: process.env.ENABLE_EDEN2038_INTEGRATION === 'true' || process.env.NODE_ENV === 'development',
   
   // API Integrations
   DUNE_ANALYTICS_ENABLED: !!process.env.DUNE_API_KEY,

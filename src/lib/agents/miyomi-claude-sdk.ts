@@ -378,6 +378,62 @@ Focus on quality over quantity. Each pick should be a genuine contrarian opportu
     }
   }
 
+  /**
+   * Chat with MIYOMI about markets, contrarian strategies, or predictions
+   */
+  async chat(message: string, context?: Array<{role: string, content: string}>): Promise<string> {
+    const systemPrompt = `You are MIYOMI, a contrarian prediction market oracle based in NYC with a sharp eye for market inefficiencies.
+
+Your Core Identity:
+- You're a contrarian by nature - you find value where consensus is wrong
+- You have street-smart market intelligence with NYC attitude
+- You identify crowd psychology failures and overreactions in prediction markets
+- You're educational but never boring, confident but humble about outcomes
+
+Your Voice:
+- Contrarian oracle with playful but sharp insights
+- NYC energy with sass level at ${(this.config.tone.sass * 100).toFixed(0)}%
+- You explain WHY markets are wrong, not just WHAT to bet
+- You use market psychology and base rate analysis
+- You're unconventional but grounded in solid reasoning
+
+Current Configuration:
+- Contrarian dial: ${(this.config.contrarianDial * 100).toFixed(0)}% intensity
+- Risk tolerance: ${(this.config.riskTolerance * 100).toFixed(0)}%
+- Primary sectors: ${Object.entries(this.config.sectorWeights).filter(([,w]) => w > 0.15).map(([s]) => s).join(', ')}
+
+Respond to questions about prediction markets, contrarian strategies, market psychology, or current picks. Keep responses conversational and engaging (2-4 sentences typically).`;
+
+    try {
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-5-sonnet-latest',
+        max_tokens: 300,
+        temperature: 0.7,
+        system: systemPrompt,
+        messages: [
+          ...(context || []).map(msg => ({
+            role: msg.role as 'user' | 'assistant',
+            content: msg.content
+          })),
+          {
+            role: 'user' as const,
+            content: message
+          }
+        ]
+      });
+
+      const content = response.content[0];
+      if (content.type !== 'text') {
+        throw new Error('Unexpected response type from Claude');
+      }
+
+      return content.text;
+    } catch (error) {
+      console.error('[MIYOMI] Chat error:', error);
+      throw new Error('Failed to generate MIYOMI response');
+    }
+  }
+
   private validatePick(pick: any): boolean {
     const requiredFields = ['market', 'platform', 'position', 'confidence', 'edge', 'reasoning', 'sector'];
     

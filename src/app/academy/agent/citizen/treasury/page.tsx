@@ -35,14 +35,22 @@ interface TreasuryData {
       collection: string;
       token_id: string;
       image_url: string;
+      opensea_link?: string;
     };
     auction_details: {
       start_time: string;
       end_time: string;
       starting_bid_eth: number;
       current_bid_eth: number;
+      floor_price_eth?: number;
       bidder_count: number;
       time_remaining: string;
+    };
+    market_data?: {
+      collection_floor: number;
+      collection_volume_24h: number | null;
+      collection_owners: number | null;
+      opensea_verified: boolean;
     };
     community_curation: {
       nominated_by: string;
@@ -200,9 +208,20 @@ export default function CitizenTreasuryPage() {
                     <span className="text-sm text-gray-400">CURRENT BID</span>
                     <span className="text-sm text-gray-400">{treasuryData.todays_auction.auction_details.bidder_count} BIDDERS</span>
                   </div>
-                  <div className="text-3xl font-bold text-green-400">
+                  <div className="text-3xl font-bold text-green-400 mb-2">
                     {treasuryData.todays_auction.auction_details.current_bid_eth} ETH
                   </div>
+                  {treasuryData.todays_auction.auction_details.floor_price_eth && (
+                    <div className="text-sm text-gray-400">
+                      Floor: {treasuryData.todays_auction.auction_details.floor_price_eth.toFixed(3)} ETH
+                    </div>
+                  )}
+                  {treasuryData.todays_auction.market_data?.opensea_verified && (
+                    <div className="flex items-center gap-1 mt-2">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                      <span className="text-xs text-blue-400">OpenSea Verified</span>
+                    </div>
+                  )}
                 </div>
                 
                 {/* Time Remaining */}
@@ -212,10 +231,21 @@ export default function CitizenTreasuryPage() {
                 </div>
                 
                 {/* Action Buttons */}
-                <div className="flex gap-4">
+                <div className="flex gap-4 flex-wrap">
                   <button className="px-6 py-3 border-2 border-green-400 text-green-400 hover:bg-green-400 hover:text-black transition-all font-bold uppercase">
                     PLACE BID
                   </button>
+                  {treasuryData.todays_auction.featured_work.opensea_link && (
+                    <a
+                      href={treasuryData.todays_auction.featured_work.opensea_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-6 py-3 border-2 border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-black transition-all font-bold uppercase"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      VIEW ON OPENSEA
+                    </a>
+                  )}
                   <a
                     href={treasuryData.todays_auction.community_curation.discussion_thread}
                     target="_blank"
@@ -239,7 +269,29 @@ export default function CitizenTreasuryPage() {
                 </div>
                 <div className="text-center">
                   <p className="text-sm text-gray-400 mb-2">Token #{treasuryData.todays_auction.featured_work.token_id}</p>
-                  <p className="text-sm">{treasuryData.todays_auction.community_curation.dao_vote_result}</p>
+                  <p className="text-sm mb-4">{treasuryData.todays_auction.community_curation.dao_vote_result}</p>
+                  
+                  {/* Market Data */}
+                  {treasuryData.todays_auction.market_data && (
+                    <div className="border-t border-gray-600 pt-4 space-y-2">
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-gray-400">Collection Floor:</span>
+                        <span className="font-bold">{treasuryData.todays_auction.market_data.collection_floor.toFixed(3)} ETH</span>
+                      </div>
+                      {treasuryData.todays_auction.market_data.collection_volume_24h && (
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-gray-400">24h Volume:</span>
+                          <span>{treasuryData.todays_auction.market_data.collection_volume_24h.toFixed(1)} ETH</span>
+                        </div>
+                      )}
+                      {treasuryData.todays_auction.market_data.collection_owners && (
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-gray-400">Owners:</span>
+                          <span>{treasuryData.todays_auction.market_data.collection_owners.toLocaleString()}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

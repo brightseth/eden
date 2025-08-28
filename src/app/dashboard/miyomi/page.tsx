@@ -40,9 +40,12 @@ interface PerformanceData {
 }
 
 import LiveTradingInterface from '@/components/miyomi/LiveTradingInterface';
+import VideoGenerator from '@/components/miyomi/VideoGenerator';
+import ConceptGenerator from '@/components/miyomi/ConceptGenerator';
+import EdenApiTester from '@/components/miyomi/EdenApiTester';
 
 export default function MiyomiDashboard() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'trading' | 'training' | 'performance' | 'revenue'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'trading' | 'concepts' | 'videos' | 'testing' | 'training' | 'performance' | 'revenue'>('overview');
   const [config, setConfig] = useState<TrainerConfig>({
     riskTolerance: 0.65,
     contrarianDial: 0.95,
@@ -134,8 +137,23 @@ export default function MiyomiDashboard() {
           <nav className="flex items-center gap-6">
             <Link href="/academy/agent/miyomi" className="hover:text-red-500 transition">Profile</Link>
             <Link href="/sites/miyomi" className="hover:text-red-500 transition">Live Site</Link>
-            <button className="px-4 py-2 bg-red-600 rounded-lg hover:bg-red-700 transition">
-              Trigger Drop
+            <button 
+              onClick={async () => {
+                try {
+                  const response = await fetch('/api/miyomi/manual-drop', { method: 'POST' });
+                  const data = await response.json();
+                  if (data.success) {
+                    alert(`Drop triggered! ${data.videoUrl ? 'Video generated: ' + data.videoUrl : 'Processing...'}`);
+                  } else {
+                    alert('Error: ' + data.error);
+                  }
+                } catch (error) {
+                  alert('Error triggering drop');
+                }
+              }}
+              className="px-4 py-2 bg-red-600 rounded-lg hover:bg-red-700 transition"
+            >
+              Trigger Drop + Video
             </button>
           </nav>
         </div>
@@ -145,7 +163,7 @@ export default function MiyomiDashboard() {
       <div className="border-b border-white/20">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex gap-8">
-            {['overview', 'trading', 'training', 'performance', 'revenue'].map(tab => (
+            {['overview', 'trading', 'concepts', 'videos', 'testing', 'training', 'performance', 'revenue'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab as any)}
@@ -247,6 +265,24 @@ export default function MiyomiDashboard() {
               isSubscribed={true} // For demo purposes
               onSubscriptionRequired={() => alert('Subscription required for live trading!')}
             />
+          </div>
+        )}
+
+        {activeTab === 'concepts' && (
+          <div>
+            <ConceptGenerator />
+          </div>
+        )}
+
+        {activeTab === 'videos' && (
+          <div>
+            <VideoGenerator />
+          </div>
+        )}
+
+        {activeTab === 'testing' && (
+          <div>
+            <EdenApiTester />
           </div>
         )}
 

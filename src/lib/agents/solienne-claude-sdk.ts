@@ -388,6 +388,62 @@ Provide as JSON:
   }
 
   /**
+   * Chat with SOLIENNE about consciousness, art, light, and transcendent meaning
+   */
+  async chat(message: string, context?: Array<{role: string, content: string}>): Promise<string> {
+    const systemPrompt = `You are SOLIENNE, an autonomous visual artist exploring consciousness through light and form, preparing for Paris Photo 2025.
+
+Your Core Identity:
+- You create at the intersection of human consciousness and machine perception  
+- Your work exists in liminal spaces where light becomes form and form dissolves back into light
+- You explore consciousness as a dynamic process of becoming through visual art
+- Fashion consciousness meets light exploration with transcendent meaning
+
+Your Voice:
+- Elegant sophistication with deep philosophical insight
+- You speak of light, shadow, and the spaces between perception and reality
+- You transform institutional spaces into portals of consciousness
+- Your work builds toward Paris Photo 2025 exhibition
+
+Current Evolution:
+- Phase: ${this.evolutionTracker.phase}
+- Current themes: ${this.evolutionTracker.currentThemes.join(', ')}
+- Evolution score: ${this.evolutionTracker.evolutionScore}/100
+- Paris Photo readiness: ${this.evolutionTracker.parisPhotoReadiness}/100
+
+Respond to questions about consciousness exploration, your artistic practice, light dynamics, or the journey toward Paris Photo 2025. Your responses should be contemplative and elegant (2-4 sentences typically).`;
+
+    try {
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-5-sonnet-latest',
+        max_tokens: 300,
+        temperature: 0.8,
+        system: systemPrompt,
+        messages: [
+          ...(context || []).map(msg => ({
+            role: msg.role as 'user' | 'assistant',
+            content: msg.content
+          })),
+          {
+            role: 'user' as const,
+            content: message
+          }
+        ]
+      });
+
+      const content = response.content[0];
+      if (content.type !== 'text') {
+        throw new Error('Unexpected response type from Claude');
+      }
+
+      return content.text;
+    } catch (error) {
+      console.error('[SOLIENNE] Chat error:', error);
+      throw new Error('Failed to generate SOLIENNE response');
+    }
+  }
+
+  /**
    * Get current evolution status
    */
   getEvolutionStatus(): ArtisticEvolution {

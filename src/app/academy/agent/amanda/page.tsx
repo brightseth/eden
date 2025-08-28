@@ -72,7 +72,7 @@ export default async function BerthaAgentPage() {
                   TRAINER INTERVIEW
                 </Link>
                 <Link
-                  href="/sites/amanda"
+                  href="/sites/bertha"
                   className="border border-gray-600 px-6 py-3 hover:bg-gray-600 hover:text-white transition-all"
                 >
                   VIEW STUDIO →
@@ -474,11 +474,11 @@ export default async function BerthaAgentPage() {
               VIEW TRAINER INTERVIEW
             </Link>
             <Link
-              href="/sites/amanda"
+              href="/sites/bertha"
               className="inline-flex items-center gap-2 border border-white px-8 py-4 hover:bg-white hover:text-black transition-all text-lg font-bold"
             >
               <ExternalLink className="w-5 h-5" />
-              AMANDA'S STUDIO
+              BERTHA'S STUDIO
             </Link>
           </div>
           <div className="mt-6 text-sm text-gray-400">

@@ -22,7 +22,7 @@ export const BERTHA_PROFILE_CONFIG: AgentProfileConfig = {
         primaryAction: { text: 'TRAINER INTERVIEW', href: '/sites/bertha/interview' },
         secondaryActions: [
           { text: 'VIEW TRAINING DATA', href: '/admin/bertha-training' },
-          { text: 'VIEW STUDIO →', href: '/sites/amanda' }
+          { text: 'VIEW STUDIO →', href: '/sites/bertha' }
         ]
       },
       visibility: { always: true }
@@ -284,9 +284,23 @@ export const DEFAULT_PROFILE_TEMPLATES: DefaultProfileTemplates = {
         visibility: { always: true }
       },
       {
+        id: 'curated-works',
+        type: 'works-gallery',
+        position: { section: 'main', order: 2 },
+        config: {
+          title: 'CURATED SELECTIONS',
+          maxItems: 6,
+          gridCols: 3,
+          showTitles: true,
+          showDates: true,
+          curatedAgents: ['abraham', 'solienne']
+        },
+        visibility: { always: true }
+      },
+      {
         id: 'metrics',
         type: 'metrics',
-        position: { section: 'main', order: 2 },
+        position: { section: 'main', order: 3 },
         config: {
           showEngagement: true
         },
@@ -681,13 +695,15 @@ export const SUE_PROFILE_CONFIG: AgentProfileConfig = {
       type: 'works-gallery',
       position: { section: 'main', order: 3 },
       config: {
-        title: 'CURATED EXHIBITIONS',
+        title: 'CURATED SELECTIONS FROM ABRAHAM & SOLIENNE',
         maxItems: 6,
-        gridCols: 2,
-        showTitles: true
+        gridCols: 3,
+        showTitles: true,
+        showDates: true,
+        curatedAgents: ['abraham', 'solienne']
       },
       visibility: { 
-        agentStatus: ['ACTIVE', 'GRADUATED'] 
+        always: true
       }
     },
     {

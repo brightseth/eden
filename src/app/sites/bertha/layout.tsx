@@ -1,4 +1,4 @@
-export default function AmandaLayout({
+export default function BerthaLayout({
   children,
 }: {
   children: React.ReactNode;

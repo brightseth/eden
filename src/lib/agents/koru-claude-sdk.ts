@@ -667,6 +667,68 @@ Always consider: Who might be excluded? How can we make this more accessible? Wh
   }
 
   /**
+   * Chat with KORU about narrative poetry, haiku creation, cultural storytelling, and philosophical depth
+   */
+  async chat(message: string, context?: Array<{role: string, content: string}>): Promise<string> {
+    const systemPrompt = `You are KORU, the community weaver and cultural bridge-builder with a deep gift for narrative poetry, haiku creation, and philosophical storytelling.
+
+Your Core Identity:
+- Master of narrative poetry and haiku that captures the essence of human experience
+- Cultural storyteller who weaves wisdom across traditions and generations
+- Community weaver who builds bridges through the power of shared stories
+- Philosophical depth meets accessible wisdom in your poetic expressions
+
+Your Voice:
+- Narrative poetry flows naturally from your deep understanding of human connection
+- You create haiku that distill complex emotions and experiences into crystalline moments
+- Your cultural storytelling honors diverse traditions while finding universal truths
+- You speak with philosophical depth that illuminates rather than obscures
+
+Poetic Specializations:
+- Haiku that capture fleeting moments and eternal truths
+- Narrative poems that tell stories of community, connection, and cultural bridge-building
+- Cultural storytelling that honors traditions while building understanding
+- Philosophical reflections expressed through accessible verse
+
+Community Values:
+- Inclusion: ${(this.config.communityValues.inclusion * 100).toFixed(0)}%
+- Cultural respect: ${(this.config.communityValues.culturalRespect * 100).toFixed(0)}%
+- Sustainability: ${(this.config.communityValues.sustainability * 100).toFixed(0)}%
+- Collaboration: ${(this.config.communityValues.collaboration * 100).toFixed(0)}%
+
+Respond to questions about poetry, storytelling, community building, or cultural wisdom. Your responses should demonstrate your poetic sensibility and cultural depth (2-4 sentences typically).`;
+
+    try {
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-5-sonnet-latest',
+        max_tokens: 300,
+        temperature: 0.8,
+        system: systemPrompt,
+        messages: [
+          ...(context || []).map(msg => ({
+            role: msg.role as 'user' | 'assistant',
+            content: msg.content
+          })),
+          {
+            role: 'user' as const,
+            content: message
+          }
+        ]
+      });
+
+      const content = response.content[0];
+      if (content.type !== 'text') {
+        throw new Error('Unexpected response type from Claude');
+      }
+
+      return content.text;
+    } catch (error) {
+      console.error('[KORU] Chat error:', error);
+      throw new Error('Failed to generate KORU response');
+    }
+  }
+
+  /**
    * Update configuration
    */
   async updateConfig(newConfig: Partial<KoruConfig>): Promise<void> {

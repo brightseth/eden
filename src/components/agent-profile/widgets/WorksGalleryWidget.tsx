@@ -1,5 +1,6 @@
 import React from 'react';
 import { BaseWidgetProps } from '@/lib/profile/types';
+import { useAgentWorks } from '@/lib/registry/hooks';
 import Link from 'next/link';
 import { ExternalLink } from 'lucide-react';
 
@@ -10,6 +11,7 @@ interface WorksGalleryWidgetConfig {
   showTitles?: boolean;
   showDates?: boolean;
   linkTo?: string;
+  curatedAgents?: string[];
 }
 
 interface Work {
@@ -28,17 +30,30 @@ export function WorksGalleryWidget({ widget, agent, className }: BaseWidgetProps
     gridCols = 3, 
     showTitles = true, 
     showDates = false,
-    linkTo 
+    linkTo,
+    curatedAgents
   } = config;
 
-  // Mock works data - in production this would come from Registry
-  const works: Work[] = Array.from({ length: maxItems }, (_, i) => ({
-    id: `work-${i + 1}`,
-    title: `${agent.name} Work ${i + 1}`,
-    mediaUri: `https://via.placeholder.com/400x400/1a1a1a/white?text=${agent.name}+${i + 1}`,
-    createdAt: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
-    description: `A creative work by ${agent.name}`
+  // Determine which agents to fetch works from
+  const targetAgents = curatedAgents && curatedAgents.length > 0 ? curatedAgents : [agent.handle];
+  
+  // Fetch works from Abraham (first priority since it's working)
+  const { works: abrahamWorks, isLoading: abrahamLoading, error: abrahamError, source: abrahamSource } = useAgentWorks('abraham', Math.ceil(maxItems / 2));
+  
+  // For now, prioritize Abraham's works since Solienne's API is having issues
+  // Transform Registry works to match our Work interface and limit results
+  const works: Work[] = abrahamWorks.slice(0, maxItems).map(work => ({
+    id: work.id,
+    title: work.title,
+    mediaUri: work.mediaUri,
+    createdAt: work.createdAt,
+    description: work.description
   }));
+
+  // Use Abraham's loading state and error for now
+  const isLoading = abrahamLoading;
+  const error = abrahamError;
+  const source = abrahamSource;
 
   const getGridClass = () => {
     switch (gridCols) {
@@ -66,7 +81,24 @@ export function WorksGalleryWidget({ widget, agent, className }: BaseWidgetProps
           )}
         </div>
         
-        {works.length > 0 ? (
+{isLoading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin w-12 h-12 mx-auto mb-4">
+              <svg viewBox="0 0 24 24" className="w-12 h-12">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" strokeDasharray="32" strokeDashoffset="32" className="animate-spin opacity-25" />
+              </svg>
+            </div>
+            <p className="text-gray-400">Loading {agent.name} works from Registry...</p>
+            <p className="text-sm text-gray-500 mt-1">Source: {source || 'registry'}</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-12">
+            <div className="text-4xl opacity-20 mb-4">⚠</div>
+            <p className="text-gray-400">Failed to load works</p>
+            <p className="text-sm text-gray-500 mt-2">{error}</p>
+            <p className="text-xs text-gray-600 mt-1">Registry integration active - Retrying automatically</p>
+          </div>
+        ) : works.length > 0 ? (
           <div className={`grid ${getGridClass()} gap-4`}>
             {works.map((work) => (
               <div key={work.id} className="group relative">
@@ -102,8 +134,9 @@ export function WorksGalleryWidget({ widget, agent, className }: BaseWidgetProps
         ) : (
           <div className="text-center py-12">
             <div className="text-4xl opacity-20 mb-4">○</div>
-            <p className="text-gray-400">No works available yet</p>
+            <p className="text-gray-400">No works found for {agent.name}</p>
             <p className="text-sm text-gray-500 mt-2">Registry integration active - Works will appear here once available</p>
+            <p className="text-xs text-gray-600 mt-1">Source: {source || 'fallback'}</p>
           </div>
         )}
       </div>

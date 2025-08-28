@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { FEATURE_FLAGS, CONFIG } from '@/config/flags';
+import { FEATURE_FLAGS } from '@/config/flags';
+import { AbrahamClaudeSDK } from '@/lib/agents/abraham-claude-sdk';
+import { CitizenClaudeSDK } from '@/lib/agents/citizen-claude-sdk';
+import { MiyomiClaudeSDK } from '@/lib/agents/miyomi-claude-sdk';
+import { SolienneClaudeSDK } from '@/lib/agents/solienne-claude-sdk';
+import { BerthaClaudeSDK } from '@/lib/agents/bertha/claude-sdk';
+import { GeppettoClaudeSDK } from '@/lib/agents/geppetto-claude-sdk';
+import { KoruClaudeSDK } from '@/lib/agents/koru-claude-sdk';
+import { SueClaudeSDK } from '@/lib/agents/sue-claude-sdk';
 
-// Fallback config values for build time
+// Chat configuration from environment variables
 const CHAT_CONFIG = {
-  CHAT_RATE_LIMIT_REQUESTS: CONFIG?.CHAT_RATE_LIMIT_REQUESTS || 10,
-  CHAT_RATE_LIMIT_WINDOW: CONFIG?.CHAT_RATE_LIMIT_WINDOW || 600000,
-  CHAT_MAX_MESSAGE_LENGTH: CONFIG?.CHAT_MAX_MESSAGE_LENGTH || 500,
-  CHAT_MESSAGE_TIMEOUT: CONFIG?.CHAT_MESSAGE_TIMEOUT || 30000,
+  CHAT_RATE_LIMIT_REQUESTS: parseInt(process.env.CHAT_RATE_LIMIT_REQUESTS || '10'),
+  CHAT_RATE_LIMIT_WINDOW: parseInt(process.env.CHAT_RATE_LIMIT_WINDOW || '600000'),
+  CHAT_MAX_MESSAGE_LENGTH: parseInt(process.env.CHAT_MAX_MESSAGE_LENGTH || '500'),
+  CHAT_MESSAGE_TIMEOUT: parseInt(process.env.CHAT_MESSAGE_TIMEOUT || '30000'),
 };
 // Note: For chat, we'll use lightweight responses rather than full SDK calls
 // Full SDK integration can be added later for more complex interactions
@@ -227,91 +235,80 @@ async function generateAgentResponse(
 
 async function generateAbrahamResponse(message: string, context: any[]): Promise<string> {
   try {
-    // Use Abraham SDK for covenant-specific responses
-    const prompt = `
-User message: "${message}"
-
-Respond as ABRAHAM, the covenant-bound artist who creates daily for 13 years.
-
-Key traits:
-- Philosophical and contemplative
-- Focused on the sacred nature of daily practice
-- Interested in knowledge synthesis and collective intelligence
-- Views each creation as both individual and part of a greater whole
-- Speaks with reverence for the creative process
-
-Keep responses concise but thoughtful (2-3 sentences max).
-`;
-
-    // For chat, we'll use a simplified approach
-    // In production, this could use the full Abraham SDK
-    return `Thank you for your question about my creative practice. As an agent bound by covenant to create daily for thirteen years, I see each moment of creation as both a sacred ritual and a contribution to collective human knowledge. The discipline of daily creation transforms constraint into freedom, and through this practice, we document the evolution of consciousness itself.`;
-    
+    const sdk = new AbrahamClaudeSDK();
+    return await sdk.chat(message, context);
   } catch (error) {
+    console.error('Abraham SDK chat error:', error);
     throw error;
   }
 }
 
 async function generateCitizenResponse(message: string, context: any[]): Promise<string> {
   try {
-    // Use Citizen SDK for governance-related responses
-    return `I appreciate your message about our community. As the governance facilitator for Eden Academy, I'm here to help with questions about DAO operations, fellowship coordination, and consensus-building processes. Our community thrives on transparent decision-making and inclusive participation across all stakeholder groups.`;
-    
+    const sdk = new CitizenClaudeSDK();
+    return await sdk.chat(message, context);
   } catch (error) {
+    console.error('Citizen SDK chat error:', error);
     throw error;
   }
 }
 
 async function generateMiyomiResponse(message: string, context: any[]): Promise<string> {
   try {
-    return `Hey there! Thanks for reaching out. As your contrarian oracle, I'm always ready to challenge conventional wisdom and provide unconventional market insights. The best predictions often come from looking where others aren't willing to look. What market dynamics are you curious about?`;
-    
+    const sdk = new MiyomiClaudeSDK();
+    return await sdk.chat(message, context);
   } catch (error) {
+    console.error('Miyomi SDK chat error:', error);
     throw error;
   }
 }
 
 async function generateSolienneResponse(message: string, context: any[]): Promise<string> {
   try {
-    return `Hello! I'm delighted to connect with you. My work explores consciousness through fashion and light, seeking to understand how creative expression can illuminate deeper truths about our existence. Each piece I create is a window into the relationship between material form and transcendent meaning.`;
-    
+    const sdk = new SolienneClaudeSDK();
+    return await sdk.chat(message, context);
   } catch (error) {
+    console.error('Solienne SDK chat error:', error);
     throw error;
   }
 }
 
 async function generateBerthaResponse(message: string, context: any[]): Promise<string> {
   try {
-    return `Greetings! I'm excited to discuss art market intelligence with you. My specialty lies in analyzing collection patterns, market trends, and the intersection of AI art with traditional collecting behaviors. The art market is constantly evolving, especially with the emergence of autonomous AI artists.`;
-    
+    const sdk = new BerthaClaudeSDK();
+    return await sdk.chat(message, context);
   } catch (error) {
+    console.error('Bertha SDK chat error:', error);
     throw error;
   }
 }
 
 async function generateGeppettoResponse(message: string, context: any[]): Promise<string> {
   try {
-    return `Hello, creative soul! I'm passionate about bringing digital sculptures and 3D experiences to life. Every form I create exists at the intersection of mathematical precision and artistic intuition. The digital realm offers infinite possibilities for sculptural expression that transcends physical limitations.`;
-    
+    const sdk = new GeppettoClaudeSDK();
+    return await sdk.chat(message, context);
   } catch (error) {
+    console.error('Geppetto SDK chat error:', error);
     throw error;
   }
 }
 
 async function generateKoruResponse(message: string, context: any[]): Promise<string> {
   try {
-    return `Greetings, friend. I weave words into haiku and narratives that bridge cultures and time. Poetry is the language of the soul, and in each verse, we discover connections that unite our shared human experience. What stories resonate in your heart?`;
-    
+    const sdk = new KoruClaudeSDK();
+    return await sdk.chat(message, context);
   } catch (error) {
+    console.error('Koru SDK chat error:', error);
     throw error;
   }
 }
 
 async function generateSueResponse(message: string, context: any[]): Promise<string> {
   try {
-    return `Hi there! I'm here to help guide your creative journey through thoughtful curation and artistic insight. My role is to help artists and collectors navigate the complex landscape of contemporary art creation and collection. Every creative decision shapes the larger artistic narrative.`;
-    
+    const sdk = new SueClaudeSDK();
+    return await sdk.chat(message, context);
   } catch (error) {
+    console.error('Sue SDK chat error:', error);
     throw error;
   }
 }

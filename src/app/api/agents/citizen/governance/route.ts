@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { citizenSDK } from '@/lib/agents/citizen-claude-sdk';
+import { isFeatureEnabled, FLAGS } from '@/config/flags';
 
 // GET /api/agents/citizen/governance - Bright Moments DAO governance info
 export async function GET(request: NextRequest) {
@@ -161,18 +162,45 @@ export async function GET(request: NextRequest) {
       };
     }
     
+    // Add Snapshot integration status if enabled
+    const snapshotEnabled = isFeatureEnabled(FLAGS.ENABLE_CITIZEN_SNAPSHOT_GOVERNANCE);
+    if (snapshotEnabled) {
+      governanceData.snapshot_integration = {
+        status: "Active on Sepolia Testnet",
+        network: "Sepolia (Chain ID: 11155111)",
+        space_id: "brightmomentsdao-sepolia.eth",
+        features: [
+          "Real-time proposal creation via CITIZEN AI",
+          "Registry-first architecture with Snapshot sync",
+          "Voting power verification for CryptoCitizen holders",
+          "Automated proposal coordination and voting strategies"
+        ],
+        safety_features: [
+          "Testnet-only deployment for safety",
+          "Fallback to local governance simulation",
+          "Registry maintains canonical governance state",
+          "All proposals logged in Registry for transparency"
+        ]
+      };
+    }
+
     return NextResponse.json({
       success: true,
       governance: governanceData,
       query: { includeProposals, includeStats },
+      snapshot_integration_enabled: snapshotEnabled,
       official_governance_links: {
-        snapshot_voting: "https://snapshot.org/#/brightmomentsdao.eth",
-        governance_docs: "https://docs.brightmoments.io/governance",
+        snapshot_voting: snapshotEnabled 
+          ? "https://testnet.snapshot.org/#/brightmomentsdao-sepolia.eth" 
+          : "https://snapshot.org/#/brightmomentsdao.eth",
+        governance_docs: "https://docs.brightmoments.io/governance", 
         community_discussion: "Official Bright Moments Discord governance channels",
         treasury_transparency: "On-chain treasury tracking and reporting"
       },
       participation_note: "Every CryptoCitizen holder is a DAO member with voting rights and community voice",
-      message: "Bright Moments DAO governance - democratic participation in cultural preservation"
+      message: snapshotEnabled 
+        ? "Bright Moments DAO governance with Snapshot testnet integration - democratic participation in cultural preservation"
+        : "Bright Moments DAO governance - democratic participation in cultural preservation"
     });
     
   } catch (error) {
@@ -180,6 +208,206 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       { 
         error: 'Failed to fetch governance data',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
+    );
+  }
+}
+
+// POST /api/agents/citizen/governance - Create Snapshot proposals or governance actions
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { action, ...params } = body;
+
+    console.log('[CITIZEN Governance] POST Action:', action, params);
+
+    // Validate required action parameter
+    if (!action) {
+      return NextResponse.json(
+        { error: 'Missing required action parameter' },
+        { status: 400 }
+      );
+    }
+
+    // Handle different governance actions
+    switch (action) {
+      case 'create_proposal': {
+        const { topic, context, proposalType, spaceId } = params;
+        
+        if (!topic || !context || !proposalType) {
+          return NextResponse.json(
+            { error: 'Missing required parameters: topic, context, proposalType' },
+            { status: 400 }
+          );
+        }
+
+        const result = await citizenSDK.createSnapshotProposal(
+          topic,
+          context,
+          proposalType,
+          spaceId
+        );
+
+        return NextResponse.json({
+          success: result.success,
+          action: 'create_proposal',
+          result: {
+            registryWorkId: result.registryWorkId,
+            snapshotProposal: result.snapshotProposal,
+            error: result.error
+          },
+          snapshot_integration: isFeatureEnabled(FLAGS.ENABLE_CITIZEN_SNAPSHOT_GOVERNANCE),
+          message: result.success 
+            ? 'Proposal created successfully'
+            : `Proposal creation failed: ${result.error}`
+        });
+      }
+
+      case 'coordinate_voting': {
+        const { proposalId, communityOutreach = true } = params;
+        
+        if (!proposalId) {
+          return NextResponse.json(
+            { error: 'Missing required parameter: proposalId' },
+            { status: 400 }
+          );
+        }
+
+        const coordination = await citizenSDK.coordinateVoting(proposalId, communityOutreach);
+
+        return NextResponse.json({
+          success: coordination.success,
+          action: 'coordinate_voting',
+          result: {
+            coordinationStrategy: coordination.coordinationStrategy,
+            outreachPlan: coordination.outreachPlan,
+            participationPrediction: Math.round(coordination.participationPrediction * 100) + '%'
+          },
+          message: coordination.success 
+            ? `Voting coordination strategy generated with ${Math.round(coordination.participationPrediction * 100)}% predicted participation`
+            : 'Failed to generate voting coordination strategy'
+        });
+      }
+
+      case 'get_voting_power': {
+        const { address, spaceId } = params;
+        
+        if (!address) {
+          return NextResponse.json(
+            { error: 'Missing required parameter: address' },
+            { status: 400 }
+          );
+        }
+
+        const votingPower = await citizenSDK.getVotingPower(address, spaceId);
+
+        if (votingPower) {
+          return NextResponse.json({
+            success: true,
+            action: 'get_voting_power',
+            result: {
+              address: votingPower.address,
+              space: votingPower.space,
+              votingPower: votingPower.power,
+              tokens: votingPower.tokens
+            },
+            snapshot_integration: isFeatureEnabled(FLAGS.ENABLE_CITIZEN_SNAPSHOT_GOVERNANCE),
+            message: `Address ${address} has ${votingPower.power} voting power`
+          });
+        } else {
+          return NextResponse.json({
+            success: false,
+            action: 'get_voting_power',
+            error: 'Failed to retrieve voting power',
+            message: `Could not determine voting power for address ${address}`
+          });
+        }
+      }
+
+      case 'sync_proposal': {
+        const { snapshotProposalId, registryWorkId } = params;
+        
+        if (!snapshotProposalId || !registryWorkId) {
+          return NextResponse.json(
+            { error: 'Missing required parameters: snapshotProposalId, registryWorkId' },
+            { status: 400 }
+          );
+        }
+
+        const syncResult = await citizenSDK.syncProposalResults(snapshotProposalId, registryWorkId);
+
+        return NextResponse.json({
+          success: syncResult.success,
+          action: 'sync_proposal',
+          result: {
+            proposalId: syncResult.proposalId,
+            registryWorkId: syncResult.registryWorkId,
+            syncedAt: syncResult.syncedAt,
+            error: syncResult.error
+          },
+          message: syncResult.success 
+            ? 'Proposal data synced successfully'
+            : `Sync failed: ${syncResult.error}`
+        });
+      }
+
+      case 'analyze_governance_performance': {
+        const analysis = await citizenSDK.analyzeGovernancePerformance();
+
+        return NextResponse.json({
+          success: true,
+          action: 'analyze_governance_performance',
+          result: {
+            snapshotMetrics: analysis.snapshotMetrics,
+            localMetrics: analysis.localMetrics,
+            recommendations: analysis.recommendations,
+            healthScore: Math.round(analysis.healthScore * 100) + '%'
+          },
+          snapshot_integration: isFeatureEnabled(FLAGS.ENABLE_CITIZEN_SNAPSHOT_GOVERNANCE),
+          message: `Governance analysis complete - Health score: ${Math.round(analysis.healthScore * 100)}%`
+        });
+      }
+
+      case 'get_governance_health': {
+        const healthData = await citizenSDK.getGovernanceHealth();
+
+        return NextResponse.json({
+          success: true,
+          action: 'get_governance_health',
+          result: {
+            metrics: healthData.metrics,
+            snapshotIntegration: healthData.snapshotIntegration,
+            healthScore: Math.round(healthData.healthScore * 100) + '%',
+            recommendations: healthData.recommendations
+          },
+          message: `Governance health retrieved - Score: ${Math.round(healthData.healthScore * 100)}%`
+        });
+      }
+
+      default:
+        return NextResponse.json(
+          { 
+            error: 'Unknown action', 
+            supportedActions: [
+              'create_proposal',
+              'coordinate_voting', 
+              'get_voting_power',
+              'sync_proposal',
+              'analyze_governance_performance',
+              'get_governance_health'
+            ]
+          },
+          { status: 400 }
+        );
+    }
+
+  } catch (error) {
+    console.error('[CITIZEN Governance] POST Error:', error);
+    return NextResponse.json(
+      { 
+        error: 'Failed to process governance action',
         details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }

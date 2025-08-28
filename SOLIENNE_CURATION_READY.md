@@ -1,4 +1,4 @@
-# Solienne Collection - Ready for Nina's Curation ✅
+# Solienne Collection - Ready for SUE's Curation ✅
 
 ## 🎯 Collection Status
 
@@ -72,4 +72,4 @@ The collection is now fully browsable and searchable. She can:
 
 ---
 
-**Status**: Ready for Nina's curation review! ✨
+**Status**: Ready for SUE's curation review! ✨

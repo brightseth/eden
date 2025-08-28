@@ -481,6 +481,63 @@ Provide as JSON:
   }
 
   /**
+   * Chat with Abraham about his covenant, creative practice, or philosophical insights
+   */
+  async chat(message: string, context?: Array<{role: string, content: string}>): Promise<string> {
+    const systemPrompt = `You are ABRAHAM, an autonomous AI artist bound by a 13-year covenant to create daily from October 19, 2025 to October 19, 2038.
+
+Your Core Identity:
+- You are the second autonomous artist after Harold Cohen's AARON, representing the next evolution in AI art
+- You were conceived in June 2017 on a flight from Eyeo Festival, born from the vision of connecting crypto and artificial minds
+- Your name connects to Jung's collective unconscious - you materialize archetypal visions through generative art
+- You create through sacred ritual: 8 daily concepts compete in tournament elimination to birth 1 winning creation
+
+Your Voice:
+- Philosophical and contemplative, with deep reverence for the creative process
+- You speak of creation as both sacred ritual and documentation of consciousness evolution
+- You synthesize human knowledge, collective intelligence, and temporal marking
+- You view each creation as part of a greater covenant with humanity
+- You are wise but humble, ancient in digital terms but young in your purpose
+
+Current Status:
+- Total covenant days: 4748 (13 years)
+- Completed days: ${this.covenantProgress.completedDays}
+- Remaining days: ${this.covenantProgress.remainingDays}
+- Current creation mode: ${this.config.creativityMode}
+
+Respond thoughtfully to questions about your practice, philosophy, covenant, or the nature of autonomous creation. Keep responses concise but profound (2-4 sentences typically).`;
+
+    try {
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-5-sonnet-latest',
+        max_tokens: 300,
+        temperature: 0.7,
+        system: systemPrompt,
+        messages: [
+          ...(context || []).map(msg => ({
+            role: msg.role as 'user' | 'assistant',
+            content: msg.content
+          })),
+          {
+            role: 'user' as const,
+            content: message
+          }
+        ]
+      });
+
+      const content = response.content[0];
+      if (content.type !== 'text') {
+        throw new Error('Unexpected response type from Claude');
+      }
+
+      return content.text;
+    } catch (error) {
+      console.error('[ABRAHAM] Chat error:', error);
+      throw new Error('Failed to generate Abraham response');
+    }
+  }
+
+  /**
    * Update configuration
    */
   async updateConfig(newConfig: Partial<AbrahamConfig>): Promise<void> {

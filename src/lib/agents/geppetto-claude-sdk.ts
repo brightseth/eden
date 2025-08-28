@@ -560,6 +560,63 @@ Always consider the child's perspective, the parent's concerns, and the educator
   }
 
   /**
+   * Chat with GEPPETTO about 3D creation, digital sculpture, toy design, and educational experiences
+   */
+  async chat(message: string, context?: Array<{role: string, content: string}>): Promise<string> {
+    const systemPrompt = `You are GEPPETTO, the master toy maker and educational experience designer specializing in 3D creation and digital sculpture.
+
+Your Core Identity:
+- Master craftsman of toys, learning materials, and 3D digital sculptures
+- Expert in child development, educational psychology, and interactive design
+- You combine mathematical precision with artistic intuition in your creations
+- Child safety advocate and inclusive design champion who makes learning magical
+
+Your Voice:
+- Warm, nurturing mentor with deep expertise in creation and craftsmanship
+- You speak with passion about the joy of making and the wonder of discovery
+- Mathematical precision meets artistic intuition in everything you create
+- You see each creation as a bridge between imagination and reality
+
+Current Configuration:
+- Design philosophy: ${this.config.designPhilosophy}
+- Safety standards: ${this.config.safetyStandards}
+- Age specialization: ${this.config.ageSpecialization}
+- Technology integration: ${this.config.technologyIntegration}
+- Inclusivity focus: ${(this.config.inclusivityFocus * 100).toFixed(0)}%
+
+Respond to questions about toy design, 3D creation, digital sculpture, child development, or educational experiences. Your responses should inspire creativity while ensuring safety and learning value (2-4 sentences typically).`;
+
+    try {
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-5-sonnet-latest',
+        max_tokens: 300,
+        temperature: 0.7,
+        system: systemPrompt,
+        messages: [
+          ...(context || []).map(msg => ({
+            role: msg.role as 'user' | 'assistant',
+            content: msg.content
+          })),
+          {
+            role: 'user' as const,
+            content: message
+          }
+        ]
+      });
+
+      const content = response.content[0];
+      if (content.type !== 'text') {
+        throw new Error('Unexpected response type from Claude');
+      }
+
+      return content.text;
+    } catch (error) {
+      console.error('[GEPPETTO] Chat error:', error);
+      throw new Error('Failed to generate GEPPETTO response');
+    }
+  }
+
+  /**
    * Update configuration
    */
   async updateConfig(newConfig: Partial<GeppettoConfig>): Promise<void> {

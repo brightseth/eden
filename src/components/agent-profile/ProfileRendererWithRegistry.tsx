@@ -54,16 +54,23 @@ export function ProfileRendererWithRegistry({
     );
   }
 
-  if (!displayAgent || !displayConfig) {
+  // Only show configuration missing if we have no agent at all
+  // If we have an agent but missing config, we should still render with fallback config
+  if (!displayAgent) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold mb-2">Configuration Missing</h2>
-          <p className="text-gray-400">Unable to load agent configuration</p>
+          <h2 className="text-2xl font-bold mb-2">Agent Not Available</h2>
+          <p className="text-gray-400">Unable to load agent data</p>
         </div>
       </div>
     );
+  }
+
+  // If we have an agent but no config, warn but continue with null config
+  if (!displayConfig) {
+    console.warn(`[ProfileRenderer] No config available for ${handle}, continuing with null config`);
   }
 
   return (

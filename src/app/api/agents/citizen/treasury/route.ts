@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
     };
     
     // Generate daily auction based on date
-    const todaysAuction = generateDailyAuction(date);
+    const todaysAuction = await generateDailyAuction(date);
     const auctionHistory = includeHistory ? generateAuctionHistory() : null;
     
     // Treasury activation strategies
@@ -133,56 +133,146 @@ export async function GET(request: NextRequest) {
   }
 }
 
-function generateDailyAuction(date: string) {
+async function generateDailyAuction(date: string) {
   const auctionDate = new Date(date);
   const dayOfYear = Math.floor((auctionDate.getTime() - new Date(auctionDate.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
   
-  // Rotate through different collection themes based on day
-  const themes = [
-    'Venice Beach Genesis', 'New York Metropolis', 'Berlin Techno', 'London Bridge', 'Tokyo Neon',
-    'Buenos Aires Passion', 'Paris Avant-Garde', 'Mexico City Vibrant', 'Venice Italy Renaissance', 'Digital Metaverse'
-  ];
-  
-  const artists = [
-    'Tyler Hobbs', 'Casey Reas', 'Helena Sarin', 'Mario Klingemann', 'Refik Anadol',
-    'Zach Lieberman', 'Lauren McCarthy', 'Gene Kogan', 'Anna Ridler', 'Memo Akten'
-  ];
-  
-  const themeIndex = dayOfYear % themes.length;
-  const artistIndex = (dayOfYear * 3) % artists.length;
-  
-  return {
-    auction_id: `BM-${date.replace(/-/g, '')}-${String(dayOfYear).padStart(3, '0')}`,
-    status: "LIVE",
-    theme: themes[themeIndex],
-    featured_work: {
+  try {
+    // Import market data for real CryptoCitizens NFTs
+    const { citizenMarketData } = await import('@/lib/agents/citizen-market-data');
+    
+    // Try to get real NFT data from CryptoCitizens collection
+    const sampleNFTs = await citizenMarketData.fetchSampleNFTs('cryptocitizensofficial', 10);
+    const collectionStats = await citizenMarketData.fetchOpenSeaStats('cryptocitizensofficial');
+    
+    // Select a random NFT from the samples
+    let featuredNFT = null;
+    if (sampleNFTs.length > 0) {
+      const randomIndex = dayOfYear % sampleNFTs.length;
+      featuredNFT = sampleNFTs[randomIndex];
+    }
+    
+    // Rotate through different collection themes based on day
+    const themes = [
+      'Venice Beach Genesis', 'New York Metropolis', 'Berlin Techno', 'London Bridge', 'Tokyo Neon',
+      'Buenos Aires Passion', 'Paris Avant-Garde', 'Mexico City Vibrant', 'Venice Italy Renaissance', 'Digital Metaverse'
+    ];
+    
+    const artists = [
+      'Tyler Hobbs', 'Casey Reas', 'Helena Sarin', 'Mario Klingemann', 'Refik Anadol',
+      'Zach Lieberman', 'Lauren McCarthy', 'Gene Kogan', 'Anna Ridler', 'Memo Akten'
+    ];
+    
+    const themeIndex = dayOfYear % themes.length;
+    const artistIndex = (dayOfYear * 3) % artists.length;
+    
+    // Use real NFT data if available, otherwise fallback to generated data
+    const featuredWork = featuredNFT ? {
+      title: featuredNFT.name,
+      artist: artists[artistIndex], // Keep artist rotation for variety
+      collection: 'CryptoCitizens',
+      token_id: featuredNFT.token_id,
+      image_url: featuredNFT.image_url,
+      opensea_link: featuredNFT.permalink
+    } : {
       title: `${themes[themeIndex]} #${(dayOfYear % 100) + 1}`,
       artist: artists[artistIndex],
       collection: themes[themeIndex].replace(' ', ''),
       token_id: `${dayOfYear % 10000}`,
       image_url: `https://via.placeholder.com/400x400/1a1a1a/white?text=${themes[themeIndex].replace(' ', '+')}`
-    },
-    auction_details: {
-      start_time: `${date}T17:00:00Z`, // 12:00 PM EST
-      end_time: `${date}T21:00:00Z`,   // 4:00 PM EST (4 hour window)
-      starting_bid_eth: 0.1,
-      current_bid_eth: (0.1 + (dayOfYear % 20) * 0.05),
-      bidder_count: Math.floor(Math.random() * 50) + 10,
-      time_remaining: calculateTimeRemaining(date)
-    },
-    community_curation: {
-      nominated_by: "Full Set Holder Council",
-      curatorial_note: `This piece exemplifies the ${themes[themeIndex]} aesthetic while showcasing ${artists[artistIndex]}'s mastery of generative techniques. Selected for its cultural significance and community resonance.`,
-      dao_vote_result: `${85 + (dayOfYear % 15)}% approval from participating DAO members`,
-      discussion_thread: `https://discourse.brightmoments.io/t/auction-${dayOfYear}`
-    },
-    cultural_context: {
-      historical_significance: `Part of the ${themes[themeIndex]} collection minted during the ${getCollectionYear(themeIndex)} Bright Moments residency`,
-      artist_background: `${artists[artistIndex]} contributed significantly to the generative art movement and Bright Moments community`,
-      technical_notes: "Algorithm: Custom generative system, Blockchain: Ethereum, Minting: IRL ceremony",
-      provenance: "Original mint → Bright Moments Treasury → Daily Auction Program"
-    }
-  };
+    };
+    
+    // Use real floor price if available
+    const currentFloorPrice = collectionStats?.floorPrice || 0.085;
+    const startingBid = Math.max(0.01, currentFloorPrice * 0.5); // Start at 50% of floor
+    const currentBid = startingBid + (dayOfYear % 20) * 0.01;
+    
+    return {
+      auction_id: `BM-${date.replace(/-/g, '')}-${String(dayOfYear).padStart(3, '0')}`,
+      status: "LIVE",
+      theme: themes[themeIndex],
+      featured_work: featuredWork,
+      auction_details: {
+        start_time: `${date}T17:00:00Z`, // 12:00 PM EST
+        end_time: `${date}T21:00:00Z`,   // 4:00 PM EST (4 hour window)
+        starting_bid_eth: startingBid,
+        current_bid_eth: currentBid,
+        floor_price_eth: currentFloorPrice,
+        bidder_count: Math.floor(Math.random() * 50) + 10,
+        time_remaining: calculateTimeRemaining(date)
+      },
+      community_curation: {
+        nominated_by: "Full Set Holder Council",
+        curatorial_note: `This piece exemplifies the ${themes[themeIndex]} aesthetic${featuredNFT ? ' from the CryptoCitizens collection' : ` while showcasing ${artists[artistIndex]}'s mastery of generative techniques`}. Selected for its cultural significance and community resonance.`,
+        dao_vote_result: `${85 + (dayOfYear % 15)}% approval from participating DAO members`,
+        discussion_thread: `https://discourse.brightmoments.io/t/auction-${dayOfYear}`
+      },
+      cultural_context: {
+        historical_significance: featuredNFT ? 
+          `Part of the original CryptoCitizens collection minted during Bright Moments IRL events` :
+          `Part of the ${themes[themeIndex]} collection minted during the ${getCollectionYear(themeIndex)} Bright Moments residency`,
+        artist_background: `${artists[artistIndex]} contributed significantly to the generative art movement and Bright Moments community`,
+        technical_notes: "Algorithm: Custom generative system, Blockchain: Ethereum, Minting: IRL ceremony",
+        provenance: "Original mint → Bright Moments Treasury → Daily Auction Program"
+      },
+      market_data: {
+        collection_floor: currentFloorPrice,
+        collection_volume_24h: collectionStats?.volume24h || null,
+        collection_owners: collectionStats?.owners || null,
+        opensea_verified: !!featuredNFT
+      }
+    };
+    
+  } catch (error) {
+    console.error('[CITIZEN Treasury] Error fetching real NFT data:', error);
+    
+    // Fallback to original implementation
+    const themes = [
+      'Venice Beach Genesis', 'New York Metropolis', 'Berlin Techno', 'London Bridge', 'Tokyo Neon',
+      'Buenos Aires Passion', 'Paris Avant-Garde', 'Mexico City Vibrant', 'Venice Italy Renaissance', 'Digital Metaverse'
+    ];
+    
+    const artists = [
+      'Tyler Hobbs', 'Casey Reas', 'Helena Sarin', 'Mario Klingemann', 'Refik Anadol',
+      'Zach Lieberman', 'Lauren McCarthy', 'Gene Kogan', 'Anna Ridler', 'Memo Akten'
+    ];
+    
+    const themeIndex = dayOfYear % themes.length;
+    const artistIndex = (dayOfYear * 3) % artists.length;
+    
+    return {
+      auction_id: `BM-${date.replace(/-/g, '')}-${String(dayOfYear).padStart(3, '0')}`,
+      status: "LIVE",
+      theme: themes[themeIndex],
+      featured_work: {
+        title: `${themes[themeIndex]} #${(dayOfYear % 100) + 1}`,
+        artist: artists[artistIndex],
+        collection: themes[themeIndex].replace(' ', ''),
+        token_id: `${dayOfYear % 10000}`,
+        image_url: `https://via.placeholder.com/400x400/1a1a1a/white?text=${themes[themeIndex].replace(' ', '+')}`
+      },
+      auction_details: {
+        start_time: `${date}T17:00:00Z`,
+        end_time: `${date}T21:00:00Z`,
+        starting_bid_eth: 0.1,
+        current_bid_eth: (0.1 + (dayOfYear % 20) * 0.05),
+        bidder_count: Math.floor(Math.random() * 50) + 10,
+        time_remaining: calculateTimeRemaining(date)
+      },
+      community_curation: {
+        nominated_by: "Full Set Holder Council",
+        curatorial_note: `This piece exemplifies the ${themes[themeIndex]} aesthetic while showcasing ${artists[artistIndex]}'s mastery of generative techniques. Selected for its cultural significance and community resonance.`,
+        dao_vote_result: `${85 + (dayOfYear % 15)}% approval from participating DAO members`,
+        discussion_thread: `https://discourse.brightmoments.io/t/auction-${dayOfYear}`
+      },
+      cultural_context: {
+        historical_significance: `Part of the ${themes[themeIndex]} collection minted during the ${getCollectionYear(themeIndex)} Bright Moments residency`,
+        artist_background: `${artists[artistIndex]} contributed significantly to the generative art movement and Bright Moments community`,
+        technical_notes: "Algorithm: Custom generative system, Blockchain: Ethereum, Minting: IRL ceremony",
+        provenance: "Original mint → Bright Moments Treasury → Daily Auction Program"
+      }
+    };
+  }
 }
 
 function generateAuctionHistory() {

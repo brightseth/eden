@@ -50,7 +50,7 @@ export async function GET() {
               },
               {
                 text: 'VIEW STUDIO →',
-                href: '/sites/amanda'
+                href: '/sites/bertha'
               }
             ]
           }

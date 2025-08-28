@@ -32,27 +32,38 @@ export function useAgent(handle: string): UseAgentResult {
       setIsLoading(true);
       setError(null);
 
-      // Fetch agent and config in parallel
+      // Fetch agent and config in parallel, with graceful fallback
       const [agentResponse, configResponse] = await Promise.all([
-        registryClient.getAgent(handle),
-        registryClient.getAgentConfig(handle)
+        registryClient.getAgent(handle).catch((err) => {
+          console.warn(`[useAgent] Registry unavailable for agent ${handle}:`, err);
+          return { error: 'Registry unavailable', source: 'fallback' as const };
+        }),
+        registryClient.getAgentConfig(handle).catch((err) => {
+          console.warn(`[useAgent] Registry unavailable for config ${handle}:`, err);
+          return { error: 'Registry unavailable', source: 'fallback' as const };
+        })
       ]);
 
-      if (agentResponse.error) {
-        setError(agentResponse.error);
-      } else if (agentResponse.data) {
+      // Handle agent response - always set data if available, even from fallback
+      if (agentResponse.data) {
         setAgent(agentResponse.data);
         setSource(agentResponse.source);
+      } else if (agentResponse.error) {
+        // Only set error if it's a legitimate not found, not a connection issue
+        if (!agentResponse.error.includes('Registry unavailable')) {
+          setError(agentResponse.error);
+        }
       }
 
-      if (configResponse.error) {
-        console.warn(`[useAgent] Config error for ${handle}:`, configResponse.error);
-      } else if (configResponse.data) {
+      // Handle config response - warn but don't fail
+      if (configResponse.data) {
         setConfig(configResponse.data);
+      } else if (configResponse.error) {
+        console.warn(`[useAgent] Config error for ${handle}:`, configResponse.error);
       }
     } catch (err) {
-      console.error(`[useAgent] Error fetching ${handle}:`, err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch agent');
+      console.error(`[useAgent] Unexpected error fetching ${handle}:`, err);
+      // Don't set error here, let fallback data be used instead
     } finally {
       setIsLoading(false);
     }

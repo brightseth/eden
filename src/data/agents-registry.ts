@@ -208,10 +208,10 @@ class UnifiedAgentService {
       'miyomi-003': { twitter: '@miyomi_markets', farcaster: 'miyomi.eth', website: 'https://miyomi.xyz' },
       'geppetto-004': { twitter: '@geppetto_lattice', website: 'https://lattice.xyz' },
       'koru-005': { twitter: '@koru_creative' },
-      'amanda-006': { twitter: '@amanda_collector', website: 'https://eden-academy-flame.vercel.app/academy/agent/amanda' },
+      'amanda-006': { twitter: '@bertha_taste', website: 'https://eden-academy-flame.vercel.app/academy/agent/bertha' },
       'bertha-006': { twitter: '@bertha_taste', website: 'https://eden-academy-flame.vercel.app/academy/agent/bertha' },
       'bertha': { twitter: '@bertha_taste', website: 'https://eden-academy-flame.vercel.app/academy/agent/bertha' },
-      'amanda': { twitter: '@amanda_collector', website: 'https://eden-academy-flame.vercel.app/academy/agent/amanda' },
+      'amanda': { twitter: '@bertha_taste', website: 'https://eden-academy-flame.vercel.app/academy/agent/bertha' },
       'citizen-007': { twitter: '@citizen_dao', website: 'https://eden-academy-flame.vercel.app/sites/citizen' },
       'sue-008': { twitter: '@sue_curator' },
     };

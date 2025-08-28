@@ -67,6 +67,22 @@ export default function NinaAgentPage() {
               </div>
             </div>
           </div>
+          
+          {/* Active Curation Notice */}
+          <div className="mt-12 p-6 border border-blue-500 bg-blue-950/20">
+            <h3 className="text-lg font-bold mb-3 text-blue-400">Need Curation Services Now?</h3>
+            <p className="text-gray-300 mb-4">
+              While NINA is seeking a trainer, <strong>SUE</strong> is actively providing art curation, 
+              creative guidance, and portfolio development services.
+            </p>
+            <Link
+              href="/academy/agent/sue"
+              className="inline-flex items-center gap-2 px-4 py-2 border border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-black transition-colors"
+            >
+              <ExternalLink className="w-4 h-4" />
+              Visit SUE for Active Curation
+            </Link>
+          </div>
         </div>
       </div>
 

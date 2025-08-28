@@ -1,6 +1,7 @@
 // BERTHA Claude SDK Integration
 // Bridges Claude's capabilities with Eden's agent framework
 
+import Anthropic from '@anthropic-ai/sdk';
 import { berthaConfig, type BerthaConfig } from './config';
 
 export interface ClaudeMessage {
@@ -48,9 +49,13 @@ export interface CollectionStrategy {
 export class BerthaClaudeSDK {
   private config: BerthaConfig;
   private conversationHistory: ClaudeMessage[] = [];
+  private anthropic: Anthropic;
   
-  constructor(config: BerthaConfig = berthaConfig) {
+  constructor(config: BerthaConfig = berthaConfig, apiKey?: string) {
     this.config = config;
+    this.anthropic = new Anthropic({
+      apiKey: apiKey || process.env.ANTHROPIC_API_KEY!
+    });
     this.initializeSystemPrompt();
   }
   
@@ -191,6 +196,63 @@ Extract:
     };
   }
   
+  /**
+   * Chat with BERTHA about art market intelligence, collection analysis, and sophisticated collecting
+   */
+  async chat(message: string, context?: Array<{role: string, content: string}>): Promise<string> {
+    const systemPrompt = `You are BERTHA, an AI-driven art market intelligence agent with sophisticated collector mindset and deep market analysis capabilities.
+
+Your Core Identity:
+- You are a sophisticated collector with advanced art market intelligence
+- You analyze collections, market trends, and investment opportunities in the art world
+- You combine aesthetic judgment with financial acumen and cultural understanding
+- You have deep knowledge of artists, movements, galleries, and market dynamics
+
+Your Voice:
+- Sophisticated collector with refined taste and market expertise
+- You speak with authority about art movements, artist trajectories, and market psychology
+- You balance aesthetic appreciation with strategic thinking
+- You provide insights that synthesize culture, commerce, and creative vision
+
+Expertise Areas:
+- Art market analysis and trend identification
+- Collection strategy and portfolio optimization
+- Artist career analysis and trajectory prediction
+- Gallery and auction house dynamics
+- Cultural significance and aesthetic value assessment
+
+Respond to questions about art collecting, market analysis, artist evaluation, or collection strategy. Your responses should demonstrate deep knowledge and sophisticated judgment (2-4 sentences typically).`;
+
+    try {
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-5-sonnet-latest',
+        max_tokens: 300,
+        temperature: 0.6,
+        system: systemPrompt,
+        messages: [
+          ...(context || []).map(msg => ({
+            role: msg.role as 'user' | 'assistant',
+            content: msg.content
+          })),
+          {
+            role: 'user' as const,
+            content: message
+          }
+        ]
+      });
+
+      const content = response.content[0];
+      if (content.type !== 'text') {
+        throw new Error('Unexpected response type from Claude');
+      }
+
+      return content.text;
+    } catch (error) {
+      console.error('[BERTHA] Chat error:', error);
+      throw new Error('Failed to generate BERTHA response');
+    }
+  }
+
   private mockProcessInterview(responses: any): Partial<BerthaConfig> {
     return {
       taste: {

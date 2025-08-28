@@ -135,6 +135,15 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
     rolloutStrategy: 'beta',
     culturalImpact: 'Direct agent interaction capability for users',
     rollbackPlan: 'Disable chat UI, show coming soon message'
+  },
+
+  ENABLE_CITIZEN_SNAPSHOT_GOVERNANCE: {
+    key: 'ENABLE_CITIZEN_SNAPSHOT_GOVERNANCE',
+    description: 'Enable CITIZEN Snapshot DAO governance integration on Sepolia testnet',
+    defaultValue: process.env.ENABLE_CITIZEN_SNAPSHOT_GOVERNANCE === 'true' && process.env.NODE_ENV === 'development',
+    rolloutStrategy: 'off',
+    culturalImpact: 'CITIZEN can create proposals, coordinate voting, and facilitate DAO governance through Snapshot integration',
+    rollbackPlan: 'Disable flag, CITIZEN reverts to governance simulation mode with local consensus building'
   }
 };
 
@@ -231,4 +240,5 @@ export const FLAGS = {
   ENABLE_ABRAHAM_TOURNAMENT: 'ENABLE_ABRAHAM_TOURNAMENT',
   ENABLE_PUBLIC_AGENT_PAGES: 'ENABLE_PUBLIC_AGENT_PAGES',
   ENABLE_AGENT_CHAT: 'ENABLE_AGENT_CHAT',
+  ENABLE_CITIZEN_SNAPSHOT_GOVERNANCE: 'ENABLE_CITIZEN_SNAPSHOT_GOVERNANCE',
 } as const;

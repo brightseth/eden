@@ -253,8 +253,8 @@ export class TokenEconomicsService {
         return this.getAmandaEconomics(baseModel);
       case 'citizen':
         return this.getCitizenEconomics(baseModel);
-      case 'nina':
-        return this.getNinaEconomics(baseModel);
+      case 'sue':
+        return this.getSueEconomics(baseModel);
       default:
         return baseModel;
     }
@@ -576,6 +576,51 @@ export class TokenEconomicsService {
           {
             risk: 'Manufacturing complexity and costs',
             mitigation: 'Partner with established manufacturers'
+          }
+        ]
+      }
+    };
+    
+    return base;
+  }
+
+  private getSueEconomics(base: EdenTokenModel): EdenTokenModel {
+    base.utilization = {
+      primaryFocus: ['curation', 'services', 'art_consulting'],
+      revenueWeighting: {
+        artSales: 25,    // Curated art sales
+        services: 50,    // Art curation and consulting services  
+        royalties: 15,   // Ongoing curation fees
+        community: 10    // Educational and mentoring services
+      },
+      uniqueFeatures: [
+        'AI-powered art curation and guidance',
+        'Creative portfolio development',
+        'Artist mentorship and career guidance'
+      ],
+      marketPosition: {
+        category: 'AI Art Curation',
+        competitors: ['Traditional art consultants', 'Gallery curators'],
+        differentiators: ['AI-enhanced taste', 'Scalable guidance', 'Democratic access'],
+        targetAudience: {
+          primary: 'Emerging artists and collectors',
+          secondary: 'Art institutions and galleries'
+        },
+        pricing: {
+          curationServices: { min: 500, max: 5000, currency: 'USD' },
+          portfolioReview: { min: 200, max: 1000, currency: 'USD' },
+          ongoingGuidance: { min: 100, max: 500, currency: 'USD', recurring: 'monthly' }
+        }
+      },
+      scalingStrategy: {
+        phase1: 'Build curation expertise and client base',
+        phase2: 'Expand to institutional partnerships',
+        phase3: 'Launch automated curation tools',
+        keyMetrics: ['Clients served', 'Artist success rates', 'Curation accuracy'],
+        risksAndMitigations: [
+          {
+            risk: 'Subjective nature of art curation',
+            mitigation: 'Develop quantitative success metrics and continuous learning'
           }
         ]
       }

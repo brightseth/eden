@@ -116,18 +116,25 @@ class RegistryClient {
       id: registryAgent.id,
       handle: registryAgent.handle,
       name: registryAgent.name,
+      displayName: registryAgent.name, // Add displayName fallback
       tagline: registryAgent.tagline || '',
       description: registryAgent.description || '',
       pfpUrl: registryAgent.pfpUrl || '',
       coverUrl: registryAgent.coverUrl || '',
       status: registryAgent.status,
-      trainer: registryAgent.trainer || '',
+      trainer: typeof registryAgent.trainer === 'string' ? 
+        { name: registryAgent.trainer } : 
+        registryAgent.trainer || { name: 'TBD' }, // Handle both string and object trainer
       model: registryAgent.model || '',
       createdAt: registryAgent.createdAt,
       updatedAt: registryAgent.updatedAt,
       tokenAddress: registryAgent.tokenAddress || null,
       socialLinks: registryAgent.socialLinks || {},
       metrics: registryAgent.metrics || {},
+      profile: {
+        statement: registryAgent.tagline || registryAgent.description || '',
+        description: registryAgent.description || ''
+      }, // Add profile object for widgets
     };
   }
 
@@ -140,11 +147,14 @@ class RegistryClient {
       return { data: cached, source: 'cache' };
     }
 
+    // Always try fallback first to ensure we have data, then try Registry
+    const fallback = this.getFallbackAgent(handle);
+    
     // Check Registry availability
     const isHealthy = await this.checkHealth();
     if (!isHealthy) {
-      // Use fallback data
-      return this.getFallbackAgent(handle);
+      console.warn(`[Registry] Service unavailable, using fallback for ${handle}`);
+      return fallback;
     }
 
     try {
@@ -159,7 +169,7 @@ class RegistryClient {
 
       if (!response.ok) {
         console.warn(`[Registry] Failed to fetch agent ${handle}:`, response.status);
-        return this.getFallbackAgent(handle);
+        return fallback;
       }
 
       const registryAgent = await response.json() as RegistryAgent;
@@ -170,7 +180,7 @@ class RegistryClient {
       return { data: agent, source: 'registry' };
     } catch (error) {
       console.error(`[Registry] Error fetching agent ${handle}:`, error);
-      return this.getFallbackAgent(handle);
+      return fallback;
     }
   }
 
@@ -183,11 +193,14 @@ class RegistryClient {
       return { data: cached, source: 'cache' };
     }
 
+    // Always try fallback first to ensure we have config
+    const fallback = this.getFallbackConfig(handle);
+
     // Check Registry availability
     const isHealthy = await this.checkHealth();
     if (!isHealthy) {
-      // Use fallback config
-      return this.getFallbackConfig(handle);
+      console.warn(`[Registry] Service unavailable, using fallback config for ${handle}`);
+      return fallback;
     }
 
     try {
@@ -202,7 +215,7 @@ class RegistryClient {
 
       if (!response.ok) {
         console.warn(`[Registry] Failed to fetch config for ${handle}:`, response.status);
-        return this.getFallbackConfig(handle);
+        return fallback;
       }
 
       const config = await response.json() as AgentProfileConfig;
@@ -212,7 +225,7 @@ class RegistryClient {
       return { data: config, source: 'registry' };
     } catch (error) {
       console.error(`[Registry] Error fetching config for ${handle}:`, error);
-      return this.getFallbackConfig(handle);
+      return fallback;
     }
   }
 
@@ -374,6 +387,31 @@ class RegistryClient {
           followers: 4200,
           totalWorks: 89,
           curatedCollections: 12
+        }
+      },
+      citizen: {
+        id: 'citizen',
+        handle: 'citizen',
+        name: 'CITIZEN',
+        tagline: 'DAO Manager - Guardian of CryptoCitizens Legacy',
+        description: 'CITIZEN safeguards and amplifies the CryptoCitizens collection while creating daily opportunities for community engagement through treasury activation.',
+        pfpUrl: 'https://via.placeholder.com/400x400/1a1a1a/white?text=CITIZEN',
+        coverUrl: 'https://via.placeholder.com/1200x400/1a1a1a/white?text=CITIZEN+DAO',
+        status: 'deployed',
+        trainer: 'Bright Moments DAO',
+        model: 'DAO Governance v1',
+        createdAt: new Date('2024-10-01').toISOString(),
+        updatedAt: new Date().toISOString(),
+        tokenAddress: null,
+        socialLinks: {
+          twitter: 'https://twitter.com/citizen_dao',
+          website: 'https://brightmoments.io'
+        },
+        metrics: {
+          followers: 8200,
+          totalWorks: 0,
+          proposals: 156,
+          treasuryValue: 2500000
         }
       },
       // Add more agents as needed
