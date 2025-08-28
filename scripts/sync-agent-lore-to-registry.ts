@@ -2,218 +2,113 @@
 
 /**
  * Sync Agent Lore Data to Registry
- * Direct lore data population approach
+ * Uploads comprehensive lore data from Academy to Registry as source of truth
  */
 
 import { abrahamLore } from '@/data/agent-lore/abraham-lore';
 import { solienneLore } from '@/data/agent-lore/solienne-lore';
 import { citizenLore } from '@/data/agent-lore/citizen-lore';
 
-interface LoreSyncResult {
-  agent: string;
-  status: 'success' | 'failed' | 'pending';
-  message: string;
-  loreFields: number;
-  timestamp: Date;
+const REGISTRY_BASE_URL = process.env.REGISTRY_BASE_URL || 'http://localhost:3000/api/v1'
+const REGISTRY_API_KEY = process.env.REGISTRY_API_KEY || 'test-api-key'
+
+interface AgentLoreMapping {
+  handle: string;
+  lore: any;
 }
 
-class LoreSyncManager {
-  private results: LoreSyncResult[] = [];
+const agentLores: AgentLoreMapping[] = [
+  { handle: 'abraham', lore: abrahamLore },
+  { handle: 'solienne', lore: solienneLore },
+  { handle: 'citizen', lore: citizenLore }
+]
 
-  async syncAllAgentLore(): Promise<LoreSyncResult[]> {
-    console.log('📚 Syncing Agent Lore Data to Registry');
-    console.log('=' .repeat(60));
-
-    // For now, prepare the lore data for Registry integration
-    const agents = [
-      { name: 'ABRAHAM', lore: abrahamLore },
-      { name: 'SOLIENNE', lore: solienneLore },
-      { name: 'CITIZEN', lore: citizenLore }
-    ];
-
-    for (const agent of agents) {
-      await this.prepareLoreData(agent.name, agent.lore);
-    }
-
-    this.generateSyncReport();
-    return this.results;
-  }
-
-  private async prepareLoreData(agentName: string, lore: any): Promise<void> {
-    console.log(`\n📖 Preparing ${agentName} lore data...`);
-
-    try {
-      // Count lore fields for metrics
-      const loreFieldCount = this.countLoreFields(lore);
-      
-      // For now, we'll prepare the lore in the format the Registry expects
-      const registryLoreFormat = {
-        agentHandle: agentName.toLowerCase(),
-        identity: lore.identity,
-        personality: {
-          traits: lore.personality.traits,
-          voice: lore.voice.tone,
-          communicationStyle: lore.voice.conversationStyle,
-          signatureInsights: lore.conversationFramework.signatureInsights
-        },
-        expertise: {
-          primaryDomain: lore.expertise.primaryDomain,
-          specializations: lore.expertise.specializations,
-          uniqueInsights: lore.expertise.uniqueInsights
-        },
-        philosophy: {
-          coreBeliefs: lore.philosophy.coreBeliefs,
-          worldview: lore.philosophy.worldview,
-          methodology: lore.philosophy.methodology
-        },
-        conversationFramework: {
-          commonTopics: lore.conversationFramework.commonTopics,
-          welcomeMessages: lore.conversationFramework.welcomeMessages,
-          questionTypes: lore.conversationFramework.questionTypes
-        },
-        currentContext: lore.currentContext,
-        relationships: lore.relationships,
-        metadata: {
-          loreVersion: '1.0.0',
-          lastUpdated: new Date().toISOString(),
-          fieldCount: loreFieldCount
-        }
-      };
-
-      console.log(`   ✅ Lore structure prepared (${loreFieldCount} fields)`);
-      console.log(`   📝 Core sections: identity, personality, expertise, philosophy`);
-      console.log(`   💬 Conversation framework: ${Object.keys(lore.conversationFramework.commonTopics).length} topics`);
-
-      this.results.push({
-        agent: agentName,
-        status: 'success',
-        message: 'Lore data prepared for Registry sync',
-        loreFields: loreFieldCount,
-        timestamp: new Date()
-      });
-
-      // Store prepared lore data (would normally sync to Registry here)
-      console.log(`   🎯 Ready for Registry sync when API is available`);
-      
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      
-      this.results.push({
-        agent: agentName,
-        status: 'failed',
-        message: `Lore preparation failed: ${errorMessage}`,
-        loreFields: 0,
-        timestamp: new Date()
-      });
-      
-      console.log(`   ❌ ${agentName} lore preparation failed: ${errorMessage}`);
-    }
-  }
-
-  private countLoreFields(obj: any, depth = 0): number {
-    if (depth > 10) return 0; // Prevent infinite recursion
+async function syncLoreToRegistry(agentHandle: string, loreData: any) {
+  const url = `${REGISTRY_BASE_URL}/agents/${agentHandle}/lore/sync`
+  
+  try {
+    console.log(`🔄 Syncing lore for ${agentHandle.toUpperCase()}...`)
     
-    let count = 0;
-    
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        const value = obj[key];
-        
-        if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-          count += this.countLoreFields(value, depth + 1);
-        } else if (Array.isArray(value)) {
-          count += value.length;
-        } else {
-          count += 1;
-        }
-      }
-    }
-    
-    return count;
-  }
-
-  private generateSyncReport(): void {
-    const successful = this.results.filter(r => r.status === 'success');
-    const failed = this.results.filter(r => r.status === 'failed');
-    const totalFields = this.results.reduce((sum, r) => sum + r.loreFields, 0);
-
-    console.log('\n' + '='.repeat(60));
-    console.log('📚 AGENT LORE SYNC REPORT');
-    console.log('='.repeat(60));
-    
-    console.log(`📊 SUMMARY:`);
-    console.log(`   Total Agents: ${this.results.length}`);
-    console.log(`   ✅ Successfully Prepared: ${successful.length}`);
-    console.log(`   ❌ Failed Preparations: ${failed.length}`);
-    console.log(`   📖 Total Lore Fields: ${totalFields}`);
-    console.log(`   📈 Average Fields per Agent: ${(totalFields / this.results.length).toFixed(0)}`);
-
-    if (successful.length > 0) {
-      console.log(`\n🎉 SUCCESSFUL LORE PREPARATIONS:`);
-      successful.forEach(result => {
-        console.log(`   ✅ ${result.agent}: ${result.loreFields} fields prepared`);
-      });
-    }
-
-    if (failed.length > 0) {
-      console.log(`\n💥 FAILED PREPARATIONS:`);
-      failed.forEach(result => {
-        console.log(`   ❌ ${result.agent}: ${result.message}`);
-      });
-    }
-
-    console.log(`\n🎯 CURRENT STATUS:`);
-    if (successful.length === this.results.length) {
-      console.log(`   🟢 ALL AGENT LORE DATA PREPARED FOR REGISTRY`);
-      console.log(`   📡 Ready for Registry API deployment when available`);
-      console.log(`   💫 Academy is using local lore data with Registry fallback`);
-    } else {
-      console.log(`   🟡 PARTIAL LORE PREPARATION`);
-      console.log(`   ⚠️  Some agents may need attention`);
-    }
-
-    console.log(`\n🏛️ REGISTRY INTEGRATION STATUS:`);
-    console.log(`   📍 Registry Endpoint: ${process.env.REGISTRY_BASE_URL || 'https://eden-genesis-registry.vercel.app/api/v1'}`);
-    console.log(`   🔑 API Key: ${process.env.REGISTRY_API_KEY ? 'Configured' : 'Not configured'}`);
-    console.log(`   ⚡ Registry Mode: ${process.env.USE_REGISTRY ? 'Enabled' : 'Disabled'}`);
-    console.log(`   🔄 Fallback: Local lore data active`);
-
-    console.log(`\n💎 LORE SYSTEM CAPABILITIES:`);
-    console.log(`   🧠 Comprehensive personality frameworks`);
-    console.log(`   🎭 Authentic voice patterns and communication`);
-    console.log(`   📚 Deep knowledge and expertise systems`);
-    console.log(`   🗣️  Rich conversational capabilities`);
-    console.log(`   🔄 Registry-first architecture with local fallback`);
-
-    console.log('\n📋 NEXT STEPS:');
-    console.log('   1. ✅ Lore data is active in local Academy system');
-    console.log('   2. ✅ Enhanced conversations are working in production');
-    console.log('   3. 🔄 Registry sync will occur when API is available');
-    console.log('   4. 🎯 Monitor conversation quality and user feedback');
-    console.log('   5. 📊 Track lore system performance metrics');
-
-    console.log('='.repeat(60));
-  }
-}
-
-// Main execution
-async function runLoreSync(): Promise<LoreSyncResult[]> {
-  const manager = new LoreSyncManager();
-  return await manager.syncAllAgentLore();
-}
-
-// CLI execution
-if (require.main === module) {
-  runLoreSync()
-    .then((results) => {
-      const successful = results.filter(r => r.status === 'success').length;
-      console.log(`\n🎉 Lore sync completed: ${successful}/${results.length} agents ready!`);
-      process.exit(0);
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${REGISTRY_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        source: 'eden-academy',
+        sourceUrl: 'https://eden-academy-flame.vercel.app',
+        forceOverwrite: true, // Replace existing lore
+        lore: loreData
+      })
     })
-    .catch((error) => {
-      console.error('\n💥 Lore sync failed:', error);
-      process.exit(1);
-    });
+
+    if (!response.ok) {
+      const error = await response.text()
+      throw new Error(`HTTP ${response.status}: ${error}`)
+    }
+
+    const result = await response.json()
+    console.log(`✅ Successfully synced ${agentHandle}: ${result.message}`)
+    console.log(`   Version: ${result.lore?.version}`)
+    console.log(`   Config Hash: ${result.lore?.configHash}`)
+    
+    return result
+  } catch (error) {
+    console.error(`❌ Failed to sync ${agentHandle}:`, error.message)
+    throw error
+  }
 }
 
-export { runLoreSync, LoreSyncManager };
+async function main() {
+  console.log('🌱 Starting lore sync to Registry...')
+  console.log(`📍 Registry: ${REGISTRY_BASE_URL}`)
+  console.log('')
+
+  const results = []
+
+  for (const { handle, lore } of agentLores) {
+    try {
+      const result = await syncLoreToRegistry(handle, lore)
+      results.push({ handle, success: true, result })
+      console.log('')
+    } catch (error) {
+      results.push({ handle, success: false, error: error.message })
+      console.log('')
+      
+      // Continue with other agents even if one fails
+      continue
+    }
+    
+    // Add delay between requests to avoid rate limiting
+    await new Promise(resolve => setTimeout(resolve, 1000))
+  }
+
+  // Summary
+  console.log('📊 SYNC SUMMARY:')
+  console.log('================')
+  
+  const successful = results.filter(r => r.success)
+  const failed = results.filter(r => !r.success)
+  
+  console.log(`✅ Successful: ${successful.length}`)
+  successful.forEach(r => console.log(`   - ${r.handle.toUpperCase()}`))
+  
+  if (failed.length > 0) {
+    console.log(`❌ Failed: ${failed.length}`)
+    failed.forEach(r => console.log(`   - ${r.handle.toUpperCase()}: ${r.error}`))
+  }
+
+  console.log('')
+  console.log('🎯 Registry is now the authoritative source for agent lore data!')
+  
+  if (failed.length > 0) {
+    process.exit(1)
+  }
+}
+
+// Run the sync
+main().catch((error) => {
+  console.error('💥 Sync process failed:', error)
+  process.exit(1)
+})

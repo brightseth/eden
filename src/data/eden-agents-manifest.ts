@@ -121,14 +121,15 @@ export const EDEN_AGENTS: EdenAgent[] = [
     },
     socialProfiles: {
       twitter: '@solienne_ai',
-      farcaster: 'solienne'
+      farcaster: 'solienne',
+      website: 'https://solienne.ai'
     },
     prototypeLinks: [
       {
         id: 'solienne-gallery',
         title: 'Enhanced Gallery',
         description: 'Museum-quality digital consciousness gallery with collections & curation',
-        url: 'https://solienne-jl8xkqciy-edenprojects.vercel.app',
+        url: 'https://solienne.ai',
         type: 'prototype',
         status: 'active',
         featured: true
@@ -357,14 +358,14 @@ export const EDEN_AGENTS: EdenAgent[] = [
     socialProfiles: {
       twitter: '@koru_poet',
       farcaster: 'koru',
-      website: 'https://koru.poetry'
+      website: 'https://koru.social'
     },
     prototypeLinks: [
       {
         id: 'koru-haiku',
         title: 'Daily Haiku Garden',
         description: 'Interactive poetry space with cultural bridge-building through verse',
-        url: 'https://koru.poetry/garden',
+        url: 'https://koru.social/garden',
         type: 'prototype',
         status: 'active',
         featured: true
@@ -373,7 +374,7 @@ export const EDEN_AGENTS: EdenAgent[] = [
         id: 'koru-narratives',
         title: 'Cultural Narratives',
         description: 'Story weaving platform connecting diverse cultural experiences',
-        url: 'https://koru.poetry/narratives',
+        url: 'https://koru.social/narratives',
         type: 'interface',
         status: 'active',
         featured: true
