@@ -60,7 +60,8 @@ const TRAINER_MAP: Record<string, { name: string; id: string }> = {
   'citizen': { name: 'Henry (Bright Moments)', id: 'henry-bright-moments' },
   'sue-008': { name: 'TBD', id: 'tbd' },
   'sue': { name: 'TBD', id: 'tbd' },
-  'tbd-009': { name: 'TBD', id: 'tbd' },
+  'bart-009': { name: 'TBD', id: 'tbd' },
+  'bart': { name: 'TBD', id: 'tbd' },
   'tbd-010': { name: 'TBD', id: 'tbd' },
 };
 
@@ -82,7 +83,8 @@ const LAUNCH_DATES: Record<string, string> = {
   'citizen': '2025-12-15',
   'sue-008': '2026-03-01',
   'sue': '2026-03-01',
-  'tbd-009': '2026-04-01',
+  'bart-009': '2026-06-01',
+  'bart': '2026-06-01',
   'tbd-010': '2026-05-01',
 };
 
@@ -104,7 +106,8 @@ const ECONOMIC_DATA: Record<string, { monthlyRevenue: number; outputRate: number
   'citizen': { monthlyRevenue: 8200, outputRate: 35 },
   'sue-008': { monthlyRevenue: 4500, outputRate: 35 },
   'sue': { monthlyRevenue: 4500, outputRate: 35 },
-  'tbd-009': { monthlyRevenue: 0, outputRate: 0 },
+  'bart-009': { monthlyRevenue: 20000, outputRate: 35 },
+  'bart': { monthlyRevenue: 20000, outputRate: 35 },
   'tbd-010': { monthlyRevenue: 0, outputRate: 0 },
 };
 
@@ -132,7 +135,8 @@ const CLAUDE_SDK_STATUS: Record<string, {
   'citizen': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
   'sue-008': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
   'sue': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
-  'tbd-009': { hasClaudeSDK: false, hasEdenPlatform: false, dualInstantiation: false, registryIntegration: false },
+  'bart-009': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
+  'bart': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
   'tbd-010': { hasClaudeSDK: false, hasEdenPlatform: false, dualInstantiation: false, registryIntegration: false },
 };
 
@@ -200,10 +204,12 @@ class UnifiedAgentService {
       'miyomi-003': { twitter: '@miyomi_markets', farcaster: 'miyomi.eth', website: 'https://miyomi.xyz' },
       'geppetto-004': { twitter: '@geppetto_lattice', website: 'https://lattice.xyz' },
       'koru-005': { twitter: '@koru_creative' },
-      'bertha-006': { twitter: '@bertha_taste', website: 'https://eden-academy-flame.vercel.app/academy/agent/bertha' },
-      'bertha': { twitter: '@bertha_taste', website: 'https://eden-academy-flame.vercel.app/academy/agent/bertha' },
-      'citizen-007': { twitter: '@citizen_dao', website: 'https://eden-academy-flame.vercel.app/sites/citizen' },
+      'bertha-006': { twitter: '@bertha_taste' },
+      'bertha': { twitter: '@bertha_taste' },
+      'citizen-007': { twitter: '@citizen_dao' },
       'sue-008': { twitter: '@sue_curator' },
+      'bart-009': { twitter: '@bart_gondi', website: 'https://gondi.xyz', farcaster: 'bart' },
+      'bart': { twitter: '@bart_gondi', website: 'https://gondi.xyz', farcaster: 'bart' },
     };
     return socialMap[agent.id] || {};
   }

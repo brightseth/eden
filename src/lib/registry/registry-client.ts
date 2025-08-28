@@ -429,8 +429,7 @@ class RegistryClient {
         updatedAt: new Date().toISOString(),
         tokenAddress: null,
         socialLinks: {
-          twitter: 'https://twitter.com/miyomi_oracle',
-          website: 'https://eden-academy-flame.vercel.app/agents/miyomi'
+          twitter: 'https://twitter.com/miyomi_oracle'
         },
         metrics: {
           followers: 3200,

@@ -2,14 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { WorkflowExplainer } from './workflow-explainer';
 import { 
-  TrendingUp, TrendingDown, DollarSign, Activity, 
-  Clock, Target, BarChart3, Zap, AlertCircle,
-  Twitter, Youtube, Radio, ArrowUpRight, Play,
-  Calendar, CheckCircle, XCircle, Minus,
-  Settings, Download, RefreshCw, Lock, Unlock,
-  Eye, EyeOff, Sliders
+  TrendingUp, DollarSign, Activity, 
+  Clock, Play, CheckCircle, XCircle, Minus,
+  Twitter, Youtube, ArrowUpRight
 } from 'lucide-react';
 
 // Types
@@ -59,17 +55,8 @@ interface PerformanceData {
 }
 
 export default function MiyomiSite() {
-  // Mode toggle
-  const [isPrivateMode, setIsPrivateMode] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'training' | 'performance' | 'revenue'>('overview');
   
-  // Feedback state (no popups!)
-  const [statusMessage, setStatusMessage] = useState<{type: 'success' | 'error' | 'info' | null, message: string}>({type: null, message: ''});
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [thinkingProcess, setThinkingProcess] = useState<any[]>([]);
-  const [showThinking, setShowThinking] = useState(false);
-  
-  // Public mode state
+  // Public site state
   const [currentTime, setCurrentTime] = useState(new Date());
   const [nextDrop, setNextDrop] = useState<Date | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -81,46 +68,8 @@ export default function MiyomiSite() {
     followersGrowth: 12
   });
   
-  // Shared data
+  // Public data
   const [recentPicks, setRecentPicks] = useState<MarketPick[]>([]);
-  const [performanceData] = useState<PerformanceData[]>([
-    { date: '2025-08-20', picks: 3, wins: 2, losses: 0, pending: 1, avgEdge: 18.5, totalReturn: 24.3 },
-    { date: '2025-08-21', picks: 3, wins: 1, losses: 1, pending: 1, avgEdge: 15.2, totalReturn: 8.7 },
-    { date: '2025-08-22', picks: 3, wins: 3, losses: 0, pending: 0, avgEdge: 22.1, totalReturn: 42.5 },
-    { date: '2025-08-23', picks: 3, wins: 2, losses: 1, pending: 0, avgEdge: 16.8, totalReturn: 18.2 },
-    { date: '2025-08-24', picks: 3, wins: 1, losses: 0, pending: 2, avgEdge: 19.3, totalReturn: 12.1 },
-    { date: '2025-08-25', picks: 3, wins: 2, losses: 0, pending: 1, avgEdge: 20.7, totalReturn: 28.9 },
-    { date: '2025-08-26', picks: 3, wins: 1, losses: 1, pending: 1, avgEdge: 17.4, totalReturn: 15.3 }
-  ]);
-  
-  // Private mode state
-  const [config, setConfig] = useState<TrainerConfig>({
-    riskTolerance: 0.65,
-    contrarianDial: 0.95,
-    sectorWeights: {
-      politics: 0.25,
-      sports: 0.20,
-      finance: 0.15,
-      ai: 0.15,
-      pop: 0.15,
-      geo: 0.05,
-      internet: 0.05
-    },
-    bannedTopics: [],
-    tone: {
-      energy: 0.8,
-      sass: 0.7,
-      profanity: 0.2
-    }
-  });
-  
-  const [revenueData] = useState({
-    subscriptions: 142,
-    monthlyRevenue: 710,
-    tips: 89,
-    referralClicks: 1842,
-    conversionRate: 7.7
-  });
 
   // 3x daily drop schedule
   const dropTimes = ['11:00', '15:00', '21:00'];
@@ -172,7 +121,7 @@ export default function MiyomiSite() {
     setNextDrop(tomorrow);
   }
 
-  // Load real data from database
+  // Load public showcase data
   async function loadRecentPicks() {
     try {
       const response = await fetch('/api/miyomi/real-picks?limit=20');
@@ -196,29 +145,47 @@ export default function MiyomiSite() {
         }));
         
         setRecentPicks(transformedPicks);
-        
-        // Show success message
-        setStatusMessage({
-          type: 'success',
-          message: `Loaded ${data.picks.length} real picks from database (${data.totalInDb} total)`
-        });
-        setTimeout(() => setStatusMessage({type: null, message: ''}), 3000);
       } else {
-        // No picks in database, create some sample ones
-        setStatusMessage({
-          type: 'info',
-          message: 'No picks in database yet. Use "Generate Smart Drop" to create one!'
-        });
-        setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
+        // Fallback to sample data for public showcase
+        setRecentPicks([
+          {
+            id: '1',
+            timestamp: new Date().toISOString(),
+            market: 'Will Fed cut rates in March 2025?',
+            platform: 'Kalshi',
+            position: 'NO',
+            confidence: 0.73,
+            edge: 0.18,
+            entryOdds: 0.65,
+            currentOdds: 0.58,
+            status: 'LIVE',
+            category: 'finance',
+            videoUrl: '#'
+          },
+          {
+            id: '2',
+            timestamp: new Date().toISOString(),
+            market: 'Bitcoin above $100k by Dec 2025?',
+            platform: 'Polymarket',
+            position: 'YES',
+            confidence: 0.68,
+            edge: 0.15,
+            entryOdds: 0.53,
+            currentOdds: 0.59,
+            status: 'WIN',
+            category: 'finance',
+            videoUrl: '#'
+          }
+        ]);
       }
     } catch (error) {
       console.error('Error loading picks:', error);
-      // Fallback to mock data if API fails
+      // Fallback to sample data
       setRecentPicks([
         {
           id: '1',
           timestamp: new Date().toISOString(),
-          market: 'Will Fed cut rates in March?',
+          market: 'Will Fed cut rates in March 2025?',
           platform: 'Kalshi',
           position: 'NO',
           confidence: 0.73,
@@ -230,12 +197,6 @@ export default function MiyomiSite() {
           videoUrl: '#'
         }
       ]);
-      
-      setStatusMessage({
-        type: 'error',
-        message: 'Could not load real data. Using mock data.'
-      });
-      setTimeout(() => setStatusMessage({type: null, message: ''}), 3000);
     }
   }
 
@@ -290,372 +251,34 @@ export default function MiyomiSite() {
     }
   }
 
-  // Private mode functions
-  function handleConfigUpdate(field: string, value: any) {
-    setConfig(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  }
-
-  function handleSectorWeightUpdate(sector: string, value: number) {
-    setConfig(prev => ({
-      ...prev,
-      sectorWeights: {
-        ...prev.sectorWeights,
-        [sector]: value / 100
-      }
-    }));
-  }
-
-  function handleToneUpdate(aspect: string, value: number) {
-    setConfig(prev => ({
-      ...prev,
-      tone: {
-        ...prev.tone,
-        [aspect]: value / 100
-      }
-    }));
-  }
-
-  async function saveConfig() {
-    console.log('Saving config:', config);
-    alert('Configuration saved successfully!');
-  }
-
-  // Button handler functions
-  async function handleTriggerManualDrop() {
-    if (isProcessing) return;
-    setIsProcessing(true);
-    setShowThinking(true);
-    setThinkingProcess([]);
-    
-    try {
-      // Use the thinking endpoint for real-time display
-      const response = await fetch('/api/miyomi/thinking-drop', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-
-      if (!response.ok) throw new Error('Failed to start thinking process');
-
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
-
-      if (reader) {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          const chunk = decoder.decode(value);
-          const lines = chunk.split('\n');
-
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              const data = line.slice(6);
-              if (data === '[DONE]') continue;
-              
-              try {
-                const parsed = JSON.parse(data);
-                setThinkingProcess(prev => [...prev, parsed]);
-              } catch (e) {
-                console.error('Failed to parse:', data);
-              }
-            }
-          }
-        }
-      }
-
-      // Save the final pick to database
-      const lastStep = thinkingProcess[thinkingProcess.length - 1];
-      if (lastStep && lastStep.step === 'pick_generation' && lastStep.data) {
-        try {
-          const saveResponse = await fetch('/api/miyomi/real-picks', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              market: lastStep.data.market,
-              position: lastStep.data.position,
-              confidence: lastStep.data.confidence,
-              entry_odds: lastStep.data.entryOdds,
-              reasoning: lastStep.data.reasoning,
-              script: lastStep.data.script,
-              market_id: `market-${Date.now()}`
-            })
-          });
-          
-          if (saveResponse.ok) {
-            const saved = await saveResponse.json();
-            setStatusMessage({
-              type: 'success',
-              message: '✅ Drop generated and saved to database!'
-            });
-            // Refresh picks display
-            loadRecentPicks();
-          } else {
-            throw new Error('Failed to save pick');
-          }
-        } catch (saveError) {
-          console.error('Error saving pick:', saveError);
-          setStatusMessage({
-            type: 'error',
-            message: '⚠️ Pick generated but failed to save to database'
-          });
-        }
-      } else {
-        setStatusMessage({
-          type: 'success',
-          message: '✅ Drop generated successfully!'
-        });
-      }
-      setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
-      
-    } catch (error) {
-      console.error('Error in thinking process:', error);
-      setStatusMessage({
-        type: 'error',
-        message: '❌ Failed to generate drop'
-      });
-      setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
-    } finally {
-      setIsProcessing(false);
-    }
-  }
-
-  // Original simple handler for backwards compatibility
-  async function handleSimpleManualDrop() {
-    if (isProcessing) return;
-    setIsProcessing(true);
-    
-    try {
-      setStatusMessage({
-        type: 'info',
-        message: '🎲 Generating contrarian pick...'
-      });
-      
-      // Call the manual drop API
-      const response = await fetch('/api/miyomi/manual-drop', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          agent_id: 'miyomi',
-          trigger_time: new Date().toISOString()
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to trigger manual drop');
-      }
-
-      const result = await response.json();
-      setStatusMessage({
-        type: 'success',
-        message: `✅ Manual drop triggered! Pick generated: ${result.pickId}`
-      });
-      
-      // Refresh the picks data
-      loadRecentPicks();
-      
-      // Clear message after 5 seconds
-      setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
-      
-    } catch (error) {
-      console.error('Error triggering manual drop:', error);
-      setStatusMessage({
-        type: 'error',
-        message: '❌ Failed to trigger manual drop. Please try again.'
-      });
-      setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
-    } finally {
-      setIsProcessing(false);
-    }
-  }
-
-  async function handleReviewPendingPicks() {
-    try {
-      console.log('Opening pending picks review...');
-      
-      // Fetch pending picks for review using real API
-      const response = await fetch('/api/miyomi/real-picks?status=PENDING&limit=50');
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch pending picks');
-      }
-
-      const data = await response.json();
-      const pendingPicks = data.picks || [];
-      
-      if (pendingPicks.length === 0) {
-        setStatusMessage({
-          type: 'info',
-          message: '📊 No pending picks to review'
-        });
-        setTimeout(() => setStatusMessage({type: null, message: ''}), 3000);
-        return;
-      }
-
-      // Show pending picks inline
-      setStatusMessage({
-        type: 'success',
-        message: `📊 Found ${pendingPicks.length} pending picks for review`
-      });
-      setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
-      
-      // Refresh picks to show the pending ones
-      loadRecentPicks();
-      
-    } catch (error) {
-      console.error('Error fetching pending picks:', error);
-      setStatusMessage({
-        type: 'error',
-        message: '❌ Failed to fetch pending picks'
-      });
-      setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
-    }
-  }
-
-  async function handleUpdateResults() {
-    try {
-      console.log('Updating market results...');
-      
-      // Get all live picks and simulate some results updates
-      const response = await fetch('/api/miyomi/real-picks?status=LIVE&limit=10');
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch live picks');
-      }
-
-      const data = await response.json();
-      const livePicks = data.picks || [];
-      
-      if (livePicks.length === 0) {
-        setStatusMessage({
-          type: 'info',
-          message: '📊 No live picks to update'
-        });
-        setTimeout(() => setStatusMessage({type: null, message: ''}), 3000);
-        return;
-      }
-
-      let updatedCount = 0;
-      
-      // Simulate updating some picks
-      for (const pick of livePicks.slice(0, 3)) {
-        const shouldResolve = Math.random() > 0.7; // 30% chance to resolve
-        if (shouldResolve) {
-          const isWin = Math.random() > 0.4; // 60% win rate
-          const newStatus = isWin ? 'WIN' : 'LOSS';
-          const newPrice = pick.consensus_price + (Math.random() * 0.2 - 0.1); // ±10% price movement
-          
-          const updateResponse = await fetch('/api/miyomi/real-picks', {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              id: pick.id,
-              status: newStatus,
-              current_price: newPrice
-            })
-          });
-          
-          if (updateResponse.ok) {
-            updatedCount++;
-          }
-        }
-      }
-
-      setStatusMessage({
-        type: 'success',
-        message: `✅ Updated ${updatedCount} market results`
-      });
-      setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
-      
-      // Refresh the picks data to show updated results
-      loadRecentPicks();
-      
-    } catch (error) {
-      console.error('Error updating results:', error);
-      setStatusMessage({
-        type: 'error',
-        message: '❌ Failed to update results'
-      });
-      setTimeout(() => setStatusMessage({type: null, message: ''}), 5000);
-    }
-  }
 
   const categories = ['all', 'politics', 'sports', 'finance', 'ai', 'pop', 'geo', 'internet'];
   const filteredPicks = selectedCategory === 'all' 
     ? recentPicks 
     : recentPicks.filter(pick => pick.category === selectedCategory);
 
-  const totalPicks = performanceData.reduce((sum, day) => sum + day.picks, 0);
-  const totalWins = performanceData.reduce((sum, day) => sum + day.wins, 0);
-  const totalLosses = performanceData.reduce((sum, day) => sum + day.losses, 0);
-  const winRate = totalPicks > 0 ? (totalWins / (totalWins + totalLosses) * 100).toFixed(1) : '0';
-  const avgReturn = performanceData.reduce((sum, day) => sum + day.totalReturn, 0) / performanceData.length;
-
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Status Message Bar */}
-      {statusMessage.type && (
-        <div className={`
-          fixed top-0 left-0 right-0 z-50 px-6 py-3 text-center font-bold
-          ${statusMessage.type === 'success' ? 'bg-green-600' : ''}
-          ${statusMessage.type === 'error' ? 'bg-red-600' : ''}
-          ${statusMessage.type === 'info' ? 'bg-blue-600' : ''}
-        `}>
-          {statusMessage.message}
-        </div>
-      )}
       
       {/* Header */}
-      <header className={`border-b border-white/20 ${statusMessage.type ? 'mt-12' : ''}`}>
+      <header className="border-b border-white/20">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/academy/agent/miyomi" className="text-2xl font-bold">
-              MIYOMI
+              ← MIYOMI
             </Link>
-            {isPrivateMode && (
-              <span className="text-sm text-gray-400">Trainer Dashboard</span>
-            )}
+            <span className="text-sm text-gray-400">Agent Site</span>
           </div>
           <nav className="flex items-center gap-6">
             <Link href="/academy" className="hover:text-red-500 transition">Academy</Link>
+            <Link href="/dashboard/miyomi" className="hover:text-red-500 transition">Dashboard</Link>
             <a href="https://twitter.com/miyomi_markets" target="_blank" rel="noopener noreferrer">
               <Twitter className="w-5 h-5 hover:text-red-500 transition" />
             </a>
-            {/* Mode Toggle */}
-            <button
-              onClick={() => setIsPrivateMode(!isPrivateMode)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition ${
-                isPrivateMode 
-                  ? 'bg-red-600 hover:bg-red-700' 
-                  : 'bg-white/10 hover:bg-white/20'
-              }`}
-              title={isPrivateMode ? 'Switch to Public Mode' : 'Switch to Private Mode'}
-            >
-              {isPrivateMode ? (
-                <>
-                  <Lock className="w-4 h-4" />
-                  <span className="hidden sm:inline">Private</span>
-                </>
-              ) : (
-                <>
-                  <Eye className="w-4 h-4" />
-                  <span className="hidden sm:inline">Public</span>
-                </>
-              )}
-            </button>
           </nav>
         </div>
       </header>
 
-      {/* PUBLIC MODE */}
-      {!isPrivateMode ? (
-        <>
           {/* Hero Section - Live Countdown */}
           <section className="relative border-b border-white/20 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 to-orange-900/20"></div>
@@ -790,327 +413,38 @@ export default function MiyomiSite() {
               </div>
             </div>
           </section>
-        </>
-      ) : (
-        /* PRIVATE MODE - DASHBOARD */
-        <>
-          {/* Tabs */}
-          <div className="border-b border-white/20">
-            <div className="max-w-7xl mx-auto px-6">
-              <div className="flex gap-8">
-                {['overview', 'training', 'performance', 'revenue'].map(tab => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab as any)}
-                    className={`py-4 capitalize border-b-2 transition ${
-                      activeTab === tab 
-                        ? 'border-red-500 text-red-500' 
-                        : 'border-transparent hover:text-red-400'
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
+
+          {/* Additional Site Sections */}
+          <section className="py-16 px-6 bg-white/2">
+            <div className="max-w-7xl mx-auto">
+              <h2 className="text-3xl font-bold text-center mb-12">
+                THE CONTRARIAN EDGE
+              </h2>
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="text-center">
+                  <div className="text-4xl mb-4">🎯</div>
+                  <h3 className="text-xl font-bold mb-3">Contrarian Analysis</h3>
+                  <p className="text-gray-400">
+                    While others follow the herd, MIYOMI identifies market inefficiencies and consensus blind spots.
+                  </p>
+                </div>
+                <div className="text-center">
+                  <div className="text-4xl mb-4">⚡</div>
+                  <h3 className="text-xl font-bold mb-3">Real-time Drops</h3>
+                  <p className="text-gray-400">
+                    Three daily market picks delivered at 11:00, 15:00, and 21:00 ET with full reasoning and edge analysis.
+                  </p>
+                </div>
+                <div className="text-center">
+                  <div className="text-4xl mb-4">🎥</div>
+                  <h3 className="text-xl font-bold mb-3">Video Content</h3>
+                  <p className="text-gray-400">
+                    Each pick comes with cinematic analysis videos explaining the contrarian thesis and market dynamics.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-
-          {/* Dashboard Content */}
-          <div className="max-w-7xl mx-auto px-6 py-8">
-            {activeTab === 'overview' && (
-              <div className="space-y-8">
-                {/* Quick Stats */}
-                <div className="grid md:grid-cols-4 gap-6">
-                  <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-gray-400">Win Rate</span>
-                      <TrendingUp className="w-4 h-4 text-green-500" />
-                    </div>
-                    <div className="text-3xl font-bold">{winRate}%</div>
-                    <div className="text-sm text-gray-400 mt-1">Last 7 days</div>
-                  </div>
-                  <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-gray-400">Active Subs</span>
-                      <DollarSign className="w-4 h-4 text-yellow-500" />
-                    </div>
-                    <div className="text-3xl font-bold">{revenueData.subscriptions}</div>
-                    <div className="text-sm text-green-400 mt-1">+12 this week</div>
-                  </div>
-                  <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-gray-400">Avg Return</span>
-                      <BarChart3 className="w-4 h-4 text-blue-500" />
-                    </div>
-                    <div className="text-3xl font-bold">{avgReturn.toFixed(1)}%</div>
-                    <div className="text-sm text-gray-400 mt-1">Per day</div>
-                  </div>
-                  <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-gray-400">Next Drop</span>
-                      <Activity className="w-4 h-4 text-purple-500" />
-                    </div>
-                    <div className="text-3xl font-bold">
-                      {nextDrop ? nextDrop.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' }) : '--:--'}
-                    </div>
-                    <div className="text-sm text-gray-400 mt-1">{getTimeUntilNextDrop()}</div>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex gap-4">
-                  <button 
-                    onClick={handleTriggerManualDrop}
-                    disabled={isProcessing}
-                    className={`px-6 py-3 bg-red-600 rounded-lg hover:bg-red-700 transition font-bold ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  >
-                    {isProcessing ? '🧠 Thinking...' : '🎯 Generate Smart Drop'}
-                  </button>
-                  <button 
-                    onClick={handleReviewPendingPicks}
-                    className="px-6 py-3 bg-white/10 rounded-lg hover:bg-white/20 transition font-bold"
-                  >
-                    Review Pending Picks
-                  </button>
-                  <button 
-                    onClick={handleUpdateResults}
-                    className="px-6 py-3 bg-white/10 rounded-lg hover:bg-white/20 transition font-bold"
-                  >
-                    Update Results
-                  </button>
-                </div>
-
-                {/* Workflow Explainer */}
-                <div className="mt-8">
-                  <WorkflowExplainer />
-                </div>
-
-                {/* Recent Activity */}
-                <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-                  <h3 className="text-xl font-bold mb-4">Recent Picks</h3>
-                  <div className="space-y-3">
-                    {recentPicks.map(pick => (
-                      <div key={pick.id} className="flex items-center justify-between py-3 border-b border-white/10">
-                        <div>
-                          <div className="font-bold">{pick.market} - {pick.position}</div>
-                          <div className="text-sm text-gray-400">{pick.platform} • {new Date(pick.timestamp).toLocaleString()}</div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <span className="text-yellow-500">{(pick.edge * 100).toFixed(0)}% edge</span>
-                          {getStatusIcon(pick.status)}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Thinking Process Display */}
-                {showThinking && thinkingProcess.length > 0 && (
-                  <div className="mt-8 bg-black/50 backdrop-blur rounded-lg p-6 border border-red-600">
-                    <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-xl font-bold">🧠 MIYOMI's Thinking Process</h3>
-                      <button 
-                        onClick={() => setShowThinking(false)}
-                        className="text-sm hover:text-red-500"
-                      >
-                        Hide
-                      </button>
-                    </div>
-                    <div className="space-y-4 max-h-96 overflow-y-auto">
-                      {thinkingProcess.map((step, idx) => (
-                        <div key={idx} className="border-l-2 border-red-600 pl-4 py-2">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-sm font-bold text-red-500">
-                              {step.step?.replace('_', ' ').toUpperCase()}
-                            </span>
-                            {step.status === 'thinking' && <span className="animate-pulse">⚡</span>}
-                            {step.status === 'complete' && <span>✅</span>}
-                          </div>
-                          <div className="text-sm mb-2">{step.message}</div>
-                          {step.thought && (
-                            <div className="text-xs italic opacity-75 bg-white/5 p-2 rounded">
-                              💭 "{step.thought}"
-                            </div>
-                          )}
-                          {step.data && (
-                            <div className="mt-2 text-xs bg-white/5 p-2 rounded">
-                              {step.step === 'video_script' && (
-                                <div>
-                                  <div className="font-bold mb-1">📝 SCRIPT:</div>
-                                  <div className="whitespace-pre-wrap">{step.data.script}</div>
-                                </div>
-                              )}
-                              {step.step === 'pick_generation' && (
-                                <div>
-                                  <div className="font-bold">Pick: {step.data.market}</div>
-                                  <div>Position: <span className="text-red-500">{step.data.position}</span></div>
-                                  <div>Edge: <span className="text-green-500">+{(step.data.edge * 100).toFixed(0)}%</span></div>
-                                </div>
-                              )}
-                              {step.step === 'video_generation' && step.data.edenRequest && (
-                                <div>
-                                  <div className="font-bold mb-1">🎨 EDEN VIDEO REQUEST:</div>
-                                  <pre className="text-xs overflow-x-auto">
-                                    {JSON.stringify(step.data.edenRequest, null, 2)}
-                                  </pre>
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {activeTab === 'training' && (
-              <div className="space-y-8">
-                {/* Risk Controls */}
-                <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-                  <h3 className="text-xl font-bold mb-6">Risk & Strategy Controls</h3>
-                  <div className="space-y-6">
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <label className="text-sm">Risk Tolerance</label>
-                        <span className="text-sm text-gray-400">{(config.riskTolerance * 100).toFixed(0)}%</span>
-                      </div>
-                      <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={config.riskTolerance * 100}
-                        onChange={(e) => handleConfigUpdate('riskTolerance', Number(e.target.value) / 100)}
-                        className="w-full"
-                      />
-                    </div>
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <label className="text-sm">Contrarian Intensity</label>
-                        <span className="text-sm text-gray-400">{(config.contrarianDial * 100).toFixed(0)}%</span>
-                      </div>
-                      <input
-                        type="range"
-                        min="50"
-                        max="100"
-                        value={config.contrarianDial * 100}
-                        onChange={(e) => handleConfigUpdate('contrarianDial', Number(e.target.value) / 100)}
-                        className="w-full"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Sector Weights */}
-                <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-                  <h3 className="text-xl font-bold mb-6">Sector Weights</h3>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {Object.entries(config.sectorWeights).map(([sector, weight]) => (
-                      <div key={sector}>
-                        <div className="flex items-center justify-between mb-2">
-                          <label className="text-sm capitalize">{sector}</label>
-                          <span className="text-sm text-gray-400">{(weight * 100).toFixed(0)}%</span>
-                        </div>
-                        <input
-                          type="range"
-                          min="0"
-                          max="50"
-                          value={weight * 100}
-                          onChange={(e) => handleSectorWeightUpdate(sector, Number(e.target.value))}
-                          className="w-full"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <button
-                  onClick={saveConfig}
-                  className="px-6 py-3 bg-red-600 rounded-lg hover:bg-red-700 transition font-bold"
-                >
-                  Save Configuration
-                </button>
-              </div>
-            )}
-
-            {activeTab === 'performance' && (
-              <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-                <h3 className="text-xl font-bold mb-6">Daily Performance</h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-white/20">
-                        <th className="text-left py-3 px-4">Date</th>
-                        <th className="text-center py-3 px-4">Picks</th>
-                        <th className="text-center py-3 px-4">Wins</th>
-                        <th className="text-center py-3 px-4">Losses</th>
-                        <th className="text-center py-3 px-4">Pending</th>
-                        <th className="text-center py-3 px-4">Avg Edge</th>
-                        <th className="text-right py-3 px-4">Return</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {performanceData.map(day => (
-                        <tr key={day.date} className="border-b border-white/10">
-                          <td className="py-3 px-4">{day.date}</td>
-                          <td className="text-center py-3 px-4">{day.picks}</td>
-                          <td className="text-center py-3 px-4 text-green-500">{day.wins}</td>
-                          <td className="text-center py-3 px-4 text-red-500">{day.losses}</td>
-                          <td className="text-center py-3 px-4 text-yellow-500">{day.pending}</td>
-                          <td className="text-center py-3 px-4">{day.avgEdge.toFixed(1)}%</td>
-                          <td className="text-right py-3 px-4 font-bold">
-                            <span className={day.totalReturn > 0 ? 'text-green-500' : 'text-red-500'}>
-                              {day.totalReturn > 0 ? '+' : ''}{day.totalReturn.toFixed(1)}%
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'revenue' && (
-              <div className="space-y-8">
-                {/* Revenue Stats */}
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-bold">Subscriptions</h3>
-                      <DollarSign className="w-5 h-5 text-green-500" />
-                    </div>
-                    <div className="text-3xl font-bold mb-2">{revenueData.subscriptions}</div>
-                    <div className="text-sm text-gray-400">Active subscribers</div>
-                    <div className="text-2xl font-bold text-green-500 mt-4">
-                      ${revenueData.monthlyRevenue}/mo
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-bold">Tips</h3>
-                      <Target className="w-5 h-5 text-yellow-500" />
-                    </div>
-                    <div className="text-3xl font-bold mb-2">${revenueData.tips}</div>
-                    <div className="text-sm text-gray-400">This month</div>
-                  </div>
-                  
-                  <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-bold">Referrals</h3>
-                      <TrendingUp className="w-5 h-5 text-blue-500" />
-                    </div>
-                    <div className="text-3xl font-bold mb-2">{revenueData.referralClicks}</div>
-                    <div className="text-sm text-gray-400">Clicks this month</div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </>
-      )}
+          </section>
 
       {/* Footer */}
       <footer className="border-t border-white/20 py-8 px-6 mt-auto">
@@ -1125,11 +459,12 @@ export default function MiyomiSite() {
             <a href="https://youtube.com/@miyomi" className="hover:text-red-500 transition">
               <Youtube className="w-5 h-5" />
             </a>
-            {isPrivateMode && (
-              <Link href="/academy/agent/miyomi" className="text-sm hover:text-red-500 transition">
-                Agent Profile
-              </Link>
-            )}
+            <Link href="/academy/agent/miyomi" className="text-sm hover:text-red-500 transition">
+              Agent Profile
+            </Link>
+            <Link href="/dashboard/miyomi" className="text-sm hover:text-red-500 transition">
+              Dashboard
+            </Link>
           </div>
         </div>
       </footer>

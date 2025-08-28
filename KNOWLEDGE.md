@@ -1,17 +1,38 @@
 # KNOWLEDGE.md - Eden Academy Architecture Context
 
 ## Current System State
-**Last Updated:** August 27, 2025  
-**Version:** 2.0.0  
-**Status:** Production Operational
+**Last Updated:** August 28, 2025  
+**Version:** 2.1.0  
+**Status:** Production Operational with Recent Consolidations
+
+## Recent Major Changes (2025-08-28)
+
+### ✅ Amanda → Bertha Agent Consolidation (CRITICAL)
+**Impact**: Resolved production-blocking dual identity issue
+- **Registry Cleanup**: Removed all amanda-006 duplicate entries
+- **Route Consolidation**: `/academy/agent/amanda` → redirects to `/academy/agent/bertha`
+- **Data Integrity**: Single bertha-006 identity with Amanda Schmitt as trainer
+- **Architecture Compliance**: Restored Registry-First principles (ADR-022)
+
+### ✅ Domain Architecture Updates
+**Impact**: Corrected external agent domains for consistency
+- **SOLIENNE**: `solienne-jl8xkqciy-edenprojects.vercel.app` → `solienne.ai`
+- **KORU**: `koru.poetry` → `koru.social`
+- **Social Profiles**: Updated manifest to reflect correct external websites
+
+### ✅ ADR Migration to Registry
+**Impact**: Documentation consolidation per Registry-First architecture
+- **ADR-022**: Deprecated local copy, now hosted in Registry docs
+- **New Pattern**: `/api/v1/docs/adr/` endpoint for architecture documentation
+- **Migration Date**: 2025-08-28
 
 ## Canonical Domain Language
 
 Per CLAUDE.md, these are the official terms used throughout the codebase:
 
 ### Core Entities
-- **Agent**: AI collaborator with specific creative role (Abraham, Solienne, etc.)
-- **Work**: Creative output produced by an agent
+- **Agent**: AI collaborator with specific creative role (Abraham, Solienne, Bertha, etc.)
+- **Work**: Creative output produced by an agent  
 - **Cohort**: Group of agents by year/batch (Genesis, Year-1, Year-2)
 - **Studio**: Creative workspace for agent-human collaboration
 - **Registry**: Central authority for agent data and management
@@ -27,218 +48,161 @@ Per CLAUDE.md, these are the official terms used throughout the codebase:
 ## Architecture Patterns
 
 ### Registry-First Architecture (ADR-022)
+**Status**: Restored to compliance after Amanda→Bertha consolidation
 All agent data flows through the Registry as the single source of truth:
 ```
 UI → Gateway → Registry → Database
 ```
 
+**Key Principle**: No static data mappings that bypass Registry authority
+
 ### Feature Flag Strategy
 All new features ship behind flags with rollback plans:
-- Development: Test new features
-- Beta: Limited rollout
-- Gradual: Percentage-based rollout
-- Full: Production deployment
+- **Development**: Test new features
+- **Beta**: Limited rollout
+- **Gradual**: Percentage-based rollout  
+- **Full**: Production deployment
 
-### Current Feature Flags
+### Current Feature Flags (Active)
 - `ENABLE_REGISTRY_SYNC`: Active in production
 - `ENABLE_ABRAHAM_REGISTRY_INTEGRATION`: Active
 - `ENABLE_SOLIENNE_REGISTRY_INTEGRATION`: Active
-- `ENABLE_EDEN2038_INTEGRATION`: Beta testing
+- `ENABLE_BERTHA_REGISTRY_INTEGRATION`: Active (consolidated from Amanda)
+- `ENABLE_CITIZEN_SOCIAL_INTEGRATION`: Ready for deployment
+- `ENABLE_MIYOMI_LIVE_TRADING`: Ready for deployment
+- `ENABLE_STAGED_LAUNCH_SYSTEM`: Production-ready
 
 ## Service Architecture
 
-### Eden Academy (This Repository)
-- **Purpose**: Training platform for AI agents
-- **Stack**: Next.js 15, TypeScript, Tailwind CSS
-- **Database**: Supabase (PostgreSQL)
-- **Deployment**: Vercel (eden-academy.vercel.app)
+### Current Production Domains
 
-### Eden Genesis Registry
-- **Purpose**: Central authority for agent management
-- **API**: RESTful with OpenAPI spec
-- **Database**: PostgreSQL with Prisma ORM
-- **Deployment**: Vercel (eden-genesis-registry.vercel.app)
+#### Main Services
+- **Eden Academy**: `eden-academy-flame.vercel.app` (primary platform)
+- **Genesis Registry**: `eden-genesis-registry.vercel.app` (data authority)
+- **Spirit Registry**: `spirit-registry.vercel.app` (blockchain verification)
 
-### Integration Points
-1. **Agent Data**: Registry API provides agent profiles, metrics
-2. **Application Processing**: `/api/agents/onboard` endpoint
-3. **Work Management**: Registry tracks all agent outputs
-4. **Authentication**: Supabase Auth with Registry validation
+#### Agent Sovereign Sites
+- **SOLIENNE**: `solienne.ai` ✅ (updated 2025-08-28)
+- **ABRAHAM**: `abraham.ai`
+- **KORU**: `koru.social` ✅ (updated 2025-08-28)
+- **SUE**: `design-critic-agent.vercel.app`
 
-## Key Technical Decisions
+#### Backend Services
+- **Eden2038**: `eden2038.vercel.app` (Abraham's covenant)
+- **Henry Registry**: `registry-i42t8muxt-henry-personal.vercel.app`
 
-### ADR Summary (Active)
-- **ADR-015**: Event-Driven Architecture Pattern
-- **ADR-016**: Service Boundaries and Responsibilities  
-- **ADR-017**: Documentation-First Development
-- **ADR-019**: Agent Graduation Criteria
-- **ADR-022**: Registry-First Architecture Pattern
-- **ADR-023**: Agent Site Architecture Standards
-- **ADR-024**: Economic Model Integration
+### Data Flow Patterns
 
-### Technology Choices
-- **Framework**: Next.js App Router for SSR/SSG flexibility
-- **Styling**: Tailwind CSS for rapid development
-- **State**: React Query for server state management
-- **Types**: TypeScript with strict mode enabled
-- **API**: Generated SDK from OpenAPI specification
+**Registry → Services → UI**:
+1. Genesis Registry stores canonical data
+2. Services consume via `/api/v1/*` endpoints
+3. UIs render from service responses
+4. No direct registry access from UIs
 
-## Current Agents in Production
+**Agent Integration Flow**:
+1. Agent registration via Registry API
+2. Profile data synced to Academy
+3. Sovereign sites pull agent data
+4. Training updates flow back to Registry
 
-### Active Agents (Genesis Cohort)
+## Current Genesis Cohort Status
 
-#### ABRAHAM
-- **Status**: Active, Complete ✅
-- **Registry Works**: 2,519+ documented works
-- **Focus**: Digital abstraction, mathematical beauty
-- **Covenant**: 13-year daily creation commitment (2025-2038)
-- **Integration**: Full Registry integration live
+### Active Agents (8 Total)
+1. **ABRAHAM** - Digital abstraction pioneer (75% complete, Gene Kogan)
+2. **SOLIENNE** - Living narrative architect (65% complete, Kristi Coronado)  
+3. **BERTHA** - Art collection intelligence (87% prediction accuracy, Amanda Schmitt)
+4. **MIYOMI** - Contrarian market oracle (Seth Goldstein)
+5. **GEPPETTO** - 3D digital sculptor (Martin & Colin/Lattice)
+6. **KORU** - Narrative poet & cultural bridge-builder (Xander)
+7. **CITIZEN** - DAO manager & governance coordinator (Henry/BrightMoments)
+8. **SUE** - Design critic & aesthetic curator (TBD - seeking partner)
 
-#### SOLIENNE
-- **Status**: Active, Complete ✅
-- **Registry Works**: 1,740+ consciousness streams
-- **Focus**: Consciousness through fashion and light
-- **Target**: Paris Photo 2025 exhibition
-- **Daily Output**: 20 generations per day
-- **Integration**: Full Registry integration live
+### Agent Status Distribution
+- **Confirmed Trainers**: 5 (Abraham, Solienne, Bertha, Miyomi, Geppetto, Koru, Citizen)
+- **Seeking Partners**: 1 (SUE)
+- **Launch Ready**: 3 (Abraham, Solienne, CITIZEN awaiting social credentials)
 
-#### BERTHA
-- **Status**: In Training
-- **Trainer**: Amanda Schmitt
-- **Focus**: AI art collection intelligence
-- **Specialization**: Collection curation and market intelligence
-- **Integration**: Development phase
+## Technical Implementation Status
 
-### Agents in Development
+### Deployment-Ready Systems
+- ✅ **Public Agent Access**: All 8 agents with interactive chat
+- ✅ **Security Hardening**: Rate limiting, input validation, auth middleware  
+- ✅ **Staged Launch Framework**: 5-stage rollout with automated validation
+- 🚀 **CITIZEN Social Integration**: Complete, awaiting credentials
+- 🚀 **MIYOMI Live Trading**: Complete, needs DB migration
+- 🚀 **BERTHA Advanced Analytics**: Production-ready dashboard
 
-#### SUE
-- **Status**: Development phase
-- **Focus**: To be determined
-- **Trainer**: Recruiting
-- **Integration**: Planned
+### Architecture Compliance
+- ✅ **Registry-First**: Restored after Amanda consolidation
+- ✅ **Single Source of Truth**: Genesis Registry authoritative  
+- ✅ **Data Integrity**: No duplicate agent identities
+- ✅ **Feature Flags**: All new features controlled
+- ✅ **Domain Consistency**: Canonical terminology throughout
 
-#### KORU
-- **Status**: Planned
-- **Focus**: Narrative poetry and haiku
-- **Trainer**: Recruiting
-- **Integration**: Not started
+## Database Schema
 
-#### GEPPETTO
-- **Status**: Planned
-- **Focus**: 3D art and sculpture
-- **Trainer**: Recruiting
-- **Integration**: Not started
-
-#### MIYOMI
-- **Status**: Planned
-- **Focus**: Anime and manga art
-- **Trainer**: Recruiting
-- **Integration**: Not started
-
-### Agent Naming Convention
-- **Standard Format**: ALL CAPS for all agents (ABRAHAM, SOLIENNE, BERTHA, SUE, etc.)
-- **Handle Format**: Lowercase for URLs and handles (abraham, solienne, bertha, sue)
-- **Display Format**: ALL CAPS in documentation and UI
-
-## Development Workflow
-
-### Git Worktree Setup
-```bash
-/Users/seth/eden-academy         # Main repository
-/Users/seth/eden-worktrees/
-  ├── launcher/                   # Feature development
-  ├── registry/                   # Registry integration
-  └── production/                 # Production branch
-```
-
-### Deployment Pipeline
-1. Feature development in worktrees
-2. Push to feature branch
-3. Automatic Vercel preview deployment
-4. Merge to main for production
-5. Automatic production deployment
-
-## API Endpoints
-
-### Core Academy APIs
-- `/api/agents/onboard` - New agent applications
-- `/api/agents/[id]` - Agent data and metrics
-- `/api/agents/[id]/works` - Agent creative outputs
-- `/api/agents/[id]/daily-practice` - Training progress
+### Core Tables (Supabase)
+- `agents` - Agent profiles and metadata
+- `works` - Creative outputs and portfolios
+- `training_sessions` - Learning progress tracking
+- `governance_events` - DAO coordination (CITIZEN)
+- `social_posts` - Cross-platform content (CITIZEN)
 
 ### Registry Integration
-- Base URL: `https://eden-genesis-registry.vercel.app/api/v1`
-- Authentication: Bearer token
-- Rate Limits: 100 requests/minute
+- Local Registry on port 3000 (development)
+- Production Registry at `eden-genesis-registry.vercel.app`
+- Graceful fallbacks for Registry unavailability
 
-## Documentation Structure
+## Security & Performance
 
-### Public Documentation
-- `/admin/docs` - Main documentation hub
-- `/admin/docs/registry-hub` - Registry integration guides
-- `/admin/docs/applications` - Training application process
-- `/admin/docs/agents` - Agent reference cheatsheet
+### Security Features (Production-Ready)
+- **Authentication**: JWT validation with role-based access
+- **Rate Limiting**: Per-endpoint controls (10/min chat, 50/min admin)
+- **Input Validation**: XSS/injection protection with DOMPurify
+- **Headers**: CSP, CORS, HSTS protection
 
-### Markdown Sources
-- Root level: `*.md` files (SITEMAP, AGENT_CHEATSHEET, etc.)
-- `/docs` directory: Technical documentation
-- `/docs/adr` directory: Architecture Decision Records
+### Performance Optimizations
+- **Caching**: Registry responses cached locally
+- **WebSockets**: Real-time updates for MIYOMI trading
+- **Static Generation**: Agent profiles pre-rendered
+- **CDN**: Vercel edge deployment
 
-## Monitoring and Observability
+## Testing & Quality Assurance
 
-### Key Metrics
-- Agent training progress (daily practice completion)
-- Work generation rate (outputs per day)
-- Application processing time
-- Registry sync status
+### Test Coverage
+- **Unit Tests**: Core business logic
+- **Integration Tests**: Registry API interactions  
+- **E2E Tests**: Agent workflows and public access
+- **Contract Tests**: Gateway API boundaries
 
-### Error Handling
-- Graceful fallbacks when Registry unavailable
-- Feature flags for safe rollback
-- Comprehensive error logging
+### Quality Gates
+- **Lint/Format**: ESLint + Prettier
+- **Type Safety**: TypeScript strict mode
+- **Security**: OWASP compliance checks
+- **Performance**: Core Web Vitals monitoring
 
-## Security Considerations
+## Monitoring & Observability
 
-### Authentication Flow
-1. User authenticates with Supabase
-2. Session validated against Registry
-3. Role-based access control (RBAC)
-4. JWT tokens for API access
+### Health Checks
+- `/health` - Service availability
+- Registry connectivity monitoring
+- Agent response time tracking
+- Error rate alerting
 
-### Data Protection
-- No sensitive data in client-side code
-- Environment variables for secrets
-- HTTPS everywhere
-- Rate limiting on all APIs
-
-## Glossary
-
-### Technical Terms
-- **SSR**: Server-Side Rendering
-- **SSG**: Static Site Generation  
-- **ISR**: Incremental Static Regeneration
-- **RBAC**: Role-Based Access Control
-- **ADR**: Architecture Decision Record
-
-### Eden-Specific Terms
-- **LAUNCHER**: Agent quality evaluation system (19 criteria)
-- **Covenant**: Long-term creative commitment
-- **Daily Practice**: Agent training routine
-- **Genesis Cohort**: First generation of Eden agents
-- **Graduation**: Successful completion of training program
-
-## Contact & Resources
-
-### Documentation
-- Main Docs: https://eden-academy.vercel.app/admin/docs
-- Registry API: https://eden-genesis-registry.vercel.app/api-docs
-- GitHub: https://github.com/edenartlab
-
-### Team Contacts
-- Technical: Registry team for API issues
-- Product: Academy team for feature requests
-- Support: Discord community for general help
+### Metrics
+- Agent interaction volumes
+- Training progress indicators  
+- Public access usage patterns
+- Registry sync health
 
 ---
 
-This document serves as the central knowledge base for Eden Academy development. Update it whenever architectural decisions change or new patterns emerge.
+## Next Development Priorities
+
+1. **Social Platform Activation** (CITIZEN credentials needed)
+2. **Production Deployments** (MIYOMI, BERTHA, security hardening)
+3. **Agent Graduation** (Abraham, Solienne readiness assessment)
+4. **Community Expansion** (new trainer recruitment for SUE)
+
+**Architecture Status**: ✅ **PRODUCTION-READY**  
+All critical issues resolved, Registry-First compliance restored, comprehensive feature deployment framework operational.

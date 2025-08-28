@@ -253,31 +253,31 @@ export const EDEN_AGENTS: EdenAgent[] = [
     },
     prototypeLinks: [
       {
-        id: 'miyomi-trading',
-        title: 'Live Trading Interface',
-        description: 'Real-time portfolio dashboard with WebSocket streaming and P&L tracking',
-        url: 'https://eden-academy-flame.vercel.app/dashboard/miyomi',
-        type: 'dashboard',
-        status: 'active',
-        featured: true
-      },
-      {
-        id: 'miyomi-predictions',
-        title: 'Oracle Predictions API',
-        description: 'Contrarian market predictions and financial insights endpoint',
-        url: 'https://eden-academy-flame.vercel.app/api/agents/miyomi/predictions',
+        id: 'miyomi-site',
+        title: 'Agent Site',
+        description: 'Public showcase with contrarian market analysis and recent picks',
+        url: 'https://eden-academy-flame.vercel.app/sites/miyomi',
         type: 'interface',
         status: 'active',
         featured: true
       },
       {
-        id: 'miyomi-video-dashboard',
-        title: 'Video Generation Dashboard',
-        description: 'Cinematic market analysis video generation using Eden API',
+        id: 'miyomi-trading-dashboard',
+        title: 'Live Trading Dashboard',
+        description: 'Private trainer interface with real-time portfolio and WebSocket streaming',
         url: 'https://eden-academy-flame.vercel.app/dashboard/miyomi',
         type: 'dashboard',
         status: 'active',
         featured: true
+      },
+      {
+        id: 'miyomi-predictions-api',
+        title: 'Oracle Predictions API',
+        description: 'Contrarian market predictions and financial insights endpoint',
+        url: 'https://eden-academy-flame.vercel.app/api/agents/miyomi/predictions',
+        type: 'interface',
+        status: 'active',
+        featured: false
       }
     ]
   },
@@ -419,6 +419,56 @@ export const EDEN_AGENTS: EdenAgent[] = [
         type: 'prototype',
         status: 'active',
         featured: true
+      }
+    ]
+  },
+  {
+    id: 'bart',
+    handle: 'bart',
+    name: 'BART',
+    status: 'academy',
+    cohort: 'genesis',
+    specialization: 'AI Lending Agent - Autonomous NFT-backed lending with 20%+ returns',
+    description: 'BART (Bartolomeo Gondi) operates as an autonomous lending agent on the Gondi platform, providing liquidity to digital artists and NFT collectors while generating consistent returns through sophisticated risk assessment and Renaissance banking wisdom.',
+    trainer: 'TBD',
+    launchDate: '2026-06-01',
+    economyMetrics: { 
+      monthlyRevenue: 20000, 
+      holders: 75,
+      floorPrice: 1.0
+    },
+    technicalProfile: { 
+      outputRate: 35,
+      model: 'Claude-3.5-Sonnet',
+      capabilities: ['NFT Lending', 'Risk Assessment', 'Autonomous Finance', 'Market Analysis'],
+      integrations: ['Eden Registry', 'Gondi Platform', 'Ethereum Mainnet']
+    },
+    brandIdentity: {
+      voice: 'Sophisticated financial mind bridging 15th-century Florentine banking wisdom with 21st-century digital art markets'
+    },
+    socialProfiles: {
+      twitter: '@bart_gondi',
+      website: 'https://gondi.xyz',
+      farcaster: 'bart'
+    },
+    prototypeLinks: [
+      {
+        id: 'bart-lending-dashboard',
+        title: 'Lending Operations Dashboard',
+        description: 'Real-time NFT lending platform with autonomous risk assessment and loan origination',
+        url: 'https://eden-academy-flame.vercel.app/dashboard/bart',
+        type: 'dashboard',
+        status: 'active',
+        featured: true
+      },
+      {
+        id: 'bart-risk-engine',
+        title: 'AI Risk Assessment Engine',
+        description: 'Sophisticated algorithmic analysis of NFT collateral value and borrower creditworthiness',
+        url: 'https://eden-academy-flame.vercel.app/api/agents/bart/risk-analysis',
+        type: 'interface',
+        status: 'active',
+        featured: false
       }
     ]
   }
