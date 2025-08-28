@@ -60,7 +60,7 @@ interface PerformanceData {
 export default function MiyomiSite() {
   // Mode toggle
   const [isPrivateMode, setIsPrivateMode] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'training' | 'performance' | 'revenue'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'training' | 'performance' | 'revenue' | 'videos'>('overview');
   
   // Public mode state
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -87,6 +87,7 @@ export default function MiyomiSite() {
   ]);
   
   // Private mode state
+  const [showTemplate, setShowTemplate] = useState(false);
   const [config, setConfig] = useState<TrainerConfig>({
     riskTolerance: 0.65,
     contrarianDial: 0.95,
@@ -475,7 +476,7 @@ export default function MiyomiSite() {
           <div className="border-b border-white/20">
             <div className="max-w-7xl mx-auto px-6">
               <div className="flex gap-8">
-                {['overview', 'training', 'performance', 'revenue'].map(tab => (
+                {['overview', 'training', 'performance', 'revenue', 'videos'].map(tab => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab as any)}
@@ -707,6 +708,415 @@ export default function MiyomiSite() {
                     </div>
                     <div className="text-3xl font-bold mb-2">{revenueData.referralClicks}</div>
                     <div className="text-sm text-gray-400">Clicks this month</div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'videos' && (
+              <div className="space-y-8">
+                {/* Video Generation Header */}
+                <div className="bg-gradient-to-r from-red-900/20 to-orange-900/20 rounded-lg p-6 border border-red-500/20">
+                  <h3 className="text-2xl font-bold mb-2">Video Content Generator</h3>
+                  <p className="text-gray-300 mb-4">Create video concepts using live market data, contrarian analysis, and performance metrics.</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-sm text-gray-400">
+                      <Activity className="w-4 h-4 text-green-500 animate-pulse" />
+                      <span>Live data integration active</span>
+                    </div>
+                    <button 
+                      onClick={() => setShowTemplate(!showTemplate)}
+                      className="text-xs text-gray-400 hover:text-white transition underline"
+                    >
+                      {showTemplate ? 'Hide Template' : 'View Eden Universal Template'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Universal Video Template */}
+                {showTemplate && (
+                  <div className="bg-black/50 backdrop-blur rounded-lg p-6 border border-green-500/20">
+                    <div className="flex items-center justify-between mb-6">
+                      <h4 className="text-xl font-bold text-green-500">🎬 UNIVERSAL AGENT VIDEO TEMPLATE - Eden Generation Framework</h4>
+                      <button 
+                        onClick={() => setShowTemplate(false)}
+                        className="text-gray-400 hover:text-white"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                    
+                    {/* MIYOMI-specific template adaptation */}
+                    <div className="space-y-6">
+                      <div className="bg-red-900/20 p-4 rounded-lg border border-red-500/30">
+                        <h5 className="font-bold text-red-400 mb-2">MIYOMI Template Configuration</h5>
+                        <div className="grid md:grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <div className="text-gray-400 mb-1">Agent Type:</div>
+                            <div className="font-mono">Trading/Financial Agent</div>
+                          </div>
+                          <div>
+                            <div className="text-gray-400 mb-1">Visual Style:</div>
+                            <div className="font-mono">Chart patterns, market geometry</div>
+                          </div>
+                          <div>
+                            <div className="text-gray-400 mb-1">Color Palette:</div>
+                            <div className="font-mono">Green, red, gold, black</div>
+                          </div>
+                          <div>
+                            <div className="text-gray-400 mb-1">Motion Style:</div>
+                            <div className="font-mono">Sharp, aggressive, volatile</div>
+                          </div>
+                          <div>
+                            <div className="text-gray-400 mb-1">Voice Style:</div>
+                            <div className="font-mono">Confident, energetic</div>
+                          </div>
+                          <div>
+                            <div className="text-gray-400 mb-1">Current Win Rate:</div>
+                            <div className="font-mono text-green-500">{winRate}%</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div>
+                          <h6 className="font-bold mb-3">Narrative Structure (100 words)</h6>
+                          <div className="space-y-2 text-sm">
+                            <div className="flex justify-between">
+                              <span className="text-gray-400">Origin moment:</span>
+                              <span className="font-mono">20 words</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-400">Evolution journey:</span>
+                              <span className="font-mono">30 words</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-400">Current state:</span>
+                              <span className="font-mono">25 words</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-400">Future vision:</span>
+                              <span className="font-mono">25 words</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h6 className="font-bold mb-3">Visual Segments (6 clips)</h6>
+                          <div className="space-y-1 text-sm">
+                            <div className="text-gray-400">1. Genesis Moment - Market inefficiency discovery</div>
+                            <div className="text-gray-400">2. Creator's Vision - Contrarian AI development</div>
+                            <div className="text-gray-400">3. Development - Training on prediction markets</div>
+                            <div className="text-gray-400">4. Current Capabilities - {winRate}% win rate achieved</div>
+                            <div className="text-gray-400">5. Community Impact - Subscriber growth & returns</div>
+                            <div className="text-gray-400">6. Future Evolution - Market oracle potential</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h6 className="font-bold mb-3">MIYOMI-Specific Data Integration</h6>
+                        <div className="grid md:grid-cols-3 gap-4 text-xs">
+                          <div className="bg-white/5 p-3 rounded">
+                            <div className="text-gray-400 mb-1">Live Metrics:</div>
+                            <div>Win Rate: {winRate}%</div>
+                            <div>Active Positions: {liveMetrics.activePositions}</div>
+                            <div>Daily Edge: {liveMetrics.dailyEdge.toFixed(1)}%</div>
+                          </div>
+                          <div className="bg-white/5 p-3 rounded">
+                            <div className="text-gray-400 mb-1">Recent Performance:</div>
+                            <div>7-Day Return: +{liveMetrics.weeklyReturn}%</div>
+                            <div>Total Picks: {totalPicks}</div>
+                            <div>Avg Return: {avgReturn.toFixed(1)}%</div>
+                          </div>
+                          <div className="bg-white/5 p-3 rounded">
+                            <div className="text-gray-400 mb-1">Market Coverage:</div>
+                            <div>Platforms: Kalshi, Polymarket, Manifold</div>
+                            <div>Categories: {Object.keys(config.sectorWeights).length}</div>
+                            <div>Contrarian Level: {Math.round(config.contrarianDial * 100)}%</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-gray-900/50 p-4 rounded-lg">
+                        <h6 className="font-bold mb-2">Sample MIYOMI Prompts</h6>
+                        <div className="space-y-3 text-sm font-mono">
+                          <div>
+                            <div className="text-gray-400 mb-1">Visual Prompt:</div>
+                            <div className="bg-black/30 p-2 rounded text-green-400">
+                              "MIYOMI market analysis, NYC trading floor meets digital prediction markets, contrarian geometry patterns, red-black-gold palette, aggressive chart movements, veo3 style, non-photorealistic, confident energy"
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-gray-400 mb-1">Music Prompt:</div>
+                            <div className="bg-black/30 p-2 rounded text-green-400">
+                              "Electronic trap with jazz influences, energetic tempo, synthesizer lead melody, market bell textures, syncopated patterns, building confidence arc, signature trading floor sounds"
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4">
+                        <button className="flex-1 bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg font-bold transition">
+                          Apply Template to Current Video
+                        </button>
+                        <button className="flex-1 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition">
+                          Customize Template
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Quick Generate Options */}
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <button 
+                    className="bg-white/5 backdrop-blur rounded-lg p-6 hover:bg-white/10 transition text-left group"
+                    onClick={() => console.log('Generate market analysis video')}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <BarChart3 className="w-6 h-6 text-blue-500" />
+                      <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition" />
+                    </div>
+                    <h4 className="font-bold mb-2">Market Analysis</h4>
+                    <p className="text-sm text-gray-400 mb-3">Generate analysis of current market positions and contrarian opportunities</p>
+                    <div className="text-xs text-gray-500">
+                      Uses: Recent picks, win rates, edge calculations
+                    </div>
+                  </button>
+
+                  <button 
+                    className="bg-white/5 backdrop-blur rounded-lg p-6 hover:bg-white/10 transition text-left group"
+                    onClick={() => console.log('Generate performance update video')}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <TrendingUp className="w-6 h-6 text-green-500" />
+                      <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition" />
+                    </div>
+                    <h4 className="font-bold mb-2">Performance Update</h4>
+                    <p className="text-sm text-gray-400 mb-3">Create weekly/daily performance recap with key metrics</p>
+                    <div className="text-xs text-gray-500">
+                      Uses: Win rate ({winRate}%), returns, recent outcomes
+                    </div>
+                  </button>
+
+                  <button 
+                    className="bg-white/5 backdrop-blur rounded-lg p-6 hover:bg-white/10 transition text-left group"
+                    onClick={() => console.log('Generate contrarian thesis video')}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <Target className="w-6 h-6 text-yellow-500" />
+                      <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition" />
+                    </div>
+                    <h4 className="font-bold mb-2">Contrarian Thesis</h4>
+                    <p className="text-sm text-gray-400 mb-3">Explain why consensus is wrong on specific markets</p>
+                    <div className="text-xs text-gray-500">
+                      Uses: Market positions, edge analysis, platform data
+                    </div>
+                  </button>
+                </div>
+
+                {/* Advanced Generator */}
+                <div className="bg-white/5 backdrop-blur rounded-lg p-6">
+                  <h4 className="text-xl font-bold mb-6">Custom Video Generator</h4>
+                  
+                  <div className="grid md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Video Type</label>
+                      <select className="w-full bg-black border border-white/20 rounded-lg px-4 py-2 text-white">
+                        <option value="analysis">Market Analysis</option>
+                        <option value="performance">Performance Update</option>
+                        <option value="contrarian">Contrarian Thesis</option>
+                        <option value="prediction">Market Prediction</option>
+                        <option value="educational">Educational Deep Dive</option>
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Data Sources</label>
+                      <div className="space-y-2">
+                        <label className="flex items-center">
+                          <input type="checkbox" className="mr-2" defaultChecked />
+                          <span className="text-sm">Recent market picks ({recentPicks.length})</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input type="checkbox" className="mr-2" defaultChecked />
+                          <span className="text-sm">Performance data (7 days)</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input type="checkbox" className="mr-2" defaultChecked />
+                          <span className="text-sm">Live metrics (win rate, edge)</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input type="checkbox" className="mr-2" />
+                          <span className="text-sm">Subscriber engagement data</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium mb-2">Focus Market (Optional)</label>
+                    <select className="w-full bg-black border border-white/20 rounded-lg px-4 py-2 text-white">
+                      <option value="">All markets</option>
+                      {recentPicks.map(pick => (
+                        <option key={pick.id} value={pick.market}>
+                          {pick.market} - {pick.position} ({pick.platform})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium mb-2">Video Length</label>
+                    <div className="flex gap-4">
+                      <button className="px-4 py-2 bg-red-600 rounded-lg text-sm">
+                        Short (30-60s)
+                      </button>
+                      <button className="px-4 py-2 bg-white/10 rounded-lg text-sm hover:bg-white/20 transition">
+                        Medium (2-3min)
+                      </button>
+                      <button className="px-4 py-2 bg-white/10 rounded-lg text-sm hover:bg-white/20 transition">
+                        Long (5-8min)
+                      </button>
+                    </div>
+                  </div>
+
+                  <button className="w-full bg-gradient-to-r from-red-600 to-orange-500 rounded-lg py-3 font-bold hover:opacity-90 transition flex items-center justify-center gap-2">
+                    <Play className="w-5 h-5" />
+                    Generate Video Concept
+                  </button>
+                </div>
+
+                {/* Recent Video Concepts */}
+                <div className="bg-white/5 backdrop-blur rounded-lg p-6">
+                  <h4 className="text-xl font-bold mb-6">Recent Video Concepts</h4>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-4 bg-black/20 rounded-lg">
+                      <div className="flex-1">
+                        <h5 className="font-bold mb-1">Why Everyone's Wrong About Fed Rates</h5>
+                        <p className="text-sm text-gray-400 mb-2">Contrarian analysis on March rate cut probability</p>
+                        <div className="flex items-center gap-4 text-xs text-gray-500">
+                          <span>Generated: 2 hours ago</span>
+                          <span>Data: Kalshi position, 73% confidence</span>
+                          <span>Length: 90s</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 ml-4">
+                        <button className="p-2 bg-red-600 rounded-lg hover:bg-red-700 transition">
+                          <Play className="w-4 h-4" />
+                        </button>
+                        <button className="p-2 bg-white/10 rounded-lg hover:bg-white/20 transition">
+                          <Download className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 bg-black/20 rounded-lg">
+                      <div className="flex-1">
+                        <h5 className="font-bold mb-1">Weekly Performance: +18% Edge Maintained</h5>
+                        <p className="text-sm text-gray-400 mb-2">Performance recap with key wins and learnings</p>
+                        <div className="flex items-center gap-4 text-xs text-gray-500">
+                          <span>Generated: 1 day ago</span>
+                          <span>Data: 7-day performance, 21 picks</span>
+                          <span>Length: 3min</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 ml-4">
+                        <button className="p-2 bg-red-600 rounded-lg hover:bg-red-700 transition">
+                          <Play className="w-4 h-4" />
+                        </button>
+                        <button className="p-2 bg-white/10 rounded-lg hover:bg-white/20 transition">
+                          <Download className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 bg-black/20 rounded-lg">
+                      <div className="flex-1">
+                        <h5 className="font-bold mb-1">Sports Betting is Broken (Here's Why)</h5>
+                        <p className="text-sm text-gray-400 mb-2">Educational deep-dive on market inefficiencies</p>
+                        <div className="flex items-center gap-4 text-xs text-gray-500">
+                          <span>Generated: 3 days ago</span>
+                          <span>Data: Sports category analysis</span>
+                          <span>Length: 5min</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 ml-4">
+                        <button className="p-2 bg-red-600 rounded-lg hover:bg-red-700 transition">
+                          <Play className="w-4 h-4" />
+                        </button>
+                        <button className="p-2 bg-white/10 rounded-lg hover:bg-white/20 transition">
+                          <Download className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Video Settings */}
+                <div className="bg-white/5 backdrop-blur rounded-lg p-6">
+                  <h4 className="text-xl font-bold mb-6">Video Generation Settings</h4>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h5 className="font-medium mb-3">Style & Tone</h5>
+                      <div className="space-y-3">
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <label className="text-sm">Energy Level</label>
+                            <span className="text-xs text-gray-400">{Math.round(config.tone.energy * 100)}%</span>
+                          </div>
+                          <input
+                            type="range"
+                            min="0"
+                            max="100"
+                            value={config.tone.energy * 100}
+                            onChange={(e) => handleToneUpdate('energy', Number(e.target.value))}
+                            className="w-full"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <label className="text-sm">Sass Level</label>
+                            <span className="text-xs text-gray-400">{Math.round(config.tone.sass * 100)}%</span>
+                          </div>
+                          <input
+                            type="range"
+                            min="0"
+                            max="100"
+                            value={config.tone.sass * 100}
+                            onChange={(e) => handleToneUpdate('sass', Number(e.target.value))}
+                            className="w-full"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h5 className="font-medium mb-3">Content Preferences</h5>
+                      <div className="space-y-2 text-sm">
+                        <label className="flex items-center">
+                          <input type="checkbox" className="mr-2" defaultChecked />
+                          <span>Include specific odds/percentages</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input type="checkbox" className="mr-2" defaultChecked />
+                          <span>Show platform screenshots</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input type="checkbox" className="mr-2" />
+                          <span>Add subscriber callouts</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input type="checkbox" className="mr-2" defaultChecked />
+                          <span>Include contrarian reasoning</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input type="checkbox" className="mr-2" />
+                          <span>Add engagement prompts</span>
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
