@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
           significance: "Birthplace of Bright Moments. First-ever IRL minting ceremonies. 'Art is born in public.'",
           cultural_context: "Pop-up gallery with LCD screens, CryptoPunks, TopShot integration",
           historical_note: "Social contract theft scandal (309 missing, August 2021) - DAO adapted and strengthened",
-          opensea_slug: "cryptovenetians"
+          opensea_slug: "cryptocitizensofficial"
         },
         {
           city: "New York", 
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
           significance: "Golden Token NY (GTNY) introduced. Tyler Hobbs' Incomplete Control minted live",
           cultural_context: "100-day pop-up in art capital. $7M presale, ~$100M secondary market",
           golden_token: "GTNY",
-          opensea_slug: "cryptonewyorkers"
+          opensea_slug: "cryptocitizensofficial"
         },
         {
           city: "Berlin",
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
           significance: "Minting accompanied by generative techno symphony. Philip Glass × Robert Wilson collab",
           cultural_context: "Berlin Collection (10 artists × 100 NFTs). Icon Series: Einstein on the Beach",
           golden_token: "GTBR",
-          opensea_slug: "cryptoberliners"
+          opensea_slug: "cryptocitizensofficial"
         },
         {
           city: "London",
@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
           significance: "Bridged UK generative artists with Bright Moments community",
           cultural_context: "Summer 2022 expansion, established European presence",
           golden_token: "GTLN", 
-          opensea_slug: "cryptolondoners"
+          opensea_slug: "cryptocitizensofficial"
         },
         {
           city: "Mexico City",
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
           venue: "Mexico City cultural venues",
           significance: "Local partnerships with CDMX artists and cultural organizations",
           cultural_context: "Minting as theatrical performance, late 2022",
-          opensea_slug: "cryptomexas"
+          opensea_slug: "cryptocitizensofficial"
         },
         {
           city: "Tokyo",
@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
           venue: "Shibuya Sky (arcade, mirror floor), Kyu Asakara House (tea garden)",
           significance: "First AI Art Collection (Claire Silver, Holly Herndon, Pindar van Arman)",
           cultural_context: "Suntory Whisky bar mint + Hibiki pour. Advanced tech integration",
-          opensea_slug: "cryptotokyoites"
+          opensea_slug: "cryptocitizensofficial"
         },
         {
           city: "Buenos Aires",
@@ -93,7 +93,7 @@ export async function GET(request: NextRequest) {
           venue: "Buenos Aires theatrical venues",
           significance: "Theatrical 8-hour mint, stage ritual. Patagonia Hashmarks collaboration (0xDEAFBEEF)",
           cultural_context: "Performance art meets crypto. Deep South American cultural integration",
-          opensea_slug: "cryptobuenosaires"
+          opensea_slug: "cryptocitizensofficial"
         },
         {
           city: "Paris",
@@ -103,7 +103,7 @@ export async function GET(request: NextRequest) {
           venue: "Paris cultural spaces",
           significance: "Expanded residency and artist activation programs",
           cultural_context: "Art capital integration, enhanced artist collaborations",
-          opensea_slug: "cryptoparisians"
+          opensea_slug: "cryptocitizensofficial"
         },
         {
           city: "Venice, Italy",
@@ -113,7 +113,7 @@ export async function GET(request: NextRequest) {
           venue: "Venice Biennale period venues",
           significance: "Finale Collection. Retrospective across 100+ projects. Venice-to-Venice completion",
           cultural_context: "April 2024 culmination during Venice Biennale. Full circle journey complete",
-          opensea_slug: "cryptoveneziani"
+          opensea_slug: "cryptocitizensofficial"
         },
         {
           city: "Metaverse",
@@ -123,7 +123,7 @@ export async function GET(request: NextRequest) {
           venue: "Digital/Metaverse space",
           significance: "Bridge collection → ERC-20 → NFT transition. Symbolic intermission set",
           cultural_context: "Experimental digital-native collection between physical cities",
-          opensea_slug: "cryptogalacticans"
+          opensea_slug: "cryptocitizensofficial"
         }
       ],
       

@@ -57,19 +57,19 @@ export class CitizenMarketData {
   private alchemyApiKey: string | null;
   private moralisApiKey: string | null;
   
-  // CryptoCitizens collection mappings - Focus on confirmed working collections
+  // CryptoCitizens collection mappings - All cities are now in the main collection
   private readonly collections = [
     { slug: 'cryptocitizensofficial', name: 'CryptoCitizens', city: 'Global Collection', contract: '0x448cc0a2e2c9007b9f89de4e383b95ebaf3b5b0c', supply: 10000 },
-    // Note: Individual city collections may have different slugs - these are placeholders for development
-    { slug: 'cryptocitizens-venice-beach', name: 'CryptoVenetians', city: 'Venice Beach', contract: '0x...', supply: 1000 },
-    { slug: 'cryptocitizens-new-york', name: 'CryptoNewYorkers', city: 'New York', contract: '0x...', supply: 1000 },
-    { slug: 'cryptocitizens-berlin-2022', name: 'CryptoBerliners', city: 'Berlin', contract: '0x...', supply: 1000 },
-    { slug: 'cryptocitizens-london-2022', name: 'CryptoLondoners', city: 'London', contract: '0x...', supply: 1000 },
-    { slug: 'cryptocitizens-mexico-city', name: 'CryptoMexas', city: 'Mexico City', contract: '0x...', supply: 1000 },
-    { slug: 'cryptocitizens-tokyo-2023', name: 'CryptoTokyoites', city: 'Tokyo', contract: '0x...', supply: 1000 },
-    { slug: 'cryptocitizens-buenos-aires-2023', name: 'CryptoBuenosAires', city: 'Buenos Aires', contract: '0x...', supply: 1000 },
-    { slug: 'cryptocitizens-paris-2024', name: 'CryptoParisians', city: 'Paris', contract: '0x...', supply: 1000 },
-    { slug: 'cryptocitizens-venice-italy-2024', name: 'CryptoVeneziani', city: 'Venice Italy', contract: '0x...', supply: 1000 }
+    // All individual city collections use the same main collection with trait filtering
+    { slug: 'cryptocitizensofficial', name: 'CryptoVenetians', city: 'Venice Beach', contract: '0x448cc0a2e2c9007b9f89de4e383b95ebaf3b5b0c', supply: 1000 },
+    { slug: 'cryptocitizensofficial', name: 'CryptoNewYorkers', city: 'New York', contract: '0x448cc0a2e2c9007b9f89de4e383b95ebaf3b5b0c', supply: 1000 },
+    { slug: 'cryptocitizensofficial', name: 'CryptoBerliners', city: 'Berlin', contract: '0x448cc0a2e2c9007b9f89de4e383b95ebaf3b5b0c', supply: 1000 },
+    { slug: 'cryptocitizensofficial', name: 'CryptoLondoners', city: 'London', contract: '0x448cc0a2e2c9007b9f89de4e383b95ebaf3b5b0c', supply: 1000 },
+    { slug: 'cryptocitizensofficial', name: 'CryptoMexas', city: 'Mexico City', contract: '0x448cc0a2e2c9007b9f89de4e383b95ebaf3b5b0c', supply: 1000 },
+    { slug: 'cryptocitizensofficial', name: 'CryptoTokyoites', city: 'Tokyo', contract: '0x448cc0a2e2c9007b9f89de4e383b95ebaf3b5b0c', supply: 1000 },
+    { slug: 'cryptocitizensofficial', name: 'CryptoBuenosAires', city: 'Buenos Aires', contract: '0x448cc0a2e2c9007b9f89de4e383b95ebaf3b5b0c', supply: 1000 },
+    { slug: 'cryptocitizensofficial', name: 'CryptoParisians', city: 'Paris', contract: '0x448cc0a2e2c9007b9f89de4e383b95ebaf3b5b0c', supply: 1000 },
+    { slug: 'cryptocitizensofficial', name: 'CryptoVeneziani', city: 'Venice Italy', contract: '0x448cc0a2e2c9007b9f89de4e383b95ebaf3b5b0c', supply: 1000 }
   ];
   
   constructor() {

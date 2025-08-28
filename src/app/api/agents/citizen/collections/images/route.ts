@@ -14,16 +14,16 @@ export async function GET(request: NextRequest) {
     
     // Collection mappings for images
     const collections = [
-      { city: "Venice Beach", opensea_slug: "cryptovenetians", collection_name: "CryptoVenetians" },
-      { city: "New York", opensea_slug: "cryptonewyorkers", collection_name: "CryptoNewYorkers" },
-      { city: "Berlin", opensea_slug: "cryptoberliners", collection_name: "CryptoBerliners" },
-      { city: "London", opensea_slug: "cryptolondoners", collection_name: "CryptoLondoners" },
-      { city: "Mexico City", opensea_slug: "cryptomexas", collection_name: "CryptoMexas" },
-      { city: "Tokyo", opensea_slug: "cryptotokyoites", collection_name: "CryptoTokyoites" },
-      { city: "Buenos Aires", opensea_slug: "cryptobuenosaires", collection_name: "CryptoBuenosAires" },
-      { city: "Paris", opensea_slug: "cryptoparisians", collection_name: "CryptoParisians" },
-      { city: "Venice, Italy", opensea_slug: "cryptoveneziani", collection_name: "CryptoVeneziani" },
-      { city: "Metaverse", opensea_slug: "cryptogalacticans", collection_name: "CryptoGalacticans" }
+      { city: "Venice Beach", opensea_slug: "cryptocitizensofficial", collection_name: "CryptoVenetians" },
+      { city: "New York", opensea_slug: "cryptocitizensofficial", collection_name: "CryptoNewYorkers" },
+      { city: "Berlin", opensea_slug: "cryptocitizensofficial", collection_name: "CryptoBerliners" },
+      { city: "London", opensea_slug: "cryptocitizensofficial", collection_name: "CryptoLondoners" },
+      { city: "Mexico City", opensea_slug: "cryptocitizensofficial", collection_name: "CryptoMexas" },
+      { city: "Tokyo", opensea_slug: "cryptocitizensofficial", collection_name: "CryptoTokyoites" },
+      { city: "Buenos Aires", opensea_slug: "cryptocitizensofficial", collection_name: "CryptoBuenosAires" },
+      { city: "Paris", opensea_slug: "cryptocitizensofficial", collection_name: "CryptoParisians" },
+      { city: "Venice, Italy", opensea_slug: "cryptocitizensofficial", collection_name: "CryptoVeneziani" },
+      { city: "Metaverse", opensea_slug: "cryptocitizensofficial", collection_name: "CryptoGalacticans" }
     ];
     
     // Filter collections if specific city/collection requested
