@@ -39,8 +39,10 @@ export async function GET(request: NextRequest) {
       trainer: getTrainerName(agent.handle), // Static mapping until Registry has trainer data
       status: mapRegistryStatus(agent.status),
       day_count: agent.counts?.creations || 0,
-      avatar_url: `/agents/${agent.handle}/profile.svg`,
+      avatar_url: getAgentImageUrl(agent.handle, 'avatar'),
+      hero_image_url: getAgentImageUrl(agent.handle, 'hero'),
       latest_work: agent.creations?.[0] || null,
+      sample_works: getSampleWorks(agent.handle),
       created_at: agent.createdAt
     }));
 
@@ -81,6 +83,48 @@ function getTrainerName(handle: string): string {
     'amanda': 'TBD'
   };
   return trainers[handle] || 'TBD';
+}
+
+function getAgentImageUrl(handle: string, type: 'avatar' | 'hero'): string {
+  // Use actual available images where they exist
+  const imageMap: Record<string, Record<string, string>> = {
+    'abraham': {
+      avatar: '/agents/abraham/profile.svg',
+      hero: '/images/gallery/abraham-hero.png'
+    },
+    'solienne': {
+      avatar: '/agents/solienne/profile.svg', 
+      hero: '/images/gallery/solienne-hero.png'
+    }
+  };
+
+  return imageMap[handle]?.[type] || `/agents/${handle}/profile.svg`;
+}
+
+function getSampleWorks(handle: string) {
+  // Return sample works data for agents with known content
+  const sampleWorks: Record<string, any[]> = {
+    'abraham': [
+      {
+        id: 'abraham-work-1',
+        title: 'Knowledge Synthesis #2519',
+        image_url: '/images/gallery/abraham-hero.png',
+        created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+        description: 'Daily synthesis of human knowledge patterns'
+      }
+    ],
+    'solienne': [
+      {
+        id: 'solienne-work-1', 
+        title: 'Consciousness Velocity Stream',
+        image_url: '/images/gallery/solienne-hero.png',
+        created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        description: 'Exploration of consciousness through architectural light'
+      }
+    ]
+  };
+
+  return sampleWorks[handle] || [];
 }
 
 // POST /api/agents - Create new agent

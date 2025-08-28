@@ -336,6 +336,94 @@ export class CitizenMarketData {
   }
   
   /**
+   * Fetch collection image and metadata from OpenSea API
+   */
+  async fetchCollectionImages(slug: string): Promise<{
+    banner_image_url: string | null;
+    featured_image_url: string | null;
+    large_image_url: string | null;
+    sample_images: string[];
+  } | null> {
+    if (!this.openSeaApiKey) {
+      console.warn('[CITIZEN Market] OpenSea API key not configured for image fetching');
+      return null;
+    }
+    
+    try {
+      const headers: Record<string, string> = {
+        'accept': 'application/json'
+      };
+      
+      if (this.openSeaApiKey) {
+        headers['X-API-KEY'] = this.openSeaApiKey;
+      }
+      
+      const response = await fetch(`https://api.opensea.io/api/v2/collections/${slug}`, {
+        headers
+      });
+      
+      if (!response.ok) {
+        console.error(`[CITIZEN Market] OpenSea collection API error for ${slug}:`, response.status);
+        return null;
+      }
+      
+      const data = await response.json();
+      
+      return {
+        banner_image_url: data.banner_image_url || null,
+        featured_image_url: data.featured_image_url || null,
+        large_image_url: data.large_image_url || null,
+        sample_images: []
+      };
+    } catch (error) {
+      console.error(`[CITIZEN Market] Error fetching images for ${slug}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Fetch sample NFTs from a collection with their images
+   */
+  async fetchSampleNFTs(slug: string, limit: number = 6): Promise<{
+    id: string;
+    name: string;
+    image_url: string;
+    permalink: string;
+    token_id: string;
+  }[]> {
+    if (!this.openSeaApiKey) return [];
+    
+    try {
+      const headers: Record<string, string> = {
+        'accept': 'application/json'
+      };
+      
+      if (this.openSeaApiKey) {
+        headers['X-API-KEY'] = this.openSeaApiKey;
+      }
+      
+      const response = await fetch(`https://api.opensea.io/api/v2/collection/${slug}/nfts?limit=${limit}`, {
+        headers
+      });
+      
+      if (!response.ok) return [];
+      
+      const data = await response.json();
+      
+      return (data.nfts || []).map((nft: any) => ({
+        id: nft.identifier,
+        name: nft.name || `${slug.toUpperCase()} #${nft.identifier}`,
+        image_url: nft.image_url || nft.display_image_url || '',
+        permalink: `https://opensea.io/assets/ethereum/${nft.contract}/${nft.identifier}`,
+        token_id: nft.identifier
+      }));
+    } catch (error) {
+      console.error(`[CITIZEN Market] Error fetching NFTs for ${slug}:`, error);
+      return [];
+    }
+  }
+
+  /**
    * Check if holder has Full Set or Ultra Set based on current market data
    */
   async analyzeHolderValue(walletAddress: string): Promise<{
