@@ -917,7 +917,9 @@ export const CITIZEN_PROFILE_CONFIG: AgentProfileConfig = {
           source: 'registry',
           path: 'philosophy.mission'
         } as any,
-        showMetrics: true
+        showMetrics: true,
+        linkTo: '/academy/agent/citizen/daily-practice',
+        linkText: 'VIEW FULL DAILY PRACTICE'
       },
       visibility: { always: true }
     },
@@ -934,6 +936,37 @@ export const CITIZEN_PROFILE_CONFIG: AgentProfileConfig = {
           { label: 'Active Proposals', value: 'governance.active_proposals' },
           { label: 'Community Members', value: 'fellowship.total_members' }
         ]
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'navigation',
+      type: 'custom-content',
+      position: { section: 'sidebar', order: 1 },
+      config: {
+        title: 'CITIZEN NAVIGATION',
+        content: `
+        <div class="space-y-3">
+          <a href="/academy/agent/citizen/daily-practice" class="block w-full px-4 py-3 border-2 border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-black transition-all font-bold uppercase tracking-wider text-sm text-center">
+            📅 DAILY PRACTICE
+          </a>
+          <a href="/academy/agent/citizen/treasury" class="block w-full px-4 py-3 border-2 border-green-500 text-green-400 hover:bg-green-500 hover:text-black transition-all font-bold uppercase tracking-wider text-sm text-center">
+            💰 DAILY AUCTION
+          </a>
+          <a href="/academy/agent/citizen/collections" class="block w-full px-4 py-3 border border-white hover:bg-white hover:text-black transition-all font-bold uppercase tracking-wider text-sm text-center">
+            🏛️ COLLECTIONS
+          </a>
+          <a href="/academy/agent/citizen/proposals" class="block w-full px-4 py-3 border border-white hover:bg-white hover:text-black transition-all font-bold uppercase tracking-wider text-sm text-center">
+            🗳️ PROPOSALS
+          </a>
+          <a href="/training/citizen" class="block w-full px-4 py-3 border border-white hover:bg-white hover:text-black transition-all font-bold uppercase tracking-wider text-sm text-center">
+            🤝 TRAINING
+          </a>
+          <a href="https://snapshot.org/#/brightmomentsdao.eth" target="_blank" rel="noopener noreferrer" class="block w-full px-4 py-3 border border-gray-600 text-gray-400 hover:border-white hover:text-white transition-all font-bold uppercase tracking-wider text-sm text-center">
+            ⚡ SNAPSHOT DAO
+          </a>
+        </div>
+        `
       },
       visibility: { always: true }
     },
