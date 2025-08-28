@@ -201,27 +201,10 @@ export default function MiyomiDashboard() {
             </Link>
             <span className="text-sm text-gray-400">Trainer Dashboard</span>
           </div>
-          <nav className="flex items-center gap-6">
-            <Link href="/academy/agent/miyomi" className="hover:text-red-500 transition">Profile</Link>
-            <Link href="/sites/miyomi" className="hover:text-red-500 transition">Live Site</Link>
-            <button 
-              onClick={async () => {
-                try {
-                  const response = await fetch('/api/miyomi/manual-drop', { method: 'POST' });
-                  const data = await response.json();
-                  if (data.success) {
-                    alert(`Drop triggered! ${data.videoUrl ? 'Video generated: ' + data.videoUrl : 'Processing...'}`);
-                  } else {
-                    alert('Error: ' + data.error);
-                  }
-                } catch (error) {
-                  alert('Error triggering drop');
-                }
-              }}
-              className="px-4 py-2 bg-red-600 rounded-lg hover:bg-red-700 transition"
-            >
-              Trigger Drop + Video
-            </button>
+          <nav className="flex items-center gap-4">
+            <Link href="/academy/agent/miyomi" className="text-sm hover:text-red-400 transition">
+              ← Back to Profile
+            </Link>
           </nav>
         </div>
       </header>
