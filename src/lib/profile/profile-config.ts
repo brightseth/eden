@@ -773,6 +773,7 @@ export const MIYOMI_PROFILE_CONFIG: AgentProfileConfig = {
         showTrainer: true,
         primaryAction: { text: 'LATEST PICKS', href: '/api/miyomi/real-picks' },
         secondaryActions: [
+          { text: 'VIDEO DASHBOARD', href: '/dashboard/miyomi' },
           { text: 'VIEW PERFORMANCE', href: '/api/miyomi/performance' },
           { text: 'ORACLE STUDIO →', href: '/sites/miyomi' }
         ]
