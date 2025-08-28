@@ -225,7 +225,7 @@ export const EDEN_AGENTS: EdenAgent[] = [
         id: 'miyomi-trading',
         title: 'Live Trading Interface',
         description: 'Real-time portfolio dashboard with WebSocket streaming and P&L tracking',
-        url: 'http://localhost:3007/dashboard/miyomi',
+        url: 'https://eden-academy-74jgnnwus-edenprojects.vercel.app/dashboard/miyomi',
         type: 'dashboard',
         status: 'active',
         featured: true
