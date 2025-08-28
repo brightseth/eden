@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { BaseWidgetProps } from '@/lib/profile/types';
 import { useAgentWorks } from '@/lib/registry/hooks';
