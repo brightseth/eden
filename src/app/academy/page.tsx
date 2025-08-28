@@ -29,6 +29,9 @@ export default function AcademyPage() {
   const [isUsingFallback, setIsUsingFallback] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
+    const loadingStart = Date.now();
+    
     async function fetchAgents() {
       try {
         console.log('Academy: Fetching agents from Academy API...');
@@ -37,38 +40,65 @@ export default function AcademyPage() {
         const response = await fetch('/api/academy/agents');
         
         if (!response.ok) {
-          throw new Error(`Academy API failed: ${response.status}`);
+          throw new Error(`Academy API failed: ${response.status} - ${response.statusText}`);
         }
         
         const data = await response.json();
         
-        console.log('Academy: API data received:', { 
-          agentCount: data.agents?.length || 0,
-          source: data.source
+        // Validate response structure
+        if (!data || !Array.isArray(data.agents)) {
+          throw new Error(`Invalid API response structure: ${JSON.stringify(data)}`);
+        }
+        
+        console.log('Academy: API data validated:', { 
+          agentCount: data.agents.length,
+          source: data.source,
+          firstAgent: data.agents[0]?.name || 'none',
+          loadTime: `${Date.now() - loadingStart}ms`
         });
+        
+        if (!mounted) return; // Prevent state updates if component unmounted
         
         setAgents(data.agents);
         setIsUsingFallback(data.source === 'fallback');
         
         if (data.warning) {
           setError(data.warning);
-          // Clear warning after 5 seconds to maintain UX
-          setTimeout(() => setError(null), 5000);
+          // Clear warning after 5 seconds to maintain UX - only if still mounted
+          setTimeout(() => {
+            if (mounted) setError(null);
+          }, 5000);
         } else {
           setError(null);
         }
         
       } catch (err) {
-        console.error('Academy API failed:', err);
-        setError('Unable to load agent data');
+        console.error('Academy API failed:', {
+          error: err,
+          stack: err instanceof Error ? err.stack : 'No stack',
+          timestamp: new Date().toISOString(),
+          url: '/api/academy/agents',
+          loadTime: `${Date.now() - loadingStart}ms`
+        });
+        
+        if (!mounted) return;
+        
+        // Preserve actual error for debugging
+        setError(err instanceof Error ? err.message : 'Unable to load agent data');
         setAgents([]);
         setIsUsingFallback(false);
       } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     }
 
     fetchAgents();
+    
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return (
