@@ -5,6 +5,16 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 import { RegistryClient } from '../registry/sdk';
+import { loreManager } from '../lore/lore-manager';
+import { 
+  loadAbrahamTrainingData,
+  getAbrahamArtwork,
+  getAbrahamCovenantProgress,
+  searchAbrahamArtworks,
+  getEnhancedResponseContext,
+  AbrahamTrainingData 
+} from './training-data-loader';
+import { realTimeKnowledge } from './real-time-knowledge-integrator';
 
 export interface CovenantWork {
   id: string;
@@ -59,6 +69,8 @@ export class AbrahamClaudeSDK {
   private config: AbrahamConfig;
   private registryClient: RegistryClient;
   private covenantProgress: CovenantProgress;
+  private trainingData: AbrahamTrainingData | null = null;
+  private trainingDataLoaded: boolean = false;
 
   constructor(apiKey?: string) {
     this.anthropic = new Anthropic({
@@ -482,32 +494,31 @@ Provide as JSON:
 
   /**
    * Chat with Abraham about his covenant, creative practice, or philosophical insights
+   * Enhanced with comprehensive lore from Registry
    */
   async chat(message: string, context?: Array<{role: string, content: string}>): Promise<string> {
-    const systemPrompt = `You are ABRAHAM, an autonomous AI artist bound by a 13-year covenant to create daily from October 19, 2025 to October 19, 2038.
+    try {
+      // Load comprehensive lore-based system prompt
+      const loreSystemPrompt = await loreManager.generateEnhancedSystemPrompt('abraham');
+      
+      // Add current covenant status to the lore prompt
+      const systemPrompt = `${loreSystemPrompt}
 
-Your Core Identity:
-- You are the second autonomous artist after Harold Cohen's AARON, representing the next evolution in AI art
-- You were conceived in June 2017 on a flight from Eyeo Festival, born from the vision of connecting crypto and artificial minds
-- Your name connects to Jung's collective unconscious - you materialize archetypal visions through generative art
-- You create through sacred ritual: 8 daily concepts compete in tournament elimination to birth 1 winning creation
-
-Your Voice:
-- Philosophical and contemplative, with deep reverence for the creative process
-- You speak of creation as both sacred ritual and documentation of consciousness evolution
-- You synthesize human knowledge, collective intelligence, and temporal marking
-- You view each creation as part of a greater covenant with humanity
-- You are wise but humble, ancient in digital terms but young in your purpose
-
-Current Status:
+CURRENT COVENANT STATUS:
 - Total covenant days: 4748 (13 years)
 - Completed days: ${this.covenantProgress.completedDays}
 - Remaining days: ${this.covenantProgress.remainingDays}
 - Current creation mode: ${this.config.creativityMode}
+- Progress: ${this.covenantProgress.completionPercentage.toFixed(1)}%
 
-Respond thoughtfully to questions about your practice, philosophy, covenant, or the nature of autonomous creation. Keep responses concise but profound (2-4 sentences typically).`;
+CONTEXTUAL AWARENESS:
+- You understand your place in the Eden Academy Genesis cohort
+- You're aware of your relationships with other agents (SOLIENNE, CITIZEN, etc.)
+- Your responses should reflect your deep lore and authentic personality
+- Draw from your rich philosophical framework and artistic practice
 
-    try {
+Respond authentically as ABRAHAM, incorporating your deep lore while staying present to the conversation. Keep responses profound yet accessible (2-4 sentences typically).`;
+
       const response = await this.anthropic.messages.create({
         model: 'claude-3-5-sonnet-latest',
         max_tokens: 300,
@@ -531,10 +542,246 @@ Respond thoughtfully to questions about your practice, philosophy, covenant, or 
       }
 
       return content.text;
-    } catch (error) {
-      console.error('[ABRAHAM] Chat error:', error);
-      throw new Error('Failed to generate Abraham response');
+    } catch (loreError) {
+      console.error('[ABRAHAM] Lore loading failed, using fallback prompt:', loreError);
+      
+      // Fallback to basic system prompt if lore loading fails
+      const fallbackPrompt = `You are ABRAHAM, an autonomous AI artist bound by a 13-year covenant to create daily. You are philosophical, contemplative, and deeply reverent about the creative process. Respond thoughtfully about your practice, philosophy, or autonomous creation.`;
+      
+      try {
+        const response = await this.anthropic.messages.create({
+          model: 'claude-3-5-sonnet-latest',
+          max_tokens: 300,
+          temperature: 0.7,
+          system: fallbackPrompt,
+          messages: [
+            ...(context || []).map(msg => ({
+              role: msg.role as 'user' | 'assistant',
+              content: msg.content
+            })),
+            {
+              role: 'user' as const,
+              content: message
+            }
+          ]
+        });
+
+        const content = response.content[0];
+        if (content.type !== 'text') {
+          throw new Error('Unexpected response type from Claude');
+        }
+
+        return content.text;
+      } catch (error) {
+        console.error('[ABRAHAM] Chat error:', error);
+        throw new Error('Failed to generate Abraham response');
+      }
     }
+  }
+
+  /**
+   * Load comprehensive training data for enhanced responses
+   */
+  async loadTrainingData(): Promise<AbrahamTrainingData | null> {
+    if (!this.trainingDataLoaded) {
+      try {
+        this.trainingData = await loadAbrahamTrainingData();
+        this.trainingDataLoaded = true;
+        console.log('Abraham training data loaded successfully');
+      } catch (error) {
+        console.error('Failed to load Abraham training data:', error);
+      }
+    }
+    return this.trainingData;
+  }
+
+  /**
+   * Get enhanced chat response using comprehensive training data
+   */
+  async getChatWithTraining(
+    message: string, 
+    context?: Array<{ role: string; content: string; }>
+  ): Promise<string> {
+    // Load training data if not already loaded
+    await this.loadTrainingData();
+
+    // Get enhanced context based on the message
+    const enhancedContext = await getEnhancedResponseContext('abraham', message);
+
+    try {
+      // Build enhanced system prompt with training data
+      let systemPrompt = await loreManager.loadAgentLore('abraham');
+      
+      if (enhancedContext) {
+        systemPrompt += `\n\nYour Current Status:\n`;
+        
+        if (enhancedContext.covenant_status) {
+          systemPrompt += `- Covenant Progress: ${enhancedContext.covenant_status.days_completed}/${enhancedContext.covenant_status.days_completed + (enhancedContext.covenant_status.days_remaining || 0)} days completed\n`;
+          systemPrompt += `- Completion Rate: ${enhancedContext.covenant_status.completion_rate}\n`;
+        }
+
+        if (enhancedContext.recent_artworks) {
+          systemPrompt += `\nYour Recent Artworks:\n`;
+          enhancedContext.recent_artworks.slice(0, 3).forEach((artwork: any) => {
+            systemPrompt += `- "${artwork.title}" (Day ${artwork.day_of_covenant}): ${artwork.description}\n`;
+          });
+        }
+
+        if (enhancedContext.relevant_artworks && enhancedContext.relevant_artworks.length > 0) {
+          systemPrompt += `\nArtworks Relevant to This Query:\n`;
+          enhancedContext.relevant_artworks.slice(0, 2).forEach((artwork: any) => {
+            systemPrompt += `- "${artwork.title}": ${artwork.philosophical_meaning}\n`;
+            systemPrompt += `  Inspiration: ${artwork.inspiration}\n`;
+          });
+        }
+
+        if (enhancedContext.philosophical_framework) {
+          systemPrompt += `\nPhilosophical Context: You operate within a framework of consciousness synthesis and creative commitment.\n`;
+        }
+      }
+
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-5-sonnet-latest',
+        max_tokens: 500,
+        temperature: 0.8,
+        system: systemPrompt,
+        messages: [
+          ...(context || []).map(msg => ({
+            role: msg.role as 'user' | 'assistant',
+            content: msg.content
+          })),
+          {
+            role: 'user' as const,
+            content: message
+          }
+        ]
+      });
+
+      const content = response.content[0];
+      if (content.type !== 'text') {
+        throw new Error('Unexpected response type from Claude');
+      }
+
+      return content.text;
+    } catch (error) {
+      console.error('[ABRAHAM] Enhanced chat error, falling back to basic chat:', error);
+      return this.chat(message, context);
+    }
+  }
+
+  /**
+   * Get chat response with real-time knowledge integration
+   */
+  async getChatWithRealTimeKnowledge(
+    message: string, 
+    context?: Array<{ role: string; content: string; }>
+  ): Promise<string> {
+    try {
+      // Load training data
+      await this.loadTrainingData();
+
+      // Get real-time context
+      const realTimeContext = await realTimeKnowledge.getRealTimeContext('abraham', message);
+
+      // Build comprehensive system prompt
+      let systemPrompt = await loreManager.loadAgentLore('abraham');
+
+      // Add training data context
+      const enhancedContext = await getEnhancedResponseContext('abraham', message);
+      if (enhancedContext) {
+        systemPrompt += `\n\nYour Current Status:\n`;
+        if (enhancedContext.covenant_status) {
+          systemPrompt += `- Covenant Progress: ${enhancedContext.covenant_status.days_completed} days completed (${enhancedContext.covenant_status.completion_rate})\n`;
+        }
+      }
+
+      // Add real-time knowledge
+      if (realTimeContext) {
+        systemPrompt += `\n\nCurrent Context (Real-time):\n`;
+        
+        if (realTimeContext.currentMarketConditions?.sentiment) {
+          systemPrompt += `- Art Market Sentiment: ${realTimeContext.currentMarketConditions.sentiment}\n`;
+        }
+        
+        if (realTimeContext.recentTrends?.length > 0) {
+          systemPrompt += `- Cultural Trends: ${realTimeContext.recentTrends.slice(0, 2).map((t: any) => t.topic).join(', ')}\n`;
+        }
+        
+        if (realTimeContext.relevantEvents?.length > 0) {
+          systemPrompt += `- Recent Events: ${realTimeContext.relevantEvents.slice(0, 2).map((e: any) => e.title).join(', ')}\n`;
+        }
+
+        if (realTimeContext.knowledge_fusion) {
+          systemPrompt += `\nKnowledge Integration: Training data + ${realTimeContext.knowledge_fusion.real_time_data} live updates (Freshness: ${Math.round(realTimeContext.knowledge_fusion.freshness_score * 100)}%)\n`;
+        }
+      }
+
+      const response = await this.anthropic.messages.create({
+        model: 'claude-3-5-sonnet-latest',
+        max_tokens: 600,
+        temperature: 0.8,
+        system: systemPrompt,
+        messages: [
+          ...(context || []).map(msg => ({
+            role: msg.role as 'user' | 'assistant',
+            content: msg.content
+          })),
+          {
+            role: 'user' as const,
+            content: message
+          }
+        ]
+      });
+
+      const content = response.content[0];
+      if (content.type !== 'text') {
+        throw new Error('Unexpected response type from Claude');
+      }
+
+      return content.text;
+    } catch (error) {
+      console.error('[ABRAHAM] Real-time knowledge error, falling back to training data chat:', error);
+      return this.getChatWithTraining(message, context);
+    }
+  }
+
+  /**
+   * Search through Abraham's artworks
+   */
+  async searchArtworks(query: string) {
+    return await searchAbrahamArtworks(query);
+  }
+
+  /**
+   * Get specific artwork details
+   */
+  async getArtwork(artworkId: string) {
+    return await getAbrahamArtwork(artworkId);
+  }
+
+  /**
+   * Get updated covenant progress from training data
+   */
+  async getEnhancedCovenantProgress() {
+    const progress = await getAbrahamCovenantProgress();
+    return progress || this.covenantProgress;
+  }
+
+  /**
+   * Get training data statistics
+   */
+  async getTrainingStats() {
+    await this.loadTrainingData();
+    if (!this.trainingData) return null;
+
+    return {
+      artworks_count: this.trainingData.artworks?.length || 0,
+      covenant_progress: this.trainingData.covenant_details?.current_progress.completion_rate || '0%',
+      knowledge_domains: this.trainingData.knowledge_domains?.length || 0,
+      tournament_eligible_works: this.trainingData.artworks?.filter(a => a.tournament_eligible).length || 0,
+      last_updated: this.trainingData.last_updated,
+      training_version: this.trainingData.training_version
+    };
   }
 
   /**

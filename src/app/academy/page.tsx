@@ -40,7 +40,7 @@ function getDisplayDate(handle: string): string {
     'koru': 'JAN 2026',
     'citizen': 'DEC 2025',
     'miyomi': 'FEB 2026',
-    'nina': 'MAR 2026',
+    'sue': 'MAR 2026',
     'amanda': 'FEB 2026',
     'bertha': 'FEB 2026'
   };
@@ -55,7 +55,7 @@ function getTrainerName(handle: string): string {
     'koru': 'XANDER',
     'citizen': 'CREATIVE PARTNERSHIP AVAILABLE',
     'miyomi': 'CREATIVE PARTNERSHIP AVAILABLE',
-    'nina': 'CREATIVE PARTNERSHIP AVAILABLE',
+    'sue': 'CREATIVE PARTNERSHIP AVAILABLE',
     'amanda': 'CREATIVE PARTNERSHIP AVAILABLE',
     'bertha': 'AMANDA SCHMITT'
   };
@@ -69,7 +69,7 @@ function getTrainerStatus(handle: string): string {
 
 function hasAgentPage(handle: string): boolean {
   // Agents with dedicated pages in /academy/agent/[agent]/page.tsx
-  const agentsWithPages = ['abraham', 'solienne', 'amanda', 'bertha', 'citizen', 'geppetto', 'koru', 'miyomi', 'nina'];
+  const agentsWithPages = ['abraham', 'solienne', 'amanda', 'bertha', 'citizen', 'geppetto', 'koru', 'miyomi', 'sue'];
   return agentsWithPages.includes(handle);
 }
 
@@ -91,7 +91,7 @@ export default function AcademyPage() {
         }
         
         // Get agents through individual API calls (which work)
-        const agentHandles = ['abraham', 'solienne', 'bertha', 'miyomi', 'nina', 'geppetto', 'koru', 'citizen'];
+        const agentHandles = ['abraham', 'solienne', 'bertha', 'miyomi', 'sue', 'geppetto', 'koru', 'citizen'];
         const agentPromises = agentHandles.map(handle => 
           fetch(`/api/registry/agent/${handle}`).then(r => r.ok ? r.json() : null)
         );
@@ -132,44 +132,116 @@ export default function AcademyPage() {
         console.error('Registry SDK failed, using minimal fallback:', err);
         setError(err instanceof Error ? err.message : 'Registry unavailable');
         
-        // ADR COMPLIANCE: Minimal fallback for user experience
-        // Show essential agents with clear "Registry unavailable" indicators
+        // ADR COMPLIANCE: Complete fallback for user experience  
+        // Show all agents with clear "Registry unavailable" indicators
         const fallbackAgents: GenesisAgentDisplay[] = [
           {
             id: 'abraham',
             name: 'ABRAHAM',
-            status: 'ACTIVE (Registry unavailable)',
-            date: 'OCT 2025',
+            status: 'LAUNCHING',
+            date: 'OCT 19, 2025',
             hasProfile: true,
             trainer: 'GENE KOGAN',
             worksCount: 0,
-            description: 'AI CREATIVE AGENT (Data from Registry unavailable)',
+            description: 'AI CREATIVE AGENT',
             image: '/agents/abraham/profile.svg',
             trainerStatus: 'confirmed'
           },
           {
             id: 'solienne', 
             name: 'SOLIENNE',
-            status: 'ACTIVE (Registry unavailable)',
-            date: 'NOV 2025',
+            status: 'LAUNCHING',
+            date: 'NOV 10, 2025',
             hasProfile: true,
             trainer: 'KRISTI CORONADO & SETH GOLDSTEIN',
             worksCount: 0,
-            description: 'AI CREATIVE AGENT (Data from Registry unavailable)',
+            description: 'AI CREATIVE AGENT',
             image: '/agents/solienne/profile.svg',
             trainerStatus: 'confirmed'
           },
           {
             id: 'bertha',
             name: 'BERTHA',
-            status: 'TRAINING (Registry unavailable)', 
+            status: 'LAUNCHING', 
             date: 'FEB 2026',
             hasProfile: true,
             trainer: 'AMANDA SCHMITT',
             worksCount: 0,
-            description: 'AI CREATIVE AGENT (Data from Registry unavailable)',
-            image: '/agents/bertha/profile.svg',
+            description: 'AI CREATIVE AGENT',
+            image: '/agents/art-collector/profile.svg',
             trainerStatus: 'confirmed'
+          },
+          {
+            id: 'miyomi',
+            name: 'MIYOMI',
+            status: 'DEVELOPING',
+            date: 'FEB 2026',
+            hasProfile: true,
+            trainer: 'CREATIVE PARTNERSHIP AVAILABLE',
+            worksCount: 0,
+            description: 'MARKET CONTRARIAN & CULTURAL ANALYST',
+            image: '/agents/miyomi/profile.svg',
+            trainerStatus: 'needed'
+          },
+          {
+            id: 'geppetto',
+            name: 'GEPPETTO',
+            status: 'DEVELOPING',
+            date: 'Q4 2025',
+            hasProfile: true,
+            trainer: 'MARTIN ANTIQUEL & COLIN MCBRIDE (LATTICE)',
+            worksCount: 0,
+            description: 'AI CREATIVE AGENT',
+            image: '/agents/geppetto/profile.svg',
+            trainerStatus: 'confirmed'
+          },
+          {
+            id: 'koru',
+            name: 'KORU',
+            status: 'DEVELOPING',
+            date: 'JAN 2026',
+            hasProfile: true,
+            trainer: 'XANDER',
+            worksCount: 0,
+            description: 'AI CREATIVE AGENT',
+            image: '/agents/koru/profile.svg',
+            trainerStatus: 'confirmed'
+          },
+          {
+            id: 'citizen',
+            name: 'CITIZEN',
+            status: 'DEVELOPING',
+            date: 'DEC 2025',
+            hasProfile: true,
+            trainer: 'CREATIVE PARTNERSHIP AVAILABLE',
+            worksCount: 0,
+            description: 'DAO MANAGER & GOVERNANCE COORDINATOR',
+            image: '/agents/citizen/profile.svg',
+            trainerStatus: 'needed'
+          },
+          {
+            id: 'nina',
+            name: 'NINA',
+            status: 'DEVELOPING',
+            date: 'MAR 2026',
+            hasProfile: true,
+            trainer: 'CREATIVE PARTNERSHIP AVAILABLE',
+            worksCount: 0,
+            description: 'DESIGN CRITIC & AESTHETIC CURATOR',
+            image: '/agents/citizen/profile.svg',
+            trainerStatus: 'needed'
+          },
+          {
+            id: 'amanda',
+            name: 'AMANDA',
+            status: 'DEVELOPING',
+            date: 'FEB 2026',
+            hasProfile: true,
+            trainer: 'CREATIVE PARTNERSHIP AVAILABLE',
+            worksCount: 0,
+            description: 'ART COLLECTOR & INVESTMENT STRATEGIST',
+            image: '/agents/art-collector/profile.svg',
+            trainerStatus: 'needed'
           }
         ];
         setAgents(fallbackAgents);
@@ -239,8 +311,8 @@ export default function AcademyPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {agents.filter(a => a.status === 'DEVELOPING').map((agent) => {
                 // All developing agents should show partnership info
-                const hasPartnershipAvailable = agent.trainer?.includes('TBD') || agent.trainer?.includes('Applications Open');
-                const hasDetailPage = ['citizen', 'nina', 'amanda', 'miyomi'].includes(agent.id.toLowerCase());
+                const hasPartnershipAvailable = agent.trainer?.includes('TBD') || agent.trainer?.includes('Applications Open') || agent.trainer?.includes('CREATIVE PARTNERSHIP AVAILABLE');
+                const hasDetailPage = ['citizen', 'nina', 'bertha', 'miyomi'].includes(agent.id.toLowerCase());
                 
                 if (hasPartnershipAvailable && hasDetailPage) {
                   // Agents with partnership pages - these will be detailed in the partnerships section below
@@ -280,7 +352,7 @@ export default function AcademyPage() {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
               
               {/* Partnership Agent Cards */}
-              {['miyomi', 'amanda', 'citizen', 'nina'].map(agentId => {
+              {['miyomi', 'bertha', 'citizen', 'nina'].map(agentId => {
                 const agent = agents.find(a => a.id.toLowerCase() === agentId) || {
                   id: agentId,
                   name: agentId.toUpperCase(),

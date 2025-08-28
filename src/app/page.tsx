@@ -89,7 +89,7 @@ function getAgentLaunchDate(handle: string): string {
     'koru': 'January 2026',
     'citizen': 'Q1 2026',
     'miyomi': 'December 1, 2025',
-    'nina': 'Q1 2026',
+    'sue': 'Q1 2026',
     'amanda': 'March 2026'
   };
   return launchDates[handle] || 'TBD';
@@ -103,7 +103,7 @@ function getAgentTrainer(handle: string): string {
     'koru': 'Xander',
     'citizen': 'TBD - Applications Open',
     'miyomi': 'Seth Goldstein',
-    'nina': 'TBD - Applications Open',
+    'sue': 'TBD - Applications Open',
     'amanda': 'TBD - Applications Open'
   };
   return trainers[handle] || 'TBD';

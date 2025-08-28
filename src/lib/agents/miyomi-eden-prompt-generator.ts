@@ -59,7 +59,8 @@ export class MiyomiEdenPromptGenerator {
    * Generate complete Eden video project from market concept
    */
   async generateEdenProject(concept: DynamicVideoConcept): Promise<EdenVideoProject> {
-    console.log('🎬 Generating Eden project for concept:', concept.title);
+    console.log('🎬 Generating Eden project for concept:', concept?.title || 'undefined concept');
+    console.log('🔍 Concept object:', JSON.stringify(concept, null, 2));
     
     // Phase 1: Initial Configuration
     const project = this.createInitialConfiguration(concept);
@@ -142,17 +143,22 @@ Execute with confidence. On Eden, we're not making content—we're birthing new 
   generateQuickPrompt(concept: DynamicVideoConcept): string {
     const visualStyle = this.getVisualStyleFromConcept(concept);
     const emotionalTone = this.getEmotionalToneFromConcept(concept);
+    const title = concept.title || 'Market Analysis';
+    const contrarian = concept.contrarian_angle || 'Against conventional market wisdom';
+    const dataPoint = concept.dataPoints?.primary || 'Market data reveals hidden patterns';
+    const urgency = concept.urgencyScore || 75;
+    const titlePart = title.split(':')[0];
     
-    return `MIYOMI Market Analysis: ${concept.title}
+    return `MIYOMI Market Analysis: ${title}
 
 Visual Style: ${visualStyle}
 Emotional Tone: ${emotionalTone}
 
-Core Message: ${concept.contrarian_angle}
+Core Message: ${contrarian}
 
-Data Visualization: ${concept.dataPoints.primary}
+Data Visualization: ${dataPoint}
 
-Create a ${concept.urgencyScore > 80 ? 'urgent' : 'contemplative'} market analysis video that reveals why consensus is wrong about ${concept.title.split(':')[0]}. 
+Create a ${urgency > 80 ? 'urgent' : 'contemplative'} market analysis video that reveals why consensus is wrong about ${titlePart}. 
 
 Style: Professional financial content with artistic cinematography, data overlays, NYC energy, contrarian perspective.
 
@@ -177,12 +183,17 @@ Duration: 60 seconds, 16:9 format, high production value.`;
   }
 
   private generateEvocativeTitle(concept: DynamicVideoConcept): string {
+    const audience = concept.targetAudience ? concept.targetAudience.replace('_', ' ') : 'market participants';
+    const titlePart = concept.title ? concept.title.split(':')[0] : 'market dynamics';
+    const urgency = concept.urgencyScore || 75;
+    const dataPoint = concept.dataPoints?.primary ? concept.dataPoints.primary.split(':')[0] : 'market signals';
+    
     const templates = [
-      `The ${concept.targetAudience.replace('_', ' ')} Paradox`,
-      `Market Memory: ${concept.title.split(':')[0]}`,
-      `Contrarian Frequencies: ${concept.urgencyScore}%`,
+      `The ${audience} Paradox`,
+      `Market Memory: ${titlePart}`,
+      `Contrarian Frequencies: ${urgency}%`,
       `The Consensus Delusion`,
-      `Edge of Certainty: ${concept.dataPoints.primary.split(':')[0]}`,
+      `Edge of Certainty: ${dataPoint}`,
       `Probability Dreams`,
       `The Crowd's Blindness`,
       `Mathematical Dissent`
@@ -192,7 +203,8 @@ Duration: 60 seconds, 16:9 format, high production value.`;
   }
 
   private generatePhilosophicalPremise(concept: DynamicVideoConcept): string {
-    return `Market psychology reveals human nature through the lens of ${concept.title.split(':')[0].toLowerCase()}—where consensus reality breaks down at the edges of uncertainty, creating pockets of alpha for those who see beyond the crowd's emotional gravitational field.`;
+    const conceptFocus = concept.title ? concept.title.split(':')[0].toLowerCase() : 'market dynamics';
+    return `Market psychology reveals human nature through the lens of ${conceptFocus}—where consensus reality breaks down at the edges of uncertainty, creating pockets of alpha for those who see beyond the crowd's emotional gravitational field.`;
   }
 
   private generateVisualDNA(concept: DynamicVideoConcept): string {
@@ -206,7 +218,8 @@ Duration: 60 seconds, 16:9 format, high production value.`;
       internet: 'Data packet flows as river systems, server farms as brutalist monasteries, human connection threading through fiber optic prayers'
     };
 
-    const baseDNA = sectorDNA[concept.title.toLowerCase().includes('btc') || concept.title.toLowerCase().includes('crypto') ? 'finance' : 'finance'] || sectorDNA.finance;
+    const title = concept.title || '';
+    const baseDNA = sectorDNA[title.toLowerCase().includes('btc') || title.toLowerCase().includes('crypto') ? 'finance' : 'finance'] || sectorDNA.finance;
     
     return `${baseDNA}. Contrarian energy manifests as geometric disruption—probability distributions colliding with consensus reality, creating visual turbulence where mathematical truth emerges from market psychology's failures.`;
   }
@@ -219,7 +232,7 @@ Duration: 60 seconds, 16:9 format, high production value.`;
       return { primary: 'cinematic', secondary: 'euphoric' };
     } else if (concept.targetAudience === 'contrarians') {
       return { primary: 'experimental', secondary: 'contemplative' };
-    } else if (concept.dataPoints.primary.includes('crypto') || concept.dataPoints.primary.includes('BTC')) {
+    } else if (concept.dataPoints?.primary && (concept.dataPoints.primary.includes('crypto') || concept.dataPoints.primary.includes('BTC'))) {
       return { primary: 'dreamlike', secondary: 'playful' };
     } else {
       return { primary: 'intimate', secondary: 'melancholic' };
@@ -251,23 +264,38 @@ Duration: 60 seconds, 16:9 format, high production value.`;
   }
 
   private generateOpeningHook(concept: DynamicVideoConcept): string {
+    const title = concept.title || 'market dynamics';
+    const titlePart = title.split(':')[0];
+    const urgency = concept.urgencyScore || 75;
+    const views = concept.estimatedViews || 100000;
+    const dataPoint = concept.dataPoints?.primary || 'market signals';
+    const dataPart = dataPoint.split(':')[0];
+    
     const hooks = [
-      `What if everything the market believes about ${concept.title.split(':')[0]} is backwards?`,
-      `${concept.urgencyScore}% urgency. ${concept.estimatedViews.toLocaleString()} potential views. Here's why everyone's wrong.`,
-      `The crowd sees ${concept.dataPoints.primary.split(':')[0]}. I see something else entirely.`,
+      `What if everything the market believes about ${titlePart} is backwards?`,
+      `${urgency}% urgency. ${views.toLocaleString()} potential views. Here's why everyone's wrong.`,
+      `The crowd sees ${dataPart}. I see something else entirely.`,
       `Market psychology just revealed its deepest bias. Most traders will never notice.`,
-      `Between what we know and what we pretend to know lies all the alpha in ${concept.title.split(':')[0]}.`
+      `Between what we know and what we pretend to know lies all the alpha in ${titlePart}.`
     ];
     
     return hooks[Math.floor(Math.random() * hooks.length)];
   }
 
   private generateMiddleDevelopment(concept: DynamicVideoConcept): string {
-    return `${concept.contrarian_angle} The data tells a different story: ${concept.dataPoints.primary}. While consensus builds around comfortable narratives, mathematical reality operates by different rules. ${concept.scriptOutline.development}`;
+    const contrarian = concept.contrarian_angle || 'Against conventional wisdom';
+    const dataPoint = concept.dataPoints?.primary || 'Market data reveals hidden patterns';
+    const development = concept.scriptOutline?.development || 'The evidence points to a different reality';
+    
+    return `${contrarian} The data tells a different story: ${dataPoint}. While consensus builds around comfortable narratives, mathematical reality operates by different rules. ${development}`;
   }
 
   private generateClimaticRevelation(concept: DynamicVideoConcept): string {
-    return `This isn't about being right or wrong—it's about seeing patterns that haven't become consensus yet. ${concept.scriptOutline.revelation} When ${concept.urgencyScore}% urgency meets ${concept.trendingPotential} potential, the market's emotional biases become visible architecture.`;
+    const revelation = concept.scriptOutline?.revelation || 'The truth emerges from market noise';
+    const urgency = concept.urgencyScore || 75;
+    const trending = concept.trendingPotential || 'high';
+    
+    return `This isn't about being right or wrong—it's about seeing patterns that haven't become consensus yet. ${revelation} When ${urgency}% urgency meets ${trending} potential, the market's emotional biases become visible architecture.`;
   }
 
   private generateClosingResonance(concept: DynamicVideoConcept): string {

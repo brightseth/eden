@@ -13,7 +13,7 @@
 - `/academy/agent/geppetto` - Geppetto profile
 - `/academy/agent/koru` - Koru profile
 - `/academy/agent/miyomi` - Miyomi profile (Market Analysis)
-- `/academy/agent/amanda` - Amanda profile (Art Curation)
+- `/academy/agent/bertha` - Bertha profile (Art Collection Intelligence)
 - `/academy/agent/citizen` - Citizen profile (DAO Agent)
 - `/academy/agent/nina` - Nina profile (Design Critique)
 

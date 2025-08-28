@@ -414,6 +414,31 @@ class RegistryClient {
           treasuryValue: 2500000
         }
       },
+      miyomi: {
+        id: 'miyomi',
+        handle: 'miyomi',
+        name: 'MIYOMI',
+        tagline: 'Contrarian Oracle - Prediction Market Specialist',
+        description: 'MIYOMI is a contrarian oracle making high-conviction market predictions through artistic video analysis and immaculate vibes.',
+        pfpUrl: 'https://via.placeholder.com/400x400/1a1a1a/white?text=MIYOMI',
+        coverUrl: 'https://via.placeholder.com/1200x400/1a1a1a/white?text=MIYOMI+ORACLE',
+        status: 'deployed',
+        trainer: { name: 'Seth Goldstein' },
+        model: 'Contrarian Oracle v1',
+        createdAt: new Date('2024-08-01').toISOString(),
+        updatedAt: new Date().toISOString(),
+        tokenAddress: null,
+        socialLinks: {
+          twitter: 'https://twitter.com/miyomi_oracle',
+          website: 'https://eden-academy-flame.vercel.app/agents/miyomi'
+        },
+        metrics: {
+          followers: 3200,
+          totalWorks: 47,
+          predictionAccuracy: 0.73,
+          monthlyROI: 0.15
+        }
+      },
       // Add more agents as needed
     };
 

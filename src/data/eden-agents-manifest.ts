@@ -268,6 +268,15 @@ export const EDEN_AGENTS: EdenAgent[] = [
         type: 'interface',
         status: 'active',
         featured: true
+      },
+      {
+        id: 'miyomi-video-dashboard',
+        title: 'Video Generation Dashboard',
+        description: 'Cinematic market analysis video generation using Eden API',
+        url: 'https://eden-academy-flame.vercel.app/dashboard/miyomi',
+        type: 'dashboard',
+        status: 'active',
+        featured: true
       }
     ]
   },

@@ -7,8 +7,9 @@ export async function GET(request: NextRequest) {
     const date = searchParams.get('date') || new Date().toISOString().split('T')[0];
     const includeAuction = searchParams.get('auction') !== 'false';
     const includeHistory = searchParams.get('history') === 'true';
+    const includeWalletData = searchParams.get('wallet') !== 'false';
     
-    console.log('[CITIZEN Treasury] Request:', { date, includeAuction, includeHistory });
+    console.log('[CITIZEN Treasury] Request:', { date, includeAuction, includeHistory, includeWalletData });
     
     // Bright Moments Treasury Overview
     const treasuryOverview = {
@@ -53,6 +54,18 @@ export async function GET(request: NextRequest) {
       }
     };
     
+    // Fetch live treasury data if requested
+    let treasuryHoldings = null;
+    if (includeWalletData) {
+      try {
+        const { citizenMarketData } = await import('@/lib/agents/citizen-market-data');
+        treasuryHoldings = await citizenMarketData.getBrightMomentsTreasuryHoldings();
+        console.log('[CITIZEN Treasury] Fetched live treasury holdings:', treasuryHoldings?.total_nfts || 0, 'NFTs');
+      } catch (error) {
+        console.error('[CITIZEN Treasury] Error fetching treasury holdings:', error);
+      }
+    }
+    
     // Generate daily auction based on date
     const todaysAuction = await generateDailyAuction(date);
     const auctionHistory = includeHistory ? generateAuctionHistory() : null;
@@ -85,7 +98,49 @@ export async function GET(request: NextRequest) {
       success: true,
       agent: "CITIZEN",
       date: date,
-      treasury_overview: treasuryOverview,
+      treasury_overview: treasuryHoldings ? {
+        // Use live data if available
+        total_nfts: treasuryHoldings.total_nfts,
+        total_value_eth: treasuryHoldings.total_treasury_value,
+        total_value_usd: treasuryHoldings.total_treasury_value * 2000, // Approximate ETH price
+        active_collections: treasuryHoldings.wallets.length,
+        daily_auction_schedule: "Every day at 12:00 PM EST",
+        citizen_role: "Autonomous treasury activation and community engagement coordinator",
+        
+        live_wallet_data: {
+          data_source: "OpenSea API - Live blockchain data",
+          wallets: treasuryHoldings.wallets,
+          last_updated: new Date().toISOString(),
+          verification_status: "Live on-chain verification"
+        },
+        
+        collection_breakdown: {
+          cryptocitizens: {
+            owned: treasuryHoldings.treasury_breakdown.cryptocitizens,
+            percentage: ((treasuryHoldings.treasury_breakdown.cryptocitizens / treasuryHoldings.total_nfts) * 100).toFixed(1),
+            estimated_value_eth: treasuryHoldings.total_treasury_value * 0.3,
+            significance: "Core collection - CryptoCitizens from all cities"
+          },
+          bright_moments_editions: {
+            owned: treasuryHoldings.treasury_breakdown.bright_moments_editions,
+            percentage: ((treasuryHoldings.treasury_breakdown.bright_moments_editions / treasuryHoldings.total_nfts) * 100).toFixed(1),
+            estimated_value_eth: treasuryHoldings.total_treasury_value * 0.4,
+            significance: "Works from BM gallery program across all cities"
+          },
+          community_submissions: {
+            owned: treasuryHoldings.treasury_breakdown.community_submissions,
+            percentage: ((treasuryHoldings.treasury_breakdown.community_submissions / treasuryHoldings.total_nfts) * 100).toFixed(1),
+            estimated_value_eth: treasuryHoldings.total_treasury_value * 0.2,
+            significance: "Community-curated works and emerging artists"
+          },
+          other_collections: {
+            owned: treasuryHoldings.treasury_breakdown.other_collections,
+            percentage: ((treasuryHoldings.treasury_breakdown.other_collections / treasuryHoldings.total_nfts) * 100).toFixed(1),
+            estimated_value_eth: treasuryHoldings.total_treasury_value * 0.1,
+            significance: "Diverse NFT holdings and partnerships"
+          }
+        }
+      } : treasuryOverview, // Fallback to static data
       activation_strategies: activationStrategies,
       
       ...(includeAuction && {

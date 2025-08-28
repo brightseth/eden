@@ -30,14 +30,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Step 2: Generate the Eden project using Dynamic Narrative Framework
-    const edenProject = await miyomiEdenPromptGenerator.generateEdenProject({
-      market: concept.title,
-      prediction: concept.coreConcept,
-      confidence: concept.urgencyScore / 100,
-      timeframe: '24h',
-      contrarian_angle: concept.contrarian_angle,
-      data_points: [concept.dataPoints.primary, ...concept.dataPoints.supporting]
-    });
+    // Pass the full concept object to the prompt generator
+    const edenProject = await miyomiEdenPromptGenerator.generateEdenProject(concept);
 
     // Step 3: Generate Eden prompt (always works)
     const edenPrompt = miyomiEdenPromptGenerator.generateEdenPrompt(edenProject);
@@ -138,8 +132,16 @@ async function createEdenSession(agentId?: string): Promise<{ success: boolean; 
   const edenApiKey = process.env.EDEN_API_KEY;
   const edenBaseUrl = process.env.EDEN_BASE_URL || 'https://api.eden.art';
   
+  console.log('[Eden API] Environment check:');
+  console.log('[Eden API] EDEN_API_KEY exists:', !!edenApiKey);
+  console.log('[Eden API] EDEN_API_KEY length:', edenApiKey?.length || 0);
+  console.log('[Eden API] EDEN_API_KEY prefix:', edenApiKey?.substring(0, 10));
+  console.log('[Eden API] EDEN_BASE_URL:', edenBaseUrl);
+  console.log('[Eden API] MIYOMI_EDEN_AGENT_ID:', process.env.MIYOMI_EDEN_AGENT_ID);
+  console.log('[Eden API] All env vars:', Object.keys(process.env).filter(k => k.includes('EDEN')));
+  
   if (!edenApiKey) {
-    return { success: false, error: 'Eden API key not configured' };
+    return { success: false, error: 'Eden API key not configured in environment variables' };
   }
 
   // Use provided agentId or default MIYOMI agent
@@ -147,38 +149,50 @@ async function createEdenSession(agentId?: string): Promise<{ success: boolean; 
   const useAgentId = agentId || defaultAgentId;
 
   try {
+    const requestBody = {
+      agent_ids: [useAgentId],
+      title: 'MIYOMI Cinematic Video Generation'
+    };
+    
+    console.log('[Eden API] Request body:', JSON.stringify(requestBody, null, 2));
+    console.log('[Eden API] Agent ID being used:', useAgentId);
+    
+    console.log('[Eden API] Creating session with agent:', useAgentId);
+    console.log('[Eden API] Request URL:', `${edenBaseUrl}/v2/sessions/create`);
+    
+    console.log('[Eden API] Full request details:');
+    console.log('[Eden API] Method: POST');
+    console.log('[Eden API] URL: ' + `${edenBaseUrl}/v2/sessions/create`);
+    console.log('[Eden API] Headers:', JSON.stringify({
+      'X-Api-Key': edenApiKey?.substring(0, 10) + '...',
+      'Content-Type': 'application/json'
+    }, null, 2));
+    console.log('[Eden API] Body:', JSON.stringify(requestBody));
+
     const response = await fetch(`${edenBaseUrl}/v2/sessions/create`, {
       method: 'POST',
       headers: {
         'X-Api-Key': edenApiKey,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'User-Agent': 'MIYOMI-Client/1.0'
       },
-      body: JSON.stringify({
-        agent_ids: [useAgentId],
-        title: 'MIYOMI Cinematic Video Generation',
-        scenario: 'Dynamic Narrative Video Framework - 9-phase cinematic approach for market analysis',
-        budget: {
-          manna_budget: 1000,
-          token_budget: 10000,
-          turn_budget: 10
-        },
-        autonomy_settings: {
-          auto_reply: true,
-          reply_interval: 2,
-          actor_selection_method: 'random'
-        }
-      })
+      body: JSON.stringify(requestBody)
     });
 
+    console.log('[Eden API] Response status:', response.status);
+    
     if (!response.ok) {
       const errorText = await response.text();
+      console.error('[Eden API] Error response:', errorText);
       throw new Error(`Eden API error ${response.status}: ${errorText}`);
     }
 
     const data = await response.json();
+    console.log('[Eden API] Session creation response:', JSON.stringify(data, null, 2));
+    
     return { 
       success: true, 
-      sessionId: data.session_id || data.id 
+      sessionId: data.session?._id || data.session_id || data.id 
     };
     
   } catch (error) {
@@ -210,6 +224,7 @@ async function sendSessionMessage(sessionId: string, content: string, agentId?: 
     if (agentId) {
       messagePayload.agent_ids = [agentId];
     }
+
 
     const response = await fetch(`${edenBaseUrl}/v2/sessions`, {
       method: 'POST',

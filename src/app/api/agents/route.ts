@@ -79,7 +79,7 @@ function getTrainerName(handle: string): string {
     'koru': 'Xander',
     'citizen': 'TBD',
     'miyomi': 'TBD',
-    'nina': 'TBD',
+    'sue': 'TBD',
     'amanda': 'TBD'
   };
   return trainers[handle] || 'TBD';

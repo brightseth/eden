@@ -1,5 +1,5 @@
-// Snapshot DAO Integration Service for Registry Gateway
-// Handles all Snapshot API interactions for CITIZEN governance on Sepolia testnet
+// Snapshot DAO Integration Service for Registry Gateway  
+// Handles all Snapshot API interactions for CITIZEN governance with eden.eth space
 
 import { registryAuth } from './auth';
 import { cacheGet, cacheSet, cacheInvalidate } from './cache';
@@ -84,14 +84,14 @@ class SnapshotService {
 
   constructor() {
     this.config = {
-      baseUrl: process.env.SNAPSHOT_BASE_URL || 'https://testnet.snapshot.org',
-      networkId: parseInt(process.env.GOVERNANCE_NETWORK_ID || '11155111'), // Sepolia
+      baseUrl: process.env.SNAPSHOT_BASE_URL || 'https://snapshot.org',
+      networkId: parseInt(process.env.GOVERNANCE_NETWORK_ID || '1'), // Mainnet for eden.eth
       apiKey: process.env.SNAPSHOT_API_KEY,
       timeout: 30000, // 30 seconds for Snapshot API
       maxRetries: 3
     };
 
-    console.log(`[SnapshotService] Initialized for network ${this.config.networkId} (${this.config.networkId === 11155111 ? 'Sepolia testnet' : 'unknown'})`);
+    console.log(`[SnapshotService] Initialized for network ${this.config.networkId} (${this.config.networkId === 1 ? 'Mainnet (eden.eth)' : this.config.networkId === 11155111 ? 'Sepolia testnet' : 'unknown'})`);
   }
 
   private generateTraceId(): string {

@@ -103,7 +103,7 @@ class UnifiedWorksService {
       'abraham': this.getAbrahamWorks(),
       'solienne': this.getSolienneWorks(),
       'miyomi': this.getMiyomiWorks(),
-      'amanda': this.getAmandaWorks(),
+      'bertha': this.getAmandaWorks(), // Amanda works now mapped to Bertha
       'citizen': this.getCitizenWorks(),
     };
 
@@ -225,8 +225,8 @@ class UnifiedWorksService {
   private getAmandaWorks(): UnifiedWork[] {
     return [
       {
-        id: 'ama-001',
-        agentId: 'amanda-006',
+        id: 'ber-001',
+        agentId: 'bertha-006',
         title: 'ART MARKET ANALYSIS Q4 2025',
         date: '2026-02-01',
         type: 'text',
@@ -238,8 +238,8 @@ class UnifiedWorksService {
         metadata: {}
       },
       {
-        id: 'ama-002',
-        agentId: 'amanda-006',
+        id: 'ber-002',
+        agentId: 'bertha-006',
         title: 'CURATED COLLECTION: EMERGING AI ARTISTS',
         date: '2026-01-30',
         type: 'image',
@@ -317,7 +317,7 @@ class UnifiedWorksService {
       const allWorks: UnifiedWork[] = [];
       
       // Get works from known active agents
-      const activeAgentSlugs = ['abraham', 'solienne', 'miyomi', 'amanda', 'citizen'];
+      const activeAgentSlugs = ['abraham', 'solienne', 'miyomi', 'bertha', 'citizen'];
       
       for (const slug of activeAgentSlugs) {
         const works = await this.getAgentWorks(slug);

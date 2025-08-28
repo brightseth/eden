@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { miyomiSDK, MarketPick } from '@/lib/agents/miyomi-claude-sdk';
 import { miyomiEdenVideoGenerator } from '@/lib/agents/miyomi-eden-video-generator';
 import { miyomiEdenPromptGenerator } from '@/lib/agents/miyomi-eden-prompt-generator';
+import { registryApi } from '@/lib/generated-sdk/registry-api';
 
 export const runtime = 'nodejs';
 
@@ -357,15 +358,51 @@ async function fetchPickFromDatabase(pickId: string): Promise<MarketPick | null>
 }
 
 async function storeVideoRecord(data: any) {
-  // Mock implementation - replace with actual database storage
   const id = `video_${Date.now()}`;
-  console.log(`Storing video record ${id}:`, data);
+  console.log(`[Registry Integration] Storing video record ${id}:`, data);
   
-  return {
-    id,
-    createdAt: new Date().toISOString(),
-    ...data
-  };
+  // Try to store in Registry as a Creation
+  try {
+    const registryCreation = await registryApi.createAgentCreation('miyomi', {
+      title: data.prompt || `Video: ${data.pick?.market || 'Market Analysis'}`,
+      mediaUri: data.videoUrl || '',
+      status: 'PUBLISHED',
+      metadata: {
+        type: 'video',
+        framework: data.metadata?.framework || 'standard',
+        pickId: data.pickId,
+        conceptId: data.conceptId,
+        style: data.style,
+        format: data.format,
+        poster: data.poster,
+        statement: data.statement,
+        generatedAt: new Date().toISOString(),
+        source: 'miyomi-video-generator'
+      }
+    });
+    
+    console.log('[Registry Integration] ✅ Video stored in Registry:', registryCreation.id);
+    
+    return {
+      id: registryCreation.id,
+      registryId: registryCreation.id,
+      createdAt: new Date().toISOString(),
+      source: 'registry',
+      ...data
+    };
+  } catch (registryError) {
+    console.warn('[Registry Integration] ⚠️ Registry storage failed, using fallback:', registryError);
+    
+    // Fallback to local storage
+    return {
+      id,
+      registryId: null,
+      createdAt: new Date().toISOString(),
+      source: 'fallback',
+      registryError: registryError instanceof Error ? registryError.message : 'Unknown error',
+      ...data
+    };
+  }
 }
 
 async function checkEdenTaskStatus(taskId: string) {

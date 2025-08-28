@@ -106,13 +106,15 @@ export function AgentCard({ agent, variant, showOnchainBadges = true }: AgentCar
 
   // Launching agents - large cards with full details
   if (variant === 'launching') {
-    // Use agent.id for consistent URL routing - matches [agent] dynamic route
-    const href = agent.hasProfile ? `/academy/agent/${agent.id}` : '#';
+    // Use consistent agent profile routing
+    const href = agent.hasProfile ? `/agents/${agent.id}` : '#';
     
     return (
       <Link 
         href={href}
         className="border border-white p-8 hover:bg-white hover:text-black transition-all block group"
+        target={undefined}
+        rel={undefined}
       >
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-start gap-3">
@@ -179,8 +181,10 @@ export function AgentCard({ agent, variant, showOnchainBadges = true }: AgentCar
           <TokenInfo />
         </div>
         <Link
-          href={`/academy/agent/${agent.id}`}
+          href={`/agents/${agent.id}`}
           className="inline-block border border-white px-4 py-2 text-xs hover:bg-white hover:text-black transition-all w-full text-center"
+          target={undefined}
+          rel={undefined}
         >
           EXPLORE PARTNERSHIP →
         </Link>
@@ -220,7 +224,7 @@ function getPartnershipDetails(agentId: string) {
         'Shape decentralized systems'
       ]
     },
-    'nina': {
+    'sue': {
       subtitle: 'Design Critic & Aesthetic Curator',
       description: 'Develop critical frameworks with an AI that analyzes and curates design across digital and physical spaces.',
       benefits: [

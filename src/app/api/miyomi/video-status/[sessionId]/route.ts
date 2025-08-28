@@ -14,7 +14,7 @@ interface SessionStatusParams {
 
 export async function GET(request: NextRequest, { params }: SessionStatusParams) {
   try {
-    const { sessionId } = params;
+    const { sessionId } = await params;
     console.log('[MIYOMI Status] Checking session:', sessionId);
 
     // Check if this is a demo session
@@ -30,8 +30,8 @@ export async function GET(request: NextRequest, { params }: SessionStatusParams)
         // Return completed demo video
         return NextResponse.json({
           status: 'completed',
-          videoUrl: 'https://demo-videos.eden-miyomi.app/cinematic/demo-video.mp4',
-          posterUrl: 'https://demo-videos.eden-miyomi.app/posters/demo-poster.jpg',
+          videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+          posterUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg',
           artisticStatement: 'This is a demo of the Dynamic Narrative Video Framework. The 9-phase cinematic approach transforms market analysis into compelling visual narratives.',
           demoMode: true,
           sessionData: {

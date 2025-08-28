@@ -191,7 +191,6 @@ export class LiveRegistrySync {
       'miyomi': { twitter: '@miyomi_markets', farcaster: 'miyomi.eth', website: 'https://miyomi.xyz' },
       'geppetto': { twitter: '@geppetto_toys' },
       'koru': { twitter: '@koru_creative' },
-      'amanda': { twitter: '@amanda_collector', website: 'https://amanda-art-agent.vercel.app' },
       'citizen': { twitter: '@citizen_dao' },
       'nina': { twitter: '@nina_curator' },
     };

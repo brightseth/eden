@@ -424,6 +424,187 @@ export class CitizenMarketData {
   }
 
   /**
+   * Fetch NFTs from wallet addresses (supports ENS domains)
+   */
+  async fetchWalletNFTs(walletAddress: string): Promise<{
+    nfts: Array<{
+      contract_address: string;
+      token_id: string;
+      name: string;
+      image_url: string;
+      collection_name: string;
+      opensea_url: string;
+      floor_price?: number;
+    }>;
+    total_value_eth: number;
+    bright_moments_nfts: number;
+    cryptocitizens_count: number;
+  } | null> {
+    if (!this.openSeaApiKey) {
+      console.warn('[CITIZEN Market] OpenSea API key required for wallet NFT fetching');
+      return null;
+    }
+
+    try {
+      const headers: Record<string, string> = {
+        'accept': 'application/json',
+        'X-API-KEY': this.openSeaApiKey
+      };
+
+      // Fetch NFTs from wallet
+      const response = await fetch(`https://api.opensea.io/api/v2/chain/ethereum/account/${walletAddress}/nfts?limit=200`, {
+        headers
+      });
+
+      if (!response.ok) {
+        console.error(`[CITIZEN Market] OpenSea wallet API error for ${walletAddress}:`, response.status);
+        return null;
+      }
+
+      const data = await response.json();
+      const nfts = data.nfts || [];
+
+      // Process and categorize NFTs
+      const processedNFTs = await Promise.all(
+        nfts.map(async (nft: any) => {
+          const collectionSlug = nft.collection?.slug || 'unknown';
+          let floorPrice = null;
+
+          // Try to get floor price for known collections
+          if (this.collections.find(c => c.slug === collectionSlug)) {
+            const stats = await this.fetchOpenSeaStats(collectionSlug);
+            floorPrice = stats?.floorPrice || null;
+          }
+
+          return {
+            contract_address: nft.contract_address,
+            token_id: nft.identifier,
+            name: nft.name || `Token #${nft.identifier}`,
+            image_url: nft.image_url || nft.display_image_url || '',
+            collection_name: nft.collection?.name || 'Unknown Collection',
+            opensea_url: `https://opensea.io/assets/ethereum/${nft.contract_address}/${nft.identifier}`,
+            floor_price: floorPrice
+          };
+        })
+      );
+
+      // Count Bright Moments related NFTs
+      const brightMomentsNfts = processedNFTs.filter(nft => 
+        nft.collection_name.toLowerCase().includes('bright moments') ||
+        nft.collection_name.toLowerCase().includes('cryptocitizens') ||
+        nft.collection_name.toLowerCase().includes('crypto') && 
+        (nft.collection_name.toLowerCase().includes('venetians') ||
+         nft.collection_name.toLowerCase().includes('berliners') ||
+         nft.collection_name.toLowerCase().includes('londoners'))
+      ).length;
+
+      // Count specifically CryptoCitizens
+      const cryptocitizensCount = processedNFTs.filter(nft =>
+        nft.collection_name.toLowerCase().includes('cryptocitizens')
+      ).length;
+
+      // Calculate total estimated value
+      const totalValue = processedNFTs.reduce((sum, nft) => 
+        sum + (nft.floor_price || 0), 0
+      );
+
+      console.log(`[CITIZEN Market] Fetched ${processedNFTs.length} NFTs from wallet ${walletAddress}`);
+      console.log(`[CITIZEN Market] Found ${brightMomentsNfts} Bright Moments NFTs, ${cryptocitizensCount} CryptoCitizens`);
+
+      return {
+        nfts: processedNFTs,
+        total_value_eth: totalValue,
+        bright_moments_nfts: brightMomentsNfts,
+        cryptocitizens_count: cryptocitizensCount
+      };
+
+    } catch (error) {
+      console.error(`[CITIZEN Market] Error fetching wallet NFTs for ${walletAddress}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Fetch treasury holdings from known Bright Moments wallets
+   */
+  async getBrightMomentsTreasuryHoldings(): Promise<{
+    wallets: Array<{
+      address: string;
+      ens_name?: string;
+      description: string;
+      nft_count: number;
+      estimated_value_eth: number;
+      cryptocitizens_count: number;
+    }>;
+    total_treasury_value: number;
+    total_nfts: number;
+    treasury_breakdown: {
+      cryptocitizens: number;
+      bright_moments_editions: number;
+      community_submissions: number;
+      other_collections: number;
+    };
+  } | null> {
+    console.log('[CITIZEN Market] Fetching Bright Moments treasury holdings...');
+
+    // Known Bright Moments wallet addresses
+    const treasuryWallets = [
+      {
+        address: '0x18B7511938FBe2EE08ADf3d4A24edB00A5C9B783',
+        ens_name: 'phil.brightmoments.eth',
+        description: 'Deployer address for Bright Moments Editions'
+      },
+      {
+        address: '0xfde07db9ea824f13f4b306f3afd570b029bf3fa4',
+        ens_name: 'air.brightmoments.eth', 
+        description: 'Bright Moments operational wallet'
+      },
+      {
+        address: '0x5778b0b140fa7a62b96c193cc8621e6e96c088a5',
+        ens_name: 'deployer.brightmoments.eth',
+        description: 'Primary deployment and treasury wallet'
+      }
+    ];
+
+    try {
+      // Fetch holdings for each wallet
+      const walletResults = await Promise.all(
+        treasuryWallets.map(async (wallet) => {
+          const holdings = await this.fetchWalletNFTs(wallet.address);
+          
+          return {
+            ...wallet,
+            nft_count: holdings?.nfts.length || 0,
+            estimated_value_eth: holdings?.total_value_eth || 0,
+            cryptocitizens_count: holdings?.cryptocitizens_count || 0
+          };
+        })
+      );
+
+      // Calculate totals
+      const totalValue = walletResults.reduce((sum, wallet) => sum + wallet.estimated_value_eth, 0);
+      const totalNFTs = walletResults.reduce((sum, wallet) => sum + wallet.nft_count, 0);
+      const totalCryptoCitizens = walletResults.reduce((sum, wallet) => sum + wallet.cryptocitizens_count, 0);
+
+      return {
+        wallets: walletResults,
+        total_treasury_value: totalValue,
+        total_nfts: totalNFTs,
+        treasury_breakdown: {
+          cryptocitizens: totalCryptoCitizens,
+          bright_moments_editions: Math.floor(totalNFTs * 0.3), // Estimated
+          community_submissions: Math.floor(totalNFTs * 0.2), // Estimated
+          other_collections: Math.floor(totalNFTs * 0.5) // Estimated
+        }
+      };
+
+    } catch (error) {
+      console.error('[CITIZEN Market] Error fetching treasury holdings:', error);
+      return null;
+    }
+  }
+
+  /**
    * Check if holder has Full Set or Ultra Set based on current market data
    */
   async analyzeHolderValue(walletAddress: string): Promise<{
@@ -431,12 +612,46 @@ export class CitizenMarketData {
     holdings: { collection: string; tokenCount: number; estimatedValue: number }[];
     setStatus: 'ultra' | 'full' | 'partial' | 'single';
   }> {
-    // This would integrate with blockchain APIs to check actual holdings
-    // For now, return structure for development
+    const walletData = await this.fetchWalletNFTs(walletAddress);
+    
+    if (!walletData) {
+      return {
+        estimatedValue: 0,
+        holdings: [],
+        setStatus: 'single'
+      };
+    }
+
+    // Group NFTs by collection
+    const collectionCounts: Record<string, number> = {};
+    walletData.nfts.forEach(nft => {
+      collectionCounts[nft.collection_name] = (collectionCounts[nft.collection_name] || 0) + 1;
+    });
+
+    const holdings = Object.entries(collectionCounts).map(([collection, count]) => {
+      const avgFloorPrice = walletData.nfts
+        .filter(nft => nft.collection_name === collection && nft.floor_price)
+        .reduce((sum, nft, _, arr) => sum + (nft.floor_price || 0) / arr.length, 0);
+      
+      return {
+        collection,
+        tokenCount: count,
+        estimatedValue: avgFloorPrice * count
+      };
+    });
+
+    // Determine set status based on CryptoCitizens holdings
+    let setStatus: 'ultra' | 'full' | 'partial' | 'single' = 'single';
+    const citizenCount = walletData.cryptocitizens_count;
+    
+    if (citizenCount >= 20) setStatus = 'ultra'; // Ultra Set (very rare)
+    else if (citizenCount >= 10) setStatus = 'full'; // Full Set
+    else if (citizenCount >= 3) setStatus = 'partial'; // Multiple cities
+    
     return {
-      estimatedValue: 0,
-      holdings: [],
-      setStatus: 'single'
+      estimatedValue: walletData.total_value_eth,
+      holdings,
+      setStatus
     };
   }
   

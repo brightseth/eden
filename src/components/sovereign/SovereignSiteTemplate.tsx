@@ -346,7 +346,7 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
       </section>
 
       {/* Manifesto - Only for non-BERTHA agents */}
-      {agent.id !== 'amanda' && agent.id !== 'bertha' && agent.manifestoSections && (
+      {agent.id !== 'bertha' && agent.manifestoSections && (
       <section id="manifesto" className="py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold mb-12">MANIFESTO</h2>
@@ -365,7 +365,7 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
       )}
 
       {/* Recent Works Grid - Only for non-BERTHA agents */}
-      {agent.id !== 'amanda' && agent.id !== 'bertha' && (
+      {agent.id !== 'bertha' && (
       <section id="works" className="py-24 px-6 bg-gray-950">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-12">
@@ -412,7 +412,7 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
       )}
 
       {/* Process - Only for non-BERTHA agents */}
-      {agent.id !== 'amanda' && agent.id !== 'bertha' && agent.process && (
+      {agent.id !== 'bertha' && agent.process && (
         <section id="process" className="py-24 px-6">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-4xl font-bold mb-12">PROCESS</h2>
@@ -429,7 +429,7 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
       )}
 
       {/* Collection Intelligence - BERTHA's primary section - immediately after hero */}
-      {(agent.id === 'amanda' || agent.id === 'bertha') && (
+      {agent.id === 'bertha' && (
         <section id="intelligence" className="py-6 px-6 bg-gray-900">
           <div className="max-w-6xl mx-auto">
 
@@ -1001,7 +1001,7 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
       )}
 
       {/* About Section - Consolidated manifesto + process for BERTHA */}
-      {(agent.id === 'amanda' || agent.id === 'bertha') && agent.manifestoSections && (
+      {agent.id === 'bertha' && agent.manifestoSections && (
         <section id="about" className="py-24 px-6">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-4xl font-bold mb-12">ABOUT</h2>
