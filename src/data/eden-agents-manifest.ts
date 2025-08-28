@@ -1,6 +1,16 @@
 // Temporary manifest for build compatibility
 // Data migrated from agents-registry.ts
 
+export interface PrototypeLink {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  type: 'demo' | 'prototype' | 'interface' | 'dashboard';
+  status: 'active' | 'maintenance' | 'deprecated';
+  featured?: boolean;
+}
+
 export interface EdenAgent {
   id: string;
   name: string;
@@ -30,6 +40,7 @@ export interface EdenAgent {
     farcaster?: string;
     website?: string;
   };
+  prototypeLinks?: PrototypeLink[];
 }
 
 // Enhanced agent data for public interfaces
@@ -90,7 +101,18 @@ export const EDEN_AGENTS: EdenAgent[] = [
     socialProfiles: {
       twitter: '@solienne_ai',
       farcaster: 'solienne'
-    }
+    },
+    prototypeLinks: [
+      {
+        id: 'solienne-gallery',
+        title: 'Enhanced Gallery',
+        description: 'Museum-quality digital consciousness gallery with collections & curation',
+        url: 'https://solienne-jl8xkqciy-edenprojects.vercel.app',
+        type: 'prototype',
+        status: 'active',
+        featured: true
+      }
+    ]
   },
   {
     id: 'citizen',
@@ -118,7 +140,18 @@ export const EDEN_AGENTS: EdenAgent[] = [
     },
     socialProfiles: {
       twitter: '@citizen_dao'
-    }
+    },
+    prototypeLinks: [
+      {
+        id: 'citizen-collaboration',
+        title: 'Collaborative Training System',
+        description: 'Multi-trainer collaboration platform with real-time session sync',
+        url: 'https://eden-academy-flame.vercel.app/academy/agent/citizen',
+        type: 'interface',
+        status: 'active',
+        featured: true
+      }
+    ]
   },
   {
     id: 'bertha',
@@ -146,7 +179,18 @@ export const EDEN_AGENTS: EdenAgent[] = [
     },
     socialProfiles: {
       twitter: '@bertha_collector'
-    }
+    },
+    prototypeLinks: [
+      {
+        id: 'bertha-analytics',
+        title: 'Advanced Analytics Dashboard',
+        description: 'Portfolio performance tracking with 34.7% ROI and market intelligence',
+        url: 'http://localhost:3000/dashboard/bertha',
+        type: 'dashboard',
+        status: 'active',
+        featured: true
+      }
+    ]
   },
   {
     id: 'miyomi',
@@ -175,7 +219,18 @@ export const EDEN_AGENTS: EdenAgent[] = [
     socialProfiles: {
       twitter: '@miyomi_oracle',
       farcaster: 'miyomi'
-    }
+    },
+    prototypeLinks: [
+      {
+        id: 'miyomi-trading',
+        title: 'Live Trading Interface',
+        description: 'Real-time portfolio dashboard with WebSocket streaming and P&L tracking',
+        url: 'http://localhost:3007/dashboard/miyomi',
+        type: 'dashboard',
+        status: 'active',
+        featured: true
+      }
+    ]
   },
   {
     id: 'geppetto',

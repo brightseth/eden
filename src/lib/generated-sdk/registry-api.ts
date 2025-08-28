@@ -27,6 +27,17 @@ export interface Profile {
   manifesto?: string;
   tags?: string[];
   links?: Record<string, unknown>;
+  prototypeLinks?: PrototypeLink[];
+}
+
+export interface PrototypeLink {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  type: 'demo' | 'prototype' | 'interface' | 'dashboard';
+  status: 'active' | 'maintenance' | 'deprecated';
+  featured?: boolean;
 }
 
 export interface Persona {

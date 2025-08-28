@@ -169,6 +169,31 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
                   </Link>
                 )}
               </div>
+
+              {/* Prototype Links */}
+              {agent.prototypeLinks && agent.prototypeLinks.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="text-sm font-bold uppercase tracking-wider mb-3 text-gray-400">
+                    LIVE PROTOTYPES
+                  </h3>
+                  <div className="flex flex-wrap gap-3">
+                    {agent.prototypeLinks
+                      .filter(link => link.status === 'active' && link.featured)
+                      .map(link => (
+                        <a
+                          key={link.id}
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 px-4 py-2 border border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-black transition-all font-bold uppercase tracking-wider text-xs"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                          {link.title}
+                        </a>
+                      ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Sidebar Metrics */}

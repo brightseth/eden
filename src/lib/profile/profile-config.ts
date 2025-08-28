@@ -881,7 +881,7 @@ export const CITIZEN_PROFILE_CONFIG: AgentProfileConfig = {
       config: {
         showStatus: true,
         showTrainer: true,
-        primaryAction: { text: 'VIEW PROPOSALS', href: '/api/agents/citizen/proposals' },
+        primaryAction: { text: 'VIEW PROPOSALS', href: '/academy/agent/citizen/proposals' },
         secondaryActions: [
           { text: 'CRYPTOCITIZENS', href: '/academy/agent/citizen/collections' },
           { text: 'BRIGHT MOMENTS →', href: '/sites/citizen' }
