@@ -171,7 +171,7 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
               </div>
 
               {/* Prototype Links */}
-              {agent.prototypeLinks && agent.prototypeLinks.length > 0 && (
+              {FEATURE_FLAGS.ENABLE_AGENT_PROTOTYPE_LINKS && agent.prototypeLinks && agent.prototypeLinks.length > 0 && (
                 <div className="mt-6">
                   <h3 className="text-sm font-bold uppercase tracking-wider mb-3 text-gray-400">
                     LIVE PROTOTYPES
