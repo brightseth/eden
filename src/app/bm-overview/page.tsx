@@ -66,31 +66,31 @@ Please contact the development team if this issue persists.`;
     .replace(/<\/pre><\/p>/g, '</pre>');
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-black py-8">
       <div className="max-w-4xl mx-auto px-6 sm:px-8">
-        <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-          <div className="px-8 py-6 border-b border-gray-200">
-            <h1 className="text-2xl font-bold text-gray-900">
-              CITIZEN Social Integration
+        <div className="border border-white overflow-hidden">
+          <div className="px-8 py-6 border-b border-white">
+            <h1 className="text-2xl font-bold text-white">
+              CITIZEN SOCIAL INTEGRATION
             </h1>
-            <p className="mt-2 text-gray-600">
-              BrightMoments Team Overview & Strategy
+            <p className="mt-2 text-white/80">
+              BRIGHTMOMENTS TEAM OVERVIEW & STRATEGY
             </p>
           </div>
           
           <div className="px-8 py-6">
             <div 
-              className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700"
+              className="prose prose-lg max-w-none prose-headings:text-white prose-p:text-white/90 prose-strong:text-white prose-code:text-white prose-code:bg-white/10 prose-pre:bg-white/5 prose-pre:border prose-pre:border-white/20 prose-ul:text-white/90 prose-li:text-white/90"
               dangerouslySetInnerHTML={{ __html: htmlContent }}
             />
           </div>
           
-          <div className="px-8 py-6 bg-gray-50 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
-              Document ID: {documentId} • Generated: {new Date().toLocaleDateString()}
+          <div className="px-8 py-6 border-t border-white">
+            <p className="text-sm text-white/60">
+              DOCUMENT ID: {documentId} • GENERATED: {new Date().toLocaleDateString().toUpperCase()}
             </p>
-            <p className="text-sm text-gray-500 mt-2">
-              For questions or concerns, please contact the Eden Academy team.
+            <p className="text-sm text-white/60 mt-2">
+              FOR QUESTIONS OR CONCERNS, PLEASE CONTACT THE EDEN ACADEMY TEAM.
             </p>
           </div>
         </div>
