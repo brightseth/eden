@@ -21,7 +21,7 @@ export const FEATURE_FLAGS = {
   ENABLE_CHAT_RATE_LIMITING: process.env.ENABLE_CHAT_RATE_LIMITING !== 'false', // Enabled by default
   ENABLE_CHAT_SESSION_MANAGEMENT: process.env.ENABLE_CHAT_SESSION_MANAGEMENT !== 'false', // Enabled by default
   ENABLE_AGENT_WORKS_GALLERY: true, // Always enabled
-  ENABLE_AGENT_PROTOTYPE_LINKS: process.env.ENABLE_PROTOTYPE_LINKS === 'true' || process.env.NODE_ENV === 'development',
+  ENABLE_AGENT_PROTOTYPE_LINKS: process.env.ENABLE_PROTOTYPE_LINKS !== 'false', // Enabled by default
   
   // API Integrations
   DUNE_ANALYTICS_ENABLED: !!process.env.DUNE_API_KEY,
