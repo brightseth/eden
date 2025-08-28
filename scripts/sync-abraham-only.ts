@@ -13,7 +13,7 @@ async function syncAbrahamLore() {
   
   const registryUrl = process.env.REGISTRY_BASE_URL || 'http://localhost:3000/api/v1';
   const jwtToken = process.env.JWT_TOKEN;
-  const abrahamAgentId = 'cmevs8l2j0004it1nmsroq66p'; // Abraham's agent ID from Registry
+  const abrahamAgentId = 'cmevzfj3v000qite84yhk050w'; // Abraham's actual agent ID from Registry
   
   if (!jwtToken) {
     console.log('❌ JWT_TOKEN environment variable required');
