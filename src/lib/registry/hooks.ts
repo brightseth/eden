@@ -1,3 +1,5 @@
+'use client';
+
 // React hooks for Registry integration
 // Implements ADR-025 with React patterns
 
