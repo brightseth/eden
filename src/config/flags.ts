@@ -99,6 +99,15 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
     rolloutStrategy: 'dev',
     culturalImpact: 'Geppetto page displays Agent Launcher validated data from Registry',
     rollbackPlan: 'Disable flag, fallback to static page content with basic profile info'
+  },
+
+  ENABLE_PRIVY_WALLET_AUTH: {
+    key: 'ENABLE_PRIVY_WALLET_AUTH',
+    description: 'Enable Privy wallet-based authentication alongside existing magic link auth',
+    defaultValue: process.env.NODE_ENV === 'development',
+    rolloutStrategy: 'dev',
+    culturalImpact: 'Users can authenticate using wallet addresses while maintaining Registry identity system',
+    rollbackPlan: 'Disable flag, fallback to magic link authentication only'
   }
 };
 
@@ -191,4 +200,5 @@ export const FLAGS = {
   ENABLE_ABRAHAM_REGISTRY_INTEGRATION: 'ENABLE_ABRAHAM_REGISTRY_INTEGRATION',
   ENABLE_SOLIENNE_REGISTRY_INTEGRATION: 'ENABLE_SOLIENNE_REGISTRY_INTEGRATION',
   ENABLE_GEPPETTO_REGISTRY_INTEGRATION: 'ENABLE_GEPPETTO_REGISTRY_INTEGRATION',
+  ENABLE_PRIVY_WALLET_AUTH: 'ENABLE_PRIVY_WALLET_AUTH',
 } as const;

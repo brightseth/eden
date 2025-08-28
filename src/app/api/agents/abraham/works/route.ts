@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { registryApi, Creation } from '@/lib/generated-sdk';
+import { registryClient, Creation } from '@/lib/generated-sdk';
 import { featureFlags, FLAGS } from '@/config/flags';
 import { createClient } from '@supabase/supabase-js';
 
@@ -74,17 +74,16 @@ export async function GET(request: NextRequest) {
 
   if (useRegistry) {
     try {
-      console.log('[Abraham Works API] Using Registry integration via HTTP API');
+      console.log('[Abraham Works API] Using Registry integration via modern SDK');
       
-      // Use Registry API via HTTP instead of generated SDK
-      const registryUrl = process.env.REGISTRY_URL || 'http://localhost:3005';
-      const response = await fetch(`${registryUrl}/api/v1/agents/abraham/works?limit=10000`);
+      // Use the modern Registry SDK with proper error handling and retries
+      const agent = await registryClient.agents.getAgent('abraham', { include: ['creations'] });
+      const creations = agent.creations || [];
       
-      if (!response.ok) {
-        throw new Error(`Registry API error: ${response.status}`);
-      }
+      console.log(`[Abraham Works API] Retrieved ${creations.length} works from Registry`);
       
-      const registryData = await response.json();
+      // Create registry data structure to match expected format
+      const registryData = { works: creations };
       
       // Transform Registry works to Academy format
       const transformedWorks = registryData.works.map((work: any) => ({

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { registryApi } from '@/lib/generated-sdk';
+import { registryClient } from '@/lib/generated-sdk';
 
 // GET /api/registry/agent/[handle] - Get agent data from Registry for artist pages
 // This powers CRIT integration and artist page access
@@ -12,20 +12,18 @@ export async function GET(
     
     console.log(`[CRIT] Fetching agent ${handle} from Registry...`);
     
-    // Use Registry SDK - ADR compliance
+    // Use modern Registry SDK - ADR-019 compliance
     // Try individual agent endpoint first, fallback to agents list if needed
     let agent;
     try {
-      agent = await registryApi.getAgent(handle.toLowerCase(), [
-        'profile', 
-        'creations', 
-        'personas'
-      ]);
+      agent = await registryClient.agents.getAgent(handle.toLowerCase(), {
+        include: ['profile', 'creations', 'personas']
+      });
     } catch (individualError) {
       console.log(`[CRIT] Individual agent endpoint failed, trying agents list...`);
       
       // Fallback: get from agents list (this endpoint works without filters)
-      const allAgents = await registryApi.getAgents();
+      const allAgents = await registryClient.agents.getAgents();
       
       // Filter client-side since query params cause 500 errors
       const agents = allAgents.filter(a => 

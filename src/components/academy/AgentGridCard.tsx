@@ -6,6 +6,7 @@ import { ChevronRight } from 'lucide-react';
 interface Agent {
   id: number;
   name: string;
+  handle?: string; // Add handle for consistent routing
   status: 'LAUNCHING' | 'DEVELOPING' | 'OPEN';
   date?: string;
   track?: string;
@@ -31,7 +32,9 @@ export function AgentGridCard({ agent }: AgentGridCardProps) {
     if (agent.status === 'OPEN') {
       return '/apply';
     }
-    return `/academy/agent/${agent.name.toLowerCase().replace(/[\[\]]/g, '').replace(/\s+/g, '')}`;
+    // Use handle if available, otherwise fallback to clean name transformation
+    const agentId = agent.handle || agent.name.toLowerCase().replace(/[\[\]]/g, '').replace(/\s+/g, '');
+    return `/academy/agent/${agentId}`;
   };
 
   return (

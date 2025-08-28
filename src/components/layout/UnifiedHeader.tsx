@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { AboutDropdown } from './AboutDropdown';
 import { AgentSwitcher } from '@/components/agent-switcher/AgentSwitcher';
+import { HeaderWalletAuth } from '@/components/auth/HeaderWalletAuth';
 
 export function UnifiedHeader() {
   const pathname = usePathname();
@@ -20,14 +21,7 @@ export function UnifiedHeader() {
           </div>
           <div className="flex items-center gap-6">
             <AboutDropdown />
-            <a 
-              href="https://app.eden.art" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-1.5 border border-gray-600 hover:border-white transition-colors text-sm"
-            >
-              LOG IN →
-            </a>
+            <HeaderWalletAuth />
           </div>
         </div>
       </div>

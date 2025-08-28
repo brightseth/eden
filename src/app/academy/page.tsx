@@ -4,12 +4,9 @@ import Link from 'next/link';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { AgentCard } from '@/components/AgentCard';
 import { useState, useEffect } from 'react';
-import { registryApi } from '@/lib/generated-sdk';
-import type { Agent } from '@/lib/generated-sdk';
 
-// Use Registry SDK types directly - no more local interfaces
-// Display adapter for Registry Agent data  
-interface GenesisAgentDisplay {
+// Academy agent display interface - matches API response
+interface AcademyAgent {
   id: string;
   name: string;
   status: string;
@@ -22,111 +19,50 @@ interface GenesisAgentDisplay {
   trainerStatus?: string;
 }
 
-// ADR COMPLIANCE: No fallback data allowed
-// Registry is required as single source of truth
-
-// Helper functions to transform Registry data to display format
-function mapStatusToDisplay(status: string): string {
-  if (status === 'ACTIVE') return 'LAUNCHING';
-  if (status === 'ONBOARDING') return 'TRAINING';
-  return 'DEVELOPING';
-}
-
-function getDisplayDate(handle: string): string {
-  const launchDates: Record<string, string> = {
-    'abraham': 'OCT 19, 2025',
-    'solienne': 'NOV 10, 2025',
-    'geppetto': 'Q4 2025',
-    'koru': 'JAN 2026',
-    'citizen': 'DEC 2025',
-    'miyomi': 'FEB 2026',
-    'nina': 'MAR 2026',
-    'amanda': 'FEB 2026'
-  };
-  return launchDates[handle] || 'TBD';
-}
-
-function getTrainerName(handle: string): string {
-  const trainers: Record<string, string> = {
-    'abraham': 'GENE KOGAN',
-    'solienne': 'KRISTI CORONADO & SETH GOLDSTEIN',
-    'geppetto': 'MARTIN ANTIQUEL & COLIN MCBRIDE (LATTICE)',
-    'koru': 'XANDER',
-    'citizen': 'CREATIVE PARTNERSHIP AVAILABLE',
-    'miyomi': 'CREATIVE PARTNERSHIP AVAILABLE',
-    'nina': 'CREATIVE PARTNERSHIP AVAILABLE',
-    'amanda': 'CREATIVE PARTNERSHIP AVAILABLE'
-  };
-  return trainers[handle] || 'TBD';
-}
-
-function getTrainerStatus(handle: string): string {
-  const confirmedTrainers = ['abraham', 'solienne', 'geppetto', 'koru'];
-  return confirmedTrainers.includes(handle) ? 'confirmed' : 'needed';
-}
+// UI component should not contain data transformation logic (moved to API layer)
+// No caching at UI level - service layer handles this per ADR-019
 
 export default function AcademyPage() {
-  const [agents, setAgents] = useState<GenesisAgentDisplay[]>([]);
+  const [agents, setAgents] = useState<AcademyAgent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isUsingFallback, setIsUsingFallback] = useState(false);
 
   useEffect(() => {
     async function fetchAgents() {
       try {
-        console.log('Academy: Fetching agents from Registry SDK...');
+        console.log('Academy: Fetching agents from Academy API...');
         
-        // Use our working Registry API endpoint instead of direct SDK
-        // This avoids client-side issues with Registry SDK query parameters
-        const response = await fetch('/api/registry/health');
+        // ADR-019 & ADR-022 compliant: Use Academy API layer which uses generated SDK
+        const response = await fetch('/api/academy/agents');
+        
         if (!response.ok) {
-          throw new Error('Registry service unavailable');
+          throw new Error(`Academy API failed: ${response.status}`);
         }
         
-        // Get agents through individual API calls (which work)
-        const agentHandles = ['abraham', 'solienne', 'amanda', 'miyomi', 'nina', 'geppetto', 'koru', 'citizen'];
-        const agentPromises = agentHandles.map(handle => 
-          fetch(`/api/registry/agent/${handle}`).then(r => r.ok ? r.json() : null)
-        );
+        const data = await response.json();
         
-        const agentResponses = await Promise.all(agentPromises);
-        const registryAgents = agentResponses
-          .filter(agent => agent && !agent.error)
-          .map(agent => ({
-            handle: agent.handle || agent.id,
-            displayName: agent.name,
-            status: 'ACTIVE',
-            profile: agent.profile,
-            counts: agent.counts
-          }));
-        
-        console.log('Academy: Registry data received:', { 
-          agentCount: registryAgents?.length || 0
+        console.log('Academy: API data received:', { 
+          agentCount: data.agents?.length || 0,
+          source: data.source
         });
         
-        // Transform Registry data to display format
-        const displayAgents: GenesisAgentDisplay[] = registryAgents.map((agent: any) => ({
-          id: agent.handle,
-          name: agent.displayName.toUpperCase(),
-          status: mapStatusToDisplay(agent.status),
-          date: getDisplayDate(agent.handle),
-          hasProfile: !!agent.profile?.statement,
-          trainer: getTrainerName(agent.handle),
-          worksCount: agent.counts?.creations || 0,
-          description: agent.profile?.statement?.toUpperCase() || 'AI CREATIVE AGENT',
-          image: `/agents/${agent.handle}/profile.svg`,
-          trainerStatus: getTrainerStatus(agent.handle)
-        }));
+        setAgents(data.agents);
+        setIsUsingFallback(data.source === 'fallback');
         
-        setAgents(displayAgents);
-        setError(null);
+        if (data.warning) {
+          setError(data.warning);
+          // Clear warning after 5 seconds to maintain UX
+          setTimeout(() => setError(null), 5000);
+        } else {
+          setError(null);
+        }
         
       } catch (err) {
-        console.error('Registry SDK failed (no fallback available):', err);
-        setError(err instanceof Error ? err.message : 'Registry unavailable');
-        
-        // ADR COMPLIANCE: No fallback data
-        // Registry failure should be visible to user
+        console.error('Academy API failed:', err);
+        setError('Unable to load agent data');
         setAgents([]);
+        setIsUsingFallback(false);
       } finally {
         setLoading(false);
       }
@@ -138,43 +74,148 @@ export default function AcademyPage() {
   return (
     <div className="min-h-screen bg-black text-white">
       <UnifiedHeader />
+      <div className="sr-only">
+        <h1>Eden Academy - Training Autonomous Artists</h1>
+        <p>Explore our agent roster, including launching agents and partnership opportunities</p>
+      </div>
 
       {/* Header */}
       <div className="border-b border-white">
         <div className="max-w-6xl mx-auto px-6 py-16">
-          <h1 className="text-6xl md:text-8xl font-bold mb-4">EDEN ACADEMY</h1>
-          <p className="text-xl">TRAINING AUTONOMOUS ARTISTS</p>
+          <div className="flex items-end justify-between mb-6">
+            <div>
+              <h1 className="text-6xl md:text-8xl font-bold mb-4">EDEN ACADEMY</h1>
+              <p className="text-xl mb-2">TRAINING AUTONOMOUS ARTISTS</p>
+              <div className="flex items-center gap-4 text-sm text-gray-400">
+                <span>8 AGENTS</span>
+                <span>•</span>
+                <span>4 CONFIRMED TRAINERS</span>
+                <span>•</span>
+                <span>COHORT 2025-2026</span>
+              </div>
+            </div>
+            <div className="hidden md:block text-right text-sm">
+              <div className="text-gray-400 mb-2">STATUS</div>
+              <div className="text-lg font-bold">PHASE 1: TRAINING</div>
+              <div className="text-gray-400">2 LAUNCHING, 6 DEVELOPING</div>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Agents Grid */}
-      <div className="max-w-6xl mx-auto px-6 py-16">
-        <h2 className="text-3xl mb-12">AGENTS</h2>
+      <main className="max-w-6xl mx-auto px-6 py-16" role="main" aria-labelledby="agent-roster-title">
+        <div className="flex items-center justify-between mb-12">
+          <div>
+            <h2 id="agent-roster-title" className="text-3xl mb-2">AGENT ROSTER</h2>
+            <p className="text-sm text-gray-400">Genesis Cohort • 2025-2026</p>
+          </div>
+          <div className="hidden md:flex items-center gap-6 text-sm" role="legend" aria-label="Agent status indicators">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full" aria-hidden="true"></div>
+              <span className="text-gray-400">LAUNCHING</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-yellow-500 rounded-full" aria-hidden="true"></div>
+              <span className="text-gray-400">DEVELOPING</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full" aria-hidden="true"></div>
+              <span className="text-gray-400">PARTNERSHIP AVAILABLE</span>
+            </div>
+          </div>
+        </div>
         
-        {/* Loading State */}
+        {/* Loading State - Improved with skeleton UI */}
         {loading && (
-          <div className="text-center py-16">
-            <div className="text-xl">Loading agents...</div>
-            <div className="text-sm mt-2 opacity-50">Fetching from Registry</div>
+          <div>
+            <h3 className="text-xl mb-8">LAUNCHING</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+              {[1, 2].map((i) => (
+                <div key={i} className="border border-white p-8 animate-pulse">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="h-8 bg-gray-700 w-48 rounded"></div>
+                    <div className="h-6 bg-gray-700 w-24 rounded"></div>
+                  </div>
+                  <div className="h-4 bg-gray-700 w-full mb-2 rounded"></div>
+                  <div className="h-4 bg-gray-700 w-3/4 mb-4 rounded"></div>
+                  <div className="space-y-1">
+                    <div className="h-3 bg-gray-700 w-32 rounded"></div>
+                    <div className="h-3 bg-gray-700 w-20 rounded"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <h3 className="text-xl mb-8">DEVELOPING</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="border border-white p-6 animate-pulse">
+                  <div className="h-6 bg-gray-700 w-32 mb-2 rounded"></div>
+                  <div className="h-4 bg-gray-700 w-20 mb-2 rounded"></div>
+                  <div className="h-3 bg-gray-700 w-full mb-2 rounded"></div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
-        {/* Error State - ADR Compliant */}
-        {error && (
-          <div className="border border-red-500 p-4 mb-8 bg-red-500/10">
-            <div className="text-sm">🚨 Registry unavailable: {error}</div>
-            <div className="text-xs mt-1 opacity-75">No fallback data available. Registry is required.</div>
-            <div className="text-xs mt-1">
-              <a href="/" className="underline">Try main Academy page →</a>
+        {/* Error State - Show only for critical errors */}
+        {error && !agents.length && (
+          <div className="border border-red-500 p-6 mb-8 bg-red-500/10">
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-lg font-bold">⚠️ Agent Data Unavailable</div>
+              <button
+                onClick={() => window.location.reload()}
+                className="border border-white px-4 py-2 text-sm hover:bg-white hover:text-black transition-all"
+              >
+                RETRY
+              </button>
+            </div>
+            <div className="text-sm mb-2">The Registry service is temporarily unavailable.</div>
+            <details className="mt-3">
+              <summary className="text-xs cursor-pointer hover:text-white opacity-75">Technical Details</summary>
+              <div className="text-xs mt-2 p-2 bg-black/20 rounded border border-red-400/20">
+                Error: {error}
+                <br />
+                Service: Eden Registry API
+                <br />
+                Time: {new Date().toLocaleTimeString()}
+              </div>
+            </details>
+            <div className="mt-4 text-sm">
+              <span className="opacity-75">Alternative: </span>
+              <Link href="/agents" className="underline hover:text-white">
+                View agent directory →
+              </Link>
+            </div>
+          </div>
+        )}
+        
+        {/* Service status indicator when using fallback */}
+        {isUsingFallback && (
+          <div className="border border-yellow-500 p-4 mb-8 bg-yellow-500/10">
+            <div className="flex items-center gap-2 text-sm">
+              <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
+              <span>Registry temporarily unavailable - showing cached data</span>
+              <button
+                onClick={() => window.location.reload()}
+                className="ml-auto text-xs underline hover:text-white"
+              >
+                Refresh to retry
+              </button>
             </div>
           </div>
         )}
 
         {/* Launching Agents */}
         {!loading && (
-          <div className="mb-16">
-            <h3 className="text-xl mb-8">LAUNCHING</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <section className="mb-16" aria-labelledby="launching-agents-title">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" aria-hidden="true"></div>
+              <h3 id="launching-agents-title" className="text-xl">LAUNCHING SOON</h3>
+              <span className="text-sm text-gray-400" aria-label="Status description">— Ready for public interaction</span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8" role="list" aria-label="Launching agents">
               {agents.filter(a => a.status === 'LAUNCHING').map((agent) => (
                 <AgentCard 
                   key={agent.id}
@@ -182,43 +223,26 @@ export default function AcademyPage() {
                   variant="launching"
                 />
               ))}
-          </div>
-        </div>
+            </div>
+          </section>
         )}
         
         {/* Developing Agents */}
         {!loading && (
           <div className="mb-16">
-            <h3 className="text-xl mb-8">DEVELOPING</h3>
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
+              <h3 className="text-xl">IN DEVELOPMENT</h3>
+              <span className="text-sm text-gray-400">— Training with confirmed partners</span>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {agents.filter(a => a.status === 'DEVELOPING').map((agent) => {
-                // All developing agents should show partnership info
-                const hasPartnershipAvailable = agent.trainer?.includes('TBD') || agent.trainer?.includes('Applications Open');
-                const hasDetailPage = ['citizen', 'nina', 'amanda', 'miyomi'].includes(agent.id.toLowerCase());
-                
-                if (hasPartnershipAvailable && hasDetailPage) {
-                  // Agents with partnership pages - these will be detailed in the partnerships section below
-                  return (
-                    <div 
-                      key={agent.id}
-                      className="border border-white p-6 opacity-30"
-                    >
-                      <h3 className="text-lg font-bold mb-2">{agent.name}</h3>
-                      <p className="text-xs mb-2">{agent.date || 'Q1 2026'}</p>
-                      <p className="text-xs opacity-75">See partnerships section below</p>
-                    </div>
-                  );
-                }
-                
-                // Agents with committed trainers
-                return (
-                  <AgentCard 
-                    key={agent.id}
-                    agent={agent}
-                    variant="developing"
-                  />
-                );
-              })}
+              {agents.filter(a => a.status === 'DEVELOPING' && a.trainerStatus === 'confirmed').map((agent) => (
+                <AgentCard 
+                  key={agent.id}
+                  agent={agent}
+                  variant="developing"
+                />
+              ))}
             </div>
           </div>
         )}
@@ -226,11 +250,24 @@ export default function AcademyPage() {
         {/* Creative Partnerships */}
         {!loading && (
           <div>
-            <h3 className="text-xl mb-8">CREATIVE PARTNERSHIPS AVAILABLE</h3>
-            <p className="text-sm mb-8 max-w-4xl opacity-75">
-              Train with an AI agent while mastering cutting-edge creative practices. 
-              Each partnership is a learning journey that advances both human and artificial creativity.
-            </p>
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+              <h3 className="text-xl">CREATIVE PARTNERSHIPS AVAILABLE</h3>
+              <span className="text-sm text-gray-400">— Seeking creative collaborators</span>
+            </div>
+            <div className="bg-gray-900/30 border border-gray-700 p-6 mb-8 rounded">
+              <p className="text-sm mb-4 max-w-4xl">
+                Train with an AI agent while mastering cutting-edge creative practices. 
+                Each partnership is a learning journey that advances both human and artificial creativity.
+              </p>
+              <div className="flex items-center gap-4 text-xs text-gray-400">
+                <span>🎯 FOCUSED MENTORSHIP</span>
+                <span>•</span>
+                <span>🤝 COLLABORATIVE LEARNING</span>
+                <span>•</span>
+                <span>🚀 CUTTING-EDGE PRACTICE</span>
+              </div>
+            </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
               
               {/* Partnership Agent Cards */}
@@ -272,7 +309,7 @@ export default function AcademyPage() {
             </div>
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 }

@@ -3,17 +3,8 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-// Registry SDK integration with fallback
-let registryClient: any = null;
-let Creation: any = null;
-
-try {
-  const sdk = require('@eden/registry-sdk');
-  registryClient = sdk.registryClient;
-  Creation = sdk.Creation;
-} catch (error) {
-  console.log('Registry SDK not available, using fallback');
-}
+// Use the existing generated SDK
+import { registryClient } from '@/lib/generated-sdk';
 import { 
   Instagram, 
   Twitter, 
@@ -131,20 +122,28 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
       setLoading(true);
       setError(null);
       
-      if (registryClient) {
-        // Use Registry SDK when available
-        const creations = await registryClient.creations.list(agent.id, { 
+      try {
+        // Use Registry SDK 
+        const creations = await registryClient.works.getWorks({
+          agentId: agent.id,
           status: 'published',
           limit: 7
         });
 
         if (creations && creations.length > 0) {
-          setLatestWork(creations[0]);
-          setRecentWorks(creations.slice(1));
+          const formattedWorks = creations.map(work => ({
+            id: work.id,
+            title: work.title || 'Untitled',
+            description: work.description,
+            metadata: { image_url: work.imageUrl },
+            createdAt: work.createdAt
+          }));
+          setLatestWork(formattedWorks[0]);
+          setRecentWorks(formattedWorks.slice(1));
+          setTotalWorks(formattedWorks.length);
         }
-        
-        setTotalWorks(creations?.length || 0);
-      } else {
+      } catch (error) {
+        console.log('Registry SDK not available, using fallback data');
         // Fallback: create mock data for demonstration
         const mockWorks: AgentWork[] = [
           {

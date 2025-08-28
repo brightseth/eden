@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
-import { registryApi } from '@/lib/generated-sdk';
+import { registryClient } from '@/lib/generated-sdk';
 import { 
   CheckCircle, AlertCircle, Clock, Users, Calendar, 
   TrendingUp, Award, ChevronRight, RefreshCw, Signal
@@ -102,7 +102,7 @@ export default function HomePage() {
       setLoading(true);
       console.log('Fetching agents from Registry SDK...');
       
-      const agents = await registryApi.getAgents({
+      const agents = await registryClient.agents.getAgents({
         status: 'ACTIVE'
       });
       

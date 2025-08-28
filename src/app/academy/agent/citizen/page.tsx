@@ -38,12 +38,21 @@ export default function CitizenAgentPage() {
               <p className="text-lg mb-8">
                 Bright Moments DAO Coordinator & CryptoCitizens Treasury Operator
               </p>
-              <Link
-                href="/apply?type=trainer&agent=citizen"
-                className="inline-block border border-white px-8 py-4 hover:bg-white hover:text-black transition-all text-lg font-bold"
-              >
-                APPLY TO TRAIN CITIZEN →
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link
+                  href="/apply?type=trainer&agent=citizen"
+                  className="inline-block border border-white px-8 py-4 hover:bg-white hover:text-black transition-all text-lg font-bold text-center"
+                >
+                  APPLY TO TRAIN CITIZEN →
+                </Link>
+                <Link
+                  href="/academy/agent/citizen/treasury"
+                  className="inline-flex items-center gap-2 border border-blue-500 bg-blue-500/10 text-blue-400 px-8 py-4 hover:bg-blue-500 hover:text-white transition-all text-lg font-bold"
+                >
+                  <Coins className="w-5 h-5" />
+                  VIEW LIVE TREASURY →
+                </Link>
+              </div>
             </div>
             <div className="border border-white p-8">
               <h3 className="text-xl font-bold mb-6">Agent Status</h3>

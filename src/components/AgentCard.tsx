@@ -106,12 +106,13 @@ export function AgentCard({ agent, variant, showOnchainBadges = true }: AgentCar
 
   // Launching agents - large cards with full details
   if (variant === 'launching') {
-    const href = agent.hasProfile ? `/academy/agent/${agent.name.toLowerCase()}` : '#';
+    const href = `/academy/agent/${agent.id}`;
     
     return (
       <Link 
         href={href}
-        className="border border-white p-8 hover:bg-white hover:text-black transition-all block group"
+        className="border border-white p-8 hover:bg-white hover:text-black transition-all block group focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
+        aria-label={`View ${agent.name} profile - ${agent.status} agent trained by ${agent.trainer}`}
       >
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-start gap-3">
@@ -133,20 +134,36 @@ export function AgentCard({ agent, variant, showOnchainBadges = true }: AgentCar
   // Developing agents - medium cards
   if (variant === 'developing') {
     return (
-      <div className="border border-white p-6">
+      <div 
+        className="border border-white p-6"
+        role="article"
+        aria-labelledby={`agent-${agent.id}-name`}
+        aria-describedby={`agent-${agent.id}-description`}
+      >
         <div className="flex justify-between items-start mb-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <h3 className="text-lg font-bold">{agent.name}</h3>
+              <h3 id={`agent-${agent.id}-name`} className="text-lg font-bold">{agent.name}</h3>
               <OnchainBadge />
             </div>
-            <p className="text-xs mb-2">{agent.date || 'Q1 2026'}</p>
+            <p className="text-xs mb-2" aria-label={`Launch date: ${agent.date || 'Q1 2026'}`}>
+              {agent.date || 'Q1 2026'}
+            </p>
           </div>
-          <span className="text-xs bg-black text-white border border-white px-2 py-1">
+          <span 
+            className="text-xs bg-black text-white border border-white px-2 py-1"
+            aria-label="Status: In Development"
+          >
             IN DEVELOPMENT
           </span>
         </div>
-        <p className="text-xs opacity-75 mb-2">{agent.trainer}</p>
+        <p 
+          id={`agent-${agent.id}-description`} 
+          className="text-xs opacity-75 mb-2"
+          aria-label={`Trainer: ${agent.trainer}`}
+        >
+          {agent.trainer}
+        </p>
         <TokenInfo />
       </div>
     );
@@ -179,7 +196,8 @@ export function AgentCard({ agent, variant, showOnchainBadges = true }: AgentCar
         </div>
         <Link
           href={`/academy/agent/${agent.id}`}
-          className="inline-block border border-white px-4 py-2 text-xs hover:bg-white hover:text-black transition-all w-full text-center"
+          className="inline-block border border-white px-4 py-2 text-xs hover:bg-white hover:text-black transition-all w-full text-center focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
+          aria-label={`Explore partnership opportunity with ${agent.name} - ${partnershipDetails.subtitle}`}
         >
           EXPLORE PARTNERSHIP →
         </Link>
