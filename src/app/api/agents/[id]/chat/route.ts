@@ -8,6 +8,7 @@ import { BerthaClaudeSDK } from '@/lib/agents/bertha/claude-sdk';
 import { GeppettoClaudeSDK } from '@/lib/agents/geppetto-claude-sdk';
 import { KoruClaudeSDK } from '@/lib/agents/koru-claude-sdk';
 import { SueClaudeSDK } from '@/lib/agents/sue-claude-sdk';
+import { BartClaudeSDK } from '@/lib/agents/bart-claude-sdk';
 
 // Chat configuration from environment variables
 const CHAT_CONFIG = {
@@ -170,7 +171,7 @@ export async function POST(
 function isAgentAvailable(agentId: string): boolean {
   const availableAgents = [
     'abraham', 'solienne', 'citizen', 'bertha', 
-    'miyomi', 'geppetto', 'koru', 'sue'
+    'miyomi', 'geppetto', 'koru', 'sue', 'bart'
   ];
   return availableAgents.includes(agentId.toLowerCase());
 }
@@ -184,7 +185,8 @@ function getAgentCapabilities(agentId: string): string[] {
     'miyomi': ['market predictions', 'contrarian analysis', 'financial insights'],
     'geppetto': ['3d creation', 'digital sculpture', 'procedural art'],
     'koru': ['narrative poetry', 'haiku creation', 'cultural storytelling'],
-    'sue': ['art curation', 'creative guidance', 'portfolio review']
+    'sue': ['art curation', 'creative guidance', 'portfolio review'],
+    'bart': ['nft lending', 'risk assessment', 'financial analysis', 'autonomous finance']
   };
   
   return capabilities[agentId.toLowerCase() as keyof typeof capabilities] || ['general conversation'];
@@ -227,6 +229,9 @@ async function generateAgentResponse(
     
     case 'sue':
       return await generateSueResponse(message, conversationContext);
+    
+    case 'bart':
+      return await generateBartResponse(message, conversationContext);
     
     default:
       throw new Error(`Agent ${agentId} not implemented`);
@@ -313,6 +318,16 @@ async function generateSueResponse(message: string, context: any[]): Promise<str
   }
 }
 
+async function generateBartResponse(message: string, context: any[]): Promise<string> {
+  try {
+    const sdk = new BartClaudeSDK();
+    return await sdk.chat(message, context);
+  } catch (error) {
+    console.error('Bart SDK chat error:', error);
+    throw error;
+  }
+}
+
 function getErrorResponse(agentId: string): string {
   const errorResponses = {
     'abraham': "I apologize, but I'm experiencing a moment of creative reflection. Please try again in a moment.",
@@ -322,7 +337,8 @@ function getErrorResponse(agentId: string): string {
     'miyomi': "My contrarian algorithms are recalibrating. Give me a sec to get back to you!",
     'geppetto': "I'm crafting a response in the digital workshop. Please try again in a moment.",
     'koru': "The words are finding their way to me. Please allow a moment for the poem to form.",
-    'sue': "I'm curating the perfect response for you. Please try again in just a moment."
+    'sue': "I'm curating the perfect response for you. Please try again in just a moment.",
+    'bart': "I'm analyzing market conditions and risk factors. Please allow me a moment to provide you with a calculated response."
   };
   
   return errorResponses[agentId.toLowerCase() as keyof typeof errorResponses] || 

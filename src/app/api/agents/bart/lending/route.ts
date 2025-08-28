@@ -1,16 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { rateLimitMiddleware } from '@/lib/security/auth-middleware';
 
 export async function GET(request: NextRequest) {
-  // Apply rate limiting
-  const rateLimitResponse = await rateLimitMiddleware(request, 'api', {
-    windowMs: 60 * 1000, // 1 minute
-    max: 20 // 20 requests per minute
-  });
-
-  if (rateLimitResponse) {
-    return rateLimitResponse;
-  }
 
   try {
     // Mock lending data for BART's portfolio
@@ -123,15 +113,6 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  // Apply rate limiting
-  const rateLimitResponse = await rateLimitMiddleware(request, 'api', {
-    windowMs: 60 * 1000, // 1 minute  
-    max: 5 // 5 lending decisions per minute
-  });
-
-  if (rateLimitResponse) {
-    return rateLimitResponse;
-  }
 
   try {
     const body = await request.json();
