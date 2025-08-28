@@ -81,7 +81,7 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  // Dynamic visual states for Amanda
+  // Dynamic visual states for BERTHA
   const [liveOpportunities, setLiveOpportunities] = useState(342);
   const [confidence, setConfidence] = useState(94);
   const [portfolioReturn, setPortfolioReturn] = useState(0);
@@ -91,9 +91,9 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
     fetchAgentData();
   }, [agent.id]);
 
-  // Dynamic animations for Amanda
+  // Dynamic animations for BERTHA
   useEffect(() => {
-    if (agent.id === 'amanda') {
+    if (agent.id === 'bertha' || agent.id === 'amanda') {
       // Animate portfolio return
       const returnInterval = setInterval(() => {
         setPortfolioReturn(prev => {
@@ -345,8 +345,8 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
         </div>
       </section>
 
-      {/* Manifesto - Only for non-Amanda agents */}
-      {agent.id !== 'amanda' && agent.manifestoSections && (
+      {/* Manifesto - Only for non-BERTHA agents */}
+      {agent.id !== 'amanda' && agent.id !== 'bertha' && agent.manifestoSections && (
       <section id="manifesto" className="py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold mb-12">MANIFESTO</h2>
@@ -364,8 +364,8 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
       </section>
       )}
 
-      {/* Recent Works Grid - Only for non-Amanda agents */}
-      {agent.id !== 'amanda' && (
+      {/* Recent Works Grid - Only for non-BERTHA agents */}
+      {agent.id !== 'amanda' && agent.id !== 'bertha' && (
       <section id="works" className="py-24 px-6 bg-gray-950">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-12">
@@ -411,8 +411,8 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
       </section>
       )}
 
-      {/* Process - Only for non-Amanda agents */}
-      {agent.id !== 'amanda' && agent.process && (
+      {/* Process - Only for non-BERTHA agents */}
+      {agent.id !== 'amanda' && agent.id !== 'bertha' && agent.process && (
         <section id="process" className="py-24 px-6">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-4xl font-bold mb-12">PROCESS</h2>
@@ -428,8 +428,8 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
         </section>
       )}
 
-      {/* Collection Intelligence - Amanda's primary section - immediately after hero */}
-      {agent.id === 'amanda' && (
+      {/* Collection Intelligence - BERTHA's primary section - immediately after hero */}
+      {(agent.id === 'amanda' || agent.id === 'bertha') && (
         <section id="intelligence" className="py-6 px-6 bg-gray-900">
           <div className="max-w-6xl mx-auto">
 
@@ -660,7 +660,7 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                         <div className="grid grid-cols-2 gap-3">
                           <div className="bg-black/50 p-3 rounded">
                             <div className="text-blue-400 font-medium">Learning Session Active</div>
-                            <div className="text-xs text-gray-400 mt-1">Amanda Schmitt → Taste Model V2.1</div>
+                            <div className="text-xs text-gray-400 mt-1">Amanda Schmitt → BERTHA Taste Model V2.1</div>
                             <div className="text-xs text-blue-300">47 artworks analyzed, 8 corrections applied</div>
                           </div>
                           <div className="bg-black/50 p-3 rounded">
@@ -970,9 +970,9 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
                       </div>
                     </div>
 
-                    {/* Following Amanda */}
+                    {/* Following BERTHA */}
                     <div className="border border-gray-600 bg-gray-800/20 p-4 rounded">
-                      <div className="font-semibold text-gray-300 mb-3">FOLLOW AMANDA'S MOVES</div>
+                      <div className="font-semibold text-gray-300 mb-3">FOLLOW BERTHA'S MOVES</div>
                       <p className="text-sm text-gray-400 mb-3">
                         Get exclusive access to my collecting decisions, market analysis, and early acquisition opportunities.
                       </p>
@@ -1000,8 +1000,8 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
         </section>
       )}
 
-      {/* About Section - Consolidated manifesto + process for Amanda */}
-      {agent.id === 'amanda' && agent.manifestoSections && (
+      {/* About Section - Consolidated manifesto + process for BERTHA */}
+      {(agent.id === 'amanda' || agent.id === 'bertha') && agent.manifestoSections && (
         <section id="about" className="py-24 px-6">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-4xl font-bold mb-12">ABOUT</h2>
@@ -1038,7 +1038,7 @@ export function SovereignSiteTemplate({ agent, showPrivateMode = false }: Sovere
         </section>
       )}
 
-      {/* Selected Works - Removed for Amanda/BERTHA */}
+      {/* Selected Works - Removed for BERTHA */}
       {false && agent.id === 'amanda' && recentWorks.length > 0 && (
         <section id="works" className="py-24 px-6 bg-gray-950">
           <div className="max-w-7xl mx-auto">
