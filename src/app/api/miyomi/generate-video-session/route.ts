@@ -142,29 +142,30 @@ async function createEdenSession(agentId?: string): Promise<{ success: boolean; 
     return { success: false, error: 'Eden API key not configured' };
   }
 
-  // Use provided agentId or default MIYOMI agent (you'll need to provide this)
-  const defaultAgentId = process.env.MIYOMI_EDEN_AGENT_ID;
+  // Use provided agentId or default MIYOMI agent
+  const defaultAgentId = process.env.MIYOMI_EDEN_AGENT_ID || 'miyomi';
   const useAgentId = agentId || defaultAgentId;
-  
-  if (!useAgentId) {
-    return { success: false, error: 'No Eden agent ID available. Please provide agentId.' };
-  }
 
   try {
     const response = await fetch(`${edenBaseUrl}/v2/sessions/create`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${edenApiKey}`,
+        'X-Api-Key': edenApiKey,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         agent_ids: [useAgentId],
         title: 'MIYOMI Cinematic Video Generation',
-        scenario: 'video_creation',
-        budget: 100, // Adjust as needed
-        autonomy: {
+        scenario: 'Dynamic Narrative Video Framework - 9-phase cinematic approach for market analysis',
+        budget: {
+          manna_budget: 1000,
+          token_budget: 10000,
+          turn_budget: 10
+        },
+        autonomy_settings: {
           auto_reply: true,
-          max_iterations: 5
+          reply_interval: 2,
+          actor_selection_method: 'random'
         }
       })
     });
@@ -200,8 +201,9 @@ async function sendSessionMessage(sessionId: string, content: string, agentId?: 
   try {
     const messagePayload: any = {
       session_id: sessionId,
-      content: `Please create a cinematic video based on this concept: ${content}`,
-      stream: false
+      content: `Create a cinematic video using the Dynamic Narrative Video Framework. Here's the concept:\n\n${content}\n\nPlease generate a compelling video that follows the 9-phase cinematic approach with visual DNA and emotional frequency targeting. Make it engaging for market analysis content.`,
+      stream: false,
+      thinking: true
     };
 
     // Add agent_ids if specified
@@ -212,7 +214,7 @@ async function sendSessionMessage(sessionId: string, content: string, agentId?: 
     const response = await fetch(`${edenBaseUrl}/v2/sessions`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${edenApiKey}`,
+        'X-Api-Key': edenApiKey,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(messagePayload)

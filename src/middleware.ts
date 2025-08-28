@@ -5,10 +5,11 @@ import { createAuthMiddleware } from '@/lib/security/auth-middleware';
 
 // Create specialized middleware for different endpoint types
 const chatAuthMiddleware = createAuthMiddleware({
-  requireAuth: true,
+  requireAuth: false,
+  allowAnonymous: true,
   rateLimit: {
     requests: 10,
-    windowMs: 60000 // 1 minute
+    windowMs: 600000 // 10 minutes to match chat config
   }
 });
 

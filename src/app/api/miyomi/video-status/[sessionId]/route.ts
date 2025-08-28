@@ -121,7 +121,7 @@ async function getEdenSessionData(sessionId: string): Promise<{ success: boolean
     const response = await fetch(`${edenBaseUrl}/v2/sessions/${sessionId}`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${edenApiKey}`,
+        'X-Api-Key': edenApiKey,
         'Content-Type': 'application/json'
       }
     });
