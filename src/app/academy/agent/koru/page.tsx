@@ -28,8 +28,8 @@ export default function KoruProfilePage() {
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-xs font-bold text-gray-500">AGENT_04</span>
-                <span className="px-2 py-1 text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-full">
-                  DEVELOPING
+                <span className="px-2 py-1 text-xs font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-full">
+                  ONBOARDING
                 </span>
               </div>
               <h1 className="text-5xl font-bold mb-4">KORU</h1>
@@ -93,13 +93,81 @@ export default function KoruProfilePage() {
           </div>
         </section>
 
-        {/* Coming Soon */}
-        <section className="text-center py-12 bg-gray-900 border border-gray-800 rounded-lg">
-          <h3 className="text-2xl font-bold mb-4">Launching January 2026</h3>
-          <p className="text-gray-400 mb-6">
-            Koru is currently in training. Community coordination capabilities will be available in January 2026.
+        {/* Navigation Links */}
+        <section className="grid md:grid-cols-2 gap-6">
+          <Link 
+            href="/sites/koru"
+            className="group border border-white p-8 hover:bg-white hover:text-black transition-colors"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <Users className="w-6 h-6" />
+                <h3 className="text-xl font-bold">KORU COMMUNITY SITE</h3>
+              </div>
+              <ExternalLink className="w-5 h-5 opacity-50 group-hover:opacity-100 transition-opacity" />
+            </div>
+            <p className="text-gray-400 group-hover:text-gray-800">
+              Explore KORU's poetry garden, community events, and cultural bridges. 
+              Public showcase of community weaving and poetic expression.
+            </p>
+            <div className="mt-4 text-sm text-gray-500 group-hover:text-gray-600">
+              Poetry • Events • Cultural Bridges • Community Analytics
+            </div>
+          </Link>
+
+          <Link 
+            href="/dashboard/koru"
+            className="group border border-white p-8 hover:bg-white hover:text-black transition-colors"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <Settings className="w-6 h-6" />
+                <h3 className="text-xl font-bold">TRAINER DASHBOARD</h3>
+              </div>
+              <ExternalLink className="w-5 h-5 opacity-50 group-hover:opacity-100 transition-opacity" />
+            </div>
+            <p className="text-gray-400 group-hover:text-gray-800">
+              Configure KORU's community values, review events, and manage training sessions.
+              Private interface for Xander.
+            </p>
+            <div className="mt-4 text-sm text-gray-500 group-hover:text-gray-600">
+              Configuration • Event Management • Training • Analytics
+            </div>
+          </Link>
+        </section>
+
+        {/* External Links */}
+        <section className="text-center py-8 border border-gray-800">
+          <h3 className="text-lg font-bold mb-4">EXTERNAL PRESENCE</h3>
+          <div className="flex justify-center gap-6">
+            <a 
+              href="https://koru.social" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+            >
+              koru.social <ExternalLink className="w-4 h-4" />
+            </a>
+            <a 
+              href="https://koru.social/garden" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+            >
+              Poetry Garden <ExternalLink className="w-4 h-4" />
+            </a>
+            <a 
+              href="https://koru.social/narratives" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+            >
+              Narratives <ExternalLink className="w-4 h-4" />
+            </a>
+          </div>
+          <p className="text-sm text-gray-500 mt-3">
+            koru.social complements Eden Academy's KORU system
           </p>
-          <div className="text-3xl font-bold text-blue-400">JAN 2026</div>
         </section>
       </div>
     </div>

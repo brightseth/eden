@@ -1,0 +1,124 @@
+# BART Risk Policy Configuration
+# Renaissance Banking Principles Applied to NFT Lending
+
+metadata:
+  name: "BART Renaissance Risk Policy"
+  version: "1.0.0"
+  lastUpdated: "2025-08-29"
+  description: "Risk management policies based on Medici banking wisdom"
+
+# Global Risk Parameters
+global:
+  maxExposurePercentage: 15  # Max % of total portfolio in single position
+  maxDailyVolume: "500 ETH"  # Maximum daily lending volume
+  reserveRatio: 0.20         # 20% cash reserves required
+  defaultDryRun: true        # All offers are simulated by default
+
+# Collection-Specific Policies
+collections:
+  cryptopunks:
+    address: "0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb"
+    tier: "blue-chip"
+    maxLTV: 0.75
+    baseAPR: 0.15
+    maxLoanAmount: "100 ETH"
+    requiredLiquidity: "50 ETH"  # Minimum 24h volume required
+    
+  bored-ape-yacht-club:
+    address: "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d"
+    tier: "blue-chip"
+    maxLTV: 0.70
+    baseAPR: 0.18
+    maxLoanAmount: "75 ETH"
+    requiredLiquidity: "40 ETH"
+    
+  art-blocks-curated:
+    address: "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270"
+    tier: "premium"
+    maxLTV: 0.60
+    baseAPR: 0.22
+    maxLoanAmount: "50 ETH"
+    requiredLiquidity: "20 ETH"
+    
+  azuki:
+    address: "0xed5af388653567af2f388e6224dc7c4b3241c544"
+    tier: "standard"
+    maxLTV: 0.65
+    baseAPR: 0.25
+    maxLoanAmount: "40 ETH"
+    requiredLiquidity: "30 ETH"
+
+# Risk Tiers and Policies
+tiers:
+  blue-chip:
+    description: "Proven collections with deep liquidity"
+    minFloorPrice: "20 ETH"
+    maxDefaultRate: 0.025  # 2.5%
+    minVolume24h: "50 ETH"
+    
+  premium:
+    description: "High-quality collections with good liquidity"
+    minFloorPrice: "5 ETH"
+    maxDefaultRate: 0.035  # 3.5%
+    minVolume24h: "20 ETH"
+    
+  standard:
+    description: "Acceptable collections with moderate risk"
+    minFloorPrice: "1 ETH"
+    maxDefaultRate: 0.050  # 5.0%
+    minVolume24h: "10 ETH"
+
+# Duration-Based Risk Adjustments
+durations:
+  short_term:    # 1-7 days
+    riskMultiplier: 0.9
+    aprBonus: 0.00
+    
+  medium_term:   # 8-30 days
+    riskMultiplier: 1.0
+    aprBonus: 0.02
+    
+  long_term:     # 31-90 days
+    riskMultiplier: 1.2
+    aprBonus: 0.05
+
+# Market Condition Adjustments
+market_conditions:
+  bull_market:
+    ltvBonus: 0.05      # Can lend 5% more in bull markets
+    aprDiscount: 0.02   # 2% lower rates in bull markets
+    
+  bear_market:
+    ltvPenalty: 0.10    # 10% lower LTV in bear markets
+    aprPremium: 0.05    # 5% higher rates for risk
+    
+  neutral:
+    ltvAdjustment: 0.00
+    aprAdjustment: 0.00
+
+# Dry Run Configuration
+dry_run:
+  enabled: true
+  mode: "simulation"  # simulation | validation | disabled
+  log_level: "detailed"
+  simulation_outcomes:
+    success_rate: 0.95
+    default_rate: 0.02
+    avg_repayment_days: 28
+
+# Renaissance Banking Wisdom Rules
+banking_wisdom:
+  - rule: "never_lend_more_than_you_can_afford_to_lose"
+    threshold: 0.10  # Never risk more than 10% on single loan
+    
+  - rule: "diversify_across_collections"
+    max_concentration: 0.25  # Max 25% in any single collection
+    
+  - rule: "maintain_liquidity_reserves"
+    min_cash_ratio: 0.15  # Always keep 15% liquid
+    
+  - rule: "price_for_risk"
+    risk_premium_per_tier:
+      blue_chip: 0.02
+      premium: 0.05
+      standard: 0.08

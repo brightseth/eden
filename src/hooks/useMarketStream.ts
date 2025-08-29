@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useSignalsStorage } from './useSignalsStorage';
 
 interface MarketUpdate {
   market_id: string;
@@ -32,6 +33,9 @@ export function useMarketStream(enabled: boolean = true) {
   const reconnectAttempts = useRef(0);
   const maxReconnectAttempts = 5;
 
+  // Signals storage integration
+  const { addPriceUpdateSignal, addNewPickSignal, addPositionClosedSignal } = useSignalsStorage();
+
   const connect = () => {
     if (!enabled || eventSourceRef.current) return;
 
@@ -64,6 +68,46 @@ export function useMarketStream(enabled: boolean = true) {
             case 'market_update':
               if (data.updates && data.updates.length > 0) {
                 console.log(`[MarketStream] Received ${data.updates.length} updates`);
+                
+                // Create signals for each update
+                data.updates.forEach(update => {
+                  if (update.market_question && update.price_change_percent !== undefined) {
+                    // Price update signal
+                    addPriceUpdateSignal(
+                      update.market_id,
+                      update.market_question,
+                      update.current_price,
+                      update.price_change_percent,
+                      'MIYOMI', // Default platform
+                      'MARKET' // Default category
+                    );
+                  }
+                  
+                  // Check for new picks or position closures based on status
+                  if (update.status && update.market_question) {
+                    if (update.status === 'NEW_PICK' && update.position) {
+                      addNewPickSignal(
+                        update.market_id,
+                        update.market_question,
+                        update.position as 'YES' | 'NO',
+                        update.current_price,
+                        'MIYOMI',
+                        'MARKET'
+                      );
+                    } else if (update.status === 'POSITION_CLOSED' && update.position && update.pnl !== undefined) {
+                      addPositionClosedSignal(
+                        update.market_id,
+                        update.market_question,
+                        update.position as 'YES' | 'NO',
+                        update.pnl,
+                        update.current_price,
+                        'MIYOMI',
+                        'MARKET'
+                      );
+                    }
+                  }
+                });
+                
                 setUpdates(prevUpdates => {
                   // Merge new updates with existing ones
                   const updatedMap = new Map();

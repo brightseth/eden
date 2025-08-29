@@ -1,0 +1,39 @@
+
+> @eden2/agent-core@1.0.0 build /Users/seth/eden-academy/packages/agent-core
+> tsc
+
+src/bart-claude-sdk.ts(245,3): error TS1472: 'catch' or 'finally' expected.
+src/bart-claude-sdk.ts(245,21): error TS1005: ',' expected.
+src/bart-claude-sdk.ts(245,39): error TS1109: Expression expected.
+src/bart-claude-sdk.ts(245,80): error TS1005: ';' expected.
+src/bart-claude-sdk.ts(246,11): error TS1005: ':' expected.
+src/bart-claude-sdk.ts(274,179): error TS1005: ',' expected.
+src/bart-claude-sdk.ts(276,9): error TS1005: ':' expected.
+src/bart-claude-sdk.ts(277,13): error TS1005: ':' expected.
+src/bart-claude-sdk.ts(292,9): error TS1005: ',' expected.
+src/bart-claude-sdk.ts(294,13): error TS1005: ':' expected.
+src/bart-claude-sdk.ts(294,42): error TS1005: ',' expected.
+src/bart-claude-sdk.ts(295,18): error TS1005: ',' expected.
+src/bart-claude-sdk.ts(295,34): error TS1005: ',' expected.
+src/bart-claude-sdk.ts(295,36): error TS1136: Property assignment expected.
+src/bart-claude-sdk.ts(306,3): error TS1128: Declaration or statement expected.
+src/bart-claude-sdk.ts(306,37): error TS1005: ';' expected.
+src/bart-claude-sdk.ts(306,39): error TS1434: Unexpected keyword or identifier.
+src/bart-claude-sdk.ts(335,3): error TS1128: Declaration or statement expected.
+src/bart-claude-sdk.ts(336,16): error TS1005: ',' expected.
+src/bart-claude-sdk.ts(337,16): error TS1109: Expression expected.
+src/bart-claude-sdk.ts(338,17): error TS1109: Expression expected.
+src/bart-claude-sdk.ts(338,35): error TS1011: An element access expression should take an argument.
+src/bart-claude-sdk.ts(339,19): error TS1109: Expression expected.
+src/bart-claude-sdk.ts(340,4): error TS1005: ';' expected.
+src/bart-claude-sdk.ts(340,6): error TS1434: Unexpected keyword or identifier.
+src/bart-claude-sdk.ts(432,3): error TS1128: Declaration or statement expected.
+src/bart-claude-sdk.ts(432,37): error TS1005: ',' expected.
+src/bart-claude-sdk.ts(432,46): error TS1005: ';' expected.
+src/bart-claude-sdk.ts(432,48): error TS1434: Unexpected keyword or identifier.
+src/bart-claude-sdk.ts(461,3): error TS1128: Declaration or statement expected.
+src/bart-claude-sdk.ts(461,40): error TS1005: ',' expected.
+src/bart-claude-sdk.ts(461,46): error TS1005: ';' expected.
+src/bart-claude-sdk.ts(461,48): error TS1434: Unexpected keyword or identifier.
+src/bart-claude-sdk.ts(483,1): error TS1128: Declaration or statement expected.
+ ELIFECYCLE  Command failed with exit code 2.
