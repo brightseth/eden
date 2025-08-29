@@ -144,6 +144,15 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
     rolloutStrategy: 'off',
     culturalImpact: 'CITIZEN can create proposals, coordinate voting, and facilitate DAO governance through Snapshot integration',
     rollbackPlan: 'Disable flag, CITIZEN reverts to governance simulation mode with local consensus building'
+  },
+
+  ENABLE_BART_LENDING_SYSTEM: {
+    key: 'ENABLE_BART_LENDING_SYSTEM',
+    description: 'Enable BART Renaissance banking and NFT lending system',
+    defaultValue: process.env.NODE_ENV === 'development',
+    rolloutStrategy: 'dev',
+    culturalImpact: 'BART can evaluate NFT collateral and make lending offers with Renaissance banking wisdom',
+    rollbackPlan: 'Disable flag, BART routes return 503 service unavailable'
   }
 };
 
@@ -224,6 +233,16 @@ export function isFeatureEnabled(flagKey: string): boolean {
   return featureFlags.isEnabled(flagKey);
 }
 
+// Build-time configuration constants
+export const CONFIG = {
+  CHAT_RATE_LIMIT_REQUESTS: 10,
+  CHAT_RATE_LIMIT_WINDOW: 600000, // 10 minutes in ms
+  CHAT_MAX_MESSAGE_LENGTH: 500,
+  CHAT_MESSAGE_TIMEOUT: 30000, // 30 seconds
+  WORKS_GALLERY_PAGE_SIZE: 12,
+  BUILD_TIME_SAFETY: process.env.NODE_ENV === 'production',
+} as const;
+
 // Export flag keys for type safety
 export const FLAGS = {
   ENABLE_SPIRIT_REGISTRY: 'ENABLE_SPIRIT_REGISTRY',
@@ -241,4 +260,5 @@ export const FLAGS = {
   ENABLE_PUBLIC_AGENT_PAGES: 'ENABLE_PUBLIC_AGENT_PAGES',
   ENABLE_AGENT_CHAT: 'ENABLE_AGENT_CHAT',
   ENABLE_CITIZEN_SNAPSHOT_GOVERNANCE: 'ENABLE_CITIZEN_SNAPSHOT_GOVERNANCE',
+  ENABLE_BART_LENDING_SYSTEM: 'ENABLE_BART_LENDING_SYSTEM',
 } as const;

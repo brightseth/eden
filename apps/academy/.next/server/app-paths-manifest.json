@@ -1,1 +1,5 @@
-{}
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/agents/[slug]/page": "app/agents/[slug]/page.js",
+  "/page": "app/page.js"
+}

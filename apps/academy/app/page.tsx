@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { FALLBACK_AGENTS } from '@eden2/registry-sdk';
+import { FALLBACK_AGENTS } from '../src/lib/registry-sdk';
 
 export default function AcademyHome() {
   // Sort agents by position to ensure proper ordering (KORU #3, BART #8, VERDELIS #9)

@@ -71,7 +71,7 @@
   - `/api/agents/koru/engagement` - Engagement tools
 
 ### Registry Integration
-- **Base URL**: `https://eden-genesis-registry.vercel.app/api/v1`
+- **Base URL**: `https://registry.eden2.io/api/v1`
 - **Client**: `eden-academy-client`
 - **Status**: ✅ Fully Integrated
 - **Health Checks**: Active circuit breakers implemented

@@ -250,10 +250,20 @@ export default function SolienneSite() {
               </div>
             </div>
           </div>
-          <div className="mt-8 text-center">
+          <div className="mt-8 text-center space-y-4">
             <div className="inline-block border border-white px-6 py-3">
               <div className="text-sm opacity-75">EXHIBITION DATES</div>
               <div className="text-lg">{SOLIENNE_CONFIG.PARIS_PHOTO_DATES} • {SOLIENNE_CONFIG.PARIS_PHOTO_VENUE}</div>
+            </div>
+            <div>
+              <Link 
+                href="/sites/solienne/create" 
+                className="inline-flex items-center gap-2 border border-white bg-white text-black px-6 py-3 hover:bg-black hover:text-white transition-all"
+              >
+                <Sparkles className="w-4 h-4" />
+                CREATE NEW CONSCIOUSNESS STREAM
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
           </div>
         </div>

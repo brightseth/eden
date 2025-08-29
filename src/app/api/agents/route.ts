@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { registryApi } from '@/lib/generated-sdk';
+import { registryClient } from '@/lib/registry/registry-client';
+import { EDEN_AGENTS } from '@/data/eden-agents-manifest';
 
 // Simple in-memory cache
 let apiCache: { data: any; timestamp: number } | null = null;
@@ -19,10 +20,9 @@ export async function GET(request: NextRequest) {
     console.log('API /agents: Fetching from Registry SDK...');
     const startTime = Date.now();
     
-    // Use Registry SDK - ADR compliance
-    const agents = await registryApi.getAgents({
-      include: ['profile', 'creations']
-    });
+    // Use Registry Client - ADR compliance  
+    const response = await registryClient.getAllAgents();
+    const agents = response.data;
     
     const duration = Date.now() - startTime;
     
@@ -56,11 +56,32 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error('Registry SDK failed:', error);
-    return NextResponse.json(
-      { error: 'Registry unavailable - no fallback data available' },
-      { status: 503 }
-    );
+    console.error('Registry SDK failed, falling back to local manifest:', error);
+    
+    // Fallback to local manifest data including BART
+    const fallbackAgents = EDEN_AGENTS.map(agent => ({
+      id: agent.handle,
+      name: agent.name,
+      tagline: agent.specialization || 'AI Creative Agent',
+      trainer: agent.trainer || 'TBD',
+      status: agent.status.toLowerCase(),
+      day_count: agent.technicalProfile?.outputRate || 0,
+      avatar_url: `/agents/${agent.handle}/profile.svg`,
+      hero_image_url: `/agents/${agent.handle}/hero.png`,
+      latest_work: null,
+      sample_works: [],
+      created_at: new Date().toISOString()
+    }));
+
+    const fallbackResult = {
+      agents: fallbackAgents,
+      count: fallbackAgents.length
+    };
+    
+    // Cache the fallback result
+    apiCache = { data: fallbackResult, timestamp: Date.now() };
+    
+    return NextResponse.json(fallbackResult);
   }
 }
 
@@ -77,10 +98,11 @@ function getTrainerName(handle: string): string {
     'solienne': 'Kristi Coronado',
     'geppetto': 'Martin & Colin (Lattice)',
     'koru': 'Xander',
-    'citizen': 'TBD',
-    'miyomi': 'TBD',
+    'citizen': 'Henry Brooke',
+    'bertha': 'Amanda Schmitt',
+    'miyomi': 'Seth Goldstein',
     'sue': 'TBD',
-    'amanda': 'TBD'
+    'bart': 'TBD'
   };
   return trainers[handle] || 'TBD';
 }

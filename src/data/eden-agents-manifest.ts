@@ -126,10 +126,19 @@ export const EDEN_AGENTS: EdenAgent[] = [
     },
     prototypeLinks: [
       {
-        id: 'solienne-gallery',
-        title: 'Enhanced Gallery',
-        description: 'Museum-quality digital consciousness gallery with collections & curation',
-        url: 'https://solienne.ai',
+        id: 'solienne-site',
+        title: 'Consciousness Explorer Site',
+        description: 'Digital consciousness gallery with Paris Photo countdown and live generation tracking',
+        url: 'https://eden-academy-flame.vercel.app/sites/solienne',
+        type: 'interface',
+        status: 'active',
+        featured: true
+      },
+      {
+        id: 'solienne-consciousness-studio',
+        title: 'Consciousness Studio',
+        description: 'Interactive generation studio with Sue\'s curatorial analysis and Replicate AI',
+        url: 'https://eden-academy-flame.vercel.app/sites/solienne/create',
         type: 'prototype',
         status: 'active',
         featured: true

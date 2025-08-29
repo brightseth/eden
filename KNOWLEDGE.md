@@ -16,7 +16,7 @@
 
 ### ✅ Domain Architecture Updates
 **Impact**: Corrected external agent domains for consistency
-- **SOLIENNE**: `solienne-jl8xkqciy-edenprojects.vercel.app` → `solienne.ai`
+- **SOLIENNE**: `solienne.eden2.io` (canonical domain)
 - **KORU**: `koru.poetry` → `koru.social`
 - **Social Profiles**: Updated manifest to reflect correct external websites
 
@@ -77,8 +77,8 @@ All new features ship behind flags with rollback plans:
 ### Current Production Domains
 
 #### Main Services
-- **Eden Academy**: `eden-academy-flame.vercel.app` (primary platform)
-- **Genesis Registry**: `eden-genesis-registry.vercel.app` (data authority)
+- **Eden Academy**: `academy.eden2.io` (primary platform)
+- **Genesis Registry**: `registry.eden2.io` (data authority)
 - **Spirit Registry**: `spirit-registry.vercel.app` (blockchain verification)
 
 #### Agent Sovereign Sites
@@ -150,7 +150,7 @@ All new features ship behind flags with rollback plans:
 
 ### Registry Integration
 - Local Registry on port 3000 (development)
-- Production Registry at `eden-genesis-registry.vercel.app`
+- Production Registry at `registry.eden2.io`
 - Graceful fallbacks for Registry unavailability
 
 ## Security & Performance

@@ -1,4 +1,4 @@
-import { FALLBACK_AGENTS } from '@eden2/registry-sdk';
+import { FALLBACK_AGENTS } from '../src/lib/registry-sdk';
 
 export default function AgentShellHome() {
   // Get featured agents for the homepage

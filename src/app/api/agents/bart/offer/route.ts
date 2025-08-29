@@ -1,8 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { isFeatureEnabled, FLAGS } from '@/config/flags';
 import { bartGondiService } from '@/lib/agents/bart-gondi-integration';
 import { bartRiskManager } from '@/lib/agents/bart-risk-manager';
 
 export async function POST(request: NextRequest) {
+  // Feature flag protection for build stability
+  if (!isFeatureEnabled(FLAGS.ENABLE_BART_LENDING_SYSTEM)) {
+    return NextResponse.json(
+      { 
+        error: 'BART lending system is currently under development',
+        status: 'disabled',
+        message: 'The Renaissance banking system is being refined by our Florentine masters'
+      },
+      { status: 503 }
+    );
+  }
+
   try {
     const body = await request.json();
     const { 
@@ -125,6 +138,17 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  // Feature flag protection for build stability  
+  if (!isFeatureEnabled(FLAGS.ENABLE_BART_LENDING_SYSTEM)) {
+    return NextResponse.json({
+      bartLendingSystem: {
+        status: 'disabled',
+        message: 'BART Renaissance banking system under development',
+        culturalNote: 'Patience, as the Medici taught - proper preparation prevents poor performance'
+      }
+    });
+  }
+
   try {
     const gondiStatus = bartGondiService.getStatus();
     const riskStatus = bartRiskManager.getStatus();

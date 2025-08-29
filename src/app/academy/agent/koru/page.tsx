@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowLeft, Users, GitBranch, MessageSquare } from 'lucide-react';
+import { ArrowLeft, Users, GitBranch, MessageSquare, ExternalLink, Settings } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 
 export default function KoruProfilePage() {

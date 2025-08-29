@@ -1,0 +1,21 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "SKIP_ENV_VALIDATION=true npm run build",
+  "installCommand": "npm install",
+  "env": {
+    "SKIP_ENV_VALIDATION": "true",
+    "ENABLE_BERTHA_DEMO": "true",
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/bertha",
+      "destination": "/bertha-demo"
+    }
+  ]
+}

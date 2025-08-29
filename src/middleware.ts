@@ -25,6 +25,26 @@ const apiAuthMiddleware = createAuthMiddleware({
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // 301 Redirect Vercel hosts to canonical eden2.io domains
+  const host = request.headers.get('host');
+  if (host && host.includes('vercel.app')) {
+    const url = new URL(request.url);
+    
+    // Map Vercel hostnames to canonical eden2.io domains
+    if (host.includes('eden-academy-') || host.includes('eden-academy.')) {
+      url.host = 'academy.eden2.io';
+    } else if (host.includes('eden-genesis-registry') || host.includes('eden-registry')) {
+      url.host = 'registry.eden2.io';
+    } else if (host.includes('solienne-')) {
+      url.host = 'solienne.eden2.io';
+    }
+    
+    // Only redirect if we successfully mapped to a canonical domain
+    if (url.host.endsWith('.eden2.io')) {
+      return NextResponse.redirect(url, 301);
+    }
+  }
+
   // Handle CORS preflight requests first
   const corsResponse = handleCORSPreflight(request);
   if (corsResponse) {
@@ -143,7 +163,9 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Legacy redirect routes
+    // Match all paths for domain redirects (excluding static assets)
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+    // Legacy redirect routes  
     '/train',
     '/academy/agent/miyomi', 
     '/academy/agent/artcollector',

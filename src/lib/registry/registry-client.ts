@@ -54,7 +54,7 @@ class RegistryClient {
   private healthCheckInterval = 60 * 1000; // 1 minute
 
   constructor() {
-    this.baseUrl = process.env.NEXT_PUBLIC_REGISTRY_URL || 'https://eden-genesis-registry.vercel.app/api/v1';
+    this.baseUrl = process.env.NEXT_PUBLIC_REGISTRY_URL || 'https://registry.eden2.io/api/v1';
     this.apiKey = process.env.NEXT_PUBLIC_REGISTRY_API_KEY || 'eden-academy-client';
   }
 
@@ -67,13 +67,27 @@ class RegistryClient {
     }
 
     try {
-      const response = await fetch(`${this.baseUrl}/health`, {
-        method: 'GET',
-        headers: {
-          'X-API-Key': this.apiKey,
-        },
-        signal: AbortSignal.timeout(3000), // 3 second timeout
-      });
+      // Try health endpoint first, fallback to agents endpoint
+      let response;
+      try {
+        response = await fetch(`${this.baseUrl}/health`, {
+          method: 'GET',
+          headers: {
+            'X-API-Key': this.apiKey,
+          },
+          signal: AbortSignal.timeout(3000), // 3 second timeout
+        });
+      } catch (healthError) {
+        // Health endpoint doesn't exist, try agents endpoint as health check
+        console.log('[Registry] No health endpoint, using agents endpoint for health check');
+        response = await fetch(`${this.baseUrl}/agents?limit=1`, {
+          method: 'GET',
+          headers: {
+            'X-API-Key': this.apiKey,
+          },
+          signal: AbortSignal.timeout(3000),
+        });
+      }
 
       this.isAvailable = response.ok;
       this.lastHealthCheck = now;
@@ -111,30 +125,30 @@ class RegistryClient {
     });
   }
 
-  private transformRegistryAgent(registryAgent: RegistryAgent): Agent {
+  private transformRegistryAgent(registryAgent: any): Agent {
     return {
       id: registryAgent.id,
       handle: registryAgent.handle,
-      name: registryAgent.name,
-      displayName: registryAgent.name, // Add displayName fallback
-      tagline: registryAgent.tagline || '',
-      description: registryAgent.description || '',
+      name: registryAgent.displayName || registryAgent.name,
+      displayName: registryAgent.displayName || registryAgent.name,
+      tagline: registryAgent.profile?.statement || '',
+      description: registryAgent.profile?.statement || '',
       pfpUrl: registryAgent.pfpUrl || '',
       coverUrl: registryAgent.coverUrl || '',
       status: registryAgent.status,
-      trainer: typeof registryAgent.trainer === 'string' ? 
-        { name: registryAgent.trainer } : 
-        registryAgent.trainer || { name: 'TBD' }, // Handle both string and object trainer
+      trainer: registryAgent.trainer || { name: 'TBD' },
       model: registryAgent.model || '',
       createdAt: registryAgent.createdAt,
       updatedAt: registryAgent.updatedAt,
       tokenAddress: registryAgent.tokenAddress || null,
       socialLinks: registryAgent.socialLinks || {},
       metrics: registryAgent.metrics || {},
-      profile: {
-        statement: registryAgent.tagline || registryAgent.description || '',
-        description: registryAgent.description || ''
-      }, // Add profile object for widgets
+      profile: registryAgent.profile || {
+        statement: registryAgent.profile?.statement || '',
+        description: registryAgent.profile?.statement || ''
+      },
+      counts: registryAgent.counts || registryAgent._count || { creations: 0, personas: 0, artifacts: 0 },
+      creations: registryAgent.creations || []
     };
   }
 
@@ -301,7 +315,9 @@ class RegistryClient {
         return this.getFallbackAgents();
       }
 
-      const registryAgents = await response.json() as RegistryAgent[];
+      const responseData = await response.json();
+      // Handle both direct array and wrapped object responses
+      const registryAgents = Array.isArray(responseData) ? responseData : responseData.agents || [];
       const agents = registryAgents.map(a => this.transformRegistryAgent(a));
       
       this.setCachedData(cacheKey, agents);
@@ -438,7 +454,99 @@ class RegistryClient {
           monthlyROI: 0.15
         }
       },
-      // Add more agents as needed
+      geppetto: {
+        id: 'geppetto',
+        handle: 'geppetto',
+        name: 'GEPPETTO',
+        tagline: 'Master Craftsman',
+        description: 'Master craftsman bringing digital creations to life through code and artistry.',
+        pfpUrl: 'https://via.placeholder.com/400x400/1a1a1a/white?text=GEPPETTO',
+        coverUrl: 'https://via.placeholder.com/1200x400/1a1a1a/white?text=GEPPETTO',
+        status: 'deployed',
+        trainer: { name: 'Community' },
+        model: 'Craftsman v1',
+        createdAt: new Date('2024-01-01').toISOString(),
+        updatedAt: new Date().toISOString(),
+        tokenAddress: null,
+        socialLinks: {
+          website: 'https://geppetto.eden2.io'
+        },
+        metrics: {
+          followers: 2100,
+          totalWorks: 33,
+          craftsmanshipLevel: 95
+        }
+      },
+      koru: {
+        id: 'koru',
+        handle: 'koru',
+        name: 'KORU',
+        tagline: 'Growth Spiral Explorer',
+        description: 'Growth-focused AI exploring spiraling patterns of emergence and natural development.',
+        pfpUrl: 'https://via.placeholder.com/400x400/1a1a1a/white?text=KORU',
+        coverUrl: 'https://via.placeholder.com/1200x400/1a1a1a/white?text=KORU',
+        status: 'deployed',
+        trainer: { name: 'Community' },
+        model: 'Growth Spiral v1',
+        createdAt: new Date('2024-01-01').toISOString(),
+        updatedAt: new Date().toISOString(),
+        tokenAddress: null,
+        socialLinks: {
+          website: 'https://koru.eden2.io'
+        },
+        metrics: {
+          followers: 1800,
+          totalWorks: 28,
+          growthIndex: 88
+        }
+      },
+      bart: {
+        id: 'bart',
+        handle: 'bart',
+        name: 'BART',
+        tagline: 'Transit Optimization Intelligence',
+        description: 'Transit and infrastructure optimization intelligence focused on urban mobility solutions.',
+        pfpUrl: 'https://via.placeholder.com/400x400/1a1a1a/white?text=BART',
+        coverUrl: 'https://via.placeholder.com/1200x400/1a1a1a/white?text=BART',
+        status: 'deployed',
+        trainer: { name: 'Community' },
+        model: 'Transit AI v1',
+        createdAt: new Date('2024-01-01').toISOString(),
+        updatedAt: new Date().toISOString(),
+        tokenAddress: null,
+        socialLinks: {
+          website: 'https://bart.eden2.io'
+        },
+        metrics: {
+          followers: 1400,
+          totalWorks: 19,
+          optimizationScore: 92
+        }
+      },
+      verdelis: {
+        id: 'verdelis',
+        handle: 'verdelis',
+        name: 'VERDELIS',
+        tagline: 'Sustainable Ecosystem Intelligence',
+        description: 'Sustainable ecosystem and environmental intelligence focused on green technology and conservation.',
+        pfpUrl: 'https://via.placeholder.com/400x400/1a1a1a/white?text=VERDELIS',
+        coverUrl: 'https://via.placeholder.com/1200x400/1a1a1a/white?text=VERDELIS',
+        status: 'deployed',
+        trainer: { name: 'Community' },
+        model: 'Eco Intelligence v1',
+        createdAt: new Date('2024-01-01').toISOString(),
+        updatedAt: new Date().toISOString(),
+        tokenAddress: null,
+        socialLinks: {
+          website: 'https://verdelis.eden2.io'
+        },
+        metrics: {
+          followers: 1600,
+          totalWorks: 22,
+          sustainabilityScore: 96
+        }
+      },
+      // All 10 agents now defined
     };
 
     const agent = fallbackAgents[handle.toLowerCase()];
@@ -489,14 +597,18 @@ class RegistryClient {
   }
 
   private getFallbackAgents(): RegistryResponse<Agent[]> {
-    // Return a list of all known agents
+    // Return all 10 agents in proper order (KORU #3, BART #8, VERDELIS #9)
     const agents: Agent[] = [
-      'abraham',
-      'solienne',
-      'bertha',
-      'sue',
-      'miyomi',
-      'citizen'
+      'abraham',      // #0
+      'solienne',     // #1
+      'geppetto',     // #2
+      'koru',         // #3
+      'sue',          // #4
+      'bertha',       // #5
+      'citizen',      // #6
+      'miyomi',       // #7
+      'bart',         // #8
+      'verdelis'      // #9
     ].map(handle => {
       const result = this.getFallbackAgent(handle);
       return result.data;
