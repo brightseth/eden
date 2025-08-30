@@ -178,7 +178,7 @@ export default function MiyomiDashboard() {
                   <div className="text-sm text-gray-400">When everyone agrees, everyone is wrong</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-red-400 mb-2">"Data &gt; narrative, always"</div>
+                  <div className="text-2xl font-bold text-red-400 mb-2">"Data {'>'} narrative, always"</div>
                   <div className="text-sm text-gray-400">Markets are voting machines short-term</div>
                 </div>
                 <div className="text-center">

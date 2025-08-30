@@ -157,7 +157,8 @@ export async function middleware(request: NextRequest) {
   }
 
   // Redirect root agent names to proper structure
-  const rootAgentPaths = ['abraham', 'solienne', 'citizen', 'miyomi', 'bertha', 'geppetto', 'koru', 'sue'];
+  // Note: /citizen is excluded as it has its own DAO interface
+  const rootAgentPaths = ['abraham', 'solienne', 'miyomi', 'bertha', 'geppetto', 'koru', 'sue'];
   if (rootAgentPaths.includes(pathname.slice(1))) {
     const agentName = pathname.slice(1);
     return NextResponse.redirect(new URL(`/agents/${agentName}`, request.url), 301);

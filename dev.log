@@ -457,3 +457,63 @@ Found 12 markets across all platforms
 [MIYOMI Markets API] Retrieved 12 markets
  GET /api/miyomi/markets 200 in 1222ms
  GET /dashboard/miyomi 200 in 52ms
+ ✓ Compiled in 646ms (1498 modules)
+ GET /dashboard/miyomi 200 in 418ms
+ GET /agents/miyomi 200 in 414ms
+ GET /dashboard/miyomi 200 in 56ms
+ GET /agents/miyomi 200 in 47ms
+ ✓ Compiled in 707ms (1292 modules)
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/seth/eden-academy/.next/server/app/agents/[slug]/page.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/seth/eden-academy/.next/server/app/agents/[slug]/page.js',
+  page: '/agents/miyomi'
+}
+ ⨯ [Error: Cannot find module '/Users/seth/eden-academy/.next/server/pages/_document.js'
+Require stack:
+- /Users/seth/eden-academy/node_modules/next/dist/server/require.js
+- /Users/seth/eden-academy/node_modules/next/dist/server/load-components.js
+- /Users/seth/eden-academy/node_modules/next/dist/build/utils.js
+- /Users/seth/eden-academy/node_modules/next/dist/build/swc/options.js
+- /Users/seth/eden-academy/node_modules/next/dist/build/swc/index.js
+- /Users/seth/eden-academy/node_modules/next/dist/build/next-config-ts/transpile-config.js
+- /Users/seth/eden-academy/node_modules/next/dist/server/config.js
+- /Users/seth/eden-academy/node_modules/next/dist/server/next.js
+- /Users/seth/eden-academy/node_modules/next/dist/server/lib/start-server.js] {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ GET /agents/miyomi 500 in 141ms
+ GET /dashboard/miyomi 200 in 145ms
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/seth/eden-academy/.next/server/app/agents/[slug]/page.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/seth/eden-academy/.next/server/app/agents/[slug]/page.js',
+  page: '/agents/miyomi'
+}
+ ✓ Compiled /_not-found in 246ms (1283 modules)
+ ⨯ [Error: Cannot find module '/Users/seth/eden-academy/.next/server/pages/_document.js'
+Require stack:
+- /Users/seth/eden-academy/node_modules/next/dist/server/require.js
+- /Users/seth/eden-academy/node_modules/next/dist/server/load-components.js
+- /Users/seth/eden-academy/node_modules/next/dist/build/utils.js
+- /Users/seth/eden-academy/node_modules/next/dist/build/swc/options.js
+- /Users/seth/eden-academy/node_modules/next/dist/build/swc/index.js
+- /Users/seth/eden-academy/node_modules/next/dist/build/next-config-ts/transpile-config.js
+- /Users/seth/eden-academy/node_modules/next/dist/server/config.js
+- /Users/seth/eden-academy/node_modules/next/dist/server/next.js
+- /Users/seth/eden-academy/node_modules/next/dist/server/lib/start-server.js] {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ GET /_next/static/css/app/layout.css?v=1756532351866 404 in 384ms
+ GET /agents/miyomi 500 in 373ms
+ GET /api/events/stream?filter=notifications 200 in 583470ms
+ GET /_next/static/chunks/fallback/webpack.js 404 in 117ms
+ GET /_next/static/chunks/fallback/main.js 404 in 100ms
+ GET /_next/static/chunks/fallback/react-refresh.js 404 in 99ms
+ GET /_next/static/chunks/fallback/pages/_app.js 404 in 39ms
+ GET /_next/static/chunks/fallback/pages/_error.js 404 in 38ms
+ ✓ Compiled in 33ms (114 modules)
