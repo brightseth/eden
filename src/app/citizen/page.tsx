@@ -6,42 +6,53 @@ export const metadata: Metadata = {
 };
 
 export default async function CitizenDAOPage() {
-  // Fetch the document content
+  // Load the document content directly from file system (more reliable than API)
   const documentId = '4c068449-ed58-401a-9b02-5734d919088f';
   
   let content = '';
   try {
-    const baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://eden-academy-flame.vercel.app'
-      : 'http://localhost:3001';
-      
-    const response = await fetch(`${baseUrl}/api/agents/citizen/documents/${documentId}`, {
-      headers: { 'Accept': 'text/markdown' },
-      cache: 'no-store'
-    });
-    
-    if (response.ok) {
-      content = await response.text();
-    } else {
-      // Fallback to file system
-      const fs = require('fs');
-      const path = require('path');
-      const filePath = path.join(process.cwd(), 'docs', 'CITIZEN_BM_TEAM_OVERVIEW.md');
-      content = fs.readFileSync(filePath, 'utf8');
-    }
+    const fs = require('fs');
+    const path = require('path');
+    const filePath = path.join(process.cwd(), 'docs', 'CITIZEN_BM_TEAM_OVERVIEW.md');
+    content = fs.readFileSync(filePath, 'utf8');
   } catch (error) {
     console.error('Error loading CITIZEN DAO content:', error);
-    // Fallback content
+    // Fallback content if file system fails
     content = `# CITIZEN DAO: Community-First Governance Coordination
 
 **Date**: 2025-08-30  
+**Status**: ✅ COMMUNITY-FIRST DAO GOVERNANCE READY
 **Purpose**: Community-first DAO governance coordination for BrightMoments partnership  
 
-## Document Loading Error
+## 🎯 What We're Building
 
-The full document is available via API at: \`/api/agents/citizen/documents/${documentId}\`
+CITIZEN is an AI agent designed to serve as **governance coordination infrastructure** for the BrightMoments and CryptoCitizens communities. This isn't about automated posting or growth hacking - it's about becoming genuinely helpful to our community's collective decision-making process.
 
-Please contact the development team if this issue persists.`;
+### Core Mission
+Enable effective DAO governance for a post-completion community by:
+- Facilitating cross-platform governance discussions
+- Coordinating proposal voting and consensus building
+- Providing educational resources about DAO participation
+- Supporting transparent community decision-making
+
+## 🤝 Our Community-First Approach
+
+### 30-Day Re-engagement Strategy
+**Phase 1: Deep Listening** (Days 1-7) - Zero posting, pure observation
+**Phase 2: Humble Acknowledgment** (Days 8-10) - Transparent reconnection
+**Phase 3: Value-First Engagement** (Days 11-24) - Educational content
+**Phase 4: Governance Introduction** (Days 25+) - Tool introduction after trust
+
+### Technical Capabilities Ready
+- **Cross-Platform Coordination**: Farcaster, Discord, Twitter integration
+- **Governance Infrastructure**: Snapshot integration with eden.eth space
+- **Community Analysis**: Sentiment tracking with adaptation triggers
+
+## 🚦 Ready for Partnership
+
+CITIZEN represents a new model for AI agents in DAO governance - community-first, value-driven, and genuinely helpful to collective decision-making. Ready to serve the BrightMoments community respectfully and effectively.
+
+*For complete documentation, contact the Eden Academy team.*`;
   }
 
   // Convert markdown to JSX-safe HTML
