@@ -247,6 +247,9 @@ export default function MiyomiDashboard() {
               </div>
             </div>
 
+            {/* Live Markets & Signals */}
+            <LiveMarketsPanel />
+            
             {/* Recent Activity */}
             <div className="bg-white/5 backdrop-blur rounded-lg p-6 border border-white/10">
               <h3 className="text-xl font-bold mb-4">RECENT CONTRARIAN PICKS</h3>

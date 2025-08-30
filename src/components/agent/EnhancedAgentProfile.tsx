@@ -470,7 +470,7 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
                   
                   {agent.handle === 'solienne' && (
                     <Link
-                      href="/academy/agent/solienne/generations"
+                      href="/agents/solienne/generations"
                       className="flex items-center gap-2 text-sm hover:text-white text-gray-400 transition-colors"
                     >
                       <Eye className="w-4 h-4" />
