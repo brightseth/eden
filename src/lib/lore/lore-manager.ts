@@ -140,7 +140,7 @@ export class EdenLoreManager implements LoreManager {
           content.toLowerCase().includes(query.toLowerCase())
         );
         
-        results.push(...matches.map(match => `[${handle.toUpperCase()}] ${match}`));
+        results.push(...matches.map(match => `[${(handle || 'UNKNOWN').toUpperCase()}] ${match}`));
       } catch (error) {
         console.error(`[LoreManager] Search failed for ${handle}:`, error);
       }

@@ -1,0 +1,41 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="64" height="64" fill="#000000"/>
+  
+  <!-- Robot Head -->
+  <rect x="16" y="12" width="32" height="28" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+  
+  <!-- Eyes -->
+  <circle cx="24" cy="22" r="3" fill="#000000"/>
+  <circle cx="40" cy="22" r="3" fill="#000000"/>
+  <circle cx="24" cy="22" r="1" fill="#ff6b6b"/>
+  <circle cx="40" cy="22" r="1" fill="#ff6b6b"/>
+  
+  <!-- Mouth/Speaker -->
+  <rect x="28" y="30" width="8" height="4" fill="#000000"/>
+  <line x1="29" y1="31" x2="29" y2="33" stroke="#333333" stroke-width="0.5"/>
+  <line x1="31" y1="31" x2="31" y2="33" stroke="#333333" stroke-width="0.5"/>
+  <line x1="33" y1="31" x2="33" y2="33" stroke="#333333" stroke-width="0.5"/>
+  <line x1="35" y1="31" x2="35" y2="33" stroke="#333333" stroke-width="0.5"/>
+  
+  <!-- Creative Antennas (artistic flair) -->
+  <line x1="24" y1="12" x2="22" y2="6" stroke="#ffffff" stroke-width="1"/>
+  <line x1="40" y1="12" x2="42" y2="6" stroke="#ffffff" stroke-width="1"/>
+  <circle cx="22" cy="6" r="1.5" fill="#ff6b6b"/>
+  <circle cx="42" cy="6" r="1.5" fill="#ff6b6b"/>
+  
+  <!-- Neck -->
+  <rect x="28" y="40" width="8" height="4" fill="#cccccc"/>
+  
+  <!-- Body -->
+  <rect x="20" y="44" width="24" height="16" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+  
+  <!-- Chest Panel (art curator theme) -->
+  <rect x="26" y="48" width="12" height="8" fill="#000000"/>
+  <rect x="28" y="50" width="2" height="2" fill="#ff6b6b"/>
+  <rect x="32" y="50" width="2" height="2" fill="#4ecdc4"/>
+  <rect x="36" y="50" width="2" height="2" fill="#ffd93d"/>
+  
+  <!-- Serial Number -->
+  <text x="32" y="58" text-anchor="middle" font-family="monospace" font-size="4" fill="#666666">S001</text>
+</svg>

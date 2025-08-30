@@ -126,16 +126,21 @@ class RegistryClient {
   }
 
   private transformRegistryAgent(registryAgent: any): Agent {
+    // Robust null/undefined handling for all agent properties
+    if (!registryAgent) {
+      throw new Error('Cannot transform null/undefined agent data');
+    }
+    
     return {
-      id: registryAgent.id,
-      handle: registryAgent.handle,
-      name: registryAgent.displayName || registryAgent.name,
-      displayName: registryAgent.displayName || registryAgent.name,
+      id: registryAgent.id || 'unknown',
+      handle: registryAgent.handle || 'unknown',
+      name: registryAgent.displayName || registryAgent.name || 'Unknown Agent',
+      displayName: registryAgent.displayName || registryAgent.name || 'Unknown Agent',
       tagline: registryAgent.profile?.statement || '',
       description: registryAgent.profile?.statement || '',
       pfpUrl: registryAgent.pfpUrl || '',
       coverUrl: registryAgent.coverUrl || '',
-      status: registryAgent.status,
+      status: registryAgent.status || 'DEVELOPING',
       trainer: registryAgent.trainer || { name: 'TBD' },
       model: registryAgent.model || '',
       createdAt: registryAgent.createdAt,
@@ -318,7 +323,17 @@ class RegistryClient {
       const responseData = await response.json();
       // Handle both direct array and wrapped object responses
       const registryAgents = Array.isArray(responseData) ? responseData : responseData.agents || [];
-      const agents = registryAgents.map(a => this.transformRegistryAgent(a));
+      const agents = registryAgents
+        .filter(a => a && (a.handle || a.id)) // Filter out null/invalid agents before transformation
+        .map(a => {
+          try {
+            return this.transformRegistryAgent(a);
+          } catch (error) {
+            console.warn('[Registry] Failed to transform agent:', a?.handle || 'unknown', error);
+            return null;
+          }
+        })
+        .filter(Boolean) as Agent[]; // Remove any failed transformations
       
       this.setCachedData(cacheKey, agents);
       

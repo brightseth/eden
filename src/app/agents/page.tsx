@@ -2,18 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { safeStatusFormat } from '@/lib/utils';
+import { AgentProfileErrorBoundary } from '@/components/error-boundary/AgentProfileErrorBoundary';
+import { PublicAgent, isValidAgent } from '@/types';
 // Using the working API endpoint instead of Registry service
-interface Agent {
-  id: string;
-  name: string;
-  tagline: string;
-  trainer: string;
-  status: string;
-  day_count: number;
-  avatar_url?: string;
-  latest_work?: any;
-  created_at?: string;
-}
 
 // Force dynamic rendering to avoid build issues
 export const dynamic = 'force-dynamic';
@@ -21,7 +13,7 @@ export const dynamic = 'force-dynamic';
 export default function AgentsDiscoveryPage() {
   const [filter, setFilter] = useState<'all' | 'genesis' | 'year-1' | 'active' | 'upcoming'>('all');
   const [sortBy, setSortBy] = useState<'launch' | 'revenue' | 'output'>('launch');
-  const [agents, setAgents] = useState<Agent[]>([]);
+  const [agents, setAgents] = useState<PublicAgent[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalRevenue, setTotalRevenue] = useState(76700); // Static for now
 
@@ -33,7 +25,7 @@ export default function AgentsDiscoveryPage() {
         if (!response.ok) throw new Error('Failed to fetch');
         
         const data = await response.json();
-        const agentList = data.agents || [];
+        const agentList = (data.agents || []).filter(isValidAgent); // Filter out invalid agents
         
         console.log('✅ Got agents:', agentList.length);
         setAgents(agentList);
@@ -79,7 +71,8 @@ export default function AgentsDiscoveryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <AgentProfileErrorBoundary>
+      <div className="min-h-screen bg-black text-white">
       {/* HEADER */}
       <header className="border-b-2 border-white p-8">
         <div className="max-w-7xl mx-auto">
@@ -257,7 +250,7 @@ export default function AgentsDiscoveryPage() {
                     STATUS
                   </div>
                   <div className="text-lg font-bold">
-                    {agent.status.toUpperCase()}
+                    {safeStatusFormat(agent.status)}
                   </div>
                 </div>
               </div>
@@ -327,6 +320,7 @@ export default function AgentsDiscoveryPage() {
           </div>
         </div>
       </footer>
-    </div>
+      </div>
+    </AgentProfileErrorBoundary>
   );
 }

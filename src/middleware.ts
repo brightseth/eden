@@ -134,24 +134,50 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // CRITICAL FIX: Stop API endpoints from being accessible as pages
+  if (pathname.startsWith('/api/agents/') && !pathname.includes('/api/agents?')) {
+    // Extract agent name from /api/agents/abraham -> abraham  
+    const segments = pathname.split('/');
+    const agentName = segments[3];
+    
+    if (agentName && !pathname.includes('/works') && !pathname.includes('/profile') && !pathname.includes('/predictions')) {
+      // Redirect /api/agents/abraham -> /agents/abraham
+      return NextResponse.redirect(new URL(`/agents/${agentName}`, request.url), 301);
+    }
+  }
+
+  // Redirect root agent names to proper structure
+  const rootAgentPaths = ['abraham', 'solienne', 'citizen', 'miyomi', 'bertha', 'geppetto', 'koru', 'sue'];
+  if (rootAgentPaths.includes(pathname.slice(1))) {
+    const agentName = pathname.slice(1);
+    return NextResponse.redirect(new URL(`/agents/${agentName}`, request.url), 301);
+  }
+
+  // Phase 2: URL Grammar Normalization - Canonical URL structure
+  // Redirect legacy /academy/agent/* paths to canonical /agents/* structure
+  if (pathname.startsWith('/academy/agent/')) {
+    const agentPath = pathname.replace('/academy/agent/', '/agents/');
+    return NextResponse.redirect(new URL(agentPath, request.url), 301);
+  }
+
   // Redirect deleted and duplicate routes
   const redirects: Record<string, string> = {
     '/train': '/academy',
-    '/academy/agent/miyomi': '/academy', 
+    '/academy/agent/miyomi': '/agents/miyomi', 
     '/academy/agent/artcollector': '/academy',
     '/academy/agent/daomanager': '/academy',
     '/academy/agent/agent07': '/apply',
     '/academy/agent/agent08': '/apply',
     '/academy/agent/agent09': '/apply',
     '/academy/agent/agent10': '/apply',
-    // Redirect old structure to new
-    '/academy/abraham/covenant': '/academy/agent/abraham',
-    '/academy/abraham/early-works': '/academy/agent/abraham/early-works',
-    '/academy/abraham/drops': '/academy/agent/abraham',
-    '/academy/solienne/generations': '/academy/agent/solienne/generations',
-    '/academy/solienne/paris-photo': '/academy/agent/solienne',
-    '/academy/solienne/practice': '/academy/agent/solienne',
-    '/academy/solienne/drops': '/academy/agent/solienne'
+    // Redirect old structure to new canonical paths
+    '/academy/abraham/covenant': '/agents/abraham',
+    '/academy/abraham/early-works': '/agents/abraham',
+    '/academy/abraham/drops': '/agents/abraham',
+    '/academy/solienne/generations': '/agents/solienne',
+    '/academy/solienne/paris-photo': '/agents/solienne',
+    '/academy/solienne/practice': '/agents/solienne',
+    '/academy/solienne/drops': '/agents/solienne'
   };
 
   if (redirects[pathname]) {
@@ -165,6 +191,17 @@ export const config = {
   matcher: [
     // Match all paths for domain redirects (excluding static assets)
     '/((?!_next/static|_next/image|favicon.ico).*)',
+    // CRITICAL: Fix broken API endpoint routing
+    '/api/agents/:path*',
+    // CRITICAL: Fix root agent path redirects 
+    '/abraham',
+    '/solienne',
+    '/citizen', 
+    '/miyomi',
+    '/bertha',
+    '/geppetto',
+    '/koru',
+    '/sue',
     // Legacy redirect routes  
     '/train',
     '/academy/agent/miyomi', 

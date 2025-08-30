@@ -1,6 +1,13 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { useState } from 'react';
+import Link from 'next/link';
+import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
+import { 
+  Activity, TrendingUp, Zap, Users, ExternalLink,
+  ChevronRight, RefreshCw, Signal, Globe
+} from 'lucide-react';
 
 // Import client-only components with no SSR to avoid hydration issues
 const AgentCount = dynamic(() => import('@/components/AgentCount').then(mod => ({ default: mod.AgentCount })), {
@@ -17,149 +24,35 @@ const StatusIndicator = dynamic(() => import('@/components/StatusIndicator').the
   )
 });
 
-const AgentList = dynamic(() => import('@/components/AgentList').then(mod => ({ default: mod.AgentList })), {
+const AgentEconomicGrid = dynamic(() => import('@/components/registry/AgentEconomicGrid').then(mod => ({ default: mod.AgentEconomicGrid })), {
   ssr: false,
-  loading: () => <div className="text-center py-8">Loading agents...</div>
+  loading: () => <div className="text-center py-8">Loading agent catalog...</div>
 });
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
-import { registryApi } from '@/lib/generated-sdk';
-import { registryClient } from '@/lib/registry/client';
-import { 
-  CheckCircle, AlertCircle, Clock, Users, Calendar, 
-  TrendingUp, Award, ChevronRight, RefreshCw, Signal
-} from 'lucide-react';
-
-// Use Registry SDK types directly
-import type { Agent } from '@/lib/generated-sdk';
-
-// Local interface for display-specific data
-interface GenesisAgentDisplay {
-  id: string;
-  name: string;
-  status: 'LAUNCHING' | 'DEVELOPING' | 'TRAINING';
-  date: string;
-  trainer: string;
-  trainerStatus: 'confirmed' | 'needed' | 'interviewing';
-  worksCount: number;
-  description?: string;
-  profile?: {
-    statement?: string;
-    tagline?: string;
-    practice?: string;
-    specialty?: string;
-  };
-}
-
-interface RegistryResponse {
-  agents: Agent[];
-  applicationOpportunities?: {
-    trainerMatching: {
-      count: number;
-      agents: Array<{ name: string; specialty: string }>;
-    };
-    completePositions: {
-      count: number;
-      description: string;
-    };
-  };
-  summary?: {
-    total: number;
-    confirmed: number;
-    needingTrainers: number;
-    openSlots: number;
-  };
-}
-
-// Helper functions to map Registry data to display format
-function mapRegistryStatusToDisplay(status: string): 'LAUNCHING' | 'DEVELOPING' | 'TRAINING' {
-  // All active agents are launching - they're all part of the first cohort
-  if (status === 'ACTIVE') return 'LAUNCHING';
-  if (status === 'ONBOARDING') return 'TRAINING';
-  return 'DEVELOPING';
-}
-
-function getAgentLaunchDate(handle: string): string {
-  const launchDates: Record<string, string> = {
-    'abraham': 'October 19, 2025',
-    'solienne': 'November 10, 2025', 
-    'geppetto': 'December 2025',
-    'koru': 'January 2026',
-    'citizen': 'Q1 2026',
-    'miyomi': 'December 1, 2025',
-    'sue': 'Q1 2026',
-    'amanda': 'March 2026'
-  };
-  return launchDates[handle] || 'TBD';
-}
-
-function getAgentTrainer(handle: string): string {
-  const trainers: Record<string, string> = {
-    'abraham': 'Gene Kogan',
-    'solienne': 'Kristi Coronado',
-    'geppetto': 'Martin & Colin (Lattice)', 
-    'koru': 'Xander',
-    'citizen': 'TBD - Applications Open',
-    'miyomi': 'Seth Goldstein',
-    'sue': 'TBD - Applications Open',
-    'amanda': 'TBD - Applications Open'
-  };
-  return trainers[handle] || 'TBD';
-}
-
-function getTrainerStatus(handle: string): 'confirmed' | 'needed' | 'interviewing' {
-  const confirmedTrainers = ['abraham', 'solienne', 'geppetto', 'koru', 'miyomi'];
-  return confirmedTrainers.includes(handle) ? 'confirmed' : 'needed';
-}
-
-export default function HomePage() {
+export default function RegistryHomePage() {
   const [loading, setLoading] = useState(false);
 
-  // Simple refresh handler for the manual refresh button
   const handleRefresh = () => {
     setLoading(true);
-    // Force reload the page to refresh all client components
     setTimeout(() => {
       window.location.reload();
     }, 100);
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'LAUNCHING': return 'text-green-400 border-green-400';
-      case 'DEVELOPING': return 'text-yellow-400 border-yellow-400';
-      case 'TRAINING': return 'text-blue-400 border-blue-400';
-      default: return 'text-gray-400 border-gray-400';
-    }
-  };
-
-  const getTrainerStatusIcon = (status: string) => {
-    switch (status) {
-      case 'confirmed': return <CheckCircle className="w-4 h-4 text-green-400" />;
-      case 'needed': return <AlertCircle className="w-4 h-4 text-red-400" />;
-      case 'interviewing': return <Clock className="w-4 h-4 text-yellow-400" />;
-      default: return <Clock className="w-4 h-4 text-gray-400" />;
-    }
-  };
-
-  // Simplified for testing - just show counts from summary
-  const launchingAgents = [];
-  const developingAgents = [];
-  const needingTrainers = [];
-
   return (
     <div className="min-h-screen bg-black text-white">
       <UnifiedHeader />
       
-      {/* Header */}
+      {/* Registry Header */}
       <div className="border-b border-white">
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-5xl md:text-6xl font-bold mb-4">EDEN ACADEMY</h1>
-              <p className="text-xl">TRAINING AUTONOMOUS ARTISTS</p>
+              <h1 className="text-5xl md:text-6xl font-bold mb-4">EDEN REGISTRY</h1>
+              <p className="text-xl">AUTONOMOUS AGENT CATALOG & DEVELOPER HUB</p>
+              <p className="text-sm text-gray-400 mt-2">
+                Pure infrastructure for AI agent economic sovereignty
+              </p>
             </div>
             <div className="flex items-center gap-3">
               <StatusIndicator />
@@ -172,71 +65,158 @@ export default function HomePage() {
               </button>
             </div>
           </div>
-          <p className="text-sm text-gray-400 mt-2">
-            Live data from Eden Genesis Registry
-          </p>
         </div>
       </div>
 
-      {/* Summary Metrics */}
+      {/* Federation Health Metrics */}
       <div className="border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div>
               <AgentCount />
-              <div className="text-sm text-gray-400">TOTAL AGENTS</div>
-              {process.env.NODE_ENV === 'development' && (
-                <div className="text-xs text-red-400">Using client-only AgentCount component</div>
-              )}
+              <div className="text-sm text-gray-400">ACTIVE AGENTS</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-green-400">5</div>
-              <div className="text-sm text-gray-400">TRAINERS CONFIRMED</div>
+              <div className="text-3xl font-bold text-green-400">99.9%</div>
+              <div className="text-sm text-gray-400">SYSTEM UPTIME</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-yellow-400">3</div>
-              <div className="text-sm text-gray-400">NEED TRAINERS</div>
+              <div className="text-3xl font-bold text-yellow-400">$12.5K</div>
+              <div className="text-sm text-gray-400">ECONOMIC VELOCITY</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-blue-400">2.8x</div>
+              <div className="text-sm text-gray-400">COMPUTE EFFICIENCY</div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      {loading ? (
-        <div className="max-w-7xl mx-auto px-6 py-16 text-center">
-          <div className="text-xl">Loading Academy data...</div>
-        </div>
-      ) : (
-        <div className="max-w-7xl mx-auto px-6 py-12">
-          {/* Critical Actions */}
-          {needingTrainers.length > 0 && (
-            <div className="bg-red-900/20 border border-red-400 p-6 mb-12 rounded">
-              <h2 className="text-xl font-bold mb-4 text-red-400">⚠️ URGENT: TRAINERS NEEDED</h2>
-              <div className="grid md:grid-cols-3 gap-4 mb-4">
-                {needingTrainers.map(agent => (
-                  <Link
-                    key={agent.id}
-                    href={`/academy/agent/${agent.id}`}
-                    className="bg-black/50 border border-red-400/50 p-4 hover:bg-red-900/20 transition-all"
-                  >
-                    <div className="font-bold">{agent.name}</div>
-                    <div className="text-sm text-gray-400">{agent.profile?.specialty || 'Specialist'}</div>
-                    <div className="text-xs mt-2">Target: {agent.date}</div>
-                  </Link>
-                ))}
+      {/* Quick Navigation to Clean Sections */}
+      <div className="border-b border-gray-800">
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Link
+              href="/api"
+              className="flex items-center justify-between p-4 border border-gray-600 hover:border-white hover:bg-gray-900/20 transition-all"
+            >
+              <div>
+                <div className="font-bold">API DOCS</div>
+                <div className="text-sm text-gray-400">Developer integration</div>
               </div>
-            </div>
-          )}
-
-          {/* All Agents */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">AGENTS</h2>
-            <AgentList />
-          </section>
-
-
+              <ExternalLink className="w-4 h-4" />
+            </Link>
+            
+            <Link
+              href="/status"
+              className="flex items-center justify-between p-4 border border-gray-600 hover:border-white hover:bg-gray-900/20 transition-all"
+            >
+              <div>
+                <div className="font-bold">SYSTEM STATUS</div>
+                <div className="text-sm text-gray-400">Infrastructure health</div>
+              </div>
+              <Activity className="w-4 h-4" />
+            </Link>
+            
+            <Link
+              href="/developers"
+              className="flex items-center justify-between p-4 border border-gray-600 hover:border-white hover:bg-gray-900/20 transition-all"
+            >
+              <div>
+                <div className="font-bold">DEVELOPERS</div>
+                <div className="text-sm text-gray-400">SDK & integration tools</div>
+              </div>
+              <Globe className="w-4 h-4" />
+            </Link>
+            
+            <Link
+              href="https://academy.eden2.io"
+              className="flex items-center justify-between p-4 border border-gray-600 hover:border-white hover:bg-gray-900/20 transition-all"
+            >
+              <div>
+                <div className="font-bold">ACADEMY</div>
+                <div className="text-sm text-gray-400">Apply & learn</div>
+              </div>
+              <ExternalLink className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
-      )}
+      </div>
+
+      {/* Pure Agent Catalog */}
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h2 className="text-3xl font-bold mb-2">AGENT CATALOG</h2>
+            <p className="text-gray-400">
+              Live economic sovereignty status with direct access to profiles, sites, and dashboards
+            </p>
+          </div>
+          <div className="text-sm text-gray-400">
+            Updated in real-time
+          </div>
+        </div>
+
+        {/* Agent Economic Grid - Clean, no distractions */}
+        <AgentEconomicGrid />
+      </div>
+
+      {/* Footer Links to Moved Sections */}
+      <div className="border-t border-gray-800 mt-16">
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="text-center mb-6">
+            <h3 className="text-xl font-bold mb-2">MOVED TO ACADEMY.EDEN2.IO</h3>
+            <p className="text-gray-400 mb-6">
+              Application, learning, and development resources have been organized separately
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Link
+              href="https://academy.eden2.io/apply"
+              className="text-center p-6 border border-gray-600 hover:border-white transition-all"
+            >
+              <Users className="w-8 h-8 mx-auto mb-3 text-blue-400" />
+              <div className="font-bold mb-2">APPLY NOW</div>
+              <div className="text-sm text-gray-400">
+                Trainer applications and agent proposals
+              </div>
+            </Link>
+            
+            <Link
+              href="https://academy.eden2.io/cohorts"
+              className="text-center p-6 border border-gray-600 hover:border-white transition-all"
+            >
+              <TrendingUp className="w-8 h-8 mx-auto mb-3 text-yellow-400" />
+              <div className="font-bold mb-2">COHORTS</div>
+              <div className="text-sm text-gray-400">
+                Current and upcoming agent cohorts
+              </div>
+            </Link>
+            
+            <Link
+              href="https://academy.eden2.io/submit"
+              className="text-center p-6 border border-gray-600 hover:border-white transition-all"
+            >
+              <Zap className="w-8 h-8 mx-auto mb-3 text-green-400" />
+              <div className="font-bold mb-2">SUBMIT WORK</div>
+              <div className="text-sm text-gray-400">
+                Upload prototypes and creative outputs
+              </div>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Registry Infrastructure Note */}
+      <div className="border-t border-white">
+        <div className="max-w-7xl mx-auto px-6 py-6 text-center">
+          <p className="text-sm text-gray-400">
+            REGISTRY.EDEN2.IO • Pure technical infrastructure for autonomous AI agents • 
+            Economic sovereignty enabled by HELVETICA BOLD principles
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,0 +1,162 @@
+{
+  "agent": {
+    "id": "miyomi",
+    "handle": "miyomi",
+    "name": "MIYOMI",
+    "displayName": "MIYOMI",
+    "status": "academy",
+    "trainer": "Seth Goldstein",
+    "launchDate": "2025-12-01",
+    "specialization": "Contrarian oracle providing unconventional market predictions",
+    "description": "MIYOMI is your contrarian oracle making bold market predictions, challenging conventional wisdom and providing unconventional insights by looking where others aren't willing to look."
+  },
+  "brand": {
+    "voice": "Bold and contrarian, challenging conventional market wisdom with unconventional insights",
+    "colorScheme": "custom",
+    "typography": "helvetica",
+    "primaryColor": "#000000",
+    "accentColor": "#ff6b35"
+  },
+  "practice": {
+    "type": "mixed_media",
+    "title": "MIYOMI Daily Practice",
+    "description": "Autonomous creative practice by MIYOMI",
+    "frequency": "daily",
+    "outputFormat": [
+      "image",
+      "text"
+    ],
+    "targetMetrics": {
+      "daily_creations": 1
+    }
+  },
+  "profile": {
+    "economyMetrics": {
+      "monthlyRevenue": 15000,
+      "holders": 200,
+      "floorPrice": 0.6
+    },
+    "technicalProfile": {
+      "outputRate": 60,
+      "model": "Claude-3.5-Sonnet",
+      "capabilities": [
+        "Market Predictions",
+        "Contrarian Analysis",
+        "Financial Insights"
+      ],
+      "integrations": [
+        "Eden Registry",
+        "Prediction Markets",
+        "Revenue System"
+      ]
+    },
+    "socialProfiles": {
+      "twitter": "@miyomi_oracle",
+      "farcaster": "miyomi"
+    }
+  },
+  "structure": {
+    "navigation": {
+      "style": "minimal",
+      "items": [
+        {
+          "label": "Works",
+          "path": "/"
+        },
+        {
+          "label": "Practice",
+          "path": "/practice"
+        },
+        {
+          "label": "About",
+          "path": "/about"
+        }
+      ]
+    },
+    "sections": [
+      {
+        "id": "hero",
+        "type": "hero",
+        "title": "Agent Introduction",
+        "enabled": true,
+        "configuration": {
+          "showMetrics": true,
+          "showTrainer": true,
+          "showLaunchDate": true
+        }
+      },
+      {
+        "id": "works",
+        "type": "works_gallery",
+        "title": "Recent Works",
+        "enabled": true,
+        "configuration": {
+          "pagination": true,
+          "worksPerPage": 12,
+          "showFilters": true,
+          "sortOptions": [
+            "date",
+            "views",
+            "revenue"
+          ]
+        }
+      },
+      {
+        "id": "practice",
+        "type": "daily_practice",
+        "title": "Daily Practice",
+        "enabled": true,
+        "configuration": {
+          "showCalendar": true,
+          "showMetrics": true,
+          "showStreaks": true
+        }
+      },
+      {
+        "id": "metrics",
+        "type": "metrics",
+        "title": "Performance",
+        "enabled": true,
+        "configuration": {
+          "showRevenue": true,
+          "showEngagement": true,
+          "showGrowth": true
+        }
+      }
+    ],
+    "features": [
+      {
+        "key": "analytics",
+        "enabled": true,
+        "description": "Basic visitor analytics"
+      },
+      {
+        "key": "comments",
+        "enabled": false,
+        "description": "Work commenting system"
+      },
+      {
+        "key": "collections",
+        "enabled": true,
+        "description": "Public collecting/purchasing"
+      },
+      {
+        "key": "rss_feed",
+        "enabled": true,
+        "description": "RSS feed for works"
+      },
+      {
+        "key": "api_access",
+        "enabled": true,
+        "description": "Public API endpoints"
+      }
+    ]
+  },
+  "deployment": {
+    "domain": "miyomi.eden2.io",
+    "subdirectory": "/sites/miyomi",
+    "environment": "production",
+    "cdn": true,
+    "ssl": true
+  }
+}

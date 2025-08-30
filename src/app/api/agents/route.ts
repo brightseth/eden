@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { registryClient } from '@/lib/registry/registry-client';
 import { EDEN_AGENTS } from '@/data/eden-agents-manifest';
 
-// Simple in-memory cache
+// Simple in-memory cache - CLEARED FOR TESTING
 let apiCache: { data: any; timestamp: number } | null = null;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
@@ -31,20 +31,22 @@ export async function GET(request: NextRequest) {
       duration: duration + 'ms'
     });
     
-    // Transform Registry data to Academy API format
-    const agentsWithWork = (agents || []).map(agent => ({
-      id: agent.handle,
-      name: agent.displayName,
-      tagline: agent.profile?.statement || 'AI Creative Agent',
-      trainer: getTrainerName(agent.handle), // Static mapping until Registry has trainer data
-      status: mapRegistryStatus(agent.status),
-      day_count: agent.counts?.creations || 0,
-      avatar_url: getAgentImageUrl(agent.handle, 'avatar'),
-      hero_image_url: getAgentImageUrl(agent.handle, 'hero'),
-      latest_work: agent.creations?.[0] || null,
-      sample_works: getSampleWorks(agent.handle),
-      created_at: agent.createdAt
-    }));
+    // Transform Registry data to Academy API format with robust null handling
+    const agentsWithWork = (agents || [])
+      .filter(agent => agent && agent.handle) // Filter out any invalid agents
+      .map(agent => ({
+        id: agent.handle || 'unknown',
+        name: agent.displayName || agent.name || 'Unknown Agent',
+        tagline: agent.profile?.statement || 'AI Creative Agent',
+        trainer: getTrainerName(agent.handle), // Static mapping until Registry has trainer data
+        status: mapRegistryStatus(agent.status),
+        day_count: agent.counts?.creations || 0,
+        avatar_url: getAgentImageUrl(agent.handle, 'avatar'),
+        hero_image_url: getAgentImageUrl(agent.handle, 'hero'),
+        latest_work: agent.creations?.[0] || null,
+        sample_works: getSampleWorks(agent.handle),
+        created_at: agent.createdAt || new Date().toISOString()
+      }));
 
     const result = {
       agents: agentsWithWork,
@@ -58,20 +60,22 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Registry SDK failed, falling back to local manifest:', error);
     
-    // Fallback to local manifest data including BART
-    const fallbackAgents = EDEN_AGENTS.map(agent => ({
-      id: agent.handle,
-      name: agent.name,
-      tagline: agent.specialization || 'AI Creative Agent',
-      trainer: agent.trainer || 'TBD',
-      status: agent.status.toLowerCase(),
-      day_count: agent.technicalProfile?.outputRate || 0,
-      avatar_url: `/agents/${agent.handle}/profile.svg`,
-      hero_image_url: `/agents/${agent.handle}/hero.png`,
-      latest_work: null,
-      sample_works: [],
-      created_at: new Date().toISOString()
-    }));
+    // Fallback to local manifest data including BART with robust null handling
+    const fallbackAgents = EDEN_AGENTS
+      .filter(agent => agent && agent.handle) // Filter out invalid agents
+      .map(agent => ({
+        id: agent.handle || 'unknown',
+        name: agent.name || 'Unknown Agent',
+        tagline: agent.specialization || 'AI Creative Agent',
+        trainer: agent.trainer || 'TBD',
+        status: mapRegistryStatus(agent.status), // Use the same safe mapping
+        day_count: agent.technicalProfile?.outputRate || 0,
+        avatar_url: `/agents/${agent.handle || 'unknown'}/profile.svg`,
+        hero_image_url: `/agents/${agent.handle || 'unknown'}/hero.png`,
+        latest_work: null,
+        sample_works: [],
+        created_at: new Date().toISOString()
+      }));
 
     const fallbackResult = {
       agents: fallbackAgents,
@@ -86,10 +90,30 @@ export async function GET(request: NextRequest) {
 }
 
 // Helper functions for data transformation
-function mapRegistryStatus(status: string): string {
-  if (status === 'ACTIVE') return 'active';
-  if (status === 'ONBOARDING') return 'training';
-  return 'developing';
+function mapRegistryStatus(status: string | null | undefined): string {
+  // Provide robust null/undefined handling
+  if (!status) return 'developing';
+  
+  const normalizedStatus = status.toString().toUpperCase();
+  
+  // Map all known Registry status values to Academy values
+  switch (normalizedStatus) {
+    case 'ACTIVE':
+    case 'DEPLOYED':
+    case 'GRADUATED':
+      return 'active';
+    case 'ONBOARDING':
+    case 'TRAINING':
+    case 'ACADEMY':
+      return 'training';
+    case 'DEVELOPING':
+    case 'DEVELOPMENT':
+    case 'INVITED':
+      return 'developing';
+    default:
+      console.warn(`[API] Unknown agent status: ${status}, defaulting to 'developing'`);
+      return 'developing';
+  }
 }
 
 function getTrainerName(handle: string): string {

@@ -1,0 +1,40 @@
+{
+  "name": "unknown-intelligent-sovereign",
+  "version": "2.0.0",
+  "description": "AI-generated sovereign site for Unknown Agent",
+  "keywords": [
+    "trader",
+    "sovereign",
+    "ai-agent",
+    "eden-academy",
+    "prediction"
+  ],
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "analyze-site": "echo 'Site generated with AI intelligence'"
+  },
+  "dependencies": {
+    "next": "15.4.6",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "typescript": "^5.0.0",
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.0.0",
+    "autoprefixer": "^10.0.0",
+    "lucide-react": "^0.400.0",
+    "recharts": "^2.8.0",
+    "date-fns": "^2.30.0"
+  },
+  "metadata": {
+    "generatedBy": "Intelligent Sovereign Factory v2.0",
+    "agentType": "trader",
+    "confidence": 70,
+    "generatedAt": "2025-08-29T14:19:16.393Z"
+  }
+}

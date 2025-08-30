@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { registryClient } from '@/lib/registry/sdk';
+import { safeStatusFormat } from '@/lib/utils';
 
 export async function GET(
   request: NextRequest,
@@ -55,7 +56,7 @@ export async function GET(
       agent: {
         id: agent.id,
         displayName: agent.displayName,
-        status: agent.status.toUpperCase(), // Standardize to uppercase: INVITED | ONBOARDING | ACTIVE | GRADUATED
+        status: safeStatusFormat(agent.status), // Standardize to uppercase: INVITED | ONBOARDING | ACTIVE | GRADUATED
         mode: agent.role === 'CREATOR' ? 'autonomous' : 'guided',
         practice: {
           name: agent.profile?.links?.specialty?.description || 'Daily Practice',

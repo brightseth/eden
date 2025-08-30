@@ -3,27 +3,12 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Users, TrendingUp, CheckCircle, AlertCircle, Clock } from 'lucide-react';
-
-interface Agent {
-  id: string;
-  name: string;
-  tagline: string;
-  trainer: string;
-  status: string;
-  day_count: number;
-  avatar_url?: string;
-  hero_image_url?: string;
-  sample_works?: Array<{
-    id: string;
-    title: string;
-    image_url: string;
-    created_at: string;
-    description: string;
-  }>;
-}
+import { safeStatusFormat } from '@/lib/utils';
+import { PublicAgent, isValidAgent } from '@/types';
+import { AgentProfileErrorBoundary } from '@/components/error-boundary/AgentProfileErrorBoundary';
 
 export function AgentList() {
-  const [agents, setAgents] = useState<Agent[]>([]);
+  const [agents, setAgents] = useState<PublicAgent[]>([]);
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
@@ -34,7 +19,7 @@ export function AgentList() {
         if (!response.ok) throw new Error('Failed to fetch');
         
         const data = await response.json();
-        const agentList = data.agents || [];
+        const agentList = (data.agents || []).filter(isValidAgent); // Filter out invalid agents
         
         console.log('✅ Got agents:', agentList.length);
         setAgents(agentList);
@@ -73,7 +58,8 @@ export function AgentList() {
   }
 
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <AgentProfileErrorBoundary>
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       {agents.map(agent => (
         <div key={agent.id} className="border border-white p-6">
           {/* Hero Image */}
@@ -89,8 +75,8 @@ export function AgentList() {
 
           <div className="flex items-center gap-3 mb-2">
             <h3 className="text-lg font-bold">{agent.name.toUpperCase()}</h3>
-            <span className={`px-2 py-1 text-xs border rounded ${getStatusColor(agent.status)}`}>
-              {agent.status.toUpperCase()}
+            <span className={`px-2 py-1 text-xs border rounded ${getStatusColor(agent.status || 'developing')}`}>
+              {safeStatusFormat(agent.status)}
             </span>
           </div>
           <p className="text-sm text-gray-400 mb-2">{agent.tagline}</p>
@@ -136,6 +122,7 @@ export function AgentList() {
           </div>
         </div>
       ))}
-    </div>
+      </div>
+    </AgentProfileErrorBoundary>
   );
 }

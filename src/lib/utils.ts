@@ -5,6 +5,19 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+// Safe status formatting to prevent toUpperCase() errors
+export function safeStatusFormat(status: string | null | undefined): string {
+  if (!status || typeof status !== 'string') {
+    return 'DEVELOPING';
+  }
+  return status.toUpperCase();
+}
+
+// Safe agent property access with fallbacks
+export function safeAgentAccess<T>(value: T | null | undefined, fallback: T): T {
+  return value ?? fallback;
+}
+
 export function calculateDayNumber(startDate: Date, currentDate: Date = new Date()): number {
   const diffTime = currentDate.getTime() - startDate.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -32,4 +45,9 @@ export function formatDate(date: Date | string): string {
     day: 'numeric',
     year: 'numeric',
   });
+}
+
+// Additional utility for legacy code compatibility
+export function formatPercentage(value: number): string {
+  return `${(value * 100).toFixed(1)}%`;
 }

@@ -68,7 +68,7 @@ function getTrainerStatus(handle: string): string {
 }
 
 function hasAgentPage(handle: string): boolean {
-  // Agents with dedicated pages in /academy/agent/[agent]/page.tsx
+  // Agents with dedicated pages in /agents/[agent] (canonical URL structure)
   const agentsWithPages = ['abraham', 'solienne', 'amanda', 'bertha', 'citizen', 'geppetto', 'koru', 'miyomi', 'sue'];
   return agentsWithPages.includes(handle);
 }
