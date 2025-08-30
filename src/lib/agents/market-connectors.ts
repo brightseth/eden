@@ -26,7 +26,7 @@ export class ManifoldConnector {
 
   async getMarkets(limit: number = 20): Promise<MarketData[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/markets?limit=${limit}&sort=score`);
+      const response = await fetch(`${this.baseUrl}/markets?limit=${limit}&sort=created-time`);
       if (!response.ok) throw new Error(`Manifold API error: ${response.status}`);
       
       const markets = await response.json();
@@ -58,11 +58,14 @@ export class ManifoldConnector {
       yes_price: market.probability || 0.5,
       no_price: 1 - (market.probability || 0.5),
       volume: market.volume || 0,
-      liquidity: market.liquidity || 0,
-      end_date: market.closeTime,
+      liquidity: market.totalLiquidity || market.liquidity || 0,
+      end_date: market.closeTime ? new Date(market.closeTime).toISOString() : new Date(Date.now() + 30*24*60*60*1000).toISOString(),
       category: this.categorizeManifoldMarket(market.question),
       status: market.isResolved ? 'resolved' : 'open',
-      resolution: market.resolution
+      resolution: market.resolution,
+      url: market.url,
+      tradersCount: market.uniqueBettorCount,
+      lastUpdate: market.lastUpdatedTime ? new Date(market.lastUpdatedTime).toISOString() : undefined
     };
   }
 
@@ -179,7 +182,7 @@ export class PolymarketConnector {
 
   async getMarkets(limit: number = 20): Promise<MarketData[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/markets?limit=${limit}&active=true`);
+      const response = await fetch(`${this.baseUrl}/markets?limit=${limit}&closed=false&active=true`);
       if (!response.ok) throw new Error(`Polymarket API error: ${response.status}`);
       
       const markets = await response.json();
@@ -197,12 +200,15 @@ export class PolymarketConnector {
       platform: 'Polymarket',
       yes_price: parseFloat(market.outcomePrices?.[0] || '0.5'),
       no_price: parseFloat(market.outcomePrices?.[1] || '0.5'),
-      volume: market.volume || 0,
-      liquidity: market.liquidity || 0,
+      volume: parseFloat(market.volume) || parseFloat(market.volumeNum) || 0,
+      liquidity: parseFloat(market.liquidity) || parseFloat(market.liquidityNum) || 0,
       end_date: market.endDate,
       category: this.categorizePolymarketMarket(market.question),
       status: market.closed ? 'closed' : 'open',
-      resolution: market.outcome
+      resolution: market.outcome,
+      url: `https://polymarket.com/event/${market.slug}`,
+      tradersCount: market.uniqueBettorCount,
+      lastUpdate: market.updatedAt
     };
   }
 
@@ -318,17 +324,19 @@ export class MarketAggregator {
 
     console.log(`Found ${allMarkets.length} markets across all platforms`);
 
-    // If no markets available, return mock data for testing
-    if (allMarkets.length === 0) {
-      console.log('No live markets available, using mock data for testing');
-      return this.getMockMarkets(limit);
-    }
-
-    // Sort by volume/liquidity to prioritize active markets
-    return allMarkets
-      .filter(market => market.status === 'open')
+    // Filter to open markets and sort by volume/liquidity to prioritize active markets
+    const activeMarkets = allMarkets
+      .filter(market => market.status === 'open' || !market.status) // Include markets without explicit status
       .sort((a, b) => (b.volume + b.liquidity) - (a.volume + a.liquidity))
       .slice(0, limit);
+
+    // Only use mock data if absolutely no live markets are available
+    if (activeMarkets.length === 0) {
+      console.log('No live markets available, using minimal mock data');
+      return this.getMockMarkets(3); // Reduced mock data
+    }
+
+    return activeMarkets;
   }
 
   private getMockMarkets(limit: number): MarketData[] {

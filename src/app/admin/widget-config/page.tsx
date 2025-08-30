@@ -1,10 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { 
   Plus, Save, Trash2, Eye, Settings, Copy, Download, Upload,
   Palette, Layout, Type, BarChart3, MessageCircle, Users,
-  Calendar, Link, FileText, Video, Coins, Handshake, Globe
+  Calendar, Link as LinkIcon, FileText, Video, Coins, Handshake, Globe,
+  ArrowLeft, Crown
 } from 'lucide-react';
 import { getAllWidgets, getWidgetsForAgentType, WidgetMetadata } from '@/lib/profile/widget-registry';
 import { WidgetType, AgentProfileConfig, ProfileWidget, WidgetPosition } from '@/lib/profile/types';
@@ -19,7 +21,7 @@ const WIDGET_ICONS: Record<WidgetType, any> = {
   'works-gallery': Palette,
   'countdown': Calendar,
   'trainer-info': Users,
-  'social-links': Link,
+  'social-links': LinkIcon,
   'custom-content': Type,
   'live-stream': Video,
   'token-economics': Coins,
@@ -273,6 +275,18 @@ export async function GET() {
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Navigation */}
+        <div className="mb-6">
+          <Link 
+            href="/admin/ceo"
+            className="inline-flex items-center gap-2 text-sm hover:text-white text-gray-400 transition-colors font-bold uppercase tracking-wider"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <Crown className="w-4 h-4" />
+            Back to CEO Dashboard
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="border-b border-gray-800 pb-6 mb-8">
           <div className="flex items-center justify-between">
