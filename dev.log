@@ -197,3 +197,4 @@ Found 20 markets across all platforms
 [MIYOMI Markets API] Retrieved 1 markets
  GET /api/miyomi/markets?limit=1 200 in 1169ms
  ✓ Compiled in 246ms (377 modules)
+ ✓ Compiled in 268ms (377 modules)

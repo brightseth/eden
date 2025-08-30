@@ -468,6 +468,16 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
                     ACADEMY PROFILE
                   </Link>
                   
+                  {agent.handle === 'solienne' && (
+                    <Link
+                      href="/academy/agent/solienne/generations"
+                      className="flex items-center gap-2 text-sm hover:text-white text-gray-400 transition-colors"
+                    >
+                      <Eye className="w-4 h-4" />
+                      HISTORICAL ARCHIVE
+                    </Link>
+                  )}
+                  
                   {detailMode === 'private' && agent.brandIdentity?.voice && (
                     <div className="mt-4 pt-4 border-t border-gray-700">
                       <div className="text-xs uppercase tracking-wider text-gray-400 mb-2">BRAND VOICE</div>
