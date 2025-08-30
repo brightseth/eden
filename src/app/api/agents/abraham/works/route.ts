@@ -69,8 +69,8 @@ export async function GET(request: NextRequest) {
   const period = searchParams.get('period'); // 'early-works' or 'covenant'
   const sort = searchParams.get('sort') || 'date_desc';
 
-  // Check if Registry integration is enabled
-  const useRegistry = featureFlags.isEnabled(FLAGS.ENABLE_ABRAHAM_REGISTRY_INTEGRATION);
+  // Check if Registry integration is enabled - temporarily disabled to fix early works
+  const useRegistry = false; // featureFlags.isEnabled(FLAGS.ENABLE_ABRAHAM_REGISTRY_INTEGRATION);
 
   if (useRegistry) {
     try {

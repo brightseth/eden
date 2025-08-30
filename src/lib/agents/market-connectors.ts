@@ -30,7 +30,7 @@ export class ManifoldConnector {
       if (!response.ok) throw new Error(`Manifold API error: ${response.status}`);
       
       const markets = await response.json();
-      return markets.map(this.transformManifoldMarket);
+      return markets.map((market: any) => this.transformManifoldMarket(market));
     } catch (error) {
       console.error('Manifold connector error:', error);
       return [];
@@ -222,7 +222,7 @@ export class PolymarketConnector {
 }
 
 export class KalshiConnector {
-  private baseUrl = 'https://trading-api.kalshi.com/trade-api/v2';
+  private baseUrl = 'https://api.elections.kalshi.com/trade-api/v2';
   private apiKey: string;
 
   constructor(apiKey?: string) {
@@ -245,7 +245,7 @@ export class KalshiConnector {
       if (!response.ok) throw new Error(`Kalshi API error: ${response.status}`);
       
       const data = await response.json();
-      return data.markets?.map(this.transformKalshiMarket) || [];
+      return data.markets?.map((market: any) => this.transformKalshiMarket(market)) || [];
     } catch (error) {
       console.error('Kalshi connector error:', error);
       return [];
@@ -263,7 +263,7 @@ export class KalshiConnector {
       liquidity: market.open_interest || 0,
       end_date: market.close_time,
       category: this.categorizeKalshiMarket(market.title),
-      status: market.status,
+      status: market.status === 'initialized' || market.status === 'open' || market.status === 'active' ? 'open' : market.status,
       resolution: market.result
     };
   }

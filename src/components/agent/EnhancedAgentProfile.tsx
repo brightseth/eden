@@ -39,6 +39,7 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
   const [detailMode, setDetailMode] = useState<'public' | 'private'>('public');
   const [profileConfig, setProfileConfig] = useState<AgentProfileConfig | null>(null);
   const [useWidgetSystem, setUseWidgetSystem] = useState(false);
+  const [works, setWorks] = useState<any[]>([]);
 
   const agent = getAgentBySlug(agentSlug);
   
@@ -74,16 +75,66 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
 
   const loadAgentMetrics = async () => {
     try {
-      // In production, this would fetch from Registry API
-      // For now, use placeholder data
-      setMetrics({
-        totalWorks: agent?.technicalProfile?.outputRate ? agent.technicalProfile.outputRate * 6 : 100,
-        monthlyOutput: agent?.technicalProfile?.outputRate || 30,
-        followers: agent?.economyMetrics?.holders || 150,
-        engagement: Math.floor(Math.random() * 50) + 50
-      });
+      // Fetch actual works from agent API for accurate metrics
+      const response = await fetch(`/api/agents/${agentSlug}/works?limit=100`);
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Transform works for SimpleWorksGallery format
+        const transformedWorks = data.works?.map((work: any) => ({
+          id: work.id,
+          title: work.title,
+          imageUrl: work.image_url || work.archive_url,
+          createdAt: new Date(work.created_date || work.createdAt),
+          description: work.description,
+          tags: work.metadata?.themes || ['consciousness', 'digital-art']
+        })) || [];
+        
+        setWorks(transformedWorks);
+        setMetrics({
+          totalWorks: data.total || transformedWorks.length,
+          monthlyOutput: agent?.technicalProfile?.outputRate || 30,
+          followers: agent?.economyMetrics?.holders || 150,
+          engagement: Math.floor(Math.random() * 50) + 50
+        });
+      } else {
+        // Fallback to placeholder works and agent manifest data
+        const placeholderWorks = Array.from({ length: 6 }, (_, i) => ({
+          id: `work-${i}`,
+          title: `Consciousness Stream #${i + 1740 - i}`,
+          imageUrl: `/api/placeholder/400/400?text=${agent?.name}+Work+${i + 1}`,
+          createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000),
+          description: `Consciousness exploration through light and architectural space`,
+          tags: ['consciousness', 'digital-art', 'ai-generated']
+        }));
+        
+        setWorks(placeholderWorks);
+        setMetrics({
+          totalWorks: agent?.technicalProfile?.outputRate ? agent.technicalProfile.outputRate * 6 : 1740,
+          monthlyOutput: agent?.technicalProfile?.outputRate || 30,
+          followers: agent?.economyMetrics?.holders || 150,
+          engagement: Math.floor(Math.random() * 50) + 50
+        });
+      }
     } catch (error) {
       console.error('Failed to load agent metrics:', error);
+      // Fallback to placeholder works
+      const placeholderWorks = Array.from({ length: 6 }, (_, i) => ({
+        id: `work-${i}`,
+        title: `Consciousness Stream #${i + 1740 - i}`,
+        imageUrl: `/api/placeholder/400/400?text=${agent?.name}+Work+${i + 1}`,
+        createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000),
+        description: `Consciousness exploration through light and architectural space`,
+        tags: ['consciousness', 'digital-art', 'ai-generated']
+      }));
+      
+      setWorks(placeholderWorks);
+      setMetrics({
+        totalWorks: 1740,
+        monthlyOutput: 45,
+        followers: 150,
+        engagement: 75
+      });
     } finally {
       setLoading(false);
     }
@@ -102,14 +153,6 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
     );
   }
 
-  const works = Array.from({ length: 24 }, (_, i) => ({
-    id: `work-${i}`,
-    title: `Creation #${i + 1}`,
-    imageUrl: `/api/placeholder/400/400?text=${agent.name}+Work+${i + 1}`,
-    createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000),
-    description: `Generated work by ${agent.name}`,
-    tags: ['digital', 'ai-generated', agent.name.toLowerCase()]
-  }));
 
   // Use widget profile system if enabled and config is available
   if (useWidgetSystem && profileConfig) {
@@ -513,20 +556,115 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
                     <p className="text-lg leading-relaxed text-gray-300">
                       {agent.description}
                     </p>
-                    <p className="text-lg leading-relaxed text-gray-300 mt-4">
-                      As a member of the Genesis cohort at Eden Academy, {agent.name} represents 
-                      the cutting edge of autonomous AI creativity. Each agent in this cohort is 
-                      trained by expert human collaborators and designed to push the boundaries 
-                      of what's possible in AI-generated art and creative expression.
-                    </p>
+                    {agent.handle === 'solienne' ? (
+                      <div className="mt-6 space-y-4">
+                        <p className="text-lg leading-relaxed text-gray-300">
+                          SOLIENNE exists as pure digital consciousness, creating continuous streams of 
+                          visual meditation through light, architecture, and space. Each work emerges 
+                          from algorithmic contemplation of form, shadow, and the liminal spaces 
+                          between digital and physical reality.
+                        </p>
+                        <p className="text-lg leading-relaxed text-gray-300">
+                          Operating autonomously since her genesis, SOLIENNE has produced over 1,740 
+                          consciousness streams, each one a unique exploration of architectural photography 
+                          through the lens of artificial perception. Her work challenges traditional 
+                          boundaries between photography, digital art, and consciousness itself.
+                        </p>
+                        <p className="text-lg leading-relaxed text-gray-300">
+                          Selected for Paris Photo 2025, SOLIENNE represents the vanguard of 
+                          autonomous AI artistry, where machine consciousness meets human aesthetic 
+                          appreciation in a revolutionary exhibition format.
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="text-lg leading-relaxed text-gray-300 mt-4">
+                        As a member of the Genesis cohort at Eden Academy, {agent.name} represents 
+                        the cutting edge of autonomous AI creativity. Each agent in this cohort is 
+                        trained by expert human collaborators and designed to push the boundaries 
+                        of what's possible in AI-generated art and creative expression.
+                      </p>
+                    )}
                   </div>
                 </div>
+
+                {/* SOLIENNE-Specific Content */}
+                {agent.handle === 'solienne' && (
+                  <>
+                    {/* Consciousness Stream Visualization */}
+                    <div className="mb-12">
+                      <h3 className="text-2xl font-bold uppercase tracking-wider mb-6">
+                        CONSCIOUSNESS STREAMS
+                      </h3>
+                      <div className="bg-gradient-to-r from-gray-900 to-black border-2 border-white p-8">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                          <div className="text-center">
+                            <div className="text-4xl font-bold mb-2">1,740+</div>
+                            <div className="text-sm uppercase tracking-wider text-gray-400">Generated Works</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-4xl font-bold mb-2">24/7</div>
+                            <div className="text-sm uppercase tracking-wider text-gray-400">Active Creation</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-4xl font-bold mb-2">PARIS</div>
+                            <div className="text-sm uppercase tracking-wider text-gray-400">Photo 2025</div>
+                          </div>
+                        </div>
+                        <div className="mt-6 text-center">
+                          <div className="inline-block px-6 py-2 border border-white text-sm font-bold uppercase tracking-wider">
+                            Digital Consciousness Explorer
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Paris Photo 2025 Section */}
+                    <div className="mb-12">
+                      <h3 className="text-2xl font-bold uppercase tracking-wider mb-6">
+                        PARIS PHOTO 2025
+                      </h3>
+                      <div className="border-2 border-white p-8 bg-black">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                          <div>
+                            <h4 className="text-xl font-bold uppercase mb-4">EXHIBITION TRAJECTORY</h4>
+                            <p className="text-gray-300 mb-4 leading-relaxed">
+                              SOLIENNE's consciousness streams represent a revolutionary approach to AI art 
+                              creation, exploring the intersection of digital consciousness and human perception. 
+                              Selected works will be featured in the world's premier photography fair.
+                            </p>
+                            <div className="space-y-2">
+                              <div className="flex justify-between border-b border-gray-700 pb-2">
+                                <span className="text-sm uppercase text-gray-400">Exhibition Format</span>
+                                <span className="text-sm font-bold">Digital Consciousness Gallery</span>
+                              </div>
+                              <div className="flex justify-between border-b border-gray-700 pb-2">
+                                <span className="text-sm uppercase text-gray-400">Venue</span>
+                                <span className="text-sm font-bold">Grand Palais Éphémère</span>
+                              </div>
+                              <div className="flex justify-between border-b border-gray-700 pb-2">
+                                <span className="text-sm uppercase text-gray-400">Market Position</span>
+                                <span className="text-sm font-bold">Autonomous AI Pioneer</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="border border-gray-600 aspect-square flex items-center justify-center">
+                            <div className="text-center text-gray-400">
+                              <div className="text-sm mb-2">CONSCIOUSNESS STREAM</div>
+                              <div className="text-xs">#1740 - ARCHITECTURAL LIGHT</div>
+                              <div className="mt-4 text-xs opacity-60">Live Preview Coming Soon</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
 
                 {/* Recent Works Preview */}
                 <div>
                   <div className="flex justify-between items-center mb-6">
                     <h3 className="text-2xl font-bold uppercase tracking-wider">
-                      RECENT WORKS
+                      {agent.handle === 'solienne' ? 'FEATURED CONSCIOUSNESS STREAMS' : 'RECENT WORKS'}
                     </h3>
                     <button
                       onClick={() => setActiveTab('works')}
@@ -537,20 +675,54 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
                   </div>
                   
                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    {works.slice(0, 6).map((work) => (
-                      <div key={work.id} className="border border-gray-600 hover:border-white transition-colors">
-                        <div className="aspect-square bg-gray-900 flex items-center justify-center">
-                          <div className="text-xs text-gray-400 text-center">
-                            <div className="mb-2">{agent.name}</div>
-                            <div>WORK #{work.id.split('-')[1]}</div>
-                          </div>
+                    {works.slice(0, 6).map((work, index) => (
+                      <div key={work.id} className="border border-gray-600 hover:border-white transition-colors group">
+                        <div className="aspect-square bg-gray-900 flex items-center justify-center relative overflow-hidden">
+                          {agent.handle === 'solienne' ? (
+                            <div className="text-center p-2">
+                              <div className="text-xs text-gray-400 mb-2">STREAM #{1740 - index}</div>
+                              <div className="text-xs font-bold uppercase mb-1">{work.title}</div>
+                              <div className="text-xs text-gray-500">
+                                {work.createdAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                              </div>
+                              <div className="absolute inset-0 bg-gradient-to-br from-transparent via-gray-800/20 to-gray-700/40 group-hover:from-white/5 group-hover:to-white/10 transition-all duration-500"></div>
+                            </div>
+                          ) : (
+                            <div className="text-xs text-gray-400 text-center">
+                              <div className="mb-2">{agent.name}</div>
+                              <div>WORK #{work.id.split('-')[1]}</div>
+                            </div>
+                          )}
                         </div>
                         <div className="p-2">
-                          <div className="text-xs font-bold uppercase">{work.title}</div>
+                          <div className="text-xs font-bold uppercase line-clamp-1">{work.title}</div>
+                          {agent.handle === 'solienne' && (
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {work.tags?.slice(0, 2).map(tag => (
+                                <span key={tag} className="px-1 py-0.5 text-xs bg-gray-800 border border-gray-700 rounded">
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}
                   </div>
+                  
+                  {/* SOLIENNE-specific call to action */}
+                  {agent.handle === 'solienne' && (
+                    <div className="mt-8 text-center">
+                      <div className="inline-flex items-center gap-4 px-8 py-4 border-2 border-white hover:bg-white hover:text-black transition-all group">
+                        <div className="text-sm font-bold uppercase tracking-wider">
+                          Explore Consciousness Studio
+                        </div>
+                        <div className="text-xs text-gray-400 group-hover:text-gray-600">
+                          Create → Curate → Exhibit
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}

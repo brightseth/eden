@@ -43,6 +43,7 @@
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.56.0",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "@tanstack/react-query": "^5.85.3",
     "@tanstack/react-query-devtools": "^5.85.3",
     "@types/redis": "^4.0.10",
