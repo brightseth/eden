@@ -198,3 +198,262 @@ Found 20 markets across all platforms
  GET /api/miyomi/markets?limit=1 200 in 1169ms
  ✓ Compiled in 246ms (377 modules)
  ✓ Compiled in 268ms (377 modules)
+ ⨯ ./src/app/dashboard/miyomi/page.tsx
+Error:   [31mx[0m Unexpected token. Did you mean `{'>'}` or `&gt;`?
+     ,-[[36;1;4m/Users/seth/eden-academy/src/app/dashboard/miyomi/page.tsx[0m:181:1]
+ [2m178[0m |                   <div className="text-sm text-gray-400">When everyone agrees, everyone is wrong</div>
+ [2m179[0m |                 </div>
+ [2m180[0m |                 <div className="text-center">
+ [2m181[0m |                   <div className="text-2xl font-bold text-red-400 mb-2">"Data > narrative, always"</div>
+     : [35;1m                                                                              ^[0m
+ [2m182[0m |                   <div className="text-sm text-gray-400">Markets are voting machines short-term</div>
+ [2m183[0m |                 </div>
+ [2m184[0m |                 <div className="text-center">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/dashboard/miyomi/page.tsx
+ ⨯ ./src/app/dashboard/miyomi/page.tsx
+Error:   [31mx[0m Unexpected token. Did you mean `{'>'}` or `&gt;`?
+     ,-[[36;1;4m/Users/seth/eden-academy/src/app/dashboard/miyomi/page.tsx[0m:181:1]
+ [2m178[0m |                   <div className="text-sm text-gray-400">When everyone agrees, everyone is wrong</div>
+ [2m179[0m |                 </div>
+ [2m180[0m |                 <div className="text-center">
+ [2m181[0m |                   <div className="text-2xl font-bold text-red-400 mb-2">"Data > narrative, always"</div>
+     : [35;1m                                                                              ^[0m
+ [2m182[0m |                   <div className="text-sm text-gray-400">Markets are voting machines short-term</div>
+ [2m183[0m |                 </div>
+ [2m184[0m |                 <div className="text-center">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/dashboard/miyomi/page.tsx
+ ○ Compiling /_not-found ...
+ ⨯ ./src/app/dashboard/miyomi/page.tsx
+Error:   [31mx[0m Unexpected token. Did you mean `{'>'}` or `&gt;`?
+     ,-[[36;1;4m/Users/seth/eden-academy/src/app/dashboard/miyomi/page.tsx[0m:181:1]
+ [2m178[0m |                   <div className="text-sm text-gray-400">When everyone agrees, everyone is wrong</div>
+ [2m179[0m |                 </div>
+ [2m180[0m |                 <div className="text-center">
+ [2m181[0m |                   <div className="text-2xl font-bold text-red-400 mb-2">"Data > narrative, always"</div>
+     : [35;1m                                                                              ^[0m
+ [2m182[0m |                   <div className="text-sm text-gray-400">Markets are voting machines short-term</div>
+ [2m183[0m |                 </div>
+ [2m184[0m |                 <div className="text-center">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/dashboard/miyomi/page.tsx
+ GET /dashboard/miyomi 500 in 1738ms
+ ⨯ ./src/app/dashboard/miyomi/page.tsx
+Error:   [31mx[0m Unexpected token. Did you mean `{'>'}` or `&gt;`?
+     ,-[[36;1;4m/Users/seth/eden-academy/src/app/dashboard/miyomi/page.tsx[0m:181:1]
+ [2m178[0m |                   <div className="text-sm text-gray-400">When everyone agrees, everyone is wrong</div>
+ [2m179[0m |                 </div>
+ [2m180[0m |                 <div className="text-center">
+ [2m181[0m |                   <div className="text-2xl font-bold text-red-400 mb-2">"Data > narrative, always"</div>
+     : [35;1m                                                                              ^[0m
+ [2m182[0m |                   <div className="text-sm text-gray-400">Markets are voting machines short-term</div>
+ [2m183[0m |                 </div>
+ [2m184[0m |                 <div className="text-center">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/dashboard/miyomi/page.tsx
+ GET /_next/static/webpack/8c25ab1ea2c9d3d8.webpack.hot-update.json 500 in 172ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /dashboard/miyomi 500 in 11ms
+ ⨯ ./src/app/dashboard/miyomi/page.tsx
+Error:   [31mx[0m Unexpected token. Did you mean `{'>'}` or `&gt;`?
+     ,-[[36;1;4m/Users/seth/eden-academy/src/app/dashboard/miyomi/page.tsx[0m:181:1]
+ [2m178[0m |                   <div className="text-sm text-gray-400">When everyone agrees, everyone is wrong</div>
+ [2m179[0m |                 </div>
+ [2m180[0m |                 <div className="text-center">
+ [2m181[0m |                   <div className="text-2xl font-bold text-red-400 mb-2">"Data > narrative, always"</div>
+     : [35;1m                                                                              ^[0m
+ [2m182[0m |                   <div className="text-sm text-gray-400">Markets are voting machines short-term</div>
+ [2m183[0m |                 </div>
+ [2m184[0m |                 <div className="text-center">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/dashboard/miyomi/page.tsx
+ GET /_next/static/webpack/8c25ab1ea2c9d3d8.webpack.hot-update.json 500 in 232ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /api/miyomi/markets 500 in 259ms
+ GET /dashboard/miyomi 500 in 23ms
+ ⨯ ./src/app/dashboard/miyomi/page.tsx
+Error:   [31mx[0m Unexpected token. Did you mean `{'>'}` or `&gt;`?
+     ,-[[36;1;4m/Users/seth/eden-academy/src/app/dashboard/miyomi/page.tsx[0m:181:1]
+ [2m178[0m |                   <div className="text-sm text-gray-400">When everyone agrees, everyone is wrong</div>
+ [2m179[0m |                 </div>
+ [2m180[0m |                 <div className="text-center">
+ [2m181[0m |                   <div className="text-2xl font-bold text-red-400 mb-2">"Data > narrative, always"</div>
+     : [35;1m                                                                              ^[0m
+ [2m182[0m |                   <div className="text-sm text-gray-400">Markets are voting machines short-term</div>
+ [2m183[0m |                 </div>
+ [2m184[0m |                 <div className="text-center">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/dashboard/miyomi/page.tsx
+ GET /_next/static/webpack/8c25ab1ea2c9d3d8.webpack.hot-update.json 500 in 364ms
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /_next/static/webpack/8c25ab1ea2c9d3d8.webpack.hot-update.json 500 in 7ms
+ GET /agents/miyomi 500 in 398ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /dashboard/miyomi 500 in 24ms
+ GET /api/miyomi/markets 500 in 30ms
+ ✓ Compiled /agents/[slug] in 924ms (1305 modules)
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /_next/static/webpack/8c25ab1ea2c9d3d8.webpack.hot-update.json 404 in 1143ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /agents/miyomi 200 in 51ms
+ GET /_next/static/webpack/8c25ab1ea2c9d3d8.webpack.hot-update.json 404 in 105ms
+[MIYOMI Markets API] Fetching live market data... { limit: 20, category: null }
+Fetching markets from all platforms...
+ GET /_next/static/webpack/8c25ab1ea2c9d3d8.webpack.hot-update.json 404 in 192ms
+ GET /dashboard/miyomi 200 in 206ms
+ GET /agents/miyomi 200 in 77ms
+Melee connector error: TypeError: fetch failed
+    at async MeleeConnector.getMarkets (src/lib/agents/market-connectors.ts:98:23)
+    at async MarketAggregator.getAllMarkets (src/lib/agents/market-connectors.ts:315:93)
+    at async GET (src/app/api/miyomi/markets/route.ts:16:16)
+   96 |
+   97 |     try {
+>  98 |       const response = await fetch(`${this.baseUrl}/markets?limit=${limit}`, {
+      |                       ^
+   99 |         headers: {
+  100 |           'Authorization': `Bearer ${this.apiKey}`,
+  101 |           'Content-Type': 'application/json' {
+  [cause]: [Error: getaddrinfo ENOTFOUND api.melee.gg] {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: 'api.melee.gg'
+  }
+}
+ GET /favicon.ico 200 in 29ms
+ GET /favicon.ico 200 in 13ms
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /api/miyomi/markets 200 in 653ms
+ GET /_next/static/webpack/8c25ab1ea2c9d3d8.webpack.hot-update.json 404 in 98ms
+ ○ Compiling /api/events/stream ...
+ ✓ Compiled /api/events/stream in 603ms (1384 modules)
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /api/miyomi/markets 200 in 657ms
+[MIYOMI Works] GET request: {
+  limit: 100,
+  offset: 0,
+  status: null,
+  category: null,
+  platform: null,
+  sort: 'date_desc',
+  source: 'registry'
+}
+[MIYOMI Markets API] Fetching live market data... { limit: 20, category: null }
+Fetching markets from all platforms...
+Melee connector error: TypeError: fetch failed
+    at async MeleeConnector.getMarkets (src/lib/agents/market-connectors.ts:98:23)
+    at async MarketAggregator.getAllMarkets (src/lib/agents/market-connectors.ts:315:93)
+    at async GET (src/app/api/miyomi/markets/route.ts:16:16)
+   96 |
+   97 |     try {
+>  98 |       const response = await fetch(`${this.baseUrl}/markets?limit=${limit}`, {
+      |                       ^
+   99 |         headers: {
+  100 |           'Authorization': `Bearer ${this.apiKey}`,
+  101 |           'Content-Type': 'application/json' {
+  [cause]: [Error: getaddrinfo ENOTFOUND api.melee.gg] {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: 'api.melee.gg'
+  }
+}
+ GET /_next/static/webpack/8c25ab1ea2c9d3d8.webpack.hot-update.json 404 in 516ms
+[MIYOMI Markets API] Fetching live market data... { limit: 20, category: null }
+Fetching markets from all platforms...
+Melee connector error: TypeError: fetch failed
+    at async MeleeConnector.getMarkets (src/lib/agents/market-connectors.ts:98:23)
+    at async MarketAggregator.getAllMarkets (src/lib/agents/market-connectors.ts:315:93)
+    at async GET (src/app/api/miyomi/markets/route.ts:16:16)
+   96 |
+   97 |     try {
+>  98 |       const response = await fetch(`${this.baseUrl}/markets?limit=${limit}`, {
+      |                       ^
+   99 |         headers: {
+  100 |           'Authorization': `Bearer ${this.apiKey}`,
+  101 |           'Content-Type': 'application/json' {
+  [cause]: [Error: getaddrinfo ENOTFOUND api.melee.gg] {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: 'api.melee.gg'
+  }
+}
+Myriad connector error: Error: Myriad API error: 404
+    at MyriadConnector.getMarkets (src/lib/agents/market-connectors.ts:139:30)
+    at async MarketAggregator.getAllMarkets (src/lib/agents/market-connectors.ts:315:93)
+    at async GET (src/app/api/miyomi/markets/route.ts:16:16)
+  137 |       // Myriad uses a different API structure - social prediction markets
+  138 |       const response = await fetch(`${this.baseUrl}/predictions?limit=${limit}&type=market`);
+> 139 |       if (!response.ok) throw new Error(`Myriad API error: ${response.status}`);
+      |                              ^
+  140 |       
+  141 |       const predictions = await response.json();
+  142 |       return predictions.data?.map(this.transformMyriadMarket) || [];
+Found 12 markets across all platforms
+[MIYOMI Markets API] Retrieved 12 markets
+[ProfileConfig] Fetching configuration for agent: miyomi
+[ProfileConfig] Found specific configuration for miyomi
+ GET /api/agents/miyomi/profile-config 200 in 1015ms
+[Registry Integration] ✅ Found 0 works in Registry
+ GET /api/agents/miyomi/works?limit=100 200 in 1138ms
+Myriad connector error: Error: Myriad API error: 404
+    at MyriadConnector.getMarkets (src/lib/agents/market-connectors.ts:139:30)
+    at async MarketAggregator.getAllMarkets (src/lib/agents/market-connectors.ts:315:93)
+    at async GET (src/app/api/miyomi/markets/route.ts:16:16)
+  137 |       // Myriad uses a different API structure - social prediction markets
+  138 |       const response = await fetch(`${this.baseUrl}/predictions?limit=${limit}&type=market`);
+> 139 |       if (!response.ok) throw new Error(`Myriad API error: ${response.status}`);
+      |                              ^
+  140 |       
+  141 |       const predictions = await response.json();
+  142 |       return predictions.data?.map(this.transformMyriadMarket) || [];
+Found 12 markets across all platforms
+[MIYOMI Markets API] Retrieved 12 markets
+Myriad connector error: Error: Myriad API error: 404
+    at MyriadConnector.getMarkets (src/lib/agents/market-connectors.ts:139:30)
+    at async MarketAggregator.getAllMarkets (src/lib/agents/market-connectors.ts:315:93)
+    at async GET (src/app/api/miyomi/markets/route.ts:16:16)
+  137 |       // Myriad uses a different API structure - social prediction markets
+  138 |       const response = await fetch(`${this.baseUrl}/predictions?limit=${limit}&type=market`);
+> 139 |       if (!response.ok) throw new Error(`Myriad API error: ${response.status}`);
+      |                              ^
+  140 |       
+  141 |       const predictions = await response.json();
+  142 |       return predictions.data?.map(this.transformMyriadMarket) || [];
+Found 12 markets across all platforms
+[MIYOMI Markets API] Retrieved 12 markets
+ GET /api/miyomi/markets 200 in 1222ms
+ GET /dashboard/miyomi 200 in 52ms
