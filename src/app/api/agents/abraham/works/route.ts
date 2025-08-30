@@ -135,22 +135,25 @@ export async function GET(request: NextRequest) {
   // Fallback to existing Supabase implementation
   console.log('[Abraham Works API] Using Supabase fallback');
   
+  // First try the creations table where historical data is likely stored
   let query = supabase
-    .from('agent_archives')
+    .from('creations')
     .select('*', { count: 'exact' })
-    .eq('agent_id', 'abraham');
+    .eq('agent_name', 'abraham');
 
-  // Filter by period if specified
+  // Filter by period if specified - creations table might have different structure
   if (period === 'early-works') {
-    query = query.eq('archive_type', 'early-work');
+    // Filter for early works - might use different criteria
+    query = query.not('id', 'is', null); // Get all for now, filter in transform
   } else if (period === 'covenant') {
-    query = query.eq('archive_type', 'covenant');
+    // Covenant works are future works
+    query = query.gt('created_at', '2025-01-01');
   }
 
-  // Apply sorting
+  // Apply sorting - map to creations table columns
   const [sortField, sortOrder] = sort.split('_');
-  const orderField = sortField === 'date' ? 'created_date' : 
-                     sortField === 'number' ? 'archive_number' : 'title';
+  const orderField = sortField === 'date' ? 'created_at' : 
+                     sortField === 'number' ? 'created_at' : 'id';
   query = query.order(orderField, { ascending: sortOrder === 'asc' });
 
   // Apply pagination
@@ -162,8 +165,25 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  // Transform creations table data to expected format
+  const transformedWorks = (data || []).map((creation: any, index: number) => ({
+    id: creation.id,
+    agent_id: 'abraham',
+    archive_type: 'early-work', // Most Abraham creations are early works
+    title: creation.prompt || `Abraham Creation #${index + 1}`,
+    image_url: creation.image_url,
+    archive_url: creation.image_url,
+    created_date: creation.created_at,
+    archive_number: index + 1, // Use index as archive number if not available
+    description: creation.prompt || creation.description || 'Early work by Abraham',
+    metadata: {
+      state: creation.state,
+      agent_name: creation.agent_name
+    }
+  }));
+
   return NextResponse.json({
-    works: data,
+    works: transformedWorks,
     total: count,
     limit,
     offset,

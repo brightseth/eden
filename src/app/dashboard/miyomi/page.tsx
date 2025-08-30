@@ -169,7 +169,49 @@ export default function MiyomiDashboard() {
       <div className="max-w-7xl mx-auto px-6 py-8">
         {activeTab === 'overview' && (
           <div className="space-y-8">
-            {/* Quick Stats */}
+            {/* Trading Philosophy Section */}
+            <div className="bg-white/5 backdrop-blur rounded-lg p-6 border border-white/20">
+              <h3 className="text-xl font-bold mb-4">CONTRARIAN TRADING PHILOSOPHY</h3>
+              <div className="grid md:grid-cols-3 gap-6 mb-6">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-red-400 mb-2">"Consensus is a contrarian indicator"</div>
+                  <div className="text-sm text-gray-400">When everyone agrees, everyone is wrong</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-red-400 mb-2">"Data > narrative, always"</div>
+                  <div className="text-sm text-gray-400">Markets are voting machines short-term</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-red-400 mb-2">95% Contrarian Intensity</div>
+                  <div className="text-sm text-gray-400">Weighing machines long-term</div>
+                </div>
+              </div>
+              
+              {/* Daily Workflow Timeline */}
+              <div className="border-t border-white/20 pt-6">
+                <h4 className="font-bold mb-4">DAILY WORKFLOW</h4>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                  <div className="text-center">
+                    <div className="font-bold text-blue-400">5:00 AM</div>
+                    <div className="text-gray-400">Market sentiment scan</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-bold text-purple-400">7:00 AM</div>
+                    <div className="text-gray-400">Contrarian play analysis</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-bold text-yellow-400">10:00 AM</div>
+                    <div className="text-gray-400">Position sizing</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-bold text-green-400">12:00 PM</div>
+                    <div className="text-gray-400">Trade pick release</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Enhanced Performance Stats */}
             <div className="grid md:grid-cols-4 gap-6">
               <div className="bg-white/5 backdrop-blur rounded-lg p-6">
                 <div className="flex items-center justify-between mb-2">
@@ -177,7 +219,7 @@ export default function MiyomiDashboard() {
                   <TrendingUp className="w-4 h-4 text-green-500" />
                 </div>
                 <div className="text-3xl font-bold">{winRate}%</div>
-                <div className="text-sm text-gray-400 mt-1">Last 7 days</div>
+                <div className="text-sm text-red-400 mt-1">Contrarian Edge</div>
               </div>
               <div className="bg-white/5 backdrop-blur rounded-lg p-6">
                 <div className="flex items-center justify-between mb-2">
@@ -193,7 +235,7 @@ export default function MiyomiDashboard() {
                   <BarChart3 className="w-4 h-4 text-blue-500" />
                 </div>
                 <div className="text-3xl font-bold">{avgReturn.toFixed(1)}%</div>
-                <div className="text-sm text-gray-400 mt-1">Per day</div>
+                <div className="text-sm text-red-400 mt-1">Against consensus</div>
               </div>
               <div className="bg-white/5 backdrop-blur rounded-lg p-6">
                 <div className="flex items-center justify-between mb-2">
@@ -206,33 +248,36 @@ export default function MiyomiDashboard() {
             </div>
 
             {/* Recent Activity */}
-            <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-              <h3 className="text-xl font-bold mb-4">Recent Picks</h3>
+            <div className="bg-white/5 backdrop-blur rounded-lg p-6 border border-white/10">
+              <h3 className="text-xl font-bold mb-4">RECENT CONTRARIAN PICKS</h3>
               <div className="space-y-3">
-                <div className="flex items-center justify-between py-3 border-b border-white/10">
+                <div className="flex items-center justify-between py-3 border-b border-white/10 hover:bg-white/5 rounded-lg px-3 transition-colors">
                   <div>
                     <div className="font-bold">Fed Rate Cut March - NO</div>
                     <div className="text-sm text-gray-400">Kalshi • 2 hours ago</div>
+                    <div className="text-xs text-red-400 mt-1">95% consensus disagreement</div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <span className="text-yellow-500">18% edge</span>
+                    <span className="text-yellow-500 font-bold">18% edge</span>
                     <Activity className="w-5 h-5 text-yellow-500" />
                   </div>
                 </div>
-                <div className="flex items-center justify-between py-3 border-b border-white/10">
+                <div className="flex items-center justify-between py-3 border-b border-white/10 hover:bg-white/5 rounded-lg px-3 transition-colors">
                   <div>
                     <div className="font-bold">Chiefs -7.5 - NO</div>
                     <div className="text-sm text-gray-400">Polymarket • Yesterday</div>
+                    <div className="text-xs text-red-400 mt-1">92% consensus disagreement</div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <span className="text-green-500">+15% return</span>
+                    <span className="text-green-500 font-bold">+15% return</span>
                     <CheckCircle className="w-5 h-5 text-green-500" />
                   </div>
                 </div>
-                <div className="flex items-center justify-between py-3">
+                <div className="flex items-center justify-between py-3 hover:bg-white/5 rounded-lg px-3 transition-colors">
                   <div>
                     <div className="font-bold">Taylor Swift Tour - NO</div>
                     <div className="text-sm text-gray-400">Manifold • 2 days ago</div>
+                    <div className="text-xs text-red-400 mt-1">88% consensus disagreement</div>
                   </div>
                   <div className="flex items-center gap-4">
                     <span className="text-gray-400">Pending</span>
@@ -365,6 +410,42 @@ export default function MiyomiDashboard() {
 
         {activeTab === 'performance' && (
           <div className="space-y-8">
+            {/* Contrarian Performance Overview */}
+            <div className="grid md:grid-cols-4 gap-6 mb-8">
+              <div className="bg-white/5 backdrop-blur rounded-lg p-6 border border-red-500/20">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-gray-400">Contrarian Score</span>
+                  <Target className="w-4 h-4 text-red-400" />
+                </div>
+                <div className="text-3xl font-bold text-red-400">95%</div>
+                <div className="text-sm text-gray-400 mt-1">Consensus opposition</div>
+              </div>
+              <div className="bg-white/5 backdrop-blur rounded-lg p-6 border border-green-500/20">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-gray-400">Edge Capture</span>
+                  <BarChart3 className="w-4 h-4 text-green-400" />
+                </div>
+                <div className="text-3xl font-bold text-green-400">87%</div>
+                <div className="text-sm text-gray-400 mt-1">Profitable positions</div>
+              </div>
+              <div className="bg-white/5 backdrop-blur rounded-lg p-6 border border-blue-500/20">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-gray-400">Avg Hold Time</span>
+                  <Calendar className="w-4 h-4 text-blue-400" />
+                </div>
+                <div className="text-3xl font-bold text-blue-400">4.2</div>
+                <div className="text-sm text-gray-400 mt-1">Days per trade</div>
+              </div>
+              <div className="bg-white/5 backdrop-blur rounded-lg p-6 border border-yellow-500/20">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-gray-400">Accuracy</span>
+                  <CheckCircle className="w-4 h-4 text-yellow-400" />
+                </div>
+                <div className="text-3xl font-bold text-yellow-400">91%</div>
+                <div className="text-sm text-gray-400 mt-1">Prediction rate</div>
+              </div>
+            </div>
+
             {/* Performance Table */}
             <div className="bg-white/5 backdrop-blur rounded-lg p-6">
               <h3 className="text-xl font-bold mb-6">Daily Performance</h3>

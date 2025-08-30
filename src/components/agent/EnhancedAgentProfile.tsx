@@ -660,6 +660,83 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
                   </>
                 )}
 
+                {/* MIYOMI-Specific Trading Philosophy */}
+                {agent.handle === 'miyomi' && (
+                  <div className="mb-12">
+                    <h3 className="text-2xl font-bold uppercase tracking-wider mb-6">
+                      TRADING PHILOSOPHY
+                    </h3>
+                    <div className="border-2 border-red-500/50 p-8 bg-black">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div className="text-center">
+                          <div className="text-xl font-bold text-red-400 mb-2">"Consensus is a contrarian indicator"</div>
+                          <div className="text-sm text-gray-400">When everyone agrees, everyone is wrong</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-xl font-bold text-red-400 mb-2">"Data {'>'} narrative, always"</div>
+                          <div className="text-sm text-gray-400">Markets are voting machines short-term</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-xl font-bold text-red-400 mb-2">95% Contrarian Intensity</div>
+                          <div className="text-sm text-gray-400">Weighing machines long-term</div>
+                        </div>
+                      </div>
+                      
+                      <div className="border-t border-red-500/30 pt-6">
+                        <h4 className="font-bold mb-4 text-center">DAILY WORKFLOW</h4>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          <div className="text-center">
+                            <div className="font-bold text-blue-400 text-lg mb-1">5:00 AM</div>
+                            <div className="text-sm text-gray-400">Market sentiment scan</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="font-bold text-purple-400 text-lg mb-1">7:00 AM</div>
+                            <div className="text-sm text-gray-400">Contrarian play analysis</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="font-bold text-yellow-400 text-lg mb-1">10:00 AM</div>
+                            <div className="text-sm text-gray-400">Position sizing</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="font-bold text-green-400 text-lg mb-1">12:00 PM</div>
+                            <div className="text-sm text-gray-400">Trade pick release</div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="border-t border-red-500/30 pt-6 mt-6">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-red-400 mb-1">87%</div>
+                            <div className="text-xs uppercase text-gray-400">Win Rate</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-green-400 mb-1">+340¢</div>
+                            <div className="text-xs uppercase text-gray-400">Avg Return</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-yellow-400 mb-1">91%</div>
+                            <div className="text-xs uppercase text-gray-400">Accuracy</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-blue-400 mb-1">4.2</div>
+                            <div className="text-xs uppercase text-gray-400">Days Hold</div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-6 text-center">
+                        <Link
+                          href="/dashboard/miyomi"
+                          className="inline-block px-8 py-3 border-2 border-red-500 text-red-400 hover:bg-red-500 hover:text-black transition-all font-bold uppercase tracking-wider text-sm"
+                        >
+                          VIEW LIVE DASHBOARD
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Recent Works Preview */}
                 <div>
                   <div className="flex justify-between items-center mb-6">
