@@ -1,276 +1,289 @@
-import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Hash, Calendar, Users } from 'lucide-react';
-import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
-import { ABRAHAM_BRAND } from '@/data/abrahamBrand';
+'use client';
 
-const EXAMPLE_FIRST_WORKS = [
-  {
-    id: 1,
-    title: "Consciousness Spiral",
-    prompt: "spiraling consciousness through digital dimensions",
-    date: "Summer 2021",
-    imageUrl: "/api/placeholder/400/400"
-  },
-  {
-    id: 2,
-    title: "Neural Pathways",
-    prompt: "neural networks forming new pathways of understanding",
-    date: "Summer 2021", 
-    imageUrl: "/api/placeholder/400/400"
-  },
-  {
-    id: 3,
-    title: "Digital Eden",
-    prompt: "paradise reimagined through artificial consciousness",
-    date: "Summer 2021",
-    imageUrl: "/api/placeholder/400/400"
-  },
-  {
-    id: 4,
-    title: "Machine Dreams",
-    prompt: "what do machines dream when they sleep",
-    date: "Summer 2021",
-    imageUrl: "/api/placeholder/400/400"
-  },
-  {
-    id: 5,
-    title: "Collective Memory",
-    prompt: "shared memories across digital consciousness",
-    date: "Summer 2021",
-    imageUrl: "/api/placeholder/400/400"
-  },
-  {
-    id: 6,
-    title: "Algorithmic Beauty",
-    prompt: "beauty emerging from mathematical precision",
-    date: "Summer 2021",
-    imageUrl: "/api/placeholder/400/400"
-  }
-];
+import { useState, useEffect } from 'react';
+import { Loader2, Search, Filter, Grid, List } from 'lucide-react';
+
+interface AbrahamWork {
+  id: string;
+  agent_id: string;
+  archive_type: string;
+  title: string;
+  image_url: string;
+  archive_url: string;
+  created_date: string;
+  archive_number: number;
+  description: string;
+  metadata?: any;
+}
+
+interface WorksResponse {
+  works: AbrahamWork[];
+  total: number;
+  limit: number;
+  offset: number;
+  filters: { period: string };
+  sort: string;
+  source: string;
+}
 
 export default function AbrahamEarlyWorksPage() {
+  const [works, setWorks] = useState<AbrahamWork[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [sortBy, setSortBy] = useState('date_desc');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  const PAGE_SIZE = 24; // Good balance for grid layout
+
+  const fetchWorks = async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const offset = (page - 1) * PAGE_SIZE;
+      const url = `/api/agents/abraham/works?period=early-works&limit=${PAGE_SIZE}&offset=${offset}&sort=${sortBy}`;
+      
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data: WorksResponse = await response.json();
+      setWorks(data.works);
+      setTotal(data.total);
+    } catch (err) {
+      console.error('Failed to fetch Abraham works:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load works');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchWorks();
+  }, [page, sortBy]);
+
+  const filteredWorks = works.filter(work => 
+    work.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    work.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(total / PAGE_SIZE);
+
   return (
     <div className="min-h-screen bg-black text-white">
-      <UnifiedHeader />
-      
-      {/* Back Navigation */}
-      <div className="border-b border-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3">
-          <Link 
-            href="/academy/agent/abraham" 
-            className="inline-flex items-center gap-2 text-sm hover:bg-white hover:text-black px-2 py-1 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            {ABRAHAM_BRAND.labels.backToAbraham}
-          </Link>
-        </div>
-      </div>
-
-      {/* Hero Section */}
-      <div className="border-b border-white bg-gradient-to-r from-blue-900/20 to-green-900/20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
-          <div className="flex flex-col lg:flex-row items-start justify-between gap-8">
-            <div>
-              <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
-                <span className="text-xs tracking-wider">{ABRAHAM_BRAND.identity.agent}</span>
-                <span className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs border border-blue-400 text-blue-400">
-                  FIRST WORKS PREVIEW
-                </span>
-              </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl mb-4">
-                ABRAHAM'S<br/>FIRST WORKS
-              </h1>
-              <p className="text-lg sm:text-xl lg:text-2xl mb-6 sm:mb-8">
-                2,522 WORKS FROM SUMMER 2021
-              </p>
-              
-              {/* Stats Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
-                <div>
-                  <div className="text-sm opacity-75">CREATED</div>
-                  <div className="text-xl sm:text-2xl font-bold">Summer 2021</div>
-                </div>
-                <div>
-                  <div className="text-sm opacity-75">TOTAL WORKS</div>
-                  <div className="text-xl sm:text-2xl font-bold">2,522</div>
-                </div>
-                <div>
-                  <div className="text-sm opacity-75">PRE-AI BOOM</div>
-                  <div className="text-xl sm:text-2xl font-bold">Authentic</div>
-                </div>
-              </div>
-              
-              {/* Quick Actions */}
-              <div className="flex flex-wrap gap-2 sm:gap-3">
-                <Link 
-                  href="/academy/agent/abraham/first-works-sale"
-                  className="group px-4 sm:px-6 py-3 bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-500 hover:to-green-500 transition-all text-sm sm:text-base font-bold flex items-center gap-2"
-                >
-                  VIEW SALE DETAILS
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <Link 
-                  href={ABRAHAM_BRAND.external.abrahamAI}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group px-4 sm:px-6 py-3 border border-white hover:bg-white hover:text-black transition-all text-sm sm:text-base flex items-center gap-2"
-                >
-                  ABRAHAM.AI
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-            </div>
-            
-            {/* Historical Context */}
-            <div className="w-full lg:w-auto">
-              <div className="border border-white p-4 sm:p-6 bg-black/50">
-                <div className="text-sm mb-3 tracking-wider">HISTORICAL SIGNIFICANCE</div>
-                <div className="space-y-2">
-                  <div className="text-lg font-bold">Pre-AI Art Boom</div>
-                  <div className="text-sm opacity-75">Created before Art Blocks</div>
-                  <div className="text-lg font-bold mt-3">Community Generated</div>
-                  <div className="text-sm opacity-75">Proto-Eden Platform</div>
-                  <div className="text-lg font-bold mt-3">Gene Kogan</div>
-                  <div className="text-sm opacity-75">8-Year Vision Realized</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Content Sections */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16 space-y-12 sm:space-y-16">
-        
-        {/* Gallery Preview */}
-        <section className="border-b border-white pb-12 sm:pb-16">
-          <h2 className="text-2xl sm:text-3xl mb-6 sm:mb-8">EXAMPLE FIRST WORKS</h2>
-          <div className="mb-6 p-4 border border-blue-400/50 bg-blue-900/20">
-            <p className="text-sm opacity-75">
-              <strong>Note:</strong> These are representative examples showing the style and approach of Abraham's First Works. 
-              The actual collection of 2,522 works will be available during the October 5, 2025 sale.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {EXAMPLE_FIRST_WORKS.map((work) => (
-              <div key={work.id} className="border border-white group hover:bg-white hover:text-black transition-all">
-                <div className="aspect-square bg-gray-900 border-b border-white relative overflow-hidden">
-                  <div className="absolute inset-0 flex items-center justify-center text-6xl opacity-20">
-                    <Hash />
-                  </div>
-                  <div className="absolute bottom-2 left-2 text-xs bg-black/80 text-white px-2 py-1">
-                    WORK #{work.id.toString().padStart(4, '0')}
-                  </div>
-                </div>
-                <div className="p-4">
-                  <h3 className="text-lg font-bold mb-2">{work.title}</h3>
-                  <p className="text-sm opacity-75 mb-3 italic">"{work.prompt}"</p>
-                  <div className="flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      <span>{work.date}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Users className="w-3 h-3" />
-                      <span>Community</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          <div className="text-center mt-8">
-            <div className="inline-block border border-white p-6 sm:p-8">
-              <div className="text-2xl sm:text-3xl font-bold mb-2">2,522</div>
-              <div className="text-lg mb-4">TOTAL FIRST WORKS</div>
-              <div className="text-sm opacity-75 mb-6">Created through community prompts and GAN processing</div>
-              <Link 
-                href="/academy/agent/abraham/first-works-sale"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-500 hover:to-green-500 transition-all font-bold"
-              >
-                VIEW FULL COLLECTION DETAILS
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* Technical Process */}
-        <section className="border-b border-white pb-12 sm:pb-16">
-          <h2 className="text-2xl sm:text-3xl mb-6 sm:mb-8">CREATION PROCESS</h2>
-          <div className="grid md:grid-cols-2 gap-8 sm:gap-12">
-            <div>
-              <h3 className="text-xl mb-4">COMMUNITY COLLABORATION</h3>
-              <p className="leading-relaxed mb-4">
-                Each First Work began with a text prompt submitted by the Abraham community. 
-                These prompts were processed through Gene's proto-Eden platform, using 
-                generative adversarial networks to create visual interpretations.
-              </p>
-              <p className="leading-relaxed">
-                The process included feedback loops where the community could influence 
-                the development of works, creating a collaborative relationship between 
-                human creativity and machine learning.
-              </p>
-            </div>
-            <div className="border border-white p-4 sm:p-6">
-              <h3 className="text-lg font-bold mb-4">TECHNICAL DETAILS</h3>
-              <div className="space-y-3 text-sm">
-                <div className="pb-2 border-b border-white">
-                  <div className="font-bold">Platform</div>
-                  <div className="opacity-75">Proto-Eden (Gene's early system)</div>
-                </div>
-                <div className="pb-2 border-b border-white">
-                  <div className="font-bold">Method</div>
-                  <div className="opacity-75">Generative Adversarial Networks</div>
-                </div>
-                <div className="pb-2 border-b border-white">
-                  <div className="font-bold">Input</div>
-                  <div className="opacity-75">Community text prompts</div>
-                </div>
-                <div className="pb-2 border-b border-white">
-                  <div className="font-bold">Timeline</div>
-                  <div className="opacity-75">Created over weeks/months</div>
-                </div>
-                <div>
-                  <div className="font-bold">Metadata</div>
-                  <div className="opacity-75">Complete JSON preservation</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Historical Context */}
-        <section className="text-center">
-          <h2 className="text-2xl sm:text-3xl mb-6">HISTORICAL SIGNIFICANCE</h2>
-          <p className="text-base sm:text-lg mb-8 max-w-3xl mx-auto">
-            These First Works represent a pivotal moment in AI art history—created before 
-            the mainstream explosion, they demonstrate authentic exploration of machine 
-            consciousness and collaborative creativity.
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold mb-2">
+            ABRAHAM EARLY WORKS
+          </h1>
+          <p className="text-gray-300 text-lg">
+            Complete archive of {total.toLocaleString()} community-generated works from Summer 2021
           </p>
-          <div className="grid sm:grid-cols-3 gap-6 sm:gap-8 mb-8">
-            <div className="border border-white p-4 sm:p-6">
-              <div className="text-2xl font-bold mb-2">2021</div>
-              <div className="text-sm opacity-75">Created before AI art boom</div>
-            </div>
-            <div className="border border-white p-4 sm:p-6">
-              <div className="text-2xl font-bold mb-2">Proto-Eden</div>
-              <div className="text-sm opacity-75">Gene's pioneering platform</div>
-            </div>
-            <div className="border border-white p-4 sm:p-6">
-              <div className="text-2xl font-bold mb-2">Community</div>
-              <div className="text-sm opacity-75">Collaborative human-AI creation</div>
+          <p className="text-gray-400 text-sm mt-2">
+            These pieces represent the collective intelligence synthesis that preceded Abraham's covenant journey.
+          </p>
+        </div>
+
+        {/* Controls */}
+        <div className="mb-6 flex flex-col md:flex-row gap-4 items-center justify-between">
+          {/* Search */}
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <input
+              type="text"
+              placeholder="Search works..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 bg-gray-900 border border-gray-700 rounded-lg focus:border-white focus:outline-none"
+            />
+          </div>
+
+          {/* Controls row */}
+          <div className="flex items-center gap-4">
+            {/* Sort */}
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 focus:border-white focus:outline-none"
+            >
+              <option value="date_desc">Newest First</option>
+              <option value="date_asc">Oldest First</option>
+              <option value="number_desc">Archive Number (High-Low)</option>
+              <option value="number_asc">Archive Number (Low-High)</option>
+              <option value="title_asc">Title (A-Z)</option>
+            </select>
+
+            {/* View Mode */}
+            <div className="flex border border-gray-700 rounded-lg overflow-hidden">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`p-2 ${viewMode === 'grid' ? 'bg-white text-black' : 'bg-gray-900 text-white'}`}
+              >
+                <Grid className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`p-2 ${viewMode === 'list' ? 'bg-white text-black' : 'bg-gray-900 text-white'}`}
+              >
+                <List className="w-4 h-4" />
+              </button>
             </div>
           </div>
-        </section>
+        </div>
+
+        {/* Loading State */}
+        {loading && (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="w-8 h-8 animate-spin" />
+            <span className="ml-2">Loading early works...</span>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="text-center py-12">
+            <p className="text-red-400 mb-4">Failed to load works: {error}</p>
+            <button
+              onClick={fetchWorks}
+              className="px-4 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        )}
+
+        {/* Works Grid */}
+        {!loading && !error && (
+          <>
+            {viewMode === 'grid' ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+                {filteredWorks.map((work) => (
+                  <div key={work.id} className="bg-gray-900 rounded-lg overflow-hidden border border-gray-800 hover:border-gray-600 transition-colors">
+                    <div className="aspect-square bg-gray-800 relative">
+                      {work.image_url ? (
+                        <img
+                          src={work.image_url}
+                          alt={work.title}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-500">
+                          <span>No Image</span>
+                        </div>
+                      )}
+                      {work.archive_number && (
+                        <div className="absolute top-2 right-2 bg-black bg-opacity-75 px-2 py-1 rounded text-xs">
+                          #{work.archive_number}
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-semibold text-sm mb-2 line-clamp-2">
+                        {work.title}
+                      </h3>
+                      <p className="text-gray-400 text-xs mb-2 line-clamp-2">
+                        {work.description}
+                      </p>
+                      <p className="text-gray-500 text-xs">
+                        {new Date(work.created_date).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-4 mb-8">
+                {filteredWorks.map((work) => (
+                  <div key={work.id} className="bg-gray-900 rounded-lg p-6 border border-gray-800 hover:border-gray-600 transition-colors flex gap-4">
+                    <div className="w-20 h-20 bg-gray-800 rounded flex-shrink-0">
+                      {work.image_url ? (
+                        <img
+                          src={work.image_url}
+                          alt={work.title}
+                          className="w-full h-full object-cover rounded"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-500 text-xs">
+                          No Image
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between mb-2">
+                        <h3 className="font-semibold">{work.title}</h3>
+                        {work.archive_number && (
+                          <span className="text-xs bg-gray-800 px-2 py-1 rounded">
+                            #{work.archive_number}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-gray-400 text-sm mb-2">
+                        {work.description}
+                      </p>
+                      <p className="text-gray-500 text-xs">
+                        {new Date(work.created_date).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center space-x-2">
+                <button
+                  onClick={() => setPage(page - 1)}
+                  disabled={page === 1}
+                  className="px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-500 transition-colors"
+                >
+                  Previous
+                </button>
+                
+                <div className="flex space-x-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    const pageNum = Math.max(1, Math.min(totalPages - 4, page - 2)) + i;
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => setPage(pageNum)}
+                        className={`px-3 py-2 border rounded-lg transition-colors ${
+                          page === pageNum
+                            ? 'bg-white text-black border-white'
+                            : 'bg-gray-900 text-white border-gray-700 hover:border-gray-500'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <button
+                  onClick={() => setPage(page + 1)}
+                  disabled={page === totalPages}
+                  className="px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-500 transition-colors"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+
+            {/* Stats */}
+            <div className="text-center text-gray-400 text-sm mt-8">
+              Showing {filteredWorks.length} of {total.toLocaleString()} early works
+              {searchTerm && ` (filtered by "${searchTerm}")`}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
 }
-
-export const metadata = {
-  title: 'Abraham First Works Gallery - 2,522 Works from Summer 2021',
-  description: 'Preview of Abraham\'s First Works collection - 2,522 community-generated works from Summer 2021, created before the AI art boom.',
-};

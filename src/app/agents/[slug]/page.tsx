@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import EnhancedAgentProfile from '@/components/agent/EnhancedAgentProfile';
-import { FEATURE_FLAGS } from '@/config/flags';
+import { isFeatureEnabled } from '@/config/flags';
 import { getAgentBySlug } from '@/data/eden-agents-manifest';
 
 // Force dynamic rendering to avoid build issues
@@ -28,7 +28,7 @@ export default async function AgentProfilePage({ params }: AgentProfilePageProps
   const { slug } = await params;
   
   // Check if public agent pages are enabled
-  if (!FEATURE_FLAGS.ENABLE_PUBLIC_AGENT_PAGES.defaultValue && process.env.NODE_ENV === 'production') {
+  if (!isFeatureEnabled('ENABLE_PUBLIC_AGENT_PAGES')) {
     notFound();
   }
   

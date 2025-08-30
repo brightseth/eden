@@ -62,7 +62,8 @@ const TRAINER_MAP: Record<string, { name: string; id: string }> = {
   'sue': { name: 'TBD', id: 'tbd' },
   'bart-009': { name: 'TBD', id: 'tbd' },
   'bart': { name: 'TBD', id: 'tbd' },
-  'tbd-010': { name: 'TBD', id: 'tbd' },
+  'verdelis-010': { name: 'TBD', id: 'tbd' },
+  'verdelis': { name: 'TBD', id: 'tbd' },
 };
 
 // Launch date mapping (until in Registry)
@@ -85,7 +86,8 @@ const LAUNCH_DATES: Record<string, string> = {
   'sue': '2026-03-01',
   'bart-009': '2026-06-01',
   'bart': '2026-06-01',
-  'tbd-010': '2026-05-01',
+  'verdelis-010': '2026-05-01',
+  'verdelis': '2026-05-01',
 };
 
 // Economic data (temporary until Registry integration)
@@ -108,7 +110,8 @@ const ECONOMIC_DATA: Record<string, { monthlyRevenue: number; outputRate: number
   'sue': { monthlyRevenue: 4500, outputRate: 35 },
   'bart-009': { monthlyRevenue: 20000, outputRate: 35 },
   'bart': { monthlyRevenue: 20000, outputRate: 35 },
-  'tbd-010': { monthlyRevenue: 0, outputRate: 0 },
+  'verdelis-010': { monthlyRevenue: 5500, outputRate: 25 },
+  'verdelis': { monthlyRevenue: 5500, outputRate: 25 },
 };
 
 // Claude SDK Status Tracking
@@ -137,7 +140,8 @@ const CLAUDE_SDK_STATUS: Record<string, {
   'sue': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
   'bart-009': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
   'bart': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
-  'tbd-010': { hasClaudeSDK: false, hasEdenPlatform: false, dualInstantiation: false, registryIntegration: false },
+  'verdelis-010': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
+  'verdelis': { hasClaudeSDK: true, hasEdenPlatform: true, dualInstantiation: true, registryIntegration: true, sdkVersion: '1.0.0' },
 };
 
 class UnifiedAgentService {
@@ -210,6 +214,8 @@ class UnifiedAgentService {
       'sue-008': { twitter: '@sue_curator' },
       'bart-009': { twitter: '@bart_gondi', website: 'https://gondi.xyz', farcaster: 'bart' },
       'bart': { twitter: '@bart_gondi', website: 'https://gondi.xyz', farcaster: 'bart' },
+      'verdelis-010': { twitter: '@verdelis_eco', website: 'https://verdelis.art' },
+      'verdelis': { twitter: '@verdelis_eco', website: 'https://verdelis.art' },
     };
     return socialMap[agent.id] || {};
   }

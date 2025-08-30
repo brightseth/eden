@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
+import { isFeatureEnabled } from '@/config/flags';
 
 interface EvaluationResult {
   evaluation: any;
@@ -50,6 +51,16 @@ export default function BerthaDemo() {
   const [evaluationResult, setEvaluationResult] = useState<EvaluationResult | null>(null);
   const [advisoryReport, setAdvisoryReport] = useState<AdvisoryReport | null>(null);
   const [dashboardData, setDashboardData] = useState<any>(null);
+  
+  // Feature flag check
+  const isDemoEnabled = isFeatureEnabled('ENABLE_BERTHA_DEMO');
+  
+  // Redirect if demo is disabled
+  useEffect(() => {
+    if (!isDemoEnabled) {
+      window.location.href = '/agents/bertha';
+    }
+  }, [isDemoEnabled]);
 
   // Sample artwork data for evaluation
   const [artwork, setArtwork] = useState({
@@ -140,6 +151,18 @@ export default function BerthaDemo() {
     }
     setLoading(false);
   };
+
+  // Show loading while checking feature flag
+  if (!isDemoEnabled) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Demo Unavailable</h1>
+          <p className="text-gray-400">Redirecting to BERTHA agent page...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black text-white">

@@ -212,6 +212,8 @@ export const config = {
     '/geppetto',
     '/koru',
     '/sue',
+    // CRITICAL: Add bertha-demo route for live trainer demo
+    '/bertha-demo',
     // Legacy redirect routes  
     '/train',
     '/academy/agent/miyomi', 

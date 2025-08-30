@@ -7,7 +7,9 @@ import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import SimpleWorksGallery from '@/components/agent/SimpleWorksGallery';
 import AgentChat from '@/components/agent/AgentChat';
 import CITIZENEnhancedProfile from '@/components/agent/CITIZENEnhancedProfile';
-import { FEATURE_FLAGS, CONFIG } from '@/config/flags';
+import AgentBetaSection from '@/components/agent/AgentBetaSection';
+import { ProfileRenderer } from '@/components/agent-profile/ProfileRenderer';
+import { FEATURE_FLAGS, CONFIG, isFeatureEnabled, FLAGS } from '@/config/flags';
 import { EDEN_AGENTS, getAgentBySlug, type EdenAgent } from '@/data/eden-agents-manifest';
 
 interface EnhancedAgentProfileProps {
@@ -21,17 +23,54 @@ interface AgentMetrics {
   engagement: number;
 }
 
+interface AgentProfileConfig {
+  agentId: string;
+  widgets: any[];
+  layout: any;
+  navigation: any;
+  theme: any;
+  metadata: any;
+}
+
 export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfileProps) {
-  const [activeTab, setActiveTab] = useState<'overview' | 'works' | 'chat'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'works' | 'chat' | 'beta'>('overview');
   const [metrics, setMetrics] = useState<AgentMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [detailMode, setDetailMode] = useState<'public' | 'private'>('public');
+  const [profileConfig, setProfileConfig] = useState<AgentProfileConfig | null>(null);
+  const [useWidgetSystem, setUseWidgetSystem] = useState(false);
 
   const agent = getAgentBySlug(agentSlug);
   
   useEffect(() => {
     loadAgentMetrics();
+    checkWidgetSystem();
   }, [agentSlug]);
+
+  const checkWidgetSystem = async () => {
+    // Check if widget profile system is enabled
+    if (!isFeatureEnabled('ENABLE_WIDGET_PROFILE_SYSTEM')) {
+      setUseWidgetSystem(false);
+      return;
+    }
+
+    // Try to load profile configuration for this agent
+    try {
+      const response = await fetch(`/api/agents/${agentSlug}/profile-config`);
+      if (response.ok) {
+        const config = await response.json();
+        setProfileConfig(config);
+        setUseWidgetSystem(true);
+        console.log(`[Widget System] Loaded profile config for ${agentSlug}`);
+      } else {
+        setUseWidgetSystem(false);
+        console.log(`[Widget System] No profile config found for ${agentSlug}, using legacy profile`);
+      }
+    } catch (error) {
+      console.error(`[Widget System] Failed to load profile config for ${agentSlug}:`, error);
+      setUseWidgetSystem(false);
+    }
+  };
 
   const loadAgentMetrics = async () => {
     try {
@@ -71,6 +110,16 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
     description: `Generated work by ${agent.name}`,
     tags: ['digital', 'ai-generated', agent.name.toLowerCase()]
   }));
+
+  // Use widget profile system if enabled and config is available
+  if (useWidgetSystem && profileConfig) {
+    return (
+      <ProfileRenderer 
+        agent={agent}
+        config={profileConfig}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -172,7 +221,7 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
                 <button
                   onClick={() => setActiveTab('chat')}
                   className="flex items-center gap-2 px-6 py-3 border-2 border-white hover:bg-white hover:text-black transition-all font-bold uppercase tracking-wider text-sm"
-                  disabled={!FEATURE_FLAGS.ENABLE_AGENT_CHAT}
+                  disabled={!isFeatureEnabled(FLAGS.ENABLE_AGENT_CHAT)}
                 >
                   <MessageCircle className="w-4 h-4" />
                   CHAT WITH {agent.name}
@@ -198,7 +247,7 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
               </div>
 
               {/* Prototype Links */}
-              {FEATURE_FLAGS.ENABLE_AGENT_PROTOTYPE_LINKS && agent.prototypeLinks && agent.prototypeLinks.length > 0 && (
+              {isFeatureEnabled(FLAGS.ENABLE_AGENT_PROTOTYPE_LINKS) && agent.prototypeLinks && agent.prototypeLinks.length > 0 && (
                 <div className="mt-6">
                   <h3 className="text-sm font-bold uppercase tracking-wider mb-3 text-gray-400">
                     {detailMode === 'public' ? 'PUBLIC PROTOTYPES' : 'ALL PROTOTYPES'}
@@ -422,13 +471,26 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
                   ? 'border-white text-white'
                   : 'border-transparent text-gray-400 hover:text-white'
               }`}
-              disabled={!FEATURE_FLAGS.ENABLE_AGENT_CHAT}
+              disabled={!isFeatureEnabled(FLAGS.ENABLE_AGENT_CHAT)}
             >
               CHAT
-              {!FEATURE_FLAGS.ENABLE_AGENT_CHAT && (
+              {!isFeatureEnabled(FLAGS.ENABLE_AGENT_CHAT) && (
                 <span className="ml-2 text-xs bg-gray-600 px-2 py-1">BETA</span>
               )}
             </button>
+            {isFeatureEnabled(FLAGS.ENABLE_AGENT_BETA_SECTION) && (
+              <button
+                onClick={() => setActiveTab('beta')}
+                className={`py-4 px-2 text-sm font-bold uppercase tracking-wider border-b-2 transition-colors ${
+                  activeTab === 'beta'
+                    ? 'border-blue-400 text-blue-400'
+                    : 'border-transparent text-gray-400 hover:text-white'
+                }`}
+              >
+                BETA PROTOTYPES
+                <span className="ml-2 text-xs bg-blue-900/50 border border-blue-600 px-1 py-0.5">NEW</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -436,57 +498,63 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
       {/* Tab Content */}
       <div className="max-w-7xl mx-auto px-8 py-12">
         {activeTab === 'overview' && (
-          <div className="space-y-12">
-            
-            {/* Agent Description */}
-            <div>
-              <h3 className="text-2xl font-bold uppercase tracking-wider mb-6">
-                ABOUT {agent.name}
-              </h3>
-              <div className="prose prose-lg prose-gray max-w-4xl">
-                <p className="text-lg leading-relaxed text-gray-300">
-                  {agent.description}
-                </p>
-                <p className="text-lg leading-relaxed text-gray-300 mt-4">
-                  As a member of the Genesis cohort at Eden Academy, {agent.name} represents 
-                  the cutting edge of autonomous AI creativity. Each agent in this cohort is 
-                  trained by expert human collaborators and designed to push the boundaries 
-                  of what's possible in AI-generated art and creative expression.
-                </p>
-              </div>
-            </div>
-
-            {/* Recent Works Preview */}
-            <div>
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-2xl font-bold uppercase tracking-wider">
-                  RECENT WORKS
-                </h3>
-                <button
-                  onClick={() => setActiveTab('works')}
-                  className="text-sm font-bold uppercase tracking-wider text-gray-400 hover:text-white transition-colors"
-                >
-                  VIEW ALL WORKS →
-                </button>
-              </div>
-              
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                {works.slice(0, 6).map((work) => (
-                  <div key={work.id} className="border border-gray-600 hover:border-white transition-colors">
-                    <div className="aspect-square bg-gray-900 flex items-center justify-center">
-                      <div className="text-xs text-gray-400 text-center">
-                        <div className="mb-2">{agent.name}</div>
-                        <div>WORK #{work.id.split('-')[1]}</div>
-                      </div>
-                    </div>
-                    <div className="p-2">
-                      <div className="text-xs font-bold uppercase">{work.title}</div>
-                    </div>
+          <>
+            {agent.handle === 'citizen' ? (
+              <CITIZENEnhancedProfile />
+            ) : (
+              <div className="space-y-12">
+                
+                {/* Agent Description */}
+                <div>
+                  <h3 className="text-2xl font-bold uppercase tracking-wider mb-6">
+                    ABOUT {agent.name}
+                  </h3>
+                  <div className="prose prose-lg prose-gray max-w-4xl">
+                    <p className="text-lg leading-relaxed text-gray-300">
+                      {agent.description}
+                    </p>
+                    <p className="text-lg leading-relaxed text-gray-300 mt-4">
+                      As a member of the Genesis cohort at Eden Academy, {agent.name} represents 
+                      the cutting edge of autonomous AI creativity. Each agent in this cohort is 
+                      trained by expert human collaborators and designed to push the boundaries 
+                      of what's possible in AI-generated art and creative expression.
+                    </p>
                   </div>
-                ))}
+                </div>
+
+                {/* Recent Works Preview */}
+                <div>
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-2xl font-bold uppercase tracking-wider">
+                      RECENT WORKS
+                    </h3>
+                    <button
+                      onClick={() => setActiveTab('works')}
+                      className="text-sm font-bold uppercase tracking-wider text-gray-400 hover:text-white transition-colors"
+                    >
+                      VIEW ALL WORKS →
+                    </button>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    {works.slice(0, 6).map((work) => (
+                      <div key={work.id} className="border border-gray-600 hover:border-white transition-colors">
+                        <div className="aspect-square bg-gray-900 flex items-center justify-center">
+                          <div className="text-xs text-gray-400 text-center">
+                            <div className="mb-2">{agent.name}</div>
+                            <div>WORK #{work.id.split('-')[1]}</div>
+                          </div>
+                        </div>
+                        <div className="p-2">
+                          <div className="text-xs font-bold uppercase">{work.title}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            )}
+          </>
         )}
 
         {activeTab === 'works' && (
@@ -518,6 +586,12 @@ export default function EnhancedAgentProfile({ agentSlug }: EnhancedAgentProfile
                 className="max-w-4xl mx-auto h-96"
               />
             </div>
+          </div>
+        )}
+
+        {activeTab === 'beta' && isFeatureEnabled(FLAGS.ENABLE_AGENT_BETA_SECTION) && (
+          <div>
+            <AgentBetaSection agentSlug={agentSlug} agentName={agent.name} />
           </div>
         )}
       </div>

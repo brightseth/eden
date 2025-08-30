@@ -171,6 +171,15 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
     rolloutStrategy: 'beta',
     culturalImpact: 'Displays cutting-edge agent experiments and research prototypes',
     rollbackPlan: 'Hide beta section, fallback to standard profile layout'
+  },
+
+  ENABLE_BERTHA_DEMO: {
+    key: 'ENABLE_BERTHA_DEMO',
+    description: 'Enable BERTHA collection intelligence demo for trainer presentations',
+    defaultValue: process.env.ENABLE_BERTHA_DEMO === 'true' || process.env.NODE_ENV === 'development',
+    rolloutStrategy: 'beta',
+    culturalImpact: 'Provides live demo of BERTHA collection analysis capabilities for trainers',
+    rollbackPlan: 'Disable flag, return 404 for /bertha-demo, redirect to main agent page'
   }
 };
 
@@ -281,4 +290,5 @@ export const FLAGS = {
   ENABLE_BART_LENDING_SYSTEM: 'ENABLE_BART_LENDING_SYSTEM',
   ENABLE_AGENT_PROTOTYPE_LINKS: 'ENABLE_AGENT_PROTOTYPE_LINKS',
   ENABLE_AGENT_BETA_SECTION: 'ENABLE_AGENT_BETA_SECTION',
+  ENABLE_BERTHA_DEMO: 'ENABLE_BERTHA_DEMO',
 } as const;

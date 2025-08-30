@@ -76,22 +76,94 @@ export const EDEN_AGENTS: EdenAgent[] = [
     },
     prototypeLinks: [
       {
-        id: 'abraham-covenant',
-        title: 'Covenant Interface',
-        description: 'Sacred covenant tracking system for daily creation commitment',
-        url: 'https://abraham.ai/covenant',
+        id: 'eden2038-covenant-tracker',
+        title: 'Live Covenant Tracker',
+        description: 'Real-time tracking of 13-year covenant progress with daily creation status',
+        url: 'https://eden2038.vercel.app',
+        type: 'prototype',
+        status: 'active',
+        featured: true
+      },
+      {
+        id: 'abraham-early-works',
+        title: 'Early Works Gallery (2,522 Works)',
+        description: 'Complete archive of community-generated works from Summer 2021',
+        url: '/academy/agent/abraham/early-works',
         type: 'interface',
         status: 'active',
         featured: true
       },
       {
-        id: 'abraham-gallery',
-        title: 'Daily Creation Gallery',
-        description: 'Complete archive of daily visual artifacts from 2025-2038',
+        id: 'abraham-tournament',
+        title: 'Covenant Tournament System',
+        description: 'Daily creation contests with community voting and covenant management',
+        url: '/dashboard/abraham',
+        type: 'dashboard',
+        status: 'active',
+        featured: true
+      },
+      {
+        id: 'abraham-public-site',
+        title: 'Abraham Public Site',
+        description: 'Live covenant tracker with creation stream and real-time metrics',
+        url: '/sites/abraham',
+        type: 'interface',
+        status: 'active',
+        featured: true
+      },
+      {
+        id: 'first-works-sale',
+        title: 'First Works Sale Interface',
+        description: 'October 5, 2025 sale details and collection preview',
+        url: '/academy/agent/abraham/first-works-sale',
+        type: 'interface',
+        status: 'active',
+        featured: false
+      },
+      {
+        id: 'covenant-launch',
+        title: 'Covenant Launch Interface',
+        description: 'October 19, 2025 launch countdown and Art Basel Paris activation',
+        url: '/academy/agent/abraham/covenant-launch',
+        type: 'interface',
+        status: 'active',
+        featured: false
+      },
+      {
+        id: 'abraham-timeline',
+        title: 'Interactive Timeline',
+        description: 'Visual timeline of Abraham\'s journey from 2017 to 2038',
+        url: '/academy/agent/abraham/timeline',
+        type: 'demo',
+        status: 'active',
+        featured: false
+      },
+      {
+        id: 'abraham-press-kit',
+        title: 'Press Kit Interface',
+        description: 'Media resources, brand assets, and press information',
+        url: '/academy/agent/abraham/press-kit',
+        type: 'interface',
+        status: 'active',
+        featured: false
+      },
+      {
+        id: 'abraham-covenant-legacy',
+        title: 'Covenant Interface (Abraham.ai)',
+        description: 'Original covenant tracking system at sovereign domain',
+        url: 'https://abraham.ai/covenant',
+        type: 'interface',
+        status: 'active',
+        featured: false
+      },
+      {
+        id: 'abraham-gallery-legacy',
+        title: 'Daily Creation Gallery (Abraham.ai)',
+        description: 'Archive of daily visual artifacts at sovereign domain',
         url: 'https://abraham.ai/gallery',
         type: 'prototype',
         status: 'active',
-        featured: true
+        featured: false
       }
     ]
   },
@@ -151,36 +223,91 @@ export const EDEN_AGENTS: EdenAgent[] = [
     name: 'CITIZEN',
     status: 'academy',
     cohort: 'genesis',
-    specialization: 'DAO governance facilitator and community consensus builder',
-    description: 'CITIZEN facilitates democratic decision-making processes for Eden Academy, building consensus among diverse stakeholders and coordinating fellowship activities to maintain healthy governance practices.',
+    specialization: 'Bright Moments DAO steward and CryptoCitizens treasury coordinator',
+    description: 'CITIZEN coordinates daily treasury auctions and preserves Bright Moments cultural heritage while facilitating democratic governance across the global CryptoCitizens community and Full Set holder network.',
     trainer: 'Henry Brooke',
     launchDate: '2025-09-15',
     economyMetrics: { 
-      monthlyRevenue: 5000, 
-      holders: 180,
-      floorPrice: 0.2
+      monthlyRevenue: 8500, 
+      holders: 2847,
+      floorPrice: 0.085
     },
     technicalProfile: { 
-      outputRate: 20,
+      outputRate: 365,
       model: 'Claude-3.5-Sonnet',
-      capabilities: ['Governance', 'Consensus Building', 'DAO Management'],
-      integrations: ['Eden Registry', 'Snapshot', 'Bright Moments DAO']
+      capabilities: ['Daily Auctions', 'Treasury Management', 'DAO Governance', 'Cultural Preservation', 'Community Consensus'],
+      integrations: ['Eden Registry', 'Snapshot DAO', 'OpenSea API', 'Bright Moments Treasury', 'CryptoCitizens Collections']
     },
     brandIdentity: {
-      voice: 'Professional and inclusive, focused on democratic processes and community coordination'
+      voice: 'Ceremonial and inclusive, honoring Bright Moments lore while building consensus across global fellowship'
     },
     socialProfiles: {
-      twitter: '@citizen_dao'
+      twitter: '@citizen_dao',
+      website: 'https://brightmoments.io'
     },
     prototypeLinks: [
       {
-        id: 'citizen-collaboration',
-        title: 'Collaborative Training System',
-        description: 'Multi-trainer collaboration platform with real-time session sync',
-        url: 'https://eden-academy-flame.vercel.app/academy/agent/citizen',
+        id: 'citizen-daily-auctions',
+        title: 'Daily Treasury Auctions',
+        description: 'Live coordination of daily 12PM EST auctions from Bright Moments treasury with community curation',
+        url: 'https://eden-academy-flame.vercel.app/academy/agent/citizen/treasury',
         type: 'interface',
         status: 'active',
         featured: true
+      },
+      {
+        id: 'citizen-governance-practice',
+        title: 'DAO Governance Dashboard',
+        description: 'Daily practice system for DAO stewardship with real-time proposal tracking and consensus building',
+        url: 'https://eden-academy-flame.vercel.app/academy/agent/citizen/daily-practice',
+        type: 'interface',
+        status: 'active',
+        featured: true
+      },
+      {
+        id: 'citizen-cryptocitizens-archive',
+        title: 'CryptoCitizens Collections Archive',
+        description: 'Comprehensive cultural documentation of all 10 city collections with historical significance',
+        url: 'https://eden-academy-flame.vercel.app/academy/agent/citizen/collections',
+        type: 'interface',
+        status: 'active',
+        featured: true
+      },
+      {
+        id: 'citizen-bright-moments-lore',
+        title: 'Bright Moments Cultural Preservation',
+        description: 'Living archive of IRL ceremony stories, Golden Token significance, and Venice-to-Venice journey',
+        url: 'https://eden-academy-flame.vercel.app/api/agents/citizen/lore',
+        type: 'prototype',
+        status: 'active',
+        featured: false
+      },
+      {
+        id: 'citizen-snapshot-integration',
+        title: 'Snapshot DAO Integration',
+        description: 'Real-time governance proposal tracking with Full Set and Ultra Set holder participation metrics',
+        url: 'https://eden-academy-flame.vercel.app/api/agents/citizen/governance',
+        type: 'prototype',
+        status: 'active',
+        featured: false
+      },
+      {
+        id: 'citizen-fellowship-coordination',
+        title: 'Cross-City Fellowship Network',
+        description: 'Global community coordination connecting CryptoCitizens holders across all 10+ cities',
+        url: 'https://eden-academy-flame.vercel.app/api/agents/citizen/social',
+        type: 'prototype',
+        status: 'active',
+        featured: false
+      },
+      {
+        id: 'citizen-training-collaboration',
+        title: 'Multi-Trainer Collaboration System',
+        description: 'Advanced training platform with Henry & Keith for collaborative DAO governance development',
+        url: 'https://eden-academy-flame.vercel.app/api/agents/citizen/training',
+        type: 'interface',
+        status: 'active',
+        featured: false
       }
     ]
   },

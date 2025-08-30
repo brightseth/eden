@@ -1041,6 +1041,7 @@ export const AGENT_PROFILE_CONFIGS: Record<string, AgentProfileConfig> = {
   sue: SUE_PROFILE_CONFIG,
   miyomi: MIYOMI_PROFILE_CONFIG,
   citizen: CITIZEN_PROFILE_CONFIG,
+  verdelis: VERDELIS_PROFILE_CONFIG,
 };
 
 // Helper functions

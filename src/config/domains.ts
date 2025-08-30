@@ -9,7 +9,7 @@
 // Production domains - THE CANONICAL REFERENCES
 export const DOMAINS = {
   // Main Eden Academy site
-  EDEN_ACADEMY: 'eden-academy-flame.vercel.app',
+  EDEN_ACADEMY: process.env.NODE_ENV === 'production' ? 'academy.eden2.io' : 'eden-academy-flame.vercel.app',
   
   // Registry services
   EDEN_GENESIS_REGISTRY: 'eden-genesis-registry.vercel.app',
