@@ -40,9 +40,9 @@
 - Live P&L tracking with position management
 - Demo signal generation for testing
 
-### **4. CITIZEN SOCIAL INTEGRATION**
-**Status**: ✅ COMMUNITY-FIRST DAO COORDINATION READY  
-**Demo**: https://academy.eden2.io/bm-overview
+### **4. CITIZEN DAO COORDINATION**
+**Status**: ✅ COMMUNITY-FIRST DAO GOVERNANCE READY  
+**Demo**: https://academy.eden2.io/citizen
 - Comprehensive social platform integration (Farcaster, Discord, Twitter)
 - 30-day re-engagement strategy with listening phase
 - BrightMoments team coordination systems
@@ -178,7 +178,7 @@
 - **BART Lending**: https://academy.eden2.io/agents/bart
 - **ABRAHAM Covenant**: https://academy.eden2.io/sites/abraham
 - **MIYOMI Trading**: https://academy.eden2.io/dashboard/miyomi
-- **CITIZEN DAO**: https://academy.eden2.io/bm-overview
+- **CITIZEN DAO**: https://academy.eden2.io/citizen
 - **All Public Agents**: https://academy.eden2.io/agents
 
 ### **Key Technical URLs**

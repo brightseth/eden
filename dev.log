@@ -517,3 +517,6 @@ Require stack:
  GET /_next/static/chunks/fallback/pages/_app.js 404 in 39ms
  GET /_next/static/chunks/fallback/pages/_error.js 404 in 38ms
  ✓ Compiled in 33ms (114 modules)
+ GET /api/events/stream?filter=notifications 200 in 622117ms
+ ✓ Compiled in 34ms (114 modules)
+[?25h

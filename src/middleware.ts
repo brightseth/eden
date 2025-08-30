@@ -207,7 +207,6 @@ export const config = {
     // CRITICAL: Fix root agent path redirects 
     '/abraham',
     '/solienne',
-    '/citizen', 
     '/miyomi',
     '/bertha',
     '/geppetto',
