@@ -4,7 +4,7 @@
 'use client';
 
 import React from 'react';
-import { WitnessRegistryInterface } from '@/components/covenant/WitnessRegistryInterface';
+import { WitnessRegistryInterface } from '@/components/covenant.disabled/WitnessRegistryInterface';
 
 export default function WitnessRegistryPage() {
   return (

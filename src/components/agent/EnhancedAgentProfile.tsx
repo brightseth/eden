@@ -6,6 +6,7 @@ import { ArrowLeft, MessageCircle, Users, TrendingUp, Calendar, ExternalLink, Ey
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import SimpleWorksGallery from '@/components/agent/SimpleWorksGallery';
 import AgentChat from '@/components/agent/AgentChat';
+import CITIZENEnhancedProfile from '@/components/agent/CITIZENEnhancedProfile';
 import { FEATURE_FLAGS, CONFIG } from '@/config/flags';
 import { EDEN_AGENTS, getAgentBySlug, type EdenAgent } from '@/data/eden-agents-manifest';
 

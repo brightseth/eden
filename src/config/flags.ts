@@ -153,6 +153,24 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
     rolloutStrategy: 'dev',
     culturalImpact: 'BART can evaluate NFT collateral and make lending offers with Renaissance banking wisdom',
     rollbackPlan: 'Disable flag, BART routes return 503 service unavailable'
+  },
+
+  ENABLE_AGENT_PROTOTYPE_LINKS: {
+    key: 'ENABLE_AGENT_PROTOTYPE_LINKS',
+    description: 'Enable prototype links display on agent profiles',
+    defaultValue: process.env.DISABLE_PROTOTYPE_LINKS !== 'true',
+    rolloutStrategy: 'full',
+    culturalImpact: 'Users can access agent experimental features and prototype interfaces',
+    rollbackPlan: 'Hide prototype links, no data impact'
+  },
+
+  ENABLE_AGENT_BETA_SECTION: {
+    key: 'ENABLE_AGENT_BETA_SECTION',
+    description: 'Enable beta section showcasing weekly experimental prototypes',
+    defaultValue: true,
+    rolloutStrategy: 'beta',
+    culturalImpact: 'Displays cutting-edge agent experiments and research prototypes',
+    rollbackPlan: 'Hide beta section, fallback to standard profile layout'
   }
 };
 
@@ -261,4 +279,6 @@ export const FLAGS = {
   ENABLE_AGENT_CHAT: 'ENABLE_AGENT_CHAT',
   ENABLE_CITIZEN_SNAPSHOT_GOVERNANCE: 'ENABLE_CITIZEN_SNAPSHOT_GOVERNANCE',
   ENABLE_BART_LENDING_SYSTEM: 'ENABLE_BART_LENDING_SYSTEM',
+  ENABLE_AGENT_PROTOTYPE_LINKS: 'ENABLE_AGENT_PROTOTYPE_LINKS',
+  ENABLE_AGENT_BETA_SECTION: 'ENABLE_AGENT_BETA_SECTION',
 } as const;

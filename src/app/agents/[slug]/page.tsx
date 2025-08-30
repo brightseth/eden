@@ -28,7 +28,7 @@ export default async function AgentProfilePage({ params }: AgentProfilePageProps
   const { slug } = await params;
   
   // Check if public agent pages are enabled
-  if (!FEATURE_FLAGS.ENABLE_PUBLIC_AGENT_PAGES) {
+  if (!FEATURE_FLAGS.ENABLE_PUBLIC_AGENT_PAGES.defaultValue && process.env.NODE_ENV === 'production') {
     notFound();
   }
   

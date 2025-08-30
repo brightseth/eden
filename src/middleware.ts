@@ -140,7 +140,17 @@ export async function middleware(request: NextRequest) {
     const segments = pathname.split('/');
     const agentName = segments[3];
     
-    if (agentName && !pathname.includes('/works') && !pathname.includes('/profile') && !pathname.includes('/predictions')) {
+    if (agentName && 
+        !pathname.includes('/works') && 
+        !pathname.includes('/profile') && 
+        !pathname.includes('/predictions') &&
+        !pathname.includes('/evaluate') &&
+        !pathname.includes('/advisory-report') && 
+        !pathname.includes('/collection-dashboard') && 
+        !pathname.includes('/registry-works') &&
+        !pathname.includes('/chat') &&
+        !pathname.includes('/status') &&
+        !pathname.includes('/training')) {
       // Redirect /api/agents/abraham -> /agents/abraham
       return NextResponse.redirect(new URL(`/agents/${agentName}`, request.url), 301);
     }

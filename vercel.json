@@ -5,6 +5,10 @@
   "env": {
     "SKIP_ENV_VALIDATION": "true",
     "ENABLE_BERTHA_DEMO": "true",
+    "ENABLE_PUBLIC_AGENT_PAGES": "true",
+    "ENABLE_AGENT_CHAT": "true",
+    "ENABLE_AGENT_PROTOTYPE_LINKS": "true",
+    "ENABLE_AGENT_BETA_SECTION": "true",
     "NODE_ENV": "production"
   },
   "functions": {
