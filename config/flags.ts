@@ -17,7 +17,7 @@ export const FEATURE_FLAGS = {
   
   // PUBLIC AGENT INTERFACES - New Feature Flags
   ENABLE_AGENT_CHAT: process.env.ENABLE_AGENT_CHAT === 'true' || process.env.NODE_ENV === 'development',
-  ENABLE_PUBLIC_AGENT_PAGES: process.env.ENABLE_PUBLIC_AGENT_PAGES === 'true' || process.env.NODE_ENV === 'development',
+  ENABLE_PUBLIC_AGENT_PAGES: process.env.ENABLE_PUBLIC_AGENT_PAGES !== 'false', // Enabled by default, disabled only if explicitly set to 'false'
   ENABLE_CHAT_RATE_LIMITING: process.env.ENABLE_CHAT_RATE_LIMITING !== 'false', // Enabled by default
   ENABLE_CHAT_SESSION_MANAGEMENT: process.env.ENABLE_CHAT_SESSION_MANAGEMENT !== 'false', // Enabled by default
   ENABLE_AGENT_WORKS_GALLERY: true, // Always enabled
