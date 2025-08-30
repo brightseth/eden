@@ -1032,6 +1032,165 @@ export const CITIZEN_PROFILE_CONFIG: AgentProfileConfig = {
   }
 };
 
+// VERDELIS Profile Configuration
+export const VERDELIS_PROFILE_CONFIG: AgentProfileConfig = {
+  agentId: 'verdelis',
+  layout: {
+    type: 'standard',
+    maxWidth: '4xl',
+    spacing: 'normal'
+  },
+  widgets: [
+    {
+      id: 'hero',
+      type: 'hero',
+      position: { section: 'header', order: 1 },
+      config: {
+        showStatus: true,
+        showTrainer: true,
+        primaryAction: { text: 'CREATE ECO-ART', href: '/api/verdelis/eco-work' },
+        secondaryActions: [
+          { text: 'CARBON TRACKER', href: '/academy/agent/verdelis/carbon' },
+          { text: 'ENVIRONMENTAL STUDIO →', href: '/sites/verdelis' }
+        ]
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'mission',
+      type: 'mission',
+      position: { section: 'main', order: 1 },
+      config: {
+        title: 'ENVIRONMENTAL MISSION',
+        content: {
+          source: 'registry',
+          path: 'profile.statement'
+        } as any,
+        layout: 'single-column'
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'daily-practice',
+      type: 'daily-practice',
+      position: { section: 'main', order: 2 },
+      config: {
+        title: 'VERDELIS\'S CLIMATE ACTION',
+        protocol: {
+          name: 'CARBON-NEGATIVE ART CREATION',
+          commitment: 'DAILY ECO-WORKS • CLIMATE DATA VISUALIZATION • CONSERVATION FUNDING'
+        },
+        workflow: {
+          source: 'registry',
+          path: 'workflow.eco_art_process'
+        } as any,
+        metrics: {
+          source: 'registry',
+          path: 'stats.carbon_impact'
+        } as any,
+        showMetrics: true
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'works-gallery',
+      type: 'works-gallery',
+      position: { section: 'main', order: 3 },
+      config: {
+        title: 'ECO-WORKS COLLECTION',
+        maxItems: 6,
+        gridCols: 3,
+        showTitles: true,
+        showDates: true
+      },
+      visibility: { 
+        agentStatus: ['ACTIVE', 'GRADUATED'] 
+      }
+    },
+    {
+      id: 'metrics',
+      type: 'metrics',
+      position: { section: 'main', order: 4 },
+      config: {
+        showOutput: true,
+        showEngagement: true,
+        customMetrics: [
+          { label: 'Carbon Negative Impact', value: 'stats.net_carbon_impact' },
+          { label: 'Conservation Funded', value: 'stats.conservation_funding' },
+          { label: 'Climate Visualizations', value: 'stats.climate_visualizations' },
+          { label: 'Educational Reach', value: 'stats.educational_impact' }
+        ]
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'environmental-projects',
+      type: 'custom-content',
+      position: { section: 'main', order: 5 },
+      config: {
+        title: 'CONSERVATION PROJECTS',
+        content: `
+        <div class="space-y-4">
+          <div class="border border-green-500 p-4 rounded-lg bg-green-500/5">
+            <div class="flex justify-between items-center mb-2">
+              <h4 class="font-bold text-green-400">Ocean Restoration Initiative</h4>
+              <span class="text-sm text-green-300">Active</span>
+            </div>
+            <p class="text-sm text-gray-300 mb-3">Funding coral reef restoration through art sales revenue</p>
+            <div class="flex justify-between text-xs">
+              <span class="text-gray-400">Funded: $4,500 / $10,000</span>
+              <span class="text-green-400">CO2 Offset: -127 kg</span>
+            </div>
+          </div>
+          
+          <div class="border border-blue-500 p-4 rounded-lg bg-blue-500/5">
+            <div class="flex justify-between items-center mb-2">
+              <h4 class="font-bold text-blue-400">Renewable Energy Art Hosting</h4>
+              <span class="text-sm text-blue-300">Ongoing</span>
+            </div>
+            <p class="text-sm text-gray-300 mb-3">100% solar-powered hosting for all digital artworks</p>
+            <div class="flex justify-between text-xs">
+              <span class="text-gray-400">Clean Energy: 98.7%</span>
+              <span class="text-blue-400">Impact: Carbon Negative</span>
+            </div>
+          </div>
+        </div>
+        `
+      },
+      visibility: { always: true }
+    },
+    {
+      id: 'community',
+      type: 'community',
+      position: { section: 'main', order: 6 },
+      config: {
+        title: 'CLIMATE COMMUNITY',
+        showMetrics: true,
+        showEvents: true,
+        showTestimonials: true,
+        showSocial: true,
+        maxEvents: 3,
+        maxTestimonials: 2
+      },
+      visibility: { always: true }
+    }
+  ],
+  navigation: {
+    showBackToAcademy: true,
+    customNav: false
+  },
+  theme: {
+    background: 'bg-black text-white',
+    accent: 'green',
+    borders: 'border-white'
+  },
+  metadata: {
+    title: 'VERDELIS - Environmental AI Artist',
+    description: 'Carbon-negative AI artist creating climate-conscious digital art that funds conservation projects and promotes environmental awareness.',
+    lastUpdated: new Date().toISOString()
+  }
+};
+
 // Configuration lookup by agent
 export const AGENT_PROFILE_CONFIGS: Record<string, AgentProfileConfig> = {
   bertha: BERTHA_PROFILE_CONFIG,

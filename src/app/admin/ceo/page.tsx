@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { 
   Crown, Users, TrendingUp, GitBranch, Target, Calendar, 
   BarChart3, Globe, Rocket, Shield, Settings, FileText,
-  Clock, AlertTriangle, CheckCircle, Activity, Presentation
+  Clock, AlertTriangle, CheckCircle, Activity, Presentation,
+  Layout
 } from 'lucide-react';
 
 // CEO Dashboard Sections
@@ -31,6 +32,14 @@ const ceoTools = [
     description: 'Claude Coding Agents - Your 6 AI development tools',
     href: '/admin/ceo/agents',
     icon: Users,
+    category: 'Development',
+    priority: 'high'
+  },
+  {
+    title: 'Widget Configuration',
+    description: 'Configure agent-specific profile widgets and layouts',
+    href: '/admin/widget-config',
+    icon: Layout,
     category: 'Development',
     priority: 'high'
   },

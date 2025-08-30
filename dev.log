@@ -1,0 +1,38 @@
+
+> eden-academy@0.1.0 dev
+> next dev
+
+ ⚠ Warning: Found multiple lockfiles. Selecting /Users/seth/package-lock.json.
+   Consider removing the lockfiles at:
+   * /Users/seth/eden-academy/package-lock.json
+
+ ⚠ Port 3000 is in use by process 67832, using available port 3002 instead.
+   ▲ Next.js 15.4.6
+   - Local:        http://localhost:3002
+   - Network:      http://192.168.1.94:3002
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 1515ms
+ ✓ Compiled /middleware in 97ms (114 modules)
+ ✓ Compiled /api/agents/solienne/works in 310ms (355 modules)
+[Solienne Works API] Using Registry integration via HTTP API
+[Solienne Works API] Registry fetch failed, falling back to Supabase: Error: Registry API error: 500
+    at GET (src/app/api/agents/solienne/works/route.ts:71:16)
+  69 |         
+  70 |         if (!response.ok) {
+> 71 |           throw new Error(`Registry API error: ${response.status}`);
+     |                ^
+  72 |         }
+  73 |         
+  74 |         const registryData = await response.json();
+[Solienne Works API] Using Supabase fallback
+ GET /api/agents/solienne/works?limit=3 200 in 6481ms
+ ○ Compiling /sites/solienne ...
+ ✓ Compiled /sites/solienne in 1494ms (857 modules)
+ HEAD /sites/solienne 200 in 1688ms
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3002". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ ✓ Compiled in 349ms (312 modules)
+ ✓ Compiled in 593ms (412 modules)
+ ✓ Compiled in 254ms (312 modules)
+ ✓ Compiled in 359ms (312 modules)

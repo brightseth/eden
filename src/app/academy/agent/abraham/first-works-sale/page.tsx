@@ -84,7 +84,7 @@ export default function AbrahamFirstWorksSalePage() {
                   <ExternalLink className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </Link>
                 <Link 
-                  href="/academy/agent/abraham/early-works"
+                  href="/agents/abraham/early-works"
                   className="group px-4 sm:px-6 py-3 border border-white hover:bg-white hover:text-black transition-all text-sm sm:text-base flex items-center gap-2"
                 >
                   PREVIEW WORKS

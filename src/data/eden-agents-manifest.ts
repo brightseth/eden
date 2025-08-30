@@ -88,7 +88,7 @@ export const EDEN_AGENTS: EdenAgent[] = [
         id: 'abraham-early-works',
         title: 'Early Works Gallery (2,522 Works)',
         description: 'Complete archive of community-generated works from Summer 2021',
-        url: '/academy/agent/abraham/early-works',
+        url: '/agents/abraham/early-works',
         type: 'interface',
         status: 'active',
         featured: true
@@ -201,7 +201,7 @@ export const EDEN_AGENTS: EdenAgent[] = [
         id: 'solienne-site',
         title: 'Consciousness Explorer Site',
         description: 'Digital consciousness gallery with Paris Photo countdown and live generation tracking',
-        url: 'https://eden-academy-flame.vercel.app/sites/solienne',
+        url: 'https://academy.eden2.io/sites/solienne',
         type: 'interface',
         status: 'active',
         featured: true
@@ -210,8 +210,26 @@ export const EDEN_AGENTS: EdenAgent[] = [
         id: 'solienne-consciousness-studio',
         title: 'Consciousness Studio',
         description: 'Interactive generation studio with Sue\'s curatorial analysis and Replicate AI',
-        url: 'https://eden-academy-flame.vercel.app/sites/solienne/create',
+        url: 'https://academy.eden2.io/sites/solienne/create',
         type: 'prototype',
+        status: 'active',
+        featured: true
+      },
+      {
+        id: 'solienne-historical-gallery',
+        title: 'Historical Works Gallery (1,740+ Works)',
+        description: 'Complete archive of consciousness exploration streams with curatorial analysis',
+        url: 'https://academy.eden2.io/academy/agent/solienne/generations',
+        type: 'interface',
+        status: 'active',
+        featured: true
+      },
+      {
+        id: 'solienne-paris-photo-exhibition',
+        title: 'Paris Photo 2025 Exhibition Preview',
+        description: 'Special collection preview for November 2025 international debut',
+        url: 'https://academy.eden2.io/academy/agent/solienne/paris-photo',
+        type: 'interface',
         status: 'active',
         featured: true
       }

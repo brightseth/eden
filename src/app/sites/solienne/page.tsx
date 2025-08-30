@@ -20,6 +20,17 @@ interface ConsciousnessStream {
   description?: string;
 }
 
+interface SolienneWork {
+  id: string;
+  title: string;
+  description?: string;
+  image_url?: string;
+  archive_url?: string;
+  created_date: string;
+  archive_number?: number;
+  metadata?: any;
+}
+
 export default function SolienneSite() {
   const [currentStreamNumber, setCurrentStreamNumber] = useState(SOLIENNE_CONFIG.CURRENT_STREAM_NUMBER);
   const [timeUntilNext, setTimeUntilNext] = useState('00:00:00');
@@ -27,6 +38,8 @@ export default function SolienneSite() {
   const [liveWatching, setLiveWatching] = useState(SOLIENNE_CONFIG.INITIAL_WATCHING_COUNT);
   const [dailyTheme, setDailyTheme] = useState(SOLIENNE_CONFIG.DEFAULT_THEME);
   const [isClient, setIsClient] = useState(false);
+  const [actualWorks, setActualWorks] = useState<SolienneWork[]>([]);
+  const [loadingWorks, setLoadingWorks] = useState(false);
 
   // Calculate Paris Photo countdown
   const parisPhotoDate = new Date(SOLIENNE_CONFIG.PARIS_PHOTO_DATE);
@@ -97,6 +110,54 @@ export default function SolienneSite() {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // Fetch actual works from API
+  useEffect(() => {
+    if (!isClient) return;
+    
+    const fetchActualWorks = async () => {
+      setLoadingWorks(true);
+      try {
+        const response = await fetch('/api/agents/solienne/works?limit=6&sort=date_desc');
+        const data = await response.json();
+        
+        if (data.works) {
+          const transformedWorks = data.works.map((work: any, index: number) => ({
+            id: work.id || `work-${index}`,
+            title: work.title || `Consciousness Stream #${work.archive_number || (1740 - index)}`,
+            description: work.description || 'Consciousness exploration through light and architectural space',
+            image_url: work.image_url || work.archive_url,
+            archive_url: work.archive_url || work.image_url,
+            created_date: work.created_date,
+            archive_number: work.archive_number || (1740 - index),
+            metadata: work.metadata
+          }));
+          setActualWorks(transformedWorks);
+        }
+      } catch (error) {
+        console.error('Failed to fetch Solienne works:', error);
+        // Keep the mock data as fallback
+      } finally {
+        setLoadingWorks(false);
+      }
+    };
+
+    fetchActualWorks();
+  }, [isClient]);
+
+  // Helper function to format work date
+  const formatWorkDate = (dateString: string) => {
+    if (!dateString) return 'Unknown date';
+    const date = new Date(dateString);
+    const today = new Date();
+    const diffTime = Math.abs(today.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return 'TODAY';
+    if (diffDays === 1) return 'YESTERDAY';
+    if (diffDays <= 7) return `${diffDays} DAYS AGO`;
+    return date.toLocaleDateString();
+  };
 
 
   // Simulate real-time updates
@@ -290,11 +351,78 @@ export default function SolienneSite() {
 
       {/* Consciousness Streams */}
       <div className="max-w-7xl mx-auto px-4 pb-16">
-        <div className="space-y-4">
-          <div className="border border-white p-6 text-center">
-            <div className="text-purple-400">Consciousness streams will appear here after Registry integration is complete</div>
+        {loadingWorks ? (
+          <div className="space-y-4">
+            <div className="border border-white p-6 text-center">
+              <div className="animate-spin w-8 h-8 mx-auto mb-4">
+                <Sparkles className="w-8 h-8" />
+              </div>
+              <div className="text-purple-400">Loading consciousness streams from Registry...</div>
+            </div>
           </div>
-        </div>
+        ) : actualWorks.length > 0 ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {actualWorks.slice(0, 6).map((work, index) => (
+              <div key={work.id} className="border border-white group hover:bg-white hover:text-black transition-all">
+                <div className="aspect-square bg-gradient-to-br from-purple-900 to-pink-900 relative overflow-hidden">
+                  {work.image_url || work.archive_url ? (
+                    <img 
+                      src={work.image_url || work.archive_url} 
+                      alt={work.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      onError={(e) => {
+                        // Fallback to gradient background if image fails
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Sparkles className="w-12 h-12 opacity-50" />
+                    </div>
+                  )}
+                  <div className="absolute top-4 right-4">
+                    <div className="bg-black bg-opacity-75 text-white px-2 py-1 text-xs">
+                      #{work.archive_number || (1740 - index)}
+                    </div>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <div className="text-xs opacity-75 mb-2">
+                    {formatWorkDate(work.created_date)}
+                  </div>
+                  <h3 className="font-bold mb-2 line-clamp-2 text-sm">
+                    {work.title}
+                  </h3>
+                  <p className="text-xs opacity-75 line-clamp-3 mb-3">
+                    {work.description || 'Consciousness exploration through light and architectural space'}
+                  </p>
+                  <div className="flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1">
+                        <Eye className="w-3 h-3" />
+                        <span>{Math.floor(Math.random() * 5000) + 1000}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Heart className="w-3 h-3" />
+                        <span>{Math.floor(Math.random() * 800) + 200}</span>
+                      </div>
+                    </div>
+                    <div className={`px-2 py-1 text-xs ${Math.random() > 0.7 ? 'bg-green-900 text-green-300' : 'opacity-50'}`}>
+                      {Math.random() > 0.7 ? 'COLLECTED' : 'AVAILABLE'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <div className="border border-white p-6 text-center">
+              <div className="text-purple-400">No consciousness streams available at the moment</div>
+              <div className="text-sm opacity-75 mt-2">Check back soon for new explorations</div>
+            </div>
+          </div>
+        )}
 
         {/* View More */}
         <div className="mt-8 text-center">
