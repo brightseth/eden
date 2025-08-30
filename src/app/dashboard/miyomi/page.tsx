@@ -43,10 +43,11 @@ import LiveTradingInterface from '@/components/miyomi/LiveTradingInterface';
 import ContentIntelligenceEngine from '@/components/miyomi/ContentIntelligenceEngine';
 import EdenApiTester from '@/components/miyomi/EdenApiTester';
 import SignalsPanel from '@/components/miyomi/SignalsPanel';
+import LiveMarketsPanel from '@/components/miyomi/LiveMarketsPanel';
 
 
 export default function MiyomiDashboard() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'trading' | 'signals' | 'content' | 'testing' | 'training' | 'performance' | 'revenue'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'content' | 'testing' | 'training' | 'performance' | 'revenue'>('overview');
   const [config, setConfig] = useState<TrainerConfig>({
     riskTolerance: 0.65,
     contrarianDial: 0.95,
@@ -148,7 +149,7 @@ export default function MiyomiDashboard() {
       <div className="border-b border-white/20">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex gap-8">
-            {['overview', 'trading', 'signals', 'content', 'testing', 'training', 'performance', 'revenue'].map(tab => (
+            {['overview', 'content', 'testing', 'training', 'performance', 'revenue'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab as any)}
@@ -289,21 +290,6 @@ export default function MiyomiDashboard() {
                 </div>
               </div>
             </div>
-          </div>
-        )}
-
-        {activeTab === 'trading' && (
-          <div>
-            <LiveTradingInterface 
-              isSubscribed={true} // For demo purposes
-              onSubscriptionRequired={() => alert('Subscription required for live trading!')}
-            />
-          </div>
-        )}
-
-        {activeTab === 'signals' && (
-          <div>
-            <SignalsPanel />
           </div>
         )}
 

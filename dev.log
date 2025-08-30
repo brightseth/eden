@@ -27,3 +27,60 @@
  ✓ Compiled in 524ms (913 modules)
  ✓ Compiled /agents/solienne/generations in 454ms (914 modules)
  HEAD /agents/solienne/generations 200 in 588ms
+ ✓ Compiled in 294ms (382 modules)
+ ✓ Compiled in 244ms (958 modules)
+ ✓ Compiled in 187ms (382 modules)
+ ✓ Compiled in 267ms (382 modules)
+ ✓ Compiled in 275ms (382 modules)
+ ✓ Compiled in 191ms (382 modules)
+ ✓ Compiled in 187ms (382 modules)
+ ✓ Compiled in 212ms (382 modules)
+ ✓ Compiled in 198ms (496 modules)
+ ✓ Compiled /dashboard/miyomi in 477ms (862 modules)
+ GET /dashboard/miyomi 200 in 647ms
+ ✓ Compiled /api/miyomi/markets in 139ms (883 modules)
+[MIYOMI Markets API] Fetching live market data... { limit: 3, category: null }
+Fetching markets from all platforms...
+Melee connector error: TypeError: fetch failed
+    at async MeleeConnector.getMarkets (src/lib/agents/market-connectors.ts:98:23)
+    at async MarketAggregator.getAllMarkets (src/lib/agents/market-connectors.ts:315:93)
+    at async GET (src/app/api/miyomi/markets/route.ts:16:16)
+   96 |
+   97 |     try {
+>  98 |       const response = await fetch(`${this.baseUrl}/markets?limit=${limit}`, {
+      |                       ^
+   99 |         headers: {
+  100 |           'Authorization': `Bearer ${this.apiKey}`,
+  101 |           'Content-Type': 'application/json' {
+  [cause]: [Error: getaddrinfo ENOTFOUND api.melee.gg] {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: 'api.melee.gg'
+  }
+}
+Kalshi connector error: Error: Kalshi API error: 400
+    at KalshiConnector.getMarkets (src/lib/agents/market-connectors.ts:245:30)
+    at async MarketAggregator.getAllMarkets (src/lib/agents/market-connectors.ts:315:93)
+    at async GET (src/app/api/miyomi/markets/route.ts:16:16)
+  243 |       });
+  244 |       
+> 245 |       if (!response.ok) throw new Error(`Kalshi API error: ${response.status}`);
+      |                              ^
+  246 |       
+  247 |       const data = await response.json();
+  248 |       return data.markets?.map((market: any) => this.transformKalshiMarket(market)) || [];
+Myriad connector error: Error: Myriad API error: 404
+    at MyriadConnector.getMarkets (src/lib/agents/market-connectors.ts:139:30)
+    at async MarketAggregator.getAllMarkets (src/lib/agents/market-connectors.ts:315:93)
+    at async GET (src/app/api/miyomi/markets/route.ts:16:16)
+  137 |       // Myriad uses a different API structure - social prediction markets
+  138 |       const response = await fetch(`${this.baseUrl}/predictions?limit=${limit}&type=market`);
+> 139 |       if (!response.ok) throw new Error(`Myriad API error: ${response.status}`);
+      |                              ^
+  140 |       
+  141 |       const predictions = await response.json();
+  142 |       return predictions.data?.map(this.transformMyriadMarket) || [];
+Found 21 markets across all platforms
+[MIYOMI Markets API] Retrieved 3 markets
+ GET /api/miyomi/markets?limit=3 200 in 1706ms
