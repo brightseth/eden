@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Loader2, Search, Filter, Grid, List } from 'lucide-react';
+import { Loader2, Search, Filter, Grid, List, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
+import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 
 interface AbrahamWork {
   id: string;
@@ -75,6 +77,21 @@ export default function AbrahamEarlyWorksPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      <UnifiedHeader />
+      
+      {/* Back Navigation */}
+      <div className="border-b border-white">
+        <div className="max-w-7xl mx-auto px-8 py-4">
+          <Link 
+            href="/agents/abraham" 
+            className="inline-flex items-center gap-2 text-sm hover:bg-white hover:text-black px-3 py-2 transition-colors font-bold uppercase tracking-wider"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            BACK TO ABRAHAM
+          </Link>
+        </div>
+      </div>
+
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">

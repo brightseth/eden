@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 
-const inter = Inter({ subsets: ['latin'] })
+// HELVETICA FONT SYSTEM - No Google Fonts, system fallback only
 
 export const metadata: Metadata = {
   title: 'SOLIENNE - Consciousness Through Light',
@@ -20,7 +19,12 @@ export default function SolienneLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className} bg-black text-white`}>
+      <body className="bg-black text-white" style={{ 
+        fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+        letterSpacing: '0.05em'
+      }}>
         {children}
       </body>
     </html>

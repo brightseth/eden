@@ -34,11 +34,38 @@ export default function CEOTeamPage() {
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
+        {/* Team Summary */}
+        <div className="mb-8 p-6 bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-xl border border-purple-500/30">
+          <h2 className="text-2xl font-bold mb-4">Genesis Cohort Team</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+              <p className="text-gray-400 text-sm">Total Team</p>
+              <p className="text-3xl font-bold">10</p>
+              <p className="text-xs text-gray-500">trainers & leaders</p>
+            </div>
+            <div>
+              <p className="text-gray-400 text-sm">Active Trainers</p>
+              <p className="text-3xl font-bold text-green-400">8</p>
+              <p className="text-xs text-gray-500">agent partnerships</p>
+            </div>
+            <div>
+              <p className="text-gray-400 text-sm">Seeking Partners</p>
+              <p className="text-3xl font-bold text-yellow-400">2</p>
+              <p className="text-xs text-gray-500">SUE & VERDELIS</p>
+            </div>
+            <div>
+              <p className="text-gray-400 text-sm">Training Progress</p>
+              <p className="text-3xl font-bold text-blue-400">52%</p>
+              <p className="text-xs text-gray-500">average completion</p>
+            </div>
+          </div>
+        </div>
+        
         {/* Team Overview */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
             <Users className="w-6 h-6 text-blue-400" />
-            Eden Academy Team
+            Team Structure
           </h2>
           
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -57,47 +84,55 @@ export default function CEOTeamPage() {
             </div>
 
             {/* Agent Trainers */}
-            <div className="p-6 bg-gray-900/50 border border-gray-800 rounded-lg">
+            <div className="p-6 bg-gray-900/50 border border-gray-800 rounded-lg md:col-span-2">
               <div className="flex items-center gap-3 mb-4">
                 <Shield className="w-5 h-5 text-green-500" />
                 <h3 className="text-lg font-semibold">Agent Trainers</h3>
               </div>
-              <div className="space-y-3">
+              <div className="grid md:grid-cols-2 gap-x-6 gap-y-3">
                 <div className="flex items-center justify-between">
                   <span>Gene Kogan</span>
-                  <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">Abraham</span>
+                  <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">ABRAHAM</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Kristi Coronado</span>
-                  <span className="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-xs">Solienne</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Amanda Schmitt</span>
-                  <span className="px-2 py-1 bg-pink-500/20 text-pink-400 rounded text-xs">Bertha</span>
+                  <span className="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-xs">SOLIENNE</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Seth Goldstein</span>
-                  <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">Miyomi</span>
+                  <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">MIYOMI</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Amanda Schmitt</span>
+                  <span className="px-2 py-1 bg-pink-500/20 text-pink-400 rounded text-xs">BERTHA</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Henry (BrightMoments)</span>
+                  <span className="px-2 py-1 bg-orange-500/20 text-orange-400 rounded text-xs">CITIZEN</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Xander</span>
+                  <span className="px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded text-xs">KORU</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Martin & Colin (Lattice)</span>
+                  <span className="px-2 py-1 bg-indigo-500/20 text-indigo-400 rounded text-xs">GEPPETTO</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>JMill</span>
+                  <span className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">BART</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Bashy</span>
+                  <span className="px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded text-xs">VERDELIS</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Seeking Partner</span>
+                  <span className="px-2 py-1 bg-gray-500/20 text-gray-400 rounded text-xs">SUE</span>
                 </div>
               </div>
             </div>
 
-            {/* Technical Team */}
-            <div className="p-6 bg-gray-900/50 border border-gray-800 rounded-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <Target className="w-5 h-5 text-red-500" />
-                <h3 className="text-lg font-semibold">Technical</h3>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span>Claude Code Agents</span>
-                  <span className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">Dev Team</span>
-                </div>
-                <div className="text-xs text-gray-500">
-                  Architecture, Registry, Feature development
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -108,25 +143,27 @@ export default function CEOTeamPage() {
           <div className="space-y-4">
             <div className="p-6 bg-gray-900/50 border border-yellow-500/30 rounded-lg">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold">Agent Deployment Sprint</h3>
+                <h3 className="text-lg font-semibold">Genesis Cohort Launch</h3>
                 <span className="px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded-lg text-sm">IN PROGRESS</span>
               </div>
-              <p className="text-gray-400 mb-3">Deploy remaining 6 agents to achieve full 8-agent ecosystem</p>
+              <p className="text-gray-400 mb-3">Complete deployment of all 10 Genesis agents with trainers</p>
               <div className="grid gap-3 md:grid-cols-2">
                 <div>
                   <p className="text-sm font-semibold text-green-400 mb-1">Completed:</p>
                   <ul className="text-xs text-gray-400">
-                    <li>• Miyomi & Bertha deployed</li>
-                    <li>• Sue, Abraham, Solienne, Citizen SDKs ready</li>
-                    <li>• Registry infrastructure validated</li>
+                    <li>• 10 agents designed and configured</li>
+                    <li>• 8 trainers onboarded</li>
+                    <li>• Registry infrastructure operational</li>
+                    <li>• CEO Dashboard with live status</li>
                   </ul>
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-yellow-400 mb-1">Next:</p>
                   <ul className="text-xs text-gray-400">
-                    <li>• Deploy 4 ready agents this week</li>
-                    <li>• Build Geppetto & Koru SDKs</li>
-                    <li>• Production monitoring dashboard</li>
+                    <li>• Find partners for SUE & VERDELIS</li>
+                    <li>• Complete BART & VERDELIS SDKs</li>
+                    <li>• Launch remaining 4 agents</li>
+                    <li>• ABRAHAM covenant (Oct 19, 2025)</li>
                   </ul>
                 </div>
               </div>
@@ -164,21 +201,26 @@ export default function CEOTeamPage() {
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-6">Team Performance</h2>
           
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-4">
             <div className="p-4 bg-gray-900/50 border border-gray-800 rounded-lg text-center">
-              <p className="text-3xl font-bold text-green-400">8/8</p>
+              <p className="text-3xl font-bold text-green-400">10/10</p>
               <p className="text-gray-400 text-sm">Agents Designed</p>
               <p className="text-xs text-green-400">100% complete</p>
             </div>
             <div className="p-4 bg-gray-900/50 border border-gray-800 rounded-lg text-center">
-              <p className="text-3xl font-bold text-yellow-400">6/8</p>
-              <p className="text-gray-400 text-sm">SDKs Built</p>
-              <p className="text-xs text-yellow-400">75% complete</p>
+              <p className="text-3xl font-bold text-yellow-400">8/10</p>
+              <p className="text-gray-400 text-sm">Trainers Assigned</p>
+              <p className="text-xs text-yellow-400">2 seeking partners</p>
             </div>
             <div className="p-4 bg-gray-900/50 border border-gray-800 rounded-lg text-center">
-              <p className="text-3xl font-bold text-blue-400">2/8</p>
-              <p className="text-gray-400 text-sm">Agents Deployed</p>
-              <p className="text-xs text-blue-400">25% complete</p>
+              <p className="text-3xl font-bold text-blue-400">6/10</p>
+              <p className="text-gray-400 text-sm">Launch Ready</p>
+              <p className="text-xs text-blue-400">60% complete</p>
+            </div>
+            <div className="p-4 bg-gray-900/50 border border-gray-800 rounded-lg text-center">
+              <p className="text-3xl font-bold text-purple-400">$89.7k</p>
+              <p className="text-gray-400 text-sm">Monthly Revenue</p>
+              <p className="text-xs text-purple-400">+38% growth</p>
             </div>
           </div>
         </div>
