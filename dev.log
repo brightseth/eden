@@ -328,3 +328,9 @@ Found 21 markets across all platforms
 <w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/Users/seth/eden-academy/.next/cache/webpack/client-development-fallback/0.pack.gz_' -> '/Users/seth/eden-academy/.next/cache/webpack/client-development-fallback/0.pack.gz'
 <w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/Users/seth/eden-academy/.next/cache/webpack/client-development-fallback/0.pack.gz_' -> '/Users/seth/eden-academy/.next/cache/webpack/client-development-fallback/0.pack.gz'
  ✓ Compiled in 514ms (551 modules)
+ ✓ Compiled in 382ms (446 modules)
+ ✓ Compiled in 359ms (446 modules)
+ ✓ Compiled in 330ms (446 modules)
+ ✓ Compiled in 220ms (446 modules)
+ ✓ Compiled in 244ms (446 modules)
+ ✓ Compiled in 233ms (446 modules)

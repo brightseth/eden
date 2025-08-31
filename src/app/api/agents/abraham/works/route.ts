@@ -141,25 +141,25 @@ export async function GET(request: NextRequest) {
   // Fallback to existing Supabase implementation
   console.log('[Abraham Works API] Using Supabase fallback');
   
-  // First try the creations table where historical data is likely stored
+  // Query the agent_archives table where Abraham's 3,693 works are actually stored
   let query = supabase
-    .from('creations')
+    .from('agent_archives')
     .select('*', { count: 'exact' })
-    .eq('agent_name', 'abraham');
+    .eq('agent_id', 'abraham');
 
-  // Filter by period if specified - creations table might have different structure
+  // Filter by period if specified - agent_archives table structure
   if (period === 'early-works') {
-    // Filter for early works - might use different criteria
-    query = query.not('id', 'is', null); // Get all for now, filter in transform
+    // Filter for early works (archive_type = 'early-work')
+    query = query.eq('archive_type', 'early-work');
   } else if (period === 'covenant') {
-    // Covenant works are future works
-    query = query.gt('created_at', '2025-01-01');
+    // Covenant works (archive_type = 'covenant')
+    query = query.eq('archive_type', 'covenant');
   }
 
-  // Apply sorting - map to creations table columns
+  // Apply sorting - map to agent_archives table columns
   const [sortField, sortOrder] = sort.split('_');
-  const orderField = sortField === 'date' ? 'created_at' : 
-                     sortField === 'number' ? 'created_at' : 'id';
+  const orderField = sortField === 'date' ? 'created_date' : 
+                     sortField === 'number' ? 'archive_number' : 'id';
   query = query.order(orderField, { ascending: sortOrder === 'asc' });
 
   // Apply pagination
@@ -167,8 +167,43 @@ export async function GET(request: NextRequest) {
 
   const { data, count, error } = await query;
 
-  if (error || !data || data.length === 0) {
-    console.warn('[Abraham Works API] Supabase fallback failed or empty, using mock data:', error?.message || 'No data');
+  if (error) {
+    console.error('[Abraham Works API] Supabase query error:', error.message);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  // If we have real data from agent_archives, transform and return it
+  if (data && data.length > 0) {
+    console.log('[Abraham Works API] Found', data.length, 'works in agent_archives table');
+    
+    // Transform agent_archives table data to expected format
+    const transformedWorks = (data || []).map((archive: any) => ({
+      id: archive.id,
+      agent_id: archive.agent_id,
+      archive_type: archive.archive_type || 'early-work',
+      title: archive.title || `Abraham Work #${archive.archive_number || archive.id}`,
+      image_url: archive.image_url,
+      archive_url: archive.archive_url || archive.image_url,
+      created_date: archive.created_date || archive.created_at,
+      archive_number: archive.archive_number,
+      description: archive.description || 'Historical work by Abraham',
+      metadata: archive.metadata || {}
+    }));
+
+    return NextResponse.json({
+      works: transformedWorks,
+      total: count || transformedWorks.length,
+      limit,
+      offset,
+      filters: { period },
+      sort,
+      source: 'supabase-agent_archives'
+    });
+  }
+
+  // Only use mock data if no real data exists
+  if (!data || data.length === 0) {
+    console.warn('[Abraham Works API] No data in agent_archives, using mock data');
     
     // Generate comprehensive mock data for Abraham's 3,693 historical works
     const TOTAL_EARLY_WORKS = 3693;
