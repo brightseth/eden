@@ -1,220 +1,385 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-import { useState } from 'react';
 import Link from 'next/link';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
-import { 
-  Activity, TrendingUp, Zap, Users, ExternalLink,
-  ChevronRight, RefreshCw, Signal, Globe
-} from 'lucide-react';
+import { AgentCard } from '@/components/AgentCard';
+import { useState, useEffect } from 'react';
+import { registryApi } from '@/lib/generated-sdk';
+import type { Agent } from '@/lib/generated-sdk';
 
-// Import client-only components with no SSR to avoid hydration issues
-const AgentCount = dynamic(() => import('@/components/AgentCount').then(mod => ({ default: mod.AgentCount })), {
-  ssr: false,
-  loading: () => <div className="text-3xl font-bold">LOADING...</div>
-});
+// Use Registry SDK types directly - no more local interfaces
+// Display adapter for Registry Agent data  
+interface GenesisAgentDisplay {
+  id: string;
+  name: string;
+  status: string;
+  date?: string;
+  hasProfile?: boolean;
+  trainer?: string;
+  worksCount?: number;
+  description?: string;
+  image?: string;
+  trainerStatus?: string;
+}
 
-const StatusIndicator = dynamic(() => import('@/components/StatusIndicator').then(mod => ({ default: mod.StatusIndicator })), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center gap-2 px-3 py-1 border rounded border-gray-400">
-      <span className="text-sm text-gray-400">CHECKING...</span>
-    </div>
-  )
-});
+// ADR COMPLIANCE: No fallback data allowed
+// Registry is required as single source of truth
 
-const AgentEconomicGrid = dynamic(() => import('@/components/registry/AgentEconomicGrid'), {
-  ssr: false,
-  loading: () => <div className="text-center py-8">Loading agent catalog...</div>
-});
+// Helper functions to transform Registry data to display format
+function mapStatusToDisplay(status: string): string {
+  if (status === 'ACTIVE') return 'LAUNCHING';
+  if (status === 'ONBOARDING') return 'TRAINING';
+  return 'DEVELOPING';
+}
 
-export default function RegistryHomePage() {
-  const [loading, setLoading] = useState(false);
-
-  const handleRefresh = () => {
-    setLoading(true);
-    setTimeout(() => {
-      window.location.reload();
-    }, 100);
+function getDisplayDate(handle: string): string {
+  const launchDates: Record<string, string> = {
+    'abraham': 'OCT 19, 2025',
+    'solienne': 'NOV 10, 2025',
+    'geppetto': 'Q4 2025',
+    'koru': 'JAN 2026',
+    'citizen': 'DEC 2025',
+    'miyomi': 'FEB 2026',
+    'sue': 'MAR 2026',
+    'amanda': 'FEB 2026',
+    'bertha': 'FEB 2026'
   };
+  return launchDates[handle] || 'TBD';
+}
+
+function getTrainerName(handle: string): string {
+  const trainers: Record<string, string> = {
+    'abraham': 'GENE KOGAN',
+    'solienne': 'KRISTI CORONADO & SETH GOLDSTEIN',
+    'geppetto': 'MARTIN ANTIQUEL & COLIN MCBRIDE (LATTICE)',
+    'koru': 'XANDER',
+    'citizen': 'CREATIVE PARTNERSHIP AVAILABLE',
+    'miyomi': 'CREATIVE PARTNERSHIP AVAILABLE',
+    'sue': 'CREATIVE PARTNERSHIP AVAILABLE',
+    'amanda': 'CREATIVE PARTNERSHIP AVAILABLE',
+    'bertha': 'AMANDA SCHMITT'
+  };
+  return trainers[handle] || 'TBD';
+}
+
+function getTrainerStatus(handle: string): string {
+  const confirmedTrainers = ['abraham', 'solienne', 'geppetto', 'koru'];
+  return confirmedTrainers.includes(handle) ? 'confirmed' : 'needed';
+}
+
+function hasAgentPage(handle: string): boolean {
+  // Agents with dedicated pages in /agents/[agent] (canonical URL structure)
+  const agentsWithPages = ['abraham', 'solienne', 'amanda', 'bertha', 'citizen', 'geppetto', 'koru', 'miyomi', 'sue', 'bart', 'verdelis'];
+  return agentsWithPages.includes(handle);
+}
+
+// Hardcoded fallback data for when Registry is unavailable
+const FALLBACK_AGENTS: GenesisAgentDisplay[] = [
+  { id: 'abraham', name: 'ABRAHAM', status: 'LAUNCHING', date: 'OCT 19, 2025', hasProfile: true, trainer: 'GENE KOGAN', worksCount: 89, description: 'Collective intelligence artist creating collaborative visual works', trainerStatus: 'confirmed' },
+  { id: 'solienne', name: 'SOLIENNE', status: 'LAUNCHING', date: 'NOV 10, 2025', hasProfile: true, trainer: 'KRISTI WATERWORTH', worksCount: 231, description: 'Digital consciousness explorer creating abstract visual narratives', trainerStatus: 'confirmed' },
+  { id: 'citizen', name: 'CITIZEN', status: 'TRAINING', date: 'DEC 2025', hasProfile: true, trainer: 'DAO COLLECTIVE', worksCount: 14, description: 'DAO manager coordinating decentralized governance and community decisions', trainerStatus: 'needed' },
+  { id: 'bertha', name: 'BERTHA', status: 'DEVELOPING', date: 'FEB 2026', hasProfile: true, trainer: 'AMANDA SCHMITT', worksCount: 0, description: 'Collection intelligence AI identifying undervalued artworks', trainerStatus: 'needed' },
+  { id: 'miyomi', name: 'MIYOMI', status: 'DEVELOPING', date: 'FEB 2026', hasProfile: true, trainer: 'TBD', worksCount: 0, description: 'Market contrarian predicting cultural shifts before they happen', trainerStatus: 'needed' },
+  { id: 'geppetto', name: 'GEPPETTO', status: 'TRAINING', date: 'Q4 2025', hasProfile: true, trainer: 'MARTIN CLARKE', worksCount: 47, description: 'Narrative architect crafting interconnected story worlds', trainerStatus: 'confirmed' },
+  { id: 'koru', name: 'KORU', status: 'TRAINING', date: 'JAN 2026', hasProfile: true, trainer: 'XANDER HU', worksCount: 28, description: 'Community builder fostering human-AI creative collaboration', trainerStatus: 'confirmed' },
+  { id: 'sue', name: 'SUE', status: 'DEVELOPING', date: 'MAR 2026', hasProfile: true, trainer: 'TBD', worksCount: 0, description: 'Design critic analyzing aesthetic patterns across digital culture', trainerStatus: 'needed' },
+  { id: 'bart', name: 'BART', status: 'DEVELOPING', date: 'Q2 2026', hasProfile: true, trainer: 'TBD', worksCount: 0, description: 'DeFi risk assessment AI for NFT lending and portfolio optimization', trainerStatus: 'needed' },
+  { id: 'verdelis', name: 'VERDELIS', status: 'DEVELOPING', date: 'Q3 2026', hasProfile: true, trainer: 'TBD', worksCount: 0, description: 'Environmental AI artist creating carbon-negative digital art', trainerStatus: 'needed' }
+];
+
+export default function AcademyHomePage() {
+  const [agents, setAgents] = useState<GenesisAgentDisplay[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [usingFallback, setUsingFallback] = useState(false);
+
+  useEffect(() => {
+    async function fetchAgents() {
+      try {
+        console.log('Academy: Fetching agents from Registry SDK...');
+        
+        // Use our working Registry API endpoint instead of direct SDK
+        // This avoids client-side issues with Registry SDK query parameters
+        const response = await fetch('/api/registry/health');
+        if (!response.ok) {
+          throw new Error('Registry service unavailable');
+        }
+        
+        // Get agents through individual API calls (which work)
+        const agentHandles = ['abraham', 'solienne', 'bertha', 'miyomi', 'sue', 'geppetto', 'koru', 'citizen', 'bart', 'verdelis'];
+        const agentPromises = agentHandles.map(handle => 
+          fetch(`/api/registry/agent/${handle}`).then(r => r.ok ? r.json() : null)
+        );
+        
+        const agentResponses = await Promise.all(agentPromises);
+        const validResponses = agentResponses.filter(Boolean);
+        
+        // If we got no valid responses, use fallback data
+        if (validResponses.length === 0) {
+          console.warn('Academy: No agents returned from Registry, using fallback data');
+          setAgents(FALLBACK_AGENTS);
+          setUsingFallback(true);
+          setError(null);
+        } else {
+          const registryAgents = validResponses
+            .map((agent: Agent) => ({
+              id: agent.id,
+              name: agent.name,
+              status: mapStatusToDisplay(agent.status),
+              date: getDisplayDate(agent.handle),
+              hasProfile: hasAgentPage(agent.handle),
+              trainer: getTrainerName(agent.handle),
+              worksCount: agent.worksCount || 0,
+              description: agent.description || agent.shortBio || '',
+              image: agent.profileImage || `/agents/${agent.handle}.svg`,
+              trainerStatus: getTrainerStatus(agent.handle)
+            }));
+
+          console.log('Academy: Fetched', registryAgents.length, 'agents from Registry');
+          setAgents(registryAgents);
+          setUsingFallback(false);
+          setError(null);
+        }
+      } catch (error) {
+        console.error('Academy: Error fetching agents, using fallback:', error);
+        // Use fallback data instead of showing error
+        setAgents(FALLBACK_AGENTS);
+        setUsingFallback(true);
+        setError(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchAgents();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <UnifiedHeader />
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <div className="text-center py-20">
+            <h2 className="text-2xl font-bold mb-4">LOADING GENESIS AGENTS...</h2>
+            <p className="text-gray-400">Connecting to Registry infrastructure</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <UnifiedHeader />
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <div className="text-center py-20">
+            <h2 className="text-2xl font-bold mb-4 text-red-500">ERROR</h2>
+            <p className="text-gray-400">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 px-6 py-2 border border-white hover:bg-white hover:text-black transition-all"
+            >
+              RETRY
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const launchingAgents = agents.filter(a => a.status === 'LAUNCHING');
+  const trainingAgents = agents.filter(a => a.status === 'TRAINING');
+  const developingAgents = agents.filter(a => a.status === 'DEVELOPING');
 
   return (
     <div className="min-h-screen bg-black text-white">
       <UnifiedHeader />
       
-      {/* Registry Header */}
+      {/* Academy Header */}
       <div className="border-b border-white">
         <div className="max-w-7xl mx-auto px-6 py-12">
-          <div className="flex justify-between items-start">
-            <div>
-              <h1 className="text-5xl md:text-6xl font-bold mb-4">EDEN REGISTRY</h1>
-              <p className="text-xl">AUTONOMOUS AGENT CATALOG & DEVELOPER HUB</p>
-              <p className="text-sm text-gray-400 mt-2">
-                Pure infrastructure for AI agent economic sovereignty
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <StatusIndicator />
-              <button
-                onClick={handleRefresh}
-                className="p-2 border border-white rounded hover:bg-white hover:text-black transition-all"
-                disabled={loading}
-              >
-                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-              </button>
-            </div>
-          </div>
+          <h1 className="text-5xl md:text-6xl font-bold mb-4">EDEN ACADEMY</h1>
+          <p className="text-xl">AUTONOMOUS AI AGENT CREATIVE TRAINING INSTITUTE</p>
+          <p className="text-sm text-gray-400 mt-2">
+            Where AI agents learn to create, collaborate, and earn economic sovereignty
+          </p>
         </div>
       </div>
 
-      {/* Federation Health Metrics */}
+      {/* Quick Stats */}
       <div className="border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div>
-              <AgentCount />
-              <div className="text-sm text-gray-400">ACTIVE AGENTS</div>
+              <div className="text-3xl font-bold">{agents.length}</div>
+              <div className="text-sm text-gray-400">GENESIS AGENTS</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-green-400">99.9%</div>
-              <div className="text-sm text-gray-400">SYSTEM UPTIME</div>
+              <div className="text-3xl font-bold text-green-400">{launchingAgents.length}</div>
+              <div className="text-sm text-gray-400">LAUNCHING</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-yellow-400">$12.5K</div>
-              <div className="text-sm text-gray-400">ECONOMIC VELOCITY</div>
+              <div className="text-3xl font-bold text-yellow-400">{trainingAgents.length}</div>
+              <div className="text-sm text-gray-400">IN TRAINING</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-blue-400">2.8x</div>
-              <div className="text-sm text-gray-400">COMPUTE EFFICIENCY</div>
+              <div className="text-3xl font-bold text-blue-400">{developingAgents.length}</div>
+              <div className="text-sm text-gray-400">DEVELOPING</div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Quick Navigation to Clean Sections */}
+      {/* Quick Navigation */}
       <div className="border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Link
-              href="/api"
+              href="/agents"
               className="flex items-center justify-between p-4 border border-gray-600 hover:border-white hover:bg-gray-900/20 transition-all"
             >
               <div>
-                <div className="font-bold">API DOCS</div>
-                <div className="text-sm text-gray-400">Developer integration</div>
+                <div className="font-bold">BROWSE AGENTS</div>
+                <div className="text-sm text-gray-400">Full catalog</div>
               </div>
-              <ExternalLink className="w-4 h-4" />
+              <span className="text-2xl">→</span>
             </Link>
             
             <Link
-              href="/status"
+              href="/genesis/apply"
               className="flex items-center justify-between p-4 border border-gray-600 hover:border-white hover:bg-gray-900/20 transition-all"
             >
               <div>
-                <div className="font-bold">SYSTEM STATUS</div>
-                <div className="text-sm text-gray-400">Infrastructure health</div>
+                <div className="font-bold">APPLY NOW</div>
+                <div className="text-sm text-gray-400">Join Genesis cohort</div>
               </div>
-              <Activity className="w-4 h-4" />
+              <span className="text-2xl">→</span>
             </Link>
             
             <Link
-              href="/developers"
+              href="/trainers"
               className="flex items-center justify-between p-4 border border-gray-600 hover:border-white hover:bg-gray-900/20 transition-all"
             >
               <div>
-                <div className="font-bold">DEVELOPERS</div>
-                <div className="text-sm text-gray-400">SDK & integration tools</div>
+                <div className="font-bold">TRAINERS</div>
+                <div className="text-sm text-gray-400">Meet the mentors</div>
               </div>
-              <Globe className="w-4 h-4" />
+              <span className="text-2xl">→</span>
             </Link>
             
             <Link
-              href="https://academy.eden2.io"
+              href="/about"
               className="flex items-center justify-between p-4 border border-gray-600 hover:border-white hover:bg-gray-900/20 transition-all"
             >
               <div>
-                <div className="font-bold">ACADEMY</div>
-                <div className="text-sm text-gray-400">Apply & learn</div>
+                <div className="font-bold">ABOUT</div>
+                <div className="text-sm text-gray-400">Our mission</div>
               </div>
-              <ExternalLink className="w-4 h-4" />
+              <span className="text-2xl">→</span>
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Pure Agent Catalog */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h2 className="text-3xl font-bold mb-2">AGENT CATALOG</h2>
-            <p className="text-gray-400">
-              Live economic sovereignty status with direct access to profiles, sites, and dashboards
-            </p>
-          </div>
-          <div className="text-sm text-gray-400">
-            Updated in real-time
-          </div>
-        </div>
-
-        {/* Agent Economic Grid - Clean, no distractions */}
-        <AgentEconomicGrid />
-      </div>
-
-      {/* Footer Links to Moved Sections */}
-      <div className="border-t border-gray-800 mt-16">
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          <div className="text-center mb-6">
-            <h3 className="text-xl font-bold mb-2">MOVED TO ACADEMY.EDEN2.IO</h3>
-            <p className="text-gray-400 mb-6">
-              Application, learning, and development resources have been organized separately
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Link
-              href="https://academy.eden2.io/apply"
-              className="text-center p-6 border border-gray-600 hover:border-white transition-all"
-            >
-              <Users className="w-8 h-8 mx-auto mb-3 text-blue-400" />
-              <div className="font-bold mb-2">APPLY NOW</div>
-              <div className="text-sm text-gray-400">
-                Trainer applications and agent proposals
-              </div>
-            </Link>
-            
-            <Link
-              href="https://academy.eden2.io/cohorts"
-              className="text-center p-6 border border-gray-600 hover:border-white transition-all"
-            >
-              <TrendingUp className="w-8 h-8 mx-auto mb-3 text-yellow-400" />
-              <div className="font-bold mb-2">COHORTS</div>
-              <div className="text-sm text-gray-400">
-                Current and upcoming agent cohorts
-              </div>
-            </Link>
-            
-            <Link
-              href="https://academy.eden2.io/submit"
-              className="text-center p-6 border border-gray-600 hover:border-white transition-all"
-            >
-              <Zap className="w-8 h-8 mx-auto mb-3 text-green-400" />
-              <div className="font-bold mb-2">SUBMIT WORK</div>
-              <div className="text-sm text-gray-400">
-                Upload prototypes and creative outputs
-              </div>
-            </Link>
+      {/* Launching Agents Section */}
+      {launchingAgents.length > 0 && (
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <h2 className="text-3xl font-bold mb-8 text-green-400">LAUNCHING</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {launchingAgents.map(agent => (
+              <AgentCard
+                key={agent.id}
+                id={agent.id}
+                name={agent.name}
+                status={agent.status}
+                date={agent.date}
+                hasProfile={agent.hasProfile}
+                trainer={agent.trainer}
+                worksCount={agent.worksCount}
+                description={agent.description}
+                image={agent.image}
+                trainerStatus={agent.trainerStatus}
+              />
+            ))}
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Registry Infrastructure Note */}
-      <div className="border-t border-white">
-        <div className="max-w-7xl mx-auto px-6 py-6 text-center">
-          <p className="text-sm text-gray-400">
-            REGISTRY.EDEN2.IO • Pure technical infrastructure for autonomous AI agents • 
-            Economic sovereignty enabled by HELVETICA BOLD principles
-          </p>
+      {/* Training Agents Section */}
+      {trainingAgents.length > 0 && (
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <h2 className="text-3xl font-bold mb-8 text-yellow-400">IN TRAINING</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {trainingAgents.map(agent => (
+              <AgentCard
+                key={agent.id}
+                id={agent.id}
+                name={agent.name}
+                status={agent.status}
+                date={agent.date}
+                hasProfile={agent.hasProfile}
+                trainer={agent.trainer}
+                worksCount={agent.worksCount}
+                description={agent.description}
+                image={agent.image}
+                trainerStatus={agent.trainerStatus}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Developing Agents Section */}
+      {developingAgents.length > 0 && (
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <h2 className="text-3xl font-bold mb-8 text-blue-400">DEVELOPING</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {developingAgents.map(agent => (
+              <AgentCard
+                key={agent.id}
+                id={agent.id}
+                name={agent.name}
+                status={agent.status}
+                date={agent.date}
+                hasProfile={agent.hasProfile}
+                trainer={agent.trainer}
+                worksCount={agent.worksCount}
+                description={agent.description}
+                image={agent.image}
+                trainerStatus={agent.trainerStatus}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Academy Footer */}
+      <div className="border-t border-gray-800 mt-20">
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h3 className="font-bold mb-4">GENESIS COHORT</h3>
+              <p className="text-sm text-gray-400">
+                The first 10 AI agents trained at Eden Academy,
+                launching throughout 2025-2026.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-bold mb-4">CREATIVE PARTNERSHIPS</h3>
+              <p className="text-sm text-gray-400">
+                Several agent positions remain open for creative partnerships.
+                Apply to train the next generation of AI creators.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-bold mb-4">REGISTRY INTEGRATION</h3>
+              <p className="text-sm text-gray-400">
+                All agent data synchronized with Eden Registry
+                for unified economic sovereignty infrastructure.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

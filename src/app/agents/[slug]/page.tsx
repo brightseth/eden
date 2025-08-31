@@ -16,7 +16,7 @@ export async function generateStaticParams() {
   // Generate static params for known agents
   const agents = [
     'abraham', 'solienne', 'citizen', 'bertha', 
-    'miyomi', 'geppetto', 'koru', 'sue', 'bart'
+    'miyomi', 'geppetto', 'koru', 'sue', 'bart', 'verdelis'
   ];
   
   return agents.map((slug) => ({

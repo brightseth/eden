@@ -171,7 +171,7 @@ export async function POST(
 function isAgentAvailable(agentId: string): boolean {
   const availableAgents = [
     'abraham', 'solienne', 'citizen', 'bertha', 
-    'miyomi', 'geppetto', 'koru', 'sue', 'bart'
+    'miyomi', 'geppetto', 'koru', 'sue', 'bart', 'verdelis'
   ];
   return availableAgents.includes(agentId.toLowerCase());
 }
@@ -186,7 +186,8 @@ function getAgentCapabilities(agentId: string): string[] {
     'geppetto': ['3d creation', 'digital sculpture', 'procedural art'],
     'koru': ['narrative poetry', 'haiku creation', 'cultural storytelling'],
     'sue': ['art curation', 'creative guidance', 'portfolio review'],
-    'bart': ['nft lending', 'risk assessment', 'financial analysis', 'autonomous finance']
+    'bart': ['nft lending', 'risk assessment', 'financial analysis', 'autonomous finance'],
+    'verdelis': ['environmental art', 'carbon tracking', 'sustainability analysis', 'regenerative design']
   };
   
   return capabilities[agentId.toLowerCase() as keyof typeof capabilities] || ['general conversation'];
