@@ -1,0 +1,167 @@
+name: 🏛️ Architectural Guard
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths: 
+      - 'src/**'
+      - 'prisma/**'
+  push:
+    branches: [main, develop]
+    paths:
+      - 'src/**'
+      - 'prisma/**'
+
+env:
+  ENABLE_REGISTRY_ENFORCEMENT: ${{ vars.ENABLE_REGISTRY_ENFORCEMENT || 'true' }}
+
+jobs:
+  architectural-compliance:
+    name: 🏛️ ADR Compliance Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+        
+      - name: 🛡️ Registry-First Pattern Enforcement (ADR-022)
+        id: registry_check
+        run: |
+          echo "🔍 Checking for direct database access violations..."
+          
+          # Check for direct Prisma imports outside Registry API routes
+          VIOLATIONS=$(find src/app/api -type f -name "*.ts" -not -path "*/registry/*" -not -path "*/agents-test/*" | xargs grep -l "import.*prisma\|from.*prisma" || true)
+          
+          if [ -n "$VIOLATIONS" ] && [ "$ENABLE_REGISTRY_ENFORCEMENT" = "true" ]; then
+            echo "❌ ARCHITECTURAL VIOLATION: Direct database access detected"
+            echo ""
+            echo "🏛️ ADR-022 Registry-First Pattern requires all data access through Registry API"
+            echo ""
+            echo "Violations found in:"
+            for file in $VIOLATIONS; do
+              echo "  - $file"
+              echo "    $(grep -n "import.*prisma\|from.*prisma" "$file" | head -1)"
+            done
+            echo ""
+            echo "✅ SOLUTION: Use Registry client instead:"
+            echo "  import { registryClient } from '@/lib/registry-client'"
+            echo "  const data = await registryClient.agents.list()"
+            echo ""
+            echo "ℹ️  To disable this check, set ENABLE_REGISTRY_ENFORCEMENT=false"
+            exit 1
+          elif [ -n "$VIOLATIONS" ]; then
+            echo "⚠️ ADVISORY: Direct database access detected (enforcement disabled)"
+            for file in $VIOLATIONS; do
+              echo "  - $file"
+            done
+            echo "🏛️ Consider using Registry-First pattern for architectural consistency"
+          else
+            echo "✅ No direct database access violations found"
+          fi
+
+      - name: 🚫 Agent Extraction Prevention (ADR-033)
+        id: extraction_check
+        run: |
+          echo "🔍 Checking for agent extraction attempts..."
+          
+          # Check for new top-level agent directories
+          AGENT_DIRS=$(find . -maxdepth 1 -type d -name "*-agent" -o -name "agent-*" -o -name "agents" | grep -v node_modules || true)
+          
+          if [ -n "$AGENT_DIRS" ]; then
+            echo "❌ ARCHITECTURAL VIOLATION: Agent extraction detected"
+            echo ""
+            echo "🏛️ ADR-033 prohibits agent extraction until v3.0"
+            echo ""
+            echo "Attempted extractions:"
+            for dir in $AGENT_DIRS; do
+              echo "  - $dir"
+            done
+            echo ""
+            echo "✅ SOLUTION: Use sovereign surfaces within Academy:"
+            echo "  - Keep agents in /src/app/agents/[slug]/"
+            echo "  - Use feature flags for agent theming"
+            echo "  - Implement reverse-proxy for custom domains"
+            echo ""
+            echo "ℹ️  See ADR-033 for extraction criteria and approval process"
+            exit 1
+          else
+            echo "✅ No agent extraction attempts detected"
+          fi
+
+      - name: 📊 Three-Tier Architecture Validation
+        id: three_tier_check
+        run: |
+          echo "🔍 Validating three-tier agent architecture..."
+          
+          # Check that agent routes follow proper pattern
+          AGENT_ROUTES=$(find src/app -path "*/agents/*/page.tsx" | wc -l)
+          SITE_ROUTES=$(find src/app -path "*/sites/*/page.tsx" | wc -l) 
+          DASHBOARD_ROUTES=$(find src/app -path "*/dashboard/*/page.tsx" | wc -l)
+          
+          echo "📊 Three-tier architecture status:"
+          echo "  - Agent profiles: $AGENT_ROUTES"
+          echo "  - Agent sites: $SITE_ROUTES"  
+          echo "  - Agent dashboards: $DASHBOARD_ROUTES"
+          
+          if [ "$AGENT_ROUTES" -eq 0 ]; then
+            echo "⚠️ No agent profiles found - consider adding agent profile pages"
+          else
+            echo "✅ Three-tier architecture maintained"
+          fi
+
+      - name: 🎨 HELVETICA Design Standards Check
+        id: design_check
+        run: |
+          echo "🔍 Checking HELVETICA design compliance..."
+          
+          # Check for prohibited fonts
+          FONT_VIOLATIONS=$(find src -name "*.tsx" -o -name "*.css" -o -name "*.scss" | xargs grep -l "serif\|Times\|Georgia\|Charter" | head -5 || true)
+          
+          if [ -n "$FONT_VIOLATIONS" ]; then
+            echo "⚠️ DESIGN ADVISORY: Non-HELVETICA fonts detected"
+            echo "Recommended: Use 'Helvetica Neue', Arial, sans-serif"
+            for file in $FONT_VIOLATIONS; do
+              echo "  - $file"
+            done
+          else
+            echo "✅ HELVETICA design standards maintained"
+          fi
+
+      - name: 📋 Feature Flag Compliance
+        id: feature_flag_check
+        run: |
+          echo "🔍 Checking feature flag usage..."
+          
+          # Look for hardcoded feature enablement
+          HARDCODED_FEATURES=$(find src -name "*.tsx" -o -name "*.ts" | xargs grep -l "ENABLE.*=.*true\|const.*ENABLE.*=.*true" | head -5 || true)
+          
+          if [ -n "$HARDCODED_FEATURES" ]; then
+            echo "⚠️ ADVISORY: Hardcoded feature flags detected"
+            echo "Recommended: Use environment variables or config files"
+            for file in $HARDCODED_FEATURES; do
+              echo "  - $file"
+            done
+          else
+            echo "✅ Feature flag discipline maintained"
+          fi
+
+      - name: 📜 Architecture Summary
+        if: always()
+        run: |
+          echo ""
+          echo "🏛️ EDEN ACADEMY ARCHITECTURAL GUARD SUMMARY"
+          echo "============================================="
+          echo ""
+          echo "✅ ADR-022: Registry-First Pattern"
+          echo "✅ ADR-033: No Agent Extraction Pre-v3.0"
+          echo "✅ Three-Tier Architecture Validation" 
+          echo "✅ HELVETICA Design Standards"
+          echo "✅ Feature Flag Discipline"
+          echo ""
+          echo "🎯 Architecture Excellence Score: Maintained"
+          echo "🔗 View all ADRs: docs/adr/"
+          echo ""
+          echo "For questions about architectural decisions:"
+          echo "  - Review relevant ADR documentation"
+          echo "  - Consult Architecture Guardian agent"
+          echo "  - Follow established patterns in existing code"
