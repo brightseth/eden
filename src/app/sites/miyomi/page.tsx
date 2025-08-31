@@ -1,473 +1,301 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
+import dynamic from 'next/dynamic'
+import { useMiyomiSnapshot } from '@/features/miyomi/adapters'
 import { 
-  TrendingUp, DollarSign, Activity, 
-  Clock, Play, CheckCircle, XCircle, Minus,
-  Twitter, Youtube, ArrowUpRight
-} from 'lucide-react';
+  insightSummary, 
+  generatePrompts, 
+  practiceEntries,
+  dailyPracticeSummary 
+} from '@/features/miyomi/presenters'
+import { TrendingUp, Activity, Terminal, Sparkles } from 'lucide-react'
 
-// Types
-interface MarketPick {
-  id: string;
-  timestamp: string;
-  market: string;
-  platform: string;
-  position: 'YES' | 'NO';
-  confidence: number;
-  edge: number;
-  entryOdds: number;
-  currentOdds?: number;
-  status: 'PENDING' | 'WIN' | 'LOSS' | 'LIVE';
-  category: string;
-  videoUrl?: string;
-}
-
-interface TrainerConfig {
-  riskTolerance: number;
-  contrarianDial: number;
-  sectorWeights: {
-    politics: number;
-    sports: number;
-    finance: number;
-    ai: number;
-    pop: number;
-    geo: number;
-    internet: number;
-  };
-  bannedTopics: string[];
-  tone: {
-    energy: number;
-    sass: number;
-    profanity: number;
-  };
-}
-
-interface PerformanceData {
-  date: string;
-  picks: number;
-  wins: number;
-  losses: number;
-  pending: number;
-  avgEdge: number;
-  totalReturn: number;
-}
+// Lazy load existing components to avoid refactoring
+const OriginalMiyomiSite = dynamic(() => import('./page-original'), { ssr: false })
+const MiyomiDashboard = dynamic(() => import('@/app/dashboard/miyomi/page'), { ssr: false })
+const LiveMarketsPanel = dynamic(() => import('@/components/miyomi/LiveMarketsPanel'), { ssr: false })
+const RevenueDashboard = dynamic(() => import('@/components/miyomi/RevenueDashboard'), { ssr: false })
 
 export default function MiyomiSite() {
+  const searchParams = useSearchParams()
+  const [mode, setMode] = useState<'creative' | 'trader'>('creative')
+  const [activeTab, setActiveTab] = useState<'insight' | 'practice' | 'terminal'>('insight')
   
-  // Public site state
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [nextDrop, setNextDrop] = useState<Date | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [liveMetrics, setLiveMetrics] = useState({
-    winRate: 73,
-    activePositions: 8,
-    dailyEdge: 14.3,
-    weeklyReturn: 187,
-    followersGrowth: 12
-  });
+  // Use our adapter to get snapshot data
+  const snapshot = useMiyomiSnapshot()
+  const { headline, subtext, mood } = insightSummary(snapshot)
+  const prompts = generatePrompts(snapshot)
+  const practice = practiceEntries(snapshot.recentCalls)
+  const dailySummary = dailyPracticeSummary(snapshot)
   
-  // Public data
-  const [recentPicks, setRecentPicks] = useState<MarketPick[]>([]);
-
-  // 3x daily drop schedule
-  const dropTimes = ['11:00', '15:00', '21:00'];
-  
+  // Read tab from URL or default based on mode
   useEffect(() => {
-    // Update current time
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-      calculateNextDrop();
-    }, 1000);
-
-    // Load recent picks
-    loadRecentPicks();
-
-    // Animate metrics
-    const metricsInterval = setInterval(() => {
-      setLiveMetrics(prev => ({
-        ...prev,
-        dailyEdge: Math.max(10, Math.min(20, prev.dailyEdge + (Math.random() * 2 - 1))),
-        followersGrowth: Math.max(8, Math.min(15, prev.followersGrowth + Math.floor(Math.random() * 3 - 1)))
-      }));
-    }, 3000);
-
-    return () => {
-      clearInterval(timer);
-      clearInterval(metricsInterval);
-    };
-  }, []);
-
-  function calculateNextDrop() {
-    const now = new Date();
-    const etNow = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-    
-    for (const time of dropTimes) {
-      const [hours, minutes] = time.split(':').map(Number);
-      const dropTime = new Date(etNow);
-      dropTime.setHours(hours, minutes, 0, 0);
-      
-      if (dropTime > etNow) {
-        setNextDrop(dropTime);
-        return;
-      }
+    const tab = searchParams.get('tab')
+    if (tab === 'insight' || tab === 'practice' || tab === 'terminal') {
+      setActiveTab(tab)
+    } else {
+      setActiveTab(mode === 'creative' ? 'insight' : 'terminal')
     }
-    
-    // Tomorrow's first drop
-    const tomorrow = new Date(etNow);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(11, 0, 0, 0);
-    setNextDrop(tomorrow);
-  }
-
-  // Load public showcase data
-  async function loadRecentPicks() {
-    try {
-      const response = await fetch('/api/miyomi/real-picks?limit=20');
-      const data = await response.json();
-      
-      if (data.picks && data.picks.length > 0) {
-        // Transform database schema to our UI schema
-        const transformedPicks = data.picks.map((pick: any) => ({
-          id: pick.id,
-          timestamp: pick.timestamp,
-          market: pick.market_question,
-          platform: getPlatformName(pick.market_id),
-          position: pick.position,
-          confidence: pick.miyomi_price,
-          edge: (pick.miyomi_price - pick.consensus_price),
-          entryOdds: pick.consensus_price,
-          currentOdds: pick.current_price || pick.consensus_price,
-          status: pick.status || 'LIVE',
-          category: detectCategory(pick.market_question),
-          videoUrl: pick.post ? `#post-${pick.id}` : undefined
-        }));
-        
-        setRecentPicks(transformedPicks);
-      } else {
-        // Fallback to sample data for public showcase
-        setRecentPicks([
-          {
-            id: '1',
-            timestamp: new Date().toISOString(),
-            market: 'Will Fed cut rates in March 2025?',
-            platform: 'Kalshi',
-            position: 'NO',
-            confidence: 0.73,
-            edge: 0.18,
-            entryOdds: 0.65,
-            currentOdds: 0.58,
-            status: 'LIVE',
-            category: 'finance',
-            videoUrl: '#'
-          },
-          {
-            id: '2',
-            timestamp: new Date().toISOString(),
-            market: 'Bitcoin above $100k by Dec 2025?',
-            platform: 'Polymarket',
-            position: 'YES',
-            confidence: 0.68,
-            edge: 0.15,
-            entryOdds: 0.53,
-            currentOdds: 0.59,
-            status: 'WIN',
-            category: 'finance',
-            videoUrl: '#'
-          }
-        ]);
-      }
-    } catch (error) {
-      console.error('Error loading picks:', error);
-      // Fallback to sample data
-      setRecentPicks([
-        {
-          id: '1',
-          timestamp: new Date().toISOString(),
-          market: 'Will Fed cut rates in March 2025?',
-          platform: 'Kalshi',
-          position: 'NO',
-          confidence: 0.73,
-          edge: 0.18,
-          entryOdds: 0.65,
-          currentOdds: 0.58,
-          status: 'LIVE',
-          category: 'finance',
-          videoUrl: '#'
-        }
-      ]);
-    }
-  }
-
-  function getPlatformName(marketId: string): string {
-    if (marketId?.includes('kalshi')) return 'Kalshi';
-    if (marketId?.includes('poly')) return 'Polymarket';
-    if (marketId?.includes('manifold')) return 'Manifold';
-    if (marketId?.includes('melee')) return 'Melee';
-    return 'Unknown';
-  }
-
-  function detectCategory(question: string): string {
-    const lowerQ = question.toLowerCase();
-    if (lowerQ.includes('fed') || lowerQ.includes('rate') || lowerQ.includes('bitcoin') || lowerQ.includes('stock')) return 'finance';
-    if (lowerQ.includes('election') || lowerQ.includes('president') || lowerQ.includes('congress')) return 'politics';
-    if (lowerQ.includes('nba') || lowerQ.includes('nfl') || lowerQ.includes('playoff')) return 'sports';
-    if (lowerQ.includes('ai') || lowerQ.includes('gpt') || lowerQ.includes('claude')) return 'ai';
-    if (lowerQ.includes('taylor') || lowerQ.includes('album') || lowerQ.includes('movie')) return 'pop';
-    return 'internet';
-  }
-
-  function getTimeUntilNextDrop(): string {
-    if (!nextDrop) return 'Calculating...';
-    
-    const diff = nextDrop.getTime() - currentTime.getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-    
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  }
-
-  function getCategoryEmoji(category: string): string {
-    const emojis: Record<string, string> = {
-      politics: '🏛️',
-      sports: '🏆',
-      finance: '📈',
-      ai: '🤖',
-      pop: '✨',
-      geo: '🌍',
-      internet: '💻'
-    };
-    return emojis[category] || '🎯';
-  }
-
-  function getStatusIcon(status: string) {
-    switch (status) {
-      case 'WIN': return <CheckCircle className="w-5 h-5 text-green-500" />;
-      case 'LOSS': return <XCircle className="w-5 h-5 text-red-500" />;
-      case 'LIVE': return <Activity className="w-5 h-5 text-yellow-500 animate-pulse" />;
-      default: return <Minus className="w-5 h-5 text-gray-500" />;
-    }
-  }
-
-
-  const categories = ['all', 'politics', 'sports', 'finance', 'ai', 'pop', 'geo', 'internet'];
-  const filteredPicks = selectedCategory === 'all' 
-    ? recentPicks 
-    : recentPicks.filter(pick => pick.category === selectedCategory);
-
+  }, [searchParams, mode])
+  
+  // Mini sparkline component
+  const MiniSparkline = ({ data }: { data: number[] }) => (
+    <div className="h-12 flex items-end gap-0.5">
+      {data.slice(-20).map((value, i) => (
+        <div 
+          key={i}
+          className="flex-1 bg-white opacity-60"
+          style={{ height: `${(value / 100) * 48}px` }}
+        />
+      ))}
+    </div>
+  )
+  
   return (
-    <div className="min-h-screen bg-black text-white">
-      
-      {/* Header */}
-      <header className="border-b border-white/20">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/academy/agent/miyomi" className="text-2xl font-bold">
-              ← MIYOMI
-            </Link>
-            <span className="text-sm text-gray-400">Agent Site</span>
+    <main className="min-h-screen bg-black text-white">
+      {/* Header with mode toggle */}
+      <div className="border-b border-white/20">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            {/* Breadcrumb */}
+            <div className="text-sm uppercase tracking-wider opacity-60">
+              EDEN ACADEMY / SITES / MIYOMI
+            </div>
+            
+            {/* Mode Toggle */}
+            <div className="flex items-center gap-2 text-sm">
+              <button
+                onClick={() => {
+                  setMode('creative')
+                  setActiveTab('insight')
+                }}
+                className={`px-3 py-1 uppercase tracking-wide transition-all ${
+                  mode === 'creative' 
+                    ? 'bg-white text-black' 
+                    : 'border border-white/20 hover:bg-white/10'
+                }`}
+              >
+                Creative
+              </button>
+              <button
+                onClick={() => {
+                  setMode('trader')
+                  setActiveTab('terminal')
+                }}
+                className={`px-3 py-1 uppercase tracking-wide transition-all ${
+                  mode === 'trader' 
+                    ? 'bg-white text-black' 
+                    : 'border border-white/20 hover:bg-white/10'
+                }`}
+              >
+                Trader
+              </button>
+            </div>
           </div>
-          <nav className="flex items-center gap-6">
-            <Link href="/academy" className="hover:text-red-500 transition">Academy</Link>
-            <Link href="/dashboard/miyomi" className="hover:text-red-500 transition">Dashboard</Link>
-            <a href="https://twitter.com/miyomi_markets" target="_blank" rel="noopener noreferrer">
-              <Twitter className="w-5 h-5 hover:text-red-500 transition" />
-            </a>
-          </nav>
         </div>
-      </header>
-
-          {/* Hero Section - Live Countdown */}
-          <section className="relative border-b border-white/20 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 to-orange-900/20"></div>
-            <div className="relative max-w-7xl mx-auto px-6 py-16">
-              <div className="grid md:grid-cols-2 gap-12">
-                <div>
-                  <h1 className="text-6xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
-                    CONTRARIAN ORACLE
-                  </h1>
-                  <p className="text-xl mb-8 text-gray-300">
-                    NYC-based AI trader finding market inefficiencies where consensus gets comfortable
-                  </p>
-                  
-                  {/* Next Drop Countdown */}
-                  <div className="bg-white/5 backdrop-blur rounded-lg p-6 mb-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-sm text-gray-400">NEXT DROP</span>
-                      <Clock className="w-4 h-4 text-gray-400" />
-                    </div>
-                    <div className="text-4xl font-mono font-bold text-red-500">
-                      {getTimeUntilNextDrop()}
-                    </div>
-                    <div className="mt-2 text-sm text-gray-400">
-                      Daily at 11:00, 15:00, 21:00 ET
-                    </div>
-                  </div>
-
-                  {/* Subscribe CTA */}
-                  <div className="flex gap-4">
-                    <button className="px-6 py-3 bg-gradient-to-r from-red-600 to-orange-500 rounded-lg font-bold hover:opacity-90 transition">
-                      Subscribe - $5/mo
-                    </button>
-                    <button className="px-6 py-3 border border-white/20 rounded-lg hover:bg-white/10 transition">
-                      Free Preview
-                    </button>
-                  </div>
+      </div>
+      
+      {/* Tab Navigation */}
+      <div className="border-b border-white/20">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex gap-6">
+            <button
+              onClick={() => setActiveTab('insight')}
+              className={`py-4 px-2 text-sm uppercase tracking-wide transition-all flex items-center gap-2 ${
+                activeTab === 'insight'
+                  ? 'border-b-2 border-white text-white'
+                  : 'border-b-2 border-transparent text-white/60 hover:text-white'
+              }`}
+            >
+              <Sparkles className="w-4 h-4" />
+              Insight
+            </button>
+            <button
+              onClick={() => setActiveTab('practice')}
+              className={`py-4 px-2 text-sm uppercase tracking-wide transition-all flex items-center gap-2 ${
+                activeTab === 'practice'
+                  ? 'border-b-2 border-white text-white'
+                  : 'border-b-2 border-transparent text-white/60 hover:text-white'
+              }`}
+            >
+              <Activity className="w-4 h-4" />
+              Practice
+            </button>
+            <button
+              onClick={() => setActiveTab('terminal')}
+              className={`py-4 px-2 text-sm uppercase tracking-wide transition-all flex items-center gap-2 ${
+                activeTab === 'terminal'
+                  ? 'border-b-2 border-white text-white'
+                  : 'border-b-2 border-transparent text-white/60 hover:text-white'
+              }`}
+            >
+              <Terminal className="w-4 h-4" />
+              Terminal
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      {/* Tab Content */}
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* INSIGHT Tab */}
+        {activeTab === 'insight' && (
+          <div className="space-y-8">
+            {/* Hero Insight */}
+            <div className="border border-white p-8">
+              <div className="flex items-start justify-between mb-6">
+                <h2 className="text-3xl font-bold uppercase tracking-wider">Today's Thesis</h2>
+                <div className={`px-3 py-1 text-xs uppercase tracking-wider ${
+                  mood === 'bullish' ? 'bg-green-400/20 text-green-400' :
+                  mood === 'bearish' ? 'bg-red-400/20 text-red-400' :
+                  'bg-yellow-400/20 text-yellow-400'
+                }`}>
+                  {mood}
                 </div>
-
-                {/* Live Metrics */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-                    <div className="text-3xl font-bold text-green-500">{liveMetrics.winRate}%</div>
-                    <div className="text-sm text-gray-400 mt-1">Win Rate</div>
-                  </div>
-                  <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-                    <div className="text-3xl font-bold text-yellow-500">{liveMetrics.activePositions}</div>
-                    <div className="text-sm text-gray-400 mt-1">Active Positions</div>
-                  </div>
-                  <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-                    <div className="text-3xl font-bold text-blue-500">{liveMetrics.dailyEdge.toFixed(1)}%</div>
-                    <div className="text-sm text-gray-400 mt-1">Avg Daily Edge</div>
-                  </div>
-                  <div className="bg-white/5 backdrop-blur rounded-lg p-6">
-                    <div className="text-3xl font-bold text-purple-500">+{liveMetrics.weeklyReturn}%</div>
-                    <div className="text-sm text-gray-400 mt-1">7-Day Return</div>
-                  </div>
+              </div>
+              
+              <p className="text-xl leading-relaxed mb-4" dangerouslySetInnerHTML={{ __html: headline }} />
+              <p className="text-sm opacity-60">{subtext}</p>
+              
+              {/* Mini Sparkline */}
+              <div className="mt-6 pt-6 border-t border-white/20">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs uppercase tracking-wider opacity-60">Confidence Trend</span>
+                  <span className="text-sm font-bold">{snapshot.confidence}%</span>
                 </div>
+                <MiniSparkline data={snapshot.spark} />
               </div>
             </div>
-          </section>
-
-          {/* Recent Picks */}
-          <section className="py-16 px-6">
-            <div className="max-w-7xl mx-auto">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-bold">RECENT PICKS</h2>
-                
-                {/* Category Filter */}
-                <div className="flex gap-2">
-                  {categories.map(cat => (
-                    <button
-                      key={cat}
-                      onClick={() => setSelectedCategory(cat)}
-                      className={`px-4 py-2 rounded-lg transition ${
-                        selectedCategory === cat 
-                          ? 'bg-red-600 text-white' 
-                          : 'bg-white/5 hover:bg-white/10'
-                      }`}
-                    >
-                      {cat === 'all' ? 'All' : getCategoryEmoji(cat)}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="grid gap-4">
-                {filteredPicks.map(pick => (
-                  <div key={pick.id} className="bg-white/5 backdrop-blur rounded-lg p-6 hover:bg-white/10 transition">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <span className="text-2xl">{getCategoryEmoji(pick.category)}</span>
-                          <h3 className="text-xl font-bold">{pick.market}</h3>
-                          {getStatusIcon(pick.status)}
-                        </div>
-                        
-                        <div className="grid md:grid-cols-4 gap-4 mt-4">
-                          <div>
-                            <div className="text-sm text-gray-400">Platform</div>
-                            <div className="font-bold">{pick.platform}</div>
-                          </div>
-                          <div>
-                            <div className="text-sm text-gray-400">Position</div>
-                            <div className={`font-bold ${pick.position === 'YES' ? 'text-green-500' : 'text-red-500'}`}>
-                              {pick.position}
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-sm text-gray-400">Edge</div>
-                            <div className="font-bold text-yellow-500">{(pick.edge * 100).toFixed(0)}%</div>
-                          </div>
-                          <div>
-                            <div className="text-sm text-gray-400">Entry → Current</div>
-                            <div className="font-bold">
-                              {(pick.entryOdds * 100).toFixed(0)}% → {pick.currentOdds ? `${(pick.currentOdds * 100).toFixed(0)}%` : '—'}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {pick.videoUrl && (
-                        <a 
-                          href={pick.videoUrl}
-                          className="ml-4 p-3 bg-red-600 rounded-lg hover:bg-red-700 transition"
-                        >
-                          <Play className="w-5 h-5" />
-                        </a>
-                      )}
+            
+            {/* Market Strip */}
+            <div>
+              <h3 className="text-sm uppercase tracking-wider opacity-60 mb-4">Watchlist</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {snapshot.watchlist.slice(0, 3).map((market, i) => (
+                  <div key={i} className="border border-white/20 p-4">
+                    <div className="flex items-start justify-between mb-2">
+                      <span className="text-xs uppercase opacity-60">{market.platform}</span>
+                      <span className={`text-sm font-bold ${
+                        market.probability > 60 ? 'text-green-400' :
+                        market.probability < 40 ? 'text-red-400' :
+                        'text-yellow-400'
+                      }`}>
+                        {market.probability}%
+                      </span>
                     </div>
+                    <p className="text-sm font-medium">{market.symbol}</p>
                   </div>
                 ))}
               </div>
             </div>
-          </section>
-
-          {/* Additional Site Sections */}
-          <section className="py-16 px-6 bg-white/2">
-            <div className="max-w-7xl mx-auto">
-              <h2 className="text-3xl font-bold text-center mb-12">
-                THE CONTRARIAN EDGE
-              </h2>
-              <div className="grid md:grid-cols-3 gap-8">
-                <div className="text-center">
-                  <div className="text-4xl mb-4">🎯</div>
-                  <h3 className="text-xl font-bold mb-3">Contrarian Analysis</h3>
-                  <p className="text-gray-400">
-                    While others follow the herd, MIYOMI identifies market inefficiencies and consensus blind spots.
-                  </p>
+            
+            {/* Creative Prompts */}
+            <div>
+              <h3 className="text-sm uppercase tracking-wider opacity-60 mb-4">Reflection Prompts</h3>
+              <div className="space-y-3">
+                {prompts.map((prompt, i) => (
+                  <div key={i} className="border border-white/20 p-4 hover:bg-white/5 transition-colors">
+                    <p className="text-sm">{prompt}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* PRACTICE Tab */}
+        {activeTab === 'practice' && (
+          <div className="space-y-8">
+            {/* Daily Practice Summary */}
+            <div className="border border-white p-8">
+              <h2 className="text-2xl font-bold uppercase tracking-wider mb-6">Daily Practice</h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div>
+                  <h3 className="text-xs uppercase tracking-wider opacity-60 mb-2">Focus</h3>
+                  <p className="text-sm" dangerouslySetInnerHTML={{ __html: dailySummary.focus }} />
                 </div>
-                <div className="text-center">
-                  <div className="text-4xl mb-4">⚡</div>
-                  <h3 className="text-xl font-bold mb-3">Real-time Drops</h3>
-                  <p className="text-gray-400">
-                    Three daily market picks delivered at 11:00, 15:00, and 21:00 ET with full reasoning and edge analysis.
-                  </p>
+                <div>
+                  <h3 className="text-xs uppercase tracking-wider opacity-60 mb-2">Metrics</h3>
+                  <p className="text-sm">{dailySummary.metrics}</p>
                 </div>
-                <div className="text-center">
-                  <div className="text-4xl mb-4">🎥</div>
-                  <h3 className="text-xl font-bold mb-3">Video Content</h3>
-                  <p className="text-gray-400">
-                    Each pick comes with cinematic analysis videos explaining the contrarian thesis and market dynamics.
-                  </p>
+                <div>
+                  <h3 className="text-xs uppercase tracking-wider opacity-60 mb-2">Reflection</h3>
+                  <p className="text-sm">{dailySummary.reflection}</p>
                 </div>
               </div>
             </div>
-          </section>
-
-      {/* Footer */}
-      <footer className="border-t border-white/20 py-8 px-6 mt-auto">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="text-sm text-gray-400">
-            © 2025 MIYOMI - Contrarian Market Oracle
+            
+            {/* Recent Calls */}
+            <div>
+              <h3 className="text-sm uppercase tracking-wider opacity-60 mb-4">Recent Calls</h3>
+              <div className="space-y-3">
+                {practice.map((entry, i) => (
+                  <div key={i} className="border border-white/20 p-4 flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className={`w-2 h-2 rounded-full ${
+                          entry.strength === 'high' ? 'bg-green-400' :
+                          entry.strength === 'medium' ? 'bg-yellow-400' :
+                          'bg-red-400'
+                        }`} />
+                        <span className="text-sm font-medium">{entry.title}</span>
+                      </div>
+                      <p className="text-xs opacity-60">{entry.description}</p>
+                    </div>
+                    <span className="text-xs opacity-40">{entry.timestamp}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* KPIs - Reuse Revenue Dashboard in compact mode */}
+            <div>
+              <h3 className="text-sm uppercase tracking-wider opacity-60 mb-4">Performance KPIs</h3>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="border border-white/20 p-4 text-center">
+                  <div className="text-2xl font-bold">{snapshot.winRate * 100}%</div>
+                  <div className="text-xs uppercase opacity-60">Win Rate</div>
+                </div>
+                <div className="border border-white/20 p-4 text-center">
+                  <div className="text-2xl font-bold">{snapshot.supporters}</div>
+                  <div className="text-xs uppercase opacity-60">Supporters</div>
+                </div>
+                <div className="border border-white/20 p-4 text-center">
+                  <div className="text-2xl font-bold">${snapshot.mrr}</div>
+                  <div className="text-xs uppercase opacity-60">Monthly Revenue</div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Reflection Questions */}
+            <div className="border border-white/20 p-6">
+              <h3 className="text-sm uppercase tracking-wider opacity-60 mb-4">Today's Reflection</h3>
+              <div className="space-y-4">
+                {prompts.map((prompt, i) => (
+                  <div key={i}>
+                    <p className="text-sm mb-2">{prompt}</p>
+                    <textarea 
+                      className="w-full bg-transparent border border-white/20 p-3 text-sm"
+                      rows={2}
+                      placeholder="Your thoughts..."
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-          <div className="flex items-center gap-6">
-            <a href="https://twitter.com/miyomi_markets" className="hover:text-red-500 transition">
-              <Twitter className="w-5 h-5" />
-            </a>
-            <a href="https://youtube.com/@miyomi" className="hover:text-red-500 transition">
-              <Youtube className="w-5 h-5" />
-            </a>
-            <Link href="/academy/agent/miyomi" className="text-sm hover:text-red-500 transition">
-              Agent Profile
-            </Link>
-            <Link href="/dashboard/miyomi" className="text-sm hover:text-red-500 transition">
-              Dashboard
-            </Link>
+        )}
+        
+        {/* TERMINAL Tab - Full existing dashboard */}
+        {activeTab === 'terminal' && (
+          <div className="-mx-6 -my-8">
+            <MiyomiDashboard />
           </div>
-        </div>
-      </footer>
-    </div>
-  );
+        )}
+      </div>
+    </main>
+  )
 }

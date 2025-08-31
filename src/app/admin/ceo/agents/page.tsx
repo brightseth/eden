@@ -47,22 +47,22 @@ export default async function CEOAgentCheatsheetPage() {
       </div>
 
       {/* Content */}
-      <DocumentationViewer
-        content={content}
-        title="Claude Coding Agents - CEO Reference"
-        sections={sections}
-        showTOC={true}
-        showBreadcrumb={false}
-        customBreadcrumb={
-          <nav className="flex items-center gap-2 text-sm text-gray-400 mb-8">
-            <Link href="/admin/ceo" className="hover:text-white transition-colors">
-              <Crown className="w-4 h-4" />
-            </Link>
-            <span>/</span>
-            <span className="text-white">Agent Cheatsheet</span>
-          </nav>
-        }
-      />
+      <div>
+        <nav className="flex items-center gap-2 text-sm text-gray-400 mb-8">
+          <Link href="/admin/ceo" className="hover:text-white transition-colors">
+            <Crown className="w-4 h-4" />
+          </Link>
+          <span>/</span>
+          <span className="text-white">Agent Cheatsheet</span>
+        </nav>
+        <DocumentationViewer
+          content={content}
+          title="Claude Coding Agents - CEO Reference"
+          sections={sections}
+          showTOC={true}
+          showBreadcrumb={false}
+        />
+      </div>
     </div>
   );
 }

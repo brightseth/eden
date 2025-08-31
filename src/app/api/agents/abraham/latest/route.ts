@@ -13,11 +13,12 @@ export async function GET() {
   // Try Registry first if enabled
   if (isFeatureEnabled(FLAGS.ENABLE_ABRAHAM_REGISTRY_INTEGRATION)) {
     try {
-      const agentProfile = await registryApi.getAgentProfile('abraham');
+      const agent = await registryApi.agents.getByHandle('abraham');
+      const creations = await registryApi.creations.list(agent.id, { limit: 1 });
       
-      if (agentProfile && agentProfile.creations && agentProfile.creations.length > 0) {
+      if (creations && creations.length > 0) {
         // Get the most recent creation from Registry
-        const latestCreation = agentProfile.creations[0]; // Assuming sorted by most recent
+        const latestCreation = creations[0]; // Assuming sorted by most recent
         
         return NextResponse.json({
           id: latestCreation.id,

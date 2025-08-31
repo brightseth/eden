@@ -57,22 +57,22 @@ export async function GET() {
       console.log('[Abraham Covenant API] Using Registry integration');
       
       // Get Abraham's profile and metrics from Registry
-      const profile = await registryApi.getAgentProfile('abraham');
-      const creations = await registryApi.getAgentCreations('abraham', 'PUBLISHED');
+      const agent = await registryApi.agents.getByHandle('abraham');
+      const creations = await registryApi.creations.list(agent.id, { status: 'PUBLISHED' });
       
       // Calculate metrics from actual Registry data
       const covenantWorks = creations.filter(creation => 
-        creation.metadata?.dayNumber && creation.metadata.dayNumber > 2522
+        creation.metadata?.dayNumber && Number(creation.metadata.dayNumber) > 2522
       );
       
       metrics = {
         totalWorks: creations.length,
         covenantWorks: covenantWorks.length,
         avgViews: Math.floor(creations.reduce((acc, creation) => 
-          acc + (creation.metadata?.views || 0), 0
+          acc + Number(creation.metadata?.views || 0), 0
         ) / Math.max(1, creations.length)),
         collectors: creations.reduce((acc, creation) => 
-          acc + (creation.metadata?.collectors || 0), 0
+          acc + Number(creation.metadata?.collectors || 0), 0
         ),
         totalVotes: metrics.totalVotes,
         activeVoters: metrics.activeVoters,

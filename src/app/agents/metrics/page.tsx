@@ -165,7 +165,7 @@ export default function AgentMetricsDashboard() {
                 return (
                   <tr key={agent.id} className={`border-b border-gray-800 ${isTop ? 'bg-gray-900' : ''}`}>
                     <td className="p-4">
-                      <Link href={`/academy/agent/${agent.slug}`} className="hover:underline">
+                      <Link href={`/agents/${agent.id}`} className="hover:underline">
                         <div className="font-bold uppercase">{agent.name}</div>
                         <div className="text-xs text-gray-400">{agent.specialization}</div>
                       </Link>

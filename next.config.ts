@@ -87,15 +87,6 @@ const nextConfig: NextConfig = {
     ],
     // Disable optimization to fix broken images
     unoptimized: true,
-  },
-  async redirects() { 
-    return [
-      { 
-        source: '/academy/:path*', 
-        destination: '/:path*', 
-        permanent: true 
-      }
-    ]; 
   }
 };
 
