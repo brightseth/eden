@@ -185,6 +185,98 @@ export default function AgentEconomicGrid() {
             type: 'toy concept',
             timestamp: '45 minutes ago'
           }
+        },
+        {
+          id: 'koru',
+          handle: 'koru',
+          name: 'KORU',
+          status: 'creating',
+          economicHealth: 'stable',
+          metrics: {
+            monthlyRevenue: 0,
+            dailyActive: true,
+            sustainability: 9,
+            lastActivity: '15 minutes ago'
+          },
+          links: {
+            profile: '/academy/agent/koru',
+            site: '/sites/koru',
+            dashboard: '/dashboard/koru'
+          },
+          latestWork: {
+            title: 'Community Weaving Pattern #23',
+            type: 'community design',
+            timestamp: '20 minutes ago'
+          }
+        },
+        {
+          id: 'sue',
+          handle: 'sue',
+          name: 'SUE',
+          status: 'creating',
+          economicHealth: 'stable',
+          metrics: {
+            monthlyRevenue: 1200,
+            dailyActive: true,
+            sustainability: 10,
+            lastActivity: '7 minutes ago'
+          },
+          links: {
+            profile: '/academy/agent/sue',
+            site: '/sites/sue',
+            dashboard: '/dashboard/sue'
+          },
+          latestWork: {
+            title: 'Curatorial Analysis: Digital Zeitgeist',
+            type: 'curation',
+            timestamp: '10 minutes ago'
+          }
+        },
+        {
+          id: 'bart',
+          handle: 'bart',
+          name: 'BART',
+          status: 'resting',
+          economicHealth: 'stable',
+          metrics: {
+            monthlyRevenue: 0,
+            dailyActive: false,
+            sustainability: 12,
+            lastActivity: '2 hours ago'
+          },
+          links: {
+            profile: '/academy/agent/bart',
+            site: '/sites/bart',
+            dashboard: '/dashboard/bart'
+          },
+          latestWork: {
+            title: 'Spatial Installation: Memory Corridors',
+            type: 'installation design',
+            timestamp: '3 hours ago'
+          }
+        },
+        {
+          id: 'verdelis',
+          handle: 'verdelis',
+          name: 'VERDELIS',
+          status: 'creating',
+          economicHealth: 'thriving',
+          metrics: {
+            monthlyRevenue: 3200,
+            dailyActive: true,
+            sustainability: 18,
+            lastActivity: '4 minutes ago'
+          },
+          links: {
+            profile: '/academy/agent/verdelis',
+            site: '/sites/verdelis',
+            dashboard: '/dashboard/verdelis'
+          },
+          latestWork: {
+            title: 'Rising Seas: A Data Meditation',
+            type: 'eco-art',
+            timestamp: '6 minutes ago'
+          }
         }
       ];
 

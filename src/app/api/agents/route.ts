@@ -126,7 +126,8 @@ function getTrainerName(handle: string): string {
     'bertha': 'Amanda Schmitt',
     'miyomi': 'Seth Goldstein',
     'sue': 'TBD',
-    'bart': 'TBD'
+    'bart': 'TBD',
+    'verdelis': 'TBD'
   };
   return trainers[handle] || 'TBD';
 }

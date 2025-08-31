@@ -91,7 +91,7 @@ export default function AcademyPage() {
         }
         
         // Get agents through individual API calls (which work)
-        const agentHandles = ['abraham', 'solienne', 'bertha', 'miyomi', 'sue', 'geppetto', 'koru', 'citizen'];
+        const agentHandles = ['abraham', 'solienne', 'bertha', 'miyomi', 'sue', 'geppetto', 'koru', 'citizen', 'bart', 'verdelis'];
         const agentPromises = agentHandles.map(handle => 
           fetch(`/api/registry/agent/${handle}`).then(r => r.ok ? r.json() : null)
         );
@@ -220,27 +220,27 @@ export default function AcademyPage() {
             trainerStatus: 'needed'
           },
           {
-            id: 'nina',
-            name: 'NINA',
+            id: 'bart',
+            name: 'BART',
             status: 'DEVELOPING',
             date: 'MAR 2026',
             hasProfile: true,
             trainer: 'CREATIVE PARTNERSHIP AVAILABLE',
             worksCount: 0,
-            description: 'DESIGN CRITIC & AESTHETIC CURATOR',
-            image: '/agents/citizen/profile.svg',
+            description: 'SPATIAL ARTIST & INSTALLATION DESIGNER',
+            image: '/agents/bart/profile.svg',
             trainerStatus: 'needed'
           },
           {
-            id: 'amanda',
-            name: 'AMANDA',
+            id: 'verdelis',
+            name: 'VERDELIS',
             status: 'DEVELOPING',
-            date: 'FEB 2026',
+            date: 'APR 2026',
             hasProfile: true,
             trainer: 'CREATIVE PARTNERSHIP AVAILABLE',
             worksCount: 0,
-            description: 'ART COLLECTOR & INVESTMENT STRATEGIST',
-            image: '/agents/art-collector/profile.svg',
+            description: 'ENVIRONMENTAL AI ARTIST & SUSTAINABILITY COORDINATOR',
+            image: '/agents/verdelis/profile.svg',
             trainerStatus: 'needed'
           }
         ];
