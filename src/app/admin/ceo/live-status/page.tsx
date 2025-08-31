@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Crown, ArrowLeft, Activity, TrendingUp, AlertTriangle, CheckCircle, Clock, Zap, DollarSign, Users, Rocket, FileText } from 'lucide-react';
+import { AgentLink } from '@/components/common/AgentLink';
 
 // Agent data matching our deployment status - ALL 10 GENESIS AGENTS
 const agents = [
@@ -109,7 +110,9 @@ export default function CEOLiveStatusPage() {
                 <div key={agent.name} className="p-4 bg-gray-900/50 border border-green-500/30 rounded-lg">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-4">
-                      <span className="text-xl font-bold">{agent.name}</span>
+                      <AgentLink agentName={agent.name} className="text-xl font-bold">
+                        {agent.name}
+                      </AgentLink>
                       <span className="text-sm text-gray-400">{agent.role}</span>
                     </div>
                     <span className="px-3 py-1 bg-green-500/20 text-green-400 rounded-lg text-sm font-semibold">
@@ -148,7 +151,9 @@ export default function CEOLiveStatusPage() {
                 <div key={agent.name} className="p-4 bg-gray-900/50 border border-yellow-500/30 rounded-lg">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-4">
-                      <span className="text-xl font-bold">{agent.name}</span>
+                      <AgentLink agentName={agent.name} className="text-xl font-bold">
+                        {agent.name}
+                      </AgentLink>
                       <span className="text-sm text-gray-400">{agent.role}</span>
                     </div>
                     <button className="px-3 py-1 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 rounded-lg text-sm font-semibold transition-colors">
@@ -187,7 +192,9 @@ export default function CEOLiveStatusPage() {
                 <div key={agent.name} className="p-4 bg-gray-900/50 border border-red-500/30 rounded-lg">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-4">
-                      <span className="text-xl font-bold">{agent.name}</span>
+                      <AgentLink agentName={agent.name} className="text-xl font-bold">
+                        {agent.name}
+                      </AgentLink>
                       <span className="text-sm text-gray-400">{agent.role}</span>
                     </div>
                     <span className="px-3 py-1 bg-red-500/20 text-red-400 rounded-lg text-sm font-semibold">

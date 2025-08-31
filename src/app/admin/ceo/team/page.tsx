@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Crown, ArrowLeft, Users, Shield, Target } from 'lucide-react';
+import { AgentLink } from '@/components/common/AgentLink';
 
 export default function CEOTeamPage() {
   return (
@@ -117,47 +118,67 @@ export default function CEOTeamPage() {
                 <div className="text-xs font-semibold text-gray-400 mb-2">TEAM MEMBERS AS TRAINERS:</div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Gene Kogan</span>
-                  <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">ABRAHAM</span>
+                  <AgentLink agentName="ABRAHAM" className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs hover:bg-blue-500/30">
+                    ABRAHAM
+                  </AgentLink>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Seth Goldstein</span>
-                  <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">MIYOMI</span>
+                  <AgentLink agentName="MIYOMI" className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs hover:bg-green-500/30">
+                    MIYOMI
+                  </AgentLink>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Henry</span>
-                  <span className="px-2 py-1 bg-orange-500/20 text-orange-400 rounded text-xs">CITIZEN</span>
+                  <AgentLink agentName="CITIZEN" className="px-2 py-1 bg-orange-500/20 text-orange-400 rounded text-xs hover:bg-orange-500/30">
+                    CITIZEN
+                  </AgentLink>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Xander</span>
-                  <span className="px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded text-xs">KORU</span>
+                  <AgentLink agentName="KORU" className="px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded text-xs hover:bg-cyan-500/30">
+                    KORU
+                  </AgentLink>
                 </div>
                 
                 <div className="text-xs font-semibold text-gray-400 mt-4 mb-2">EXTERNAL TRAINERS:</div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Kristi Coronado</span>
-                  <span className="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-xs">SOLIENNE</span>
+                  <AgentLink agentName="SOLIENNE" className="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-xs hover:bg-purple-500/30">
+                    SOLIENNE
+                  </AgentLink>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Amanda Schmitt</span>
-                  <span className="px-2 py-1 bg-pink-500/20 text-pink-400 rounded text-xs">BERTHA</span>
+                  <AgentLink agentName="BERTHA" className="px-2 py-1 bg-pink-500/20 text-pink-400 rounded text-xs hover:bg-pink-500/30">
+                    BERTHA
+                  </AgentLink>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Martin & Colin</span>
-                  <span className="px-2 py-1 bg-indigo-500/20 text-indigo-400 rounded text-xs">GEPPETTO</span>
+                  <AgentLink agentName="GEPPETTO" className="px-2 py-1 bg-indigo-500/20 text-indigo-400 rounded text-xs hover:bg-indigo-500/30">
+                    GEPPETTO
+                  </AgentLink>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Vanessa</span>
-                  <span className="px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded text-xs">VERDELIS</span>
+                  <AgentLink agentName="VERDELIS" className="px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded text-xs hover:bg-emerald-500/30">
+                    VERDELIS
+                  </AgentLink>
                 </div>
                 
                 <div className="text-xs font-semibold text-gray-400 mt-4 mb-2">SEEKING TRAINERS:</div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Open</span>
-                  <span className="px-2 py-1 bg-gray-500/20 text-gray-400 rounded text-xs">SUE</span>
+                  <AgentLink agentName="SUE" className="px-2 py-1 bg-gray-500/20 text-gray-400 rounded text-xs hover:bg-gray-500/30">
+                    SUE
+                  </AgentLink>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Open</span>
-                  <span className="px-2 py-1 bg-gray-500/20 text-gray-400 rounded text-xs">BART</span>
+                  <AgentLink agentName="BART" className="px-2 py-1 bg-gray-500/20 text-gray-400 rounded text-xs hover:bg-gray-500/30">
+                    BART
+                  </AgentLink>
                 </div>
               </div>
             </div>

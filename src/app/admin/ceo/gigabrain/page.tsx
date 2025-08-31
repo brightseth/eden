@@ -47,6 +47,7 @@ export default function GigabrainDashboard() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [gigabrainQuery, setGigabrainQuery] = useState('');
   const [gigabrainResponse, setGigabrainResponse] = useState('');
+  const [connectionStatus, setConnectionStatus] = useState<'checking' | 'connected' | 'fallback'>('checking');
 
   // Simulated data - would be pulled from actual training histories
   const [patterns, setPatterns] = useState<TrainingPattern[]>([
@@ -56,6 +57,20 @@ export default function GigabrainDashboard() {
     { pattern: 'Early morning training sessions', frequency: 78, successRate: 82, source: 'both' },
     { pattern: 'Rapid iteration in days 3-5', frequency: 92, successRate: 88, source: 'abraham' }
   ]);
+
+  // Check API connection status on mount
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        const response = await fetch('/api/gigabrain/query');
+        const data = await response.json();
+        setConnectionStatus(data.status === 'connected' ? 'connected' : 'fallback');
+      } catch {
+        setConnectionStatus('fallback');
+      }
+    };
+    checkConnection();
+  }, []);
 
   const [currentAgents, setCurrentAgents] = useState<AgentMetrics[]>([
     {
@@ -85,34 +100,75 @@ export default function GigabrainDashboard() {
   ]);
 
   const analyzeWithGigabrain = async () => {
+    if (!gigabrainQuery.trim()) return;
+    
     setIsAnalyzing(true);
-    // Simulate API call to Gigabrain
-    setTimeout(() => {
-      setGigabrainResponse(`Based on Abraham and Solienne's training patterns, I recommend:
+    setGigabrainResponse('');
+    
+    try {
+      // Get context from current training agents
+      const context = {
+        agentName: currentAgents[0]?.name,
+        agentType: 'training_agent',
+        trainingData: currentAgents[0] ? {
+          day: currentAgents[0].timeToProduction,
+          phase: 'Training',
+          qualityScore: currentAgents[0].qualityScore,
+          successRate: 87
+        } : undefined,
+        patterns: patterns.slice(0, 3).map(p => ({
+          pattern: p.pattern,
+          successRate: p.successRate
+        }))
+      };
+      
+      // Call the real Gigabrain API
+      const response = await fetch('/api/gigabrain/query', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: gigabrainQuery,
+          context,
+          sessionId: `ceo_dashboard_${Date.now()}`
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to query Gigabrain');
+      }
+      
+      const data = await response.json();
+      
+      // Display the response
+      setGigabrainResponse(data.response);
+      
+      // Log metadata for debugging
+      if (data.metadata) {
+        console.log('Gigabrain confidence:', data.metadata.confidence);
+        console.log('Sources:', data.metadata.sources);
+        if (data.metadata.recommendations) {
+          console.log('Recommendations:', data.metadata.recommendations);
+        }
+      }
+      
+    } catch (error) {
+      console.error('Error querying Gigabrain:', error);
+      // Fallback to a helpful error message
+      setGigabrainResponse(`I'm having trouble connecting to the Gigabrain service right now. 
 
-1. **Optimal Trait Configuration for ${gigabrainQuery}:**
-   - Creativity: 75-85 (drives novel outputs)
-   - Confidence: 70-80 (ensures consistent production)
-   - Chaos: 55-65 (breakthrough catalyst without instability)
+Based on cached Abraham and Solienne patterns, here are general recommendations:
 
-2. **Memory Seeding Strategy:**
-   - Load to 70% capacity with core knowledge
-   - Reserve 30% for emergent learning
-   - Focus on cross-domain connections
+• **Memory Seeding**: Maintain 70% capacity for optimal learning
+• **Chaos Trait**: Keep between 60-75 for creative breakthroughs
+• **Paired Training**: Increases success rate by 40%
+• **Critical Checkpoints**: Monitor at days 3, 5, and 7
 
-3. **Critical Success Factors:**
-   - Day 1-3 personality calibration is crucial
-   - Paired training with complementary agent increases success by 40%
-   - Early creative outputs predict long-term viability
-
-4. **Risk Mitigation:**
-   - Monitor trait drift - >10% change indicates instability
-   - Implement checkpoints at days 3, 5, and 7
-   - Have rollback strategy if quality drops below 75%
-
-Predicted success rate with these parameters: **89%**`);
+Please try again in a moment or check the API connection status.`);
+    } finally {
       setIsAnalyzing(false);
-    }, 2000);
+    }
   };
 
   const curricula: CurriculumRecommendation[] = [
@@ -173,6 +229,22 @@ Predicted success rate with these parameters: **89%**`);
               </div>
             </div>
             <div className="flex items-center gap-3">
+              <div className={`flex items-center gap-2 px-3 py-1 border rounded text-sm ${
+                connectionStatus === 'connected' 
+                  ? 'border-green-400 text-green-400' 
+                  : connectionStatus === 'fallback'
+                  ? 'border-yellow-400 text-yellow-400'
+                  : 'border-gray-400 text-gray-400'
+              }`}>
+                <div className={`w-2 h-2 rounded-full ${
+                  connectionStatus === 'connected' ? 'bg-green-400' :
+                  connectionStatus === 'fallback' ? 'bg-yellow-400' :
+                  'bg-gray-400'
+                } animate-pulse`} />
+                {connectionStatus === 'connected' ? 'LIVE' : 
+                 connectionStatus === 'fallback' ? 'FALLBACK MODE' : 
+                 'CHECKING...'}
+              </div>
               <Link
                 href="https://staging.app.eden.art/chat/eden_gigabrain"
                 target="_blank"
@@ -181,7 +253,10 @@ Predicted success rate with these parameters: **89%**`);
                 <Share2 className="w-4 h-4" />
                 <span>OPEN GIGABRAIN</span>
               </Link>
-              <button className="p-2 border border-white hover:bg-white hover:text-black transition-all">
+              <button 
+                onClick={() => window.location.reload()}
+                className="p-2 border border-white hover:bg-white hover:text-black transition-all"
+              >
                 <RefreshCw className="w-4 h-4" />
               </button>
             </div>
