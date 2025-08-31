@@ -176,25 +176,25 @@ export async function GET(request: NextRequest) {
     
     // Filter for advisor reports
     let advisorReports = artifacts.filter(artifact => 
-      artifact.metadata.type === 'advisor-report'
+      (artifact.metadata as any).type === 'advisor-report'
     );
 
     // Apply filters
     if (reportId) {
       advisorReports = advisorReports.filter(report => 
-        report.metadata.reportData?.reportId === reportId
+        (report.metadata as any).reportData?.reportId === reportId
       );
     }
 
     if (collectorName) {
       advisorReports = advisorReports.filter(report =>
-        report.metadata.collectorName?.toLowerCase().includes(collectorName.toLowerCase())
+        (report.metadata as any).collectorName?.toLowerCase().includes(collectorName.toLowerCase())
       );
     }
 
     if (status) {
       advisorReports = advisorReports.filter(report =>
-        report.metadata.reportData?.status === status
+        (report.metadata as any).reportData?.status === status
       );
     }
 
@@ -206,20 +206,20 @@ export async function GET(request: NextRequest) {
     // Format for response
     const formattedReports = sortedReports.map(artifact => ({
       id: artifact.id,
-      reportId: artifact.metadata.reportData?.reportId,
-      title: artifact.metadata.title,
-      collectorName: artifact.metadata.collectorName,
-      generated: artifact.metadata.generated,
-      recommendations: artifact.metadata.recommendations,
-      riskLevel: artifact.metadata.riskLevel,
-      portfolioSize: artifact.metadata.portfolioSize,
-      status: artifact.metadata.reportData?.status || 'final',
-      access: artifact.metadata.access,
-      shareableLink: artifact.metadata.reportData?.access?.shareableLink,
-      downloadUrl: `/api/agents/bertha/advisory-report/download?reportId=${artifact.metadata.reportData?.reportId}`,
-      performance: artifact.metadata.reportData?.performance,
+      reportId: (artifact.metadata as any).reportData?.reportId,
+      title: (artifact.metadata as any).title,
+      collectorName: (artifact.metadata as any).collectorName,
+      generated: (artifact.metadata as any).generated,
+      recommendations: (artifact.metadata as any).recommendations,
+      riskLevel: (artifact.metadata as any).riskLevel,
+      portfolioSize: (artifact.metadata as any).portfolioSize,
+      status: (artifact.metadata as any).reportData?.status || 'final',
+      access: (artifact.metadata as any).access,
+      shareableLink: (artifact.metadata as any).reportData?.access?.shareableLink,
+      downloadUrl: `/api/agents/bertha/advisory-report/download?reportId=${(artifact.metadata as any).reportData?.reportId}`,
+      performance: (artifact.metadata as any).reportData?.performance,
       createdAt: artifact.createdAt,
-      tags: artifact.metadata.tags
+      tags: (artifact.metadata as any).tags
     }));
 
     return NextResponse.json({
@@ -268,8 +268,8 @@ export async function DELETE(request: NextRequest) {
     // Find the report artifact
     const artifacts = await registryClient.getAgentCreations(berthaAgent.id);
     const reportArtifact = artifacts.find(artifact => 
-      artifact.metadata.type === 'advisor-report' && 
-      artifact.metadata.reportData?.reportId === reportId
+      (artifact.metadata as any).type === 'advisor-report' && 
+      (artifact.metadata as any).reportData?.reportId === reportId
     );
 
     if (!reportArtifact) {

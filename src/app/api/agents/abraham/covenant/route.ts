@@ -57,8 +57,8 @@ export async function GET() {
       console.log('[Abraham Covenant API] Using Registry integration');
       
       // Get Abraham's profile and metrics from Registry
-      const agent = await registryApi.agents.getByHandle('abraham');
-      const creations = await registryApi.creations.list(agent.id, { status: 'PUBLISHED' });
+      const agent = await registryApi.getAgent('abraham');
+      const creations = await registryApi.getAgentCreations('abraham', 'PUBLISHED');
       
       // Calculate metrics from actual Registry data
       const covenantWorks = creations.filter(creation => 

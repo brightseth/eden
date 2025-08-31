@@ -317,10 +317,10 @@ async function analyzePortfolio(works: any[]): Promise<PortfolioAnalysis> {
 async function generateMarketInsights(categories: string[]): Promise<MarketInsights> {
   try {
     // Use market intelligence for real insights
-    const marketData = await marketIntelligence.getGlobalMarketTrends();
+    const marketData = await marketIntelligence.getMarketOverview();
 
     return {
-      currentTrends: marketData.trends || [
+      currentTrends: [
         'AI-generated art gaining institutional acceptance',
         'Cross-chain NFT collections showing resilience',
         'Generative art commanding premium prices'
@@ -330,7 +330,7 @@ async function generateMarketInsights(categories: string[]): Promise<MarketInsig
         'Registry-verified provenance becoming collection standard',
         'Multi-modal AI art expanding collector interest'
       ],
-      marketRisks: marketData.risks || [
+      marketRisks: [
         'Market volatility affecting digital art sector',
         'Regulatory uncertainty in digital collectibles',
         'Platform risk from centralized marketplaces'
@@ -464,6 +464,14 @@ async function generateSampleReport(): Promise<Partial<CollectorAdvisoryReport>>
         keyStrengths: ['Strong generative art focus', 'High-quality curation'],
         improvementAreas: ['Expand into emerging mediums', 'Add more exceptional pieces']
       } as PortfolioAnalysis,
+      marketIntelligence: {
+        currentTrends: ['AI art gaining momentum'],
+        marketRisks: ['Platform volatility'],
+        opportunities: ['Early Eden Registry adoption'],
+        emergingOpportunities: [],
+        priceTargets: [],
+        platformInsights: { totalVolume: 100, activeBuyers: 50, averagePrice: 1.5 }
+      } as MarketInsights,
       recommendations: [{
         priority: 'high' as const,
         category: 'Eden Registry Works',
@@ -471,7 +479,15 @@ async function generateSampleReport(): Promise<Partial<CollectorAdvisoryReport>>
         rationale: 'Registry verification provides unique value and provenance guarantee',
         timeline: 'Next 30 days',
         budget: 'Primary allocation'
-      }]
+      }],
+      riskAssessment: {
+        overallRisk: 'medium' as const,
+        factors: [],
+        mitigationStrategies: [],
+        riskFactors: [],
+        diversificationScore: 0.5,
+        recommendations: []
+      } as RiskAnalysis
     }
   };
 }

@@ -89,16 +89,16 @@ export async function GET() {
         // Update current work based on Registry data
         if (latestCreation) {
           statusData.currentWork = {
-            number: latestCreation.metadata?.dayNumber || currentWorkNumber,
+            number: Number(latestCreation.metadata?.dayNumber) || currentWorkNumber,
             title: latestCreation.title || statusData.currentWork.title,
             status: latestCreation.status === 'PUBLISHED' ? 'completed' : 'creating',
-            phase: (latestCreation.metadata?.dayNumber && latestCreation.metadata.dayNumber > 2522) ? 'covenant' : 'early-works'
+            phase: (latestCreation.metadata?.dayNumber && Number(latestCreation.metadata.dayNumber) > 2522) ? 'covenant' : 'early-works'
           };
         }
         
         // Calculate aggregate metrics from Registry
         const totalViews = creations.reduce((acc, creation) => 
-          acc + (creation.metadata?.views || 0), 0
+          acc + (Number(creation.metadata?.views) || 0), 0
         );
         const avgViews = Math.floor(totalViews / Math.max(1, creations.length));
         

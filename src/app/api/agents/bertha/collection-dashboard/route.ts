@@ -369,7 +369,7 @@ function calculateCollectionMetrics(works: WorkAnalysis[], totalWorks: number) {
 
   // Risk assessment
   const highRiskCount = works.filter(w => w.berthaDecision.action === 'sell').length;
-  const riskLevel = highRiskCount > works.length * 0.3 ? 'high' : 
+  const riskLevel: 'low' | 'medium' | 'high' = highRiskCount > works.length * 0.3 ? 'high' : 
                    highRiskCount > works.length * 0.1 ? 'medium' : 'low';
 
   return {

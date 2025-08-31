@@ -133,7 +133,7 @@ export async function GET(request: NextRequest) {
           type: 'social-links',
           position: { section: 'sidebar', order: 3 },
           config: {
-            layout: 'vertical',
+            layout: 'single-column' as const,
             showIcons: true,
             professionalFocus: true
           },

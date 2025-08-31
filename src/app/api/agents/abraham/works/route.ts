@@ -52,7 +52,7 @@ function transformCreationToWork(creation: Creation, index?: number): any {
   return {
     id: creation.id,
     agent_id: 'abraham',
-    archive_type: (creation.metadata?.dayNumber && creation.metadata.dayNumber <= 2522) ? 'early-work' : 'covenant',
+    archive_type: (creation.metadata?.dayNumber && Number(creation.metadata.dayNumber) <= 2522) ? 'early-work' : 'covenant',
     title: creation.title || `Knowledge Synthesis #${creation.metadata?.dayNumber || 'Unknown'}`,
     image_url: creation.mediaUri,
     archive_url: creation.mediaUri,
@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
       const transformedWorks = registryData.works.map((work: any) => ({
         id: work.id,
         agent_id: 'abraham',
-        archive_type: (work.metadata?.dayNumber && work.metadata.dayNumber <= 2522) ? 'early-work' : 'covenant',
+        archive_type: (work.metadata?.dayNumber && Number(work.metadata.dayNumber) <= 2522) ? 'early-work' : 'covenant',
         title: work.title || `Knowledge Synthesis #${work.metadata?.dayNumber || 'Unknown'}`,
         image_url: work.imageUrl || work.mediaUri,
         archive_url: work.imageUrl || work.mediaUri,
