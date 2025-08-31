@@ -4,8 +4,9 @@ import { safeStatusFormat } from '@/lib/utils';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }) {
+  props: { params: Promise<{ id: string }> }) {
   try {
+    const params = await props.params;
   const { id: agentId } = params;
 
     // Get agent data from Registry (single source of truth)

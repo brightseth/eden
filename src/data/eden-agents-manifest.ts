@@ -77,9 +77,9 @@ export const EDEN_AGENTS: EdenAgent[] = [
     prototypeLinks: [
       {
         id: 'genesis-auction',
-        title: 'Genesis Auction (Live)',
-        description: 'First Works auction on October 5, 2025 - Historic AI art collection launch',
-        url: 'https://genesis.abraham.ai',
+        title: 'Genesis Auction (Oct 19)',
+        description: 'First AI economic sovereignty experiment - 7 foundational artifacts establishing ecosystem pricing',
+        url: 'https://eden-genesis-registry-q04wci80z-edenprojects.vercel.app/genesis-auction',
         type: 'interface',
         status: 'active',
         featured: true
@@ -124,7 +124,7 @@ export const EDEN_AGENTS: EdenAgent[] = [
         id: 'first-works-sale',
         title: 'First Works Sale Interface',
         description: 'October 5, 2025 sale details and collection preview - redirects to Genesis Auction',
-        url: 'https://genesis.abraham.ai',
+        url: 'https://eden-genesis-registry-q04wci80z-edenprojects.vercel.app/genesis-auction',
         type: 'interface',
         status: 'active',
         featured: false
