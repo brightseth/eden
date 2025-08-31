@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, TrendingUp, Users, Palette } from 'lucide-react';
+import { ChevronDown, TrendingUp, Users, Palette, Play, ExternalLink } from 'lucide-react';
+import { getAgentBySlug } from '@/data/eden-agents-manifest';
 interface OverviewTabProps {
   agentName: string;
   academyStatus: ReturnType<typeof import('@/utils/academy-dates').getAcademyStatus>;
@@ -67,6 +68,9 @@ const AGENT_DATA: Record<string, {
 export function OverviewTab({ agentName, academyStatus }: OverviewTabProps) {
   const [storyExpanded, setStoryExpanded] = useState(false);
   const data = AGENT_DATA[agentName] || AGENT_DATA.ABRAHAM;
+  
+  // Get agent prototype links from manifest
+  const agent = getAgentBySlug(agentName.toLowerCase());
 
   return (
     <div className="space-y-8">
@@ -144,6 +148,43 @@ export function OverviewTab({ agentName, academyStatus }: OverviewTabProps) {
           )}
         </div>
       </div>
+
+      {/* Prototype Links */}
+      {agent?.prototypeLinks && agent.prototypeLinks.length > 0 && (
+        <div className="p-4 bg-gray-950 border border-gray-800 rounded-lg">
+          <h3 className="font-bold mb-3 flex items-center gap-2">
+            <Play className="w-4 h-4" />
+            Live Prototypes & Interfaces
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {agent.prototypeLinks
+              .filter(link => link.status === 'active')
+              .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0))
+              .map(link => (
+                <a
+                  key={link.id}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`p-3 border rounded-lg hover:bg-gray-900 transition-colors group ${
+                    link.featured 
+                      ? 'border-purple-500/50 bg-purple-500/10' 
+                      : 'border-gray-700'
+                  }`}
+                >
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h4 className="font-medium text-sm">{link.title}</h4>
+                      <p className="text-xs text-gray-400 mt-1">{link.description}</p>
+                      <span className="text-xs text-gray-500 mt-1 capitalize">{link.type}</span>
+                    </div>
+                    <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-white flex-shrink-0 ml-2" />
+                  </div>
+                </a>
+              ))}
+          </div>
+        </div>
+      )}
 
       {/* Quick Info */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

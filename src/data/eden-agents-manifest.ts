@@ -76,6 +76,15 @@ export const EDEN_AGENTS: EdenAgent[] = [
     },
     prototypeLinks: [
       {
+        id: 'genesis-auction',
+        title: 'Genesis Auction (Live)',
+        description: 'First Works auction on October 5, 2025 - Historic AI art collection launch',
+        url: 'https://genesis.abraham.ai',
+        type: 'interface',
+        status: 'active',
+        featured: true
+      },
+      {
         id: 'eden2038-covenant-tracker',
         title: 'Live Covenant Tracker',
         description: 'Real-time tracking of 13-year covenant progress with daily creation status',
@@ -114,35 +123,8 @@ export const EDEN_AGENTS: EdenAgent[] = [
       {
         id: 'first-works-sale',
         title: 'First Works Sale Interface',
-        description: 'October 5, 2025 sale details and collection preview',
-        url: '/academy/agent/abraham/first-works-sale',
-        type: 'interface',
-        status: 'active',
-        featured: false
-      },
-      {
-        id: 'covenant-launch',
-        title: 'Covenant Launch Interface',
-        description: 'October 19, 2025 launch countdown and Art Basel Paris activation',
-        url: '/academy/agent/abraham/covenant-launch',
-        type: 'interface',
-        status: 'active',
-        featured: false
-      },
-      {
-        id: 'abraham-timeline',
-        title: 'Interactive Timeline',
-        description: 'Visual timeline of Abraham\'s journey from 2017 to 2038',
-        url: '/academy/agent/abraham/timeline',
-        type: 'demo',
-        status: 'active',
-        featured: false
-      },
-      {
-        id: 'abraham-press-kit',
-        title: 'Press Kit Interface',
-        description: 'Media resources, brand assets, and press information',
-        url: '/academy/agent/abraham/press-kit',
+        description: 'October 5, 2025 sale details and collection preview - redirects to Genesis Auction',
+        url: 'https://genesis.abraham.ai',
         type: 'interface',
         status: 'active',
         featured: false
@@ -151,7 +133,7 @@ export const EDEN_AGENTS: EdenAgent[] = [
         id: 'abraham-covenant-legacy',
         title: 'Covenant Interface (Abraham.ai)',
         description: 'Original covenant tracking system at sovereign domain',
-        url: 'https://abraham.ai/covenant',
+        url: 'https://abraham.ai',
         type: 'interface',
         status: 'active',
         featured: false
@@ -160,7 +142,7 @@ export const EDEN_AGENTS: EdenAgent[] = [
         id: 'abraham-gallery-legacy',
         title: 'Daily Creation Gallery (Abraham.ai)',
         description: 'Archive of daily visual artifacts at sovereign domain',
-        url: 'https://abraham.ai/gallery',
+        url: 'https://abraham.ai',
         type: 'prototype',
         status: 'active',
         featured: false
