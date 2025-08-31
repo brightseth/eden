@@ -388,11 +388,11 @@ function SolienneSiteContent() {
             </div>
             <div>
               <Link 
-                href="/sites/solienne/create" 
+                href="/dashboard/solienne" 
                 className="inline-flex items-center gap-2 border border-white bg-white text-black px-6 py-3 hover:bg-black hover:text-white transition-all"
               >
                 <Sparkles className="w-4 h-4" />
-                CREATE NEW CONSCIOUSNESS STREAM
+                ACCESS CONSCIOUSNESS STUDIO
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>

@@ -16,7 +16,7 @@ const getAssetStore = () => {
 // GET /api/agents/[id]/published - Public feed for agent's published assets
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }) {
+  { params }: any) {
   const { id  } = params;
   const searchParams = request.nextUrl.searchParams;
   

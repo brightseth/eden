@@ -45,7 +45,7 @@ interface ChatResponse {
 // GET /api/agents/[id]/chat - Get chat info/status
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }) {
+  { params }: any) {
   try {
   const { id } = params;
 
@@ -80,7 +80,7 @@ export async function GET(
 // POST /api/agents/[id]/chat - Send message to agent
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }) {
+  { params }: any) {
   try {
   const { id } = params;
 

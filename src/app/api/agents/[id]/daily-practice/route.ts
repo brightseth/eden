@@ -10,7 +10,7 @@ import { z } from 'zod';
 // GET /api/agents/[id]/daily-practice?since=YYYY-MM-DD&limit=7
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }) {
+  { params }: any) {
   try {
     const supabase = await createClient();
   const { id: agentId } = params;
@@ -71,7 +71,7 @@ export async function GET(
 // POST /api/agents/[id]/daily-practice
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }) {
+  { params }: any) {
   try {
     const supabase = await createClient();
   const { id: agentId } = params;
@@ -128,7 +128,7 @@ export async function POST(
 // PATCH /api/agents/[id]/daily-practice (for incremental updates)
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }) {
+  { params }: any) {
   try {
     const supabase = await createClient();
   const { id: agentId } = params;

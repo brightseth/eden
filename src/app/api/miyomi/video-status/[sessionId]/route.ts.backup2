@@ -8,10 +8,9 @@ export const runtime = 'nodejs';
 
 export async function GET(
   request: NextRequest,
-  props: { params: Promise<{ sessionId: string }> }
+  { params }: { params: { sessionId: string } }
 ) {
   try {
-    const params = await props.params;
     const { sessionId } = params;
     console.log('[MIYOMI Status] Checking session:', sessionId);
 

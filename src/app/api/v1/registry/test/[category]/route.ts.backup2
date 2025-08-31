@@ -181,7 +181,7 @@ const testRunners = {
 
 export async function POST(
   request: NextRequest,
-  context: { params: Promise<TestParams> }
+  { params }: { params: TestParams }
 ) {
   const { category } = params
   

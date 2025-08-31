@@ -10,10 +10,9 @@ import { z } from 'zod';
 // GET /api/agents/[id]/financial-model
 export async function GET(
   request: NextRequest,
-  props: { params: Promise<{ id: string }> }) {
+  { params }: { params: { id: string } }) {
   try {
     const supabase = await createClient();
-    const params = await props.params;
   const { id: agentId } = params;
 
     // Validate UUID
@@ -65,10 +64,9 @@ export async function GET(
 // POST /api/agents/[id]/financial-model
 export async function POST(
   request: NextRequest,
-  props: { params: Promise<{ id: string }> }) {
+  { params }: { params: { id: string } }) {
   try {
     const supabase = await createClient();
-    const params = await props.params;
   const { id: agentId } = params;
     const body = await request.json();
 
@@ -122,10 +120,9 @@ export async function POST(
 // PATCH /api/agents/[id]/financial-model
 export async function PATCH(
   request: NextRequest,
-  props: { params: Promise<{ id: string }> }) {
+  { params }: { params: { id: string } }) {
   try {
     const supabase = await createClient();
-    const params = await props.params;
   const { id: agentId } = params;
     const body = await request.json();
 

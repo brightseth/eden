@@ -5,7 +5,7 @@ const patchStore = new Map<string, Array<any>>();
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }) {
+  { params }: any) {
   try {
   const { id: agentId } = params;
     const { patch, source_image_id, dimensions } = await request.json();
@@ -62,7 +62,7 @@ export async function POST(
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }) {
+  { params }: any) {
   try {
   const { id: agentId } = params;
     const { searchParams } = new URL(request.url);

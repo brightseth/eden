@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 // DELETE /api/works/[id] - Delete a work
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }) {
+  { params }: any) {
   try {
   const { id: workId } = params;
     

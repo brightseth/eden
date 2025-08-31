@@ -5,7 +5,7 @@ const followStore = new Map<string, Set<string>>();
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }) {
+  { params }: any) {
   try {
   const { id: agentId } = params;
     const { user_id } = await request.json();
@@ -45,7 +45,7 @@ export async function POST(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }) {
+  { params }: any) {
   try {
   const { id: agentId } = params;
     const { user_id } = await request.json();
@@ -81,7 +81,7 @@ export async function DELETE(
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }) {
+  { params }: any) {
   try {
   const { id: agentId } = params;
     const { searchParams } = new URL(request.url);

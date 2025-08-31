@@ -8,7 +8,7 @@ export const runtime = 'nodejs';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { sessionId: string } }
+  { params }: any
 ) {
   try {
     const { sessionId } = params;

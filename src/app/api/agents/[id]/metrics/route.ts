@@ -5,7 +5,7 @@ import { z } from 'zod';
 // GET /api/agents/[id]/metrics
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }) {
+  { params }: any) {
   try {
     const supabase = await createClient();
   const { id: agentId } = params;

@@ -5,9 +5,8 @@ import { registryApi } from '@/lib/generated-sdk';
 // This powers CRIT integration and artist page access
 export async function GET(
   request: NextRequest,
-  props: { params: Promise<{ handle: string }> }) {
+  { params }: { params: { handle: string } }) {
   try {
-    const params = await props.params;
   const { handle } = params;
     
     console.log(`[CRIT] Fetching agent ${handle} from Registry...`);

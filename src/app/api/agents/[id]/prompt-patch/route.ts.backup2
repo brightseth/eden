@@ -5,9 +5,8 @@ const patchStore = new Map<string, Array<any>>();
 
 export async function POST(
   request: Request,
-  props: { params: Promise<{ id: string }> }) {
+  { params }: { params: { id: string } }) {
   try {
-    const params = await props.params;
   const { id: agentId } = params;
     const { patch, source_image_id, dimensions } = await request.json();
     
@@ -63,9 +62,8 @@ export async function POST(
 
 export async function GET(
   request: Request,
-  props: { params: Promise<{ id: string }> }) {
+  { params }: { params: { id: string } }) {
   try {
-    const params = await props.params;
   const { id: agentId } = params;
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '10');

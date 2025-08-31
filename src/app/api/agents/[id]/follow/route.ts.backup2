@@ -5,9 +5,8 @@ const followStore = new Map<string, Set<string>>();
 
 export async function POST(
   request: Request,
-  props: { params: Promise<{ id: string }> }) {
+  { params }: { params: { id: string } }) {
   try {
-    const params = await props.params;
   const { id: agentId } = params;
     const { user_id } = await request.json();
     
@@ -46,9 +45,8 @@ export async function POST(
 
 export async function DELETE(
   request: Request,
-  props: { params: Promise<{ id: string }> }) {
+  { params }: { params: { id: string } }) {
   try {
-    const params = await props.params;
   const { id: agentId } = params;
     const { user_id } = await request.json();
     
@@ -83,9 +81,8 @@ export async function DELETE(
 
 export async function GET(
   request: Request,
-  props: { params: Promise<{ id: string }> }) {
+  { params }: { params: { id: string } }) {
   try {
-    const params = await props.params;
   const { id: agentId } = params;
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('user_id');

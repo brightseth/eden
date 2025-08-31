@@ -11,7 +11,7 @@ import {
 // GET /api/agents/[id]/profile-config - Get agent profile configuration
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }) {
+  { params }: any) {
   try {
   const { id: agent } = params;
     

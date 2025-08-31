@@ -4,7 +4,7 @@ import { safeStatusFormat } from '@/lib/utils';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }) {
+  { params }: any) {
   try {
   const { id: agentId } = params;
 

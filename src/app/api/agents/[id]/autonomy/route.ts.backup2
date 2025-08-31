@@ -3,8 +3,7 @@ import { NextResponse } from 'next/server';
 // Agent autonomy tracker - measures maturation, not competition
 export async function GET(
   request: Request,
-  props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
+  { params }: { params: { id: string } }) {
   const { id  } = params;
   
   // Mock data - will connect to real metrics later

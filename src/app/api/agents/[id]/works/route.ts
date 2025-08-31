@@ -4,7 +4,7 @@ import { registryApi } from '@/lib/generated-sdk';
 // GET /api/agents/[id]/works - Get agent's creative works
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }) {
+  { params }: any) {
   try {
   const { id } = params;
     const searchParams = request.nextUrl.searchParams;
@@ -61,7 +61,7 @@ export async function GET(
 // POST /api/agents/[id]/works - Create new work (for authorized agents)
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }) {
+  { params }: any) {
   try {
   const { id } = params;
     

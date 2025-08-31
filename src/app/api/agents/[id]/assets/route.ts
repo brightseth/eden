@@ -47,7 +47,7 @@ async function enqueueCuration(assetId: string) {
 // GET /api/agents/[id]/assets - Fetch agent's assets
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: any
 ) {
   const { id } = params;
   const searchParams = request.nextUrl.searchParams;
@@ -72,7 +72,7 @@ export async function GET(
 // POST /api/agents/[id]/assets - Upload new assets
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: any
 ) {
   const { id } = params;
   try {
@@ -136,7 +136,7 @@ export async function POST(
 // PATCH /api/agents/[id]/assets/[assetId] - Update asset
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: any
 ) {
   const { id } = params;
   try {

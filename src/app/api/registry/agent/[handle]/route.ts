@@ -5,7 +5,7 @@ import { registryApi } from '@/lib/generated-sdk';
 // This powers CRIT integration and artist page access
 export async function GET(
   request: NextRequest,
-  { params }: { params: { handle: string } }) {
+  { params }: any) {
   try {
   const { handle } = params;
     

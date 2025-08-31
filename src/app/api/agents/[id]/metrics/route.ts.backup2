@@ -5,10 +5,9 @@ import { z } from 'zod';
 // GET /api/agents/[id]/metrics
 export async function GET(
   request: NextRequest,
-  props: { params: Promise<{ id: string }> }) {
+  { params }: { params: { id: string } }) {
   try {
     const supabase = await createClient();
-    const params = await props.params;
   const { id: agentId } = params;
 
     // Validate UUID
