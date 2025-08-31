@@ -34,6 +34,33 @@ export default function CEOStrategyPage() {
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
+        {/* Strategic Intelligence Tools */}
+        <div className="mb-8 grid gap-4 md:grid-cols-2">
+          <Link
+            href="/admin/ceo/gigabrain"
+            className="p-6 bg-gradient-to-r from-purple-900/20 to-blue-900/20 border border-purple-500/30 rounded-lg hover:border-purple-400 transition-all group"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <Brain className="w-8 h-8 text-purple-400" />
+              <span className="text-xs px-2 py-1 bg-purple-500/20 text-purple-400 rounded">NEW</span>
+            </div>
+            <h3 className="text-xl font-bold mb-2 group-hover:text-purple-400 transition-colors">GIGABRAIN INTELLIGENCE</h3>
+            <p className="text-gray-400 text-sm">Intelligent training system with Abraham & Solienne patterns. Reduce training from 2 weeks to 4 days.</p>
+          </Link>
+          
+          <Link
+            href="/admin/ceo/vision"
+            className="p-6 bg-gradient-to-r from-blue-900/20 to-green-900/20 border border-blue-500/30 rounded-lg hover:border-blue-400 transition-all group"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <Eye className="w-8 h-8 text-blue-400" />
+              <span className="text-xs px-2 py-1 bg-blue-500/20 text-blue-400 rounded">UPDATED</span>
+            </div>
+            <h3 className="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors">STRATEGIC VISION</h3>
+            <p className="text-gray-400 text-sm">Eden narrative: The Future of Creative Autonomy. Nested token economics and phases.</p>
+          </Link>
+        </div>
+
         {/* Current Strategic Objectives */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">

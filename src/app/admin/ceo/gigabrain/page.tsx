@@ -331,8 +331,8 @@ Predicted success rate with these parameters: **89%**`);
                 <div className="flex items-start gap-4">
                   <TrendingUp className="w-5 h-5 text-green-400 mt-1" />
                   <div>
-                    <p className="font-bold">Chaos trait >60 unlocks creativity breakthroughs</p>
-                    <p className="text-sm text-gray-400">But >80 causes instability and inconsistent outputs</p>
+                    <p className="font-bold">Chaos trait &gt;60 unlocks creativity breakthroughs</p>
+                    <p className="text-sm text-gray-400">But &gt;80 causes instability and inconsistent outputs</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
