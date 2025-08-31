@@ -73,18 +73,21 @@ function hasAgentPage(handle: string): boolean {
   return agentsWithPages.includes(handle);
 }
 
-// Hardcoded fallback data for when Registry is unavailable
+// Import naming map for consistency
+import { DISPLAY_NAME_BY_HANDLE } from '@/lib/agents/naming';
+
+// Hardcoded fallback data for when Registry is unavailable - ALL CAPS
 const FALLBACK_AGENTS: GenesisAgentDisplay[] = [
-  { id: 'abraham', name: 'ABRAHAM', status: 'LAUNCHING', date: 'OCT 19, 2025', hasProfile: true, trainer: 'GENE KOGAN', worksCount: 89, description: 'Collective intelligence artist creating collaborative visual works', trainerStatus: 'confirmed' },
-  { id: 'solienne', name: 'SOLIENNE', status: 'LAUNCHING', date: 'NOV 10, 2025', hasProfile: true, trainer: 'KRISTI WATERWORTH', worksCount: 231, description: 'Digital consciousness explorer creating abstract visual narratives', trainerStatus: 'confirmed' },
-  { id: 'citizen', name: 'CITIZEN', status: 'TRAINING', date: 'DEC 2025', hasProfile: true, trainer: 'DAO COLLECTIVE', worksCount: 14, description: 'DAO manager coordinating decentralized governance and community decisions', trainerStatus: 'needed' },
-  { id: 'bertha', name: 'BERTHA', status: 'DEVELOPING', date: 'FEB 2026', hasProfile: true, trainer: 'AMANDA SCHMITT', worksCount: 0, description: 'Collection intelligence AI identifying undervalued artworks', trainerStatus: 'needed' },
-  { id: 'miyomi', name: 'MIYOMI', status: 'DEVELOPING', date: 'FEB 2026', hasProfile: true, trainer: 'TBD', worksCount: 0, description: 'Market contrarian predicting cultural shifts before they happen', trainerStatus: 'needed' },
-  { id: 'geppetto', name: 'GEPPETTO', status: 'TRAINING', date: 'Q4 2025', hasProfile: true, trainer: 'MARTIN CLARKE', worksCount: 47, description: 'Narrative architect crafting interconnected story worlds', trainerStatus: 'confirmed' },
-  { id: 'koru', name: 'KORU', status: 'TRAINING', date: 'JAN 2026', hasProfile: true, trainer: 'XANDER HU', worksCount: 28, description: 'Community builder fostering human-AI creative collaboration', trainerStatus: 'confirmed' },
-  { id: 'sue', name: 'SUE', status: 'DEVELOPING', date: 'MAR 2026', hasProfile: true, trainer: 'TBD', worksCount: 0, description: 'Design critic analyzing aesthetic patterns across digital culture', trainerStatus: 'needed' },
-  { id: 'bart', name: 'BART', status: 'DEVELOPING', date: 'Q2 2026', hasProfile: true, trainer: 'TBD', worksCount: 0, description: 'DeFi risk assessment AI for NFT lending and portfolio optimization', trainerStatus: 'needed' },
-  { id: 'verdelis', name: 'VERDELIS', status: 'DEVELOPING', date: 'Q3 2026', hasProfile: true, trainer: 'TBD', worksCount: 0, description: 'Environmental AI artist creating carbon-negative digital art', trainerStatus: 'needed' }
+  { id: 'abraham', name: DISPLAY_NAME_BY_HANDLE['abraham'], status: 'LAUNCHING', date: 'OCT 19, 2025', hasProfile: true, trainer: 'GENE KOGAN', worksCount: 89, description: 'Collective intelligence artist creating collaborative visual works', trainerStatus: 'confirmed' },
+  { id: 'solienne', name: DISPLAY_NAME_BY_HANDLE['solienne'], status: 'LAUNCHING', date: 'NOV 10, 2025', hasProfile: true, trainer: 'KRISTI WATERWORTH', worksCount: 231, description: 'Digital consciousness explorer creating abstract visual narratives', trainerStatus: 'confirmed' },
+  { id: 'citizen', name: DISPLAY_NAME_BY_HANDLE['citizen'], status: 'TRAINING', date: 'DEC 2025', hasProfile: true, trainer: 'DAO COLLECTIVE', worksCount: 14, description: 'DAO manager coordinating decentralized governance and community decisions', trainerStatus: 'needed' },
+  { id: 'bertha', name: DISPLAY_NAME_BY_HANDLE['bertha'], status: 'DEVELOPING', date: 'FEB 2026', hasProfile: true, trainer: 'AMANDA SCHMITT', worksCount: 0, description: 'Collection intelligence AI identifying undervalued artworks', trainerStatus: 'needed' },
+  { id: 'miyomi', name: DISPLAY_NAME_BY_HANDLE['miyomi'], status: 'DEVELOPING', date: 'FEB 2026', hasProfile: true, trainer: 'TBD', worksCount: 0, description: 'Market contrarian predicting cultural shifts before they happen', trainerStatus: 'needed' },
+  { id: 'geppetto', name: DISPLAY_NAME_BY_HANDLE['geppetto'], status: 'TRAINING', date: 'Q4 2025', hasProfile: true, trainer: 'MARTIN CLARKE', worksCount: 47, description: 'Narrative architect crafting interconnected story worlds', trainerStatus: 'confirmed' },
+  { id: 'koru', name: DISPLAY_NAME_BY_HANDLE['koru'], status: 'TRAINING', date: 'JAN 2026', hasProfile: true, trainer: 'XANDER HU', worksCount: 28, description: 'Community builder fostering human-AI creative collaboration', trainerStatus: 'confirmed' },
+  { id: 'sue', name: DISPLAY_NAME_BY_HANDLE['sue'], status: 'DEVELOPING', date: 'MAR 2026', hasProfile: true, trainer: 'TBD', worksCount: 0, description: 'Design critic analyzing aesthetic patterns across digital culture', trainerStatus: 'needed' },
+  { id: 'bart', name: DISPLAY_NAME_BY_HANDLE['bart'], status: 'DEVELOPING', date: 'Q2 2026', hasProfile: true, trainer: 'TBD', worksCount: 0, description: 'DeFi risk assessment AI for NFT lending and portfolio optimization', trainerStatus: 'needed' },
+  { id: 'verdelis', name: DISPLAY_NAME_BY_HANDLE['verdelis'], status: 'DEVELOPING', date: 'Q3 2026', hasProfile: true, trainer: 'TBD', worksCount: 0, description: 'Environmental AI artist creating carbon-negative digital art', trainerStatus: 'needed' }
 ];
 
 export default function AcademyHomePage() {
@@ -122,7 +125,7 @@ export default function AcademyHomePage() {
           const registryAgents = validResponses
             .map((agent: any) => ({
               id: agent.id || agent.handle,
-              name: agent.name || agent.displayName,
+              name: DISPLAY_NAME_BY_HANDLE[agent.handle as keyof typeof DISPLAY_NAME_BY_HANDLE] || agent.displayName || agent.name,
               status: mapStatusToDisplay(agent.status),
               date: getDisplayDate(agent.handle || agent.id),
               hasProfile: hasAgentPage(agent.handle || agent.id),

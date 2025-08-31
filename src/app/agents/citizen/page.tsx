@@ -1,6 +1,6 @@
-// Main CITIZEN agent page
+// Main CITIZEN agent page - redirect to DAO interface
 import { redirect } from 'next/navigation';
 
 export default function CitizenAgentPage() {
-  redirect('/academy/agent/citizen');
+  redirect('/citizen');
 }
