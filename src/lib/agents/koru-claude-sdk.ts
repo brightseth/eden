@@ -4,7 +4,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
-import { RegistryClient } from '../registry/sdk';
+import { registryClient } from '../registry/registry-client';
 
 export interface CommunityEvent {
   id: string;
@@ -122,16 +122,13 @@ export interface CommunityHealth {
 export class KoruClaudeSDK {
   private anthropic: Anthropic;
   private config: KoruConfig;
-  private registryClient: RegistryClient;
 
   constructor(apiKey?: string) {
     this.anthropic = new Anthropic({
       apiKey: apiKey || process.env.ANTHROPIC_API_KEY!
     });
 
-    this.registryClient = new RegistryClient({
-      baseUrl: process.env.REGISTRY_URL || 'https://eden-genesis-registry.vercel.app/api/v1'
-    });
+    // Use existing registryClient singleton
 
     // Initialize KORU's community configuration
     this.config = {
@@ -519,7 +516,7 @@ Format as JSON:
    */
   async syncWithRegistry(event: CommunityEvent): Promise<void> {
     try {
-      await this.registryClient.creations.create('koru', {
+      await registryClient.creations.create('koru', {
         type: 'community-building',
         title: event.title,
         description: event.description,

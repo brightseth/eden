@@ -13,6 +13,8 @@ export { SolienneClaudeSDK, solienneSDK } from './solienne-claude-sdk';
 export { AbrahamClaudeSDK, abrahamSDK } from './abraham-claude-sdk';
 export { SueClaudeSDK, sueSDK } from './sue-claude-sdk';
 export { CitizenClaudeSDK, citizenSDK } from './citizen-claude-sdk';
+export { BartClaudeSDK, bartSDK } from './bart-claude-sdk';
+export { KoruClaudeSDK, koruSDK } from './koru-claude-sdk';
 
 // Type exports for all SDKs
 export type { 
@@ -51,6 +53,21 @@ export type {
   GovernanceMetrics
 } from './citizen-claude-sdk';
 
+export type {
+  LoanRequest,
+  LoanDecision,
+  RiskAssessment,
+  BartConfig
+} from './bart-claude-sdk';
+
+export type {
+  CommunityEvent,
+  CulturalBridge,
+  CommunityInsight,
+  KoruConfig,
+  CommunityHealth
+} from './koru-claude-sdk';
+
 // Agent Registry for SDK lookup
 export const AGENT_SDKS = {
   miyomi: miyomiSDK,
@@ -59,6 +76,8 @@ export const AGENT_SDKS = {
   abraham: abrahamSDK,
   sue: sueSDK,
   citizen: citizenSDK,
+  bart: bartSDK,
+  koru: koruSDK,
 } as const;
 
 // SDK Status tracking
@@ -125,6 +144,20 @@ export function getSDKStatuses(): Record<string, SDKStatus> {
     },
     citizen: {
       agentId: 'citizen',
+      hasClaudeSDK: true,
+      hasEdenPlatform: true,
+      dualInstantiation: true,
+      registryIntegration: true
+    },
+    bart: {
+      agentId: 'bart',
+      hasClaudeSDK: true,
+      hasEdenPlatform: true,
+      dualInstantiation: true,
+      registryIntegration: true
+    },
+    koru: {
+      agentId: 'koru',
       hasClaudeSDK: true,
       hasEdenPlatform: true,
       dualInstantiation: true,

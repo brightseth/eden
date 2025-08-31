@@ -54,7 +54,7 @@ class RegistryClient {
   private healthCheckInterval = 60 * 1000; // 1 minute
 
   constructor() {
-    this.baseUrl = process.env.NEXT_PUBLIC_REGISTRY_URL || 'https://registry.eden2.io/api/v1';
+    this.baseUrl = process.env.NEXT_PUBLIC_REGISTRY_URL || 'https://eden-genesis-registry.vercel.app/api/v1';
     this.apiKey = process.env.NEXT_PUBLIC_REGISTRY_API_KEY || 'eden-academy-client';
   }
 
