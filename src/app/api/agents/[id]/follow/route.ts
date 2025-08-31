@@ -5,10 +5,10 @@ const followStore = new Map<string, Set<string>>();
 
 export async function POST(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  props: { params: Promise<{ id: string }> }) {
   try {
-    const { id: agentId } = await params;
+    const params = await props.params;
+  const { id: agentId } = params;
     const { user_id } = await request.json();
     
     if (!user_id) {
@@ -46,10 +46,10 @@ export async function POST(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  props: { params: Promise<{ id: string }> }) {
   try {
-    const { id: agentId } = await params;
+    const params = await props.params;
+  const { id: agentId } = params;
     const { user_id } = await request.json();
     
     if (!user_id) {
@@ -83,10 +83,10 @@ export async function DELETE(
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  props: { params: Promise<{ id: string }> }) {
   try {
-    const { id: agentId } = await params;
+    const params = await props.params;
+  const { id: agentId } = params;
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('user_id');
     

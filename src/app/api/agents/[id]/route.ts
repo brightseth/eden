@@ -5,10 +5,10 @@ import { registryApi } from '@/lib/generated-sdk';
 // ADR COMPLIANCE: Use Registry SDK instead of direct Supabase access
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+  props: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = await context.params;
+    const params = await props.params;
+  const { id } = params;
     
     console.log(`API /agents/${id}: Fetching from Registry SDK...`);
     
@@ -78,13 +78,12 @@ function getTrainerName(handle: string): string {
 // ADR COMPLIANCE: Agent updates should go through Registry
 export async function PATCH(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+  props: { params: Promise<{ id: string }> }) {
   return NextResponse.json(
     { 
       error: 'Agent updates must go through Registry API',
       message: 'Use Registry endpoints for agent management operations',
-      registryEndpoint: `/api/v1/agents/${(await context.params).id}` 
+      registryEndpoint: `/api/v1/agents/${(params).id}` 
     },
     { status: 501 }
   );

@@ -23,13 +23,14 @@ interface DocumentMetadata {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+  props: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const params = await props.params;
+  const { id } = params;
 
     if (!id) {
-      return NextResponse.json(
+  const params = await props.params;
+  return NextResponse.json(
         { error: 'Document ID is required' },
         { status: 400 }
       );

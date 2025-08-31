@@ -206,7 +206,9 @@ function isCriticalChange(path: string): boolean {
 }
 
 // Add reload listener (for real-time notifications)
-export function addReloadListener(listener: (changes: ConfigChange[]) => void) {
+// Note: This function is not exported from route file to comply with Next.js route requirements
+// It can be moved to a separate utility file if needed externally
+function addReloadListener(listener: (changes: ConfigChange[]) => void) {
   reloadListeners.push(listener)
   
   return () => {

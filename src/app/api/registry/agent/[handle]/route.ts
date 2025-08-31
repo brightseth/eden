@@ -5,10 +5,10 @@ import { registryApi } from '@/lib/generated-sdk';
 // This powers CRIT integration and artist page access
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ handle: string }> }
-) {
+  props: { params: Promise<{ handle: string }> }) {
   try {
-    const { handle } = await context.params;
+    const params = await props.params;
+  const { handle } = params;
     
     console.log(`[CRIT] Fetching agent ${handle} from Registry...`);
     
@@ -130,13 +130,13 @@ export async function GET(
     });
     
   } catch (error) {
-    console.error(`[CRIT] Registry SDK failed for ${(await context.params).handle}:`, error);
+    console.error(`[CRIT] Registry SDK failed for ${(params).handle}:`, error);
     
     return NextResponse.json(
       { 
         error: 'Registry unavailable',
         message: 'Artist data temporarily unavailable - Registry integration required',
-        handle: (await context.params).handle,
+        handle: (params).handle,
         registryRequired: true
       },
       { 

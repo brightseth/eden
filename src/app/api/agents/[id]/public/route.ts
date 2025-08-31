@@ -3,9 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
-  const params = await context.params;
+  props: { params: Promise<{ id: string }> }) {
   try {
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '50');

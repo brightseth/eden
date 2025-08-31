@@ -22,9 +22,9 @@ const emitEvent = (type: string, payload: any) => {
 // POST /api/assets/[id]/publish - Publish an asset
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params;
+  props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+  const { id  } = params;
   
   try {
     const assetStore = getAssetStore();

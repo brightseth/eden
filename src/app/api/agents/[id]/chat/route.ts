@@ -45,13 +45,14 @@ interface ChatResponse {
 // GET /api/agents/[id]/chat - Get chat info/status
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+  props: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = await context.params;
+    const params = await props.params;
+  const { id } = params;
 
     if (!FEATURE_FLAGS.ENABLE_AGENT_CHAT) {
-      return NextResponse.json(
+  const params = await props.params;
+  return NextResponse.json(
         { error: 'Agent chat is currently disabled' },
         { status: 503 }
       );
@@ -81,13 +82,14 @@ export async function GET(
 // POST /api/agents/[id]/chat - Send message to agent
 export async function POST(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+  props: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = await context.params;
+    const params = await props.params;
+  const { id } = params;
 
     if (!FEATURE_FLAGS.ENABLE_AGENT_CHAT) {
-      return NextResponse.json(
+  const params = await props.params;
+  return NextResponse.json(
         { error: 'Agent chat is currently disabled' },
         { status: 503 }
       );

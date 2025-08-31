@@ -4,10 +4,10 @@ import { registryApi } from '@/lib/generated-sdk';
 // GET /api/agents/[id]/works - Get agent's creative works
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+  props: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = await context.params;
+    const params = await props.params;
+  const { id } = params;
     const searchParams = request.nextUrl.searchParams;
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
@@ -62,10 +62,10 @@ export async function GET(
 // POST /api/agents/[id]/works - Create new work (for authorized agents)
 export async function POST(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+  props: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = await context.params;
+    const params = await props.params;
+  const { id } = params;
     
     // Verify internal API token
     const authHeader = request.headers.get('Authorization');

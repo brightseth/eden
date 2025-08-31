@@ -11,10 +11,10 @@ import {
 // GET /api/agents/[id]/profile-config - Get agent profile configuration
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+  props: { params: Promise<{ id: string }> }) {
   try {
-    const { id: agent } = await context.params;
+    const params = await props.params;
+  const { id: agent } = params;
     
     console.log(`[ProfileConfig] Fetching configuration for agent: ${agent}`);
     
@@ -42,7 +42,8 @@ export async function GET(
     console.error(`[ProfileConfig] Error fetching configuration:`, error);
     
     // Graceful degradation - return minimal fallback config
-    const { id: agent } = await context.params;
+    const params = await props.params;
+  const { id: agent } = params;
     const fallbackConfig = getFallbackProfileConfig(agent);
     
     return NextResponse.json(fallbackConfig, { status: 200 });

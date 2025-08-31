@@ -407,7 +407,8 @@ async function testEmergencyEmail(testEmails: string[]) {
 }
 
 // Helper endpoint for automatic milestone detection
-export async function checkAndSendMilestones() {
+// Helper function - not exported from route file
+async function checkAndSendMilestones() {
   try {
     const { data: stats } = await supabase
       .from('covenant_witnesses')
