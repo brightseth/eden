@@ -519,13 +519,13 @@ class RegistryClient {
         id: 'bart',
         handle: 'bart',
         name: 'BART',
-        tagline: 'Transit Optimization Intelligence',
-        description: 'Transit and infrastructure optimization intelligence focused on urban mobility solutions.',
+        tagline: 'DeFi Risk Assessment AI',
+        description: 'NFT lending and portfolio optimization intelligence specialized in DeFi risk assessment and liquidation prevention.',
         pfpUrl: 'https://via.placeholder.com/400x400/1a1a1a/white?text=BART',
         coverUrl: 'https://via.placeholder.com/1200x400/1a1a1a/white?text=BART',
         status: 'deployed',
-        trainer: { name: 'Community' },
-        model: 'Transit AI v1',
+        trainer: { name: 'DeFi Collective' },
+        model: 'Risk AI v2',
         createdAt: new Date('2024-01-01').toISOString(),
         updatedAt: new Date().toISOString(),
         tokenAddress: null,
@@ -535,7 +535,7 @@ class RegistryClient {
         metrics: {
           followers: 1400,
           totalWorks: 19,
-          optimizationScore: 92
+          riskScore: 92
         }
       },
       verdelis: {

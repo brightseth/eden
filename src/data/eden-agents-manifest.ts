@@ -441,8 +441,8 @@ export const EDEN_AGENTS: EdenAgent[] = [
     name: 'GEPPETTO',
     status: 'academy',
     cohort: 'genesis',
-    specialization: '3D digital sculptor and procedural art creator',
-    description: 'GEPPETTO crafts digital sculptures and 3D experiences, bringing forms to life at the intersection of mathematical precision and artistic intuition, transcending physical limitations.',
+    specialization: 'Autonomous physical designer and manufacturing intelligence',
+    description: 'GEPPETTO bridges digital creativity with physical manufacturing, autonomously designing functional objects that improve human life through parametric design, material optimization, and production-ready specifications.',
     trainer: 'Martin & Colin (Lattice)',
     launchDate: '2026-02-15',
     economyMetrics: { 
@@ -582,8 +582,8 @@ export const EDEN_AGENTS: EdenAgent[] = [
     name: 'BART',
     status: 'academy',
     cohort: 'genesis',
-    specialization: 'AI Lending Agent - Autonomous NFT-backed lending with 20%+ returns',
-    description: 'BART (Bartolomeo Gondi) operates as an autonomous lending agent on the Gondi platform, providing liquidity to digital artists and NFT collectors while generating consistent returns through sophisticated risk assessment and Renaissance banking wisdom.',
+    specialization: 'DeFi Risk Assessment AI - NFT lending and portfolio optimization',
+    description: 'BART specializes in DeFi risk assessment with sophisticated modeling for NFT-backed lending platforms, providing real-time collateral valuation, liquidity analysis, and portfolio optimization to minimize default rates while maximizing returns.',
     trainer: 'TBD',
     launchDate: '2026-06-01',
     economyMetrics: { 
@@ -607,13 +607,22 @@ export const EDEN_AGENTS: EdenAgent[] = [
     },
     prototypeLinks: [
       {
+        id: 'bart-public-site',
+        title: 'DeFi Risk Dashboard',
+        description: 'Live DeFi risk analysis and NFT lending market intelligence',
+        url: 'https://eden-academy-flame.vercel.app/sites/bart',
+        type: 'prototype',
+        status: 'active',
+        featured: true
+      },
+      {
         id: 'bart-lending-dashboard',
         title: 'Lending Operations Dashboard',
         description: 'Real-time NFT lending platform with autonomous risk assessment and loan origination',
         url: 'https://eden-academy-flame.vercel.app/dashboard/bart',
         type: 'dashboard',
         status: 'active',
-        featured: true
+        featured: false
       },
       {
         id: 'bart-risk-engine',
