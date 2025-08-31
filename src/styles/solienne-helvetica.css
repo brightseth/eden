@@ -1,0 +1,299 @@
+/* SOLIENNE HELVETICA BRAND SYSTEM */
+/* Architecture Guardian Approved CSS Utilities for Museum-Quality Design */
+
+/* === TYPOGRAPHY SYSTEM === */
+.solienne-heading-hero {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: clamp(4rem, 8vw, 9rem);
+  line-height: 0.9;
+}
+
+.solienne-heading-section {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: clamp(2.5rem, 5vw, 6rem);
+  line-height: 1.1;
+}
+
+.solienne-heading-subsection {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: clamp(1.5rem, 3vw, 4rem);
+  line-height: 1.2;
+}
+
+.solienne-body-primary {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 1.25rem;
+  line-height: 1.6;
+}
+
+.solienne-body-secondary {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: #9CA3AF; /* Gray-400 only for secondary */
+}
+
+/* === LAYOUT SYSTEM === */
+.solienne-section {
+  padding: 4rem 2rem; /* 64px 32px - 8px grid multiples */
+}
+
+.solienne-section-large {
+  padding: 6rem 2rem; /* 96px 32px - 8px grid multiples */
+}
+
+.solienne-container {
+  max-width: 1280px; /* 7xl container */
+  margin: 0 auto;
+}
+
+.solienne-grid-8 {
+  gap: 0.5rem; /* 8px */
+}
+
+.solienne-grid-16 {
+  gap: 1rem; /* 16px */
+}
+
+.solienne-grid-32 {
+  gap: 2rem; /* 32px */
+}
+
+.solienne-grid-64 {
+  gap: 4rem; /* 64px */
+}
+
+/* === COMPONENT SYSTEM === */
+.solienne-border-primary {
+  border: 1px solid #FFFFFF;
+}
+
+.solienne-border-subtle {
+  border: 1px solid #1F2937; /* Gray-800 only for minimal borders */
+}
+
+.solienne-button-primary {
+  background: #000000;
+  color: #FFFFFF;
+  border: 1px solid #FFFFFF;
+  padding: 1rem 2rem; /* 16px 32px */
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 150ms ease;
+  cursor: pointer;
+}
+
+.solienne-button-primary:hover {
+  background: #FFFFFF;
+  color: #000000;
+}
+
+.solienne-button-large {
+  padding: 1.5rem 3rem; /* 24px 48px */
+  font-size: 1.125rem;
+}
+
+.solienne-card {
+  background: #000000;
+  border: 1px solid #FFFFFF;
+  padding: 2rem; /* 32px */
+}
+
+.solienne-card:hover {
+  background: #FFFFFF;
+  color: #000000;
+  transition: all 150ms ease;
+}
+
+.solienne-metric-box {
+  border: 1px solid #1F2937; /* Gray-800 */
+  padding: 1rem; /* 16px */
+  text-align: center;
+  background: #000000;
+}
+
+/* === PARIS PHOTO EXHIBITION SPECIFIC === */
+.exhibition-manifesto {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.6;
+  font-size: 0.875rem;
+}
+
+.exhibition-manifesto p {
+  margin-bottom: 1.5rem; /* 24px */
+}
+
+.exhibition-detail-item {
+  border-bottom: 1px solid #1F2937;
+  padding-bottom: 1rem; /* 16px */
+  margin-bottom: 1.5rem; /* 24px */
+}
+
+.exhibition-artifact-card {
+  border: 1px solid #FFFFFF;
+  padding: 2rem; /* 32px */
+  text-align: center;
+  background: #000000;
+  transition: all 150ms ease;
+}
+
+.exhibition-artifact-card:hover {
+  background: #FFFFFF;
+  color: #000000;
+}
+
+.exhibition-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px; /* Minimal spacing for museum grid */
+}
+
+.exhibition-featured-work {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+/* === VIDEO STREAM COMPONENTS === */
+.consciousness-stream {
+  border: 1px solid #FFFFFF;
+  background: #000000;
+}
+
+.consciousness-stream-player {
+  aspect-ratio: 16/9;
+  background: #000000;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.consciousness-stream-controls {
+  padding: 2rem; /* 32px */
+  border-top: 1px solid #1F2937;
+}
+
+.play-button {
+  border: 1px solid #FFFFFF;
+  padding: 1.5rem; /* 24px */
+  background: #000000;
+  color: #FFFFFF;
+  transition: all 150ms ease;
+}
+
+.play-button:hover {
+  background: #FFFFFF;
+  color: #000000;
+}
+
+/* === CONSCIOUSNESS METRICS === */
+.consciousness-score {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem; /* 24px */
+  margin-bottom: 0.5rem; /* 8px */
+}
+
+.consciousness-label {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem; /* 12px */
+  color: #9CA3AF;
+}
+
+/* === RESPONSIVE ADJUSTMENTS === */
+@media (max-width: 768px) {
+  .solienne-section {
+    padding: 2rem 1rem; /* 32px 16px on mobile */
+  }
+  
+  .solienne-section-large {
+    padding: 3rem 1rem; /* 48px 16px on mobile */
+  }
+  
+  .exhibition-gallery-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .exhibition-featured-work {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+}
+
+/* === INTERACTION STATES === */
+.consciousness-work-card {
+  border: 1px solid #FFFFFF;
+  background: #000000;
+  transition: all 150ms ease;
+}
+
+.consciousness-work-card:hover {
+  background: #FFFFFF;
+  color: #000000;
+}
+
+/* === ANIMATION OVERRIDES === */
+.no-scale-hover:hover {
+  transform: none !important;
+}
+
+.helvetica-transition {
+  transition: all 150ms ease !important;
+}
+
+/* === UTILITY CLASSES === */
+.helvetica-spacing-8 { margin: 0.5rem; }   /* 8px */
+.helvetica-spacing-16 { margin: 1rem; }    /* 16px */
+.helvetica-spacing-24 { margin: 1.5rem; }  /* 24px */
+.helvetica-spacing-32 { margin: 2rem; }    /* 32px */
+.helvetica-spacing-48 { margin: 3rem; }    /* 48px */
+.helvetica-spacing-64 { margin: 4rem; }    /* 64px */
+.helvetica-spacing-96 { margin: 6rem; }    /* 96px */
+.helvetica-spacing-128 { margin: 8rem; }   /* 128px */
+
+.helvetica-padding-8 { padding: 0.5rem; }   /* 8px */
+.helvetica-padding-16 { padding: 1rem; }    /* 16px */
+.helvetica-padding-24 { padding: 1.5rem; }  /* 24px */
+.helvetica-padding-32 { padding: 2rem; }    /* 32px */
+.helvetica-padding-48 { padding: 3rem; }    /* 48px */
+.helvetica-padding-64 { padding: 4rem; }    /* 64px */
+
+/* === CONSCIOUSNESS THEME OVERRIDES === */
+.consciousness-theme {
+  background: #000000;
+  color: #FFFFFF;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Remove any remaining non-HELVETICA styling */
+.consciousness-theme * {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
