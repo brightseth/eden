@@ -6,15 +6,29 @@ const nextConfig: NextConfig = {
     // Temporarily ignore ESLint during builds to unblock deployments
     ignoreDuringBuilds: true,
   },
+  // Exclude legacy apps directory from build
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
   typescript: {
     // Enable TypeScript checking to catch build issues
     ignoreBuildErrors: false,
   },
+  async redirects() {
+    return [
+      {
+        source: '/academy/:path*',
+        destination: '/:path*',
+        permanent: true,
+      },
+    ];
+  },
   webpack: (config, { isServer }) => {
-    // Exclude packages directory from compilation
+    // Exclude packages and apps directories from compilation
     config.externals = config.externals || [];
     config.externals.push(function ({context, request}, callback) {
-      if (request && (request.startsWith('./packages/') || request.includes('/packages/'))) {
+      if (request && (
+        request.startsWith('./packages/') || request.includes('/packages/') ||
+        request.startsWith('./apps/') || request.includes('/apps/')
+      )) {
         return callback(null, 'commonjs ' + request);
       }
       callback();
