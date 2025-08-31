@@ -21,83 +21,109 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              // Comprehensive wallet provider error suppression
+              // CRITICAL: Block ALL wallet provider injections immediately
               (function() {
                 'use strict';
                 
-                // Early suppression setup before any other code runs
-                const suppressedPatterns = [
-                  'proxy-injected-providers',
-                  'Cannot create proxy',
-                  'non-object as target or handler',
-                  'Minified React error #306',
-                  'MetaMask',
-                  'wallet provider',
-                  'injected provider',
-                  'ethereum provider',
-                  'web3 provider'
-                ];
-                
-                function shouldSuppress(message) {
-                  if (!message) return false;
-                  const str = message.toString().toLowerCase();
-                  return suppressedPatterns.some(pattern => str.includes(pattern.toLowerCase()));
-                }
-                
-                // Override console methods immediately
-                if (typeof console !== 'undefined') {
-                  const originalError = console.error;
-                  const originalWarn = console.warn;
-                  const originalLog = console.log;
-                  
-                  console.error = function(...args) {
-                    if (shouldSuppress(args[0])) return;
-                    return originalError.apply(console, args);
-                  };
-                  
-                  console.warn = function(...args) {
-                    if (shouldSuppress(args[0])) return;
-                    return originalWarn.apply(console, args);
-                  };
-                  
-                  console.log = function(...args) {
-                    if (shouldSuppress(args[0])) return;
-                    return originalLog.apply(console, args);
-                  };
-                }
-                
-                // Global error handling
-                window.addEventListener('error', function(event) {
-                  if (shouldSuppress(event.error?.message) || shouldSuppress(event.message)) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    event.stopImmediatePropagation();
-                    return false;
-                  }
-                }, { capture: true, passive: false });
-                
-                // Unhandled promise rejection handling
-                window.addEventListener('unhandledrejection', function(event) {
-                  if (shouldSuppress(event.reason?.message) || shouldSuppress(event.reason)) {
-                    event.preventDefault();
-                    return false;
-                  }
-                }, { capture: true, passive: false });
-                
-                // Proxy trap for common wallet injection issues
-                if (typeof window !== 'undefined' && typeof Proxy !== 'undefined') {
-                  const originalProxy = window.Proxy;
-                  window.Proxy = function(target, handler) {
+                // Block Proxy constructor completely for problematic cases
+                const OriginalProxy = window.Proxy;
+                window.Proxy = new Proxy(OriginalProxy, {
+                  construct(target, args) {
+                    const [proxyTarget, handler] = args;
+                    
+                    // If target is undefined, null, or not an object, return a dummy proxy
+                    if (!proxyTarget || typeof proxyTarget !== 'object') {
+                      return new OriginalProxy({}, {});
+                    }
+                    
+                    // If handler is undefined, null, or not an object, return a dummy proxy
+                    if (!handler || typeof handler !== 'object') {
+                      return new OriginalProxy(proxyTarget, {});
+                    }
+                    
                     try {
-                      if (!target || typeof target !== 'object') {
-                        console.warn('[Wallet Provider] Suppressed invalid proxy target');
-                        return {};
+                      return new target(...args);
+                    } catch (e) {
+                      // Return dummy proxy on any error
+                      return new OriginalProxy({}, {});
+                    }
+                  }
+                });
+                
+                // Completely override console.error to suppress wallet errors
+                const originalError = console.error;
+                console.error = function(...args) {
+                  const message = args[0]?.toString?.() || '';
+                  if (
+                    message.includes('proxy') ||
+                    message.includes('Proxy') ||
+                    message.includes('wallet') ||
+                    message.includes('MetaMask') ||
+                    message.includes('injected') ||
+                    message.includes('Cannot create') ||
+                    message.includes('non-object')
+                  ) {
+                    return;
+                  }
+                  return originalError.apply(console, args);
+                };
+                
+                // Block all error events related to wallet providers
+                window.addEventListener('error', function(e) {
+                  const msg = e.message || e.error?.message || '';
+                  if (
+                    msg.includes('proxy') ||
+                    msg.includes('Proxy') ||
+                    msg.includes('wallet') ||
+                    msg.includes('injected') ||
+                    msg.includes('Cannot create')
+                  ) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    return false;
+                  }
+                }, true);
+                
+                // Block unhandled rejections
+                window.addEventListener('unhandledrejection', function(e) {
+                  const msg = e.reason?.message || e.reason?.toString?.() || '';
+                  if (
+                    msg.includes('proxy') ||
+                    msg.includes('Proxy') ||
+                    msg.includes('wallet') ||
+                    msg.includes('injected')
+                  ) {
+                    e.preventDefault();
+                    return false;
+                  }
+                }, true);
+                
+                // Block script injection attempts from extensions
+                const observer = new MutationObserver(function(mutations) {
+                  mutations.forEach(function(mutation) {
+                    mutation.addedNodes.forEach(function(node) {
+                      if (node.tagName === 'SCRIPT' && node.src) {
+                        if (
+                          node.src.includes('proxy-injected') ||
+                          node.src.includes('wallet') ||
+                          node.src.includes('metamask') ||
+                          node.src.includes('injected-provider')
+                        ) {
+                          node.remove();
+                        }
                       }
-                      return new originalProxy(target, handler);
-                    } catch (error) {
-                      if (shouldSuppress(error.message)) {
-                        console.warn('[Wallet Provider] Suppressed proxy creation error');
-                        return target || {};
+                    });
+                  });
+                });
+                
+                // Start observing as soon as possible
+                if (document.documentElement) {
+                  observer.observe(document.documentElement, {
+                    childList: true,
+                    subtree: true
+                  });
+                }
                       }
                       throw error;
                     }

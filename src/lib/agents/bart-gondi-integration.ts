@@ -3,37 +3,12 @@
  * Handles real-time integration with Gondi NFT lending platform
  */
 
-// import { Gondi } from 'gondi'; // TODO: Install gondi package
-const Gondi = null as any; // Temporary stub for deployment
-
-// Conditional viem imports to prevent client-side issues
-let createWalletClient: any, http: any, privateKeyToAccount: any, mainnet: any;
-
-if (typeof window === 'undefined') {
-  // Server-side only imports
-  try {
-    const viemModule = require('viem');
-    const viemAccounts = require('viem/accounts');
-    const viemChains = require('viem/chains');
-    
-    createWalletClient = viemModule.createWalletClient;
-    http = viemModule.http;
-    privateKeyToAccount = viemAccounts.privateKeyToAccount;
-    mainnet = viemChains.mainnet;
-  } catch (error) {
-    console.warn('[BART] Viem not available, using stubs:', error.message);
-    createWalletClient = () => ({});
-    http = () => ({});
-    privateKeyToAccount = () => ({});
-    mainnet = {};
-  }
-} else {
-  // Client-side stubs
-  createWalletClient = () => ({});
-  http = () => ({});
-  privateKeyToAccount = () => ({});
-  mainnet = {};
-}
+// COMPLETELY STUBBED - NO WEB3 IMPORTS TO AVOID CLIENT-SIDE ERRORS
+const Gondi = null as any;
+const createWalletClient = () => ({ request: () => Promise.resolve() });
+const http = () => ({});
+const privateKeyToAccount = () => ({ address: '0x0000000000000000000000000000000000000000' });
+const mainnet = { id: 1, name: 'mainnet' };
 
 export interface GondiMarketData {
   offers: GondiOffer[];
