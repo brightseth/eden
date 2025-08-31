@@ -206,7 +206,7 @@ function isCriticalChange(path: string): boolean {
 }
 
 // Add reload listener (for real-time notifications)
-export function addReloadListener(listener: (changes: ConfigChange[]) => void) {
+function addReloadListener(listener: (changes: ConfigChange[]) => void) {
   reloadListeners.push(listener)
   
   return () => {

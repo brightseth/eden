@@ -182,19 +182,19 @@ export async function GET(request: NextRequest) {
     // Apply filters
     if (reportId) {
       advisorReports = advisorReports.filter(report => 
-        report.metadata.reportData?.reportId === reportId
+        (report.metadata.reportData as any)?.reportId === reportId
       );
     }
 
     if (collectorName) {
       advisorReports = advisorReports.filter(report =>
-        report.metadata.collectorName?.toLowerCase().includes(collectorName.toLowerCase())
+        (report.metadata.collectorName as string)?.toLowerCase().includes(collectorName.toLowerCase())
       );
     }
 
     if (status) {
       advisorReports = advisorReports.filter(report =>
-        report.metadata.reportData?.status === status
+        (report.metadata.reportData as any)?.status === status
       );
     }
 
@@ -206,18 +206,18 @@ export async function GET(request: NextRequest) {
     // Format for response
     const formattedReports = sortedReports.map(artifact => ({
       id: artifact.id,
-      reportId: artifact.metadata.reportData?.reportId,
+      reportId: (artifact.metadata.reportData as any)?.reportId,
       title: artifact.metadata.title,
       collectorName: artifact.metadata.collectorName,
       generated: artifact.metadata.generated,
       recommendations: artifact.metadata.recommendations,
       riskLevel: artifact.metadata.riskLevel,
       portfolioSize: artifact.metadata.portfolioSize,
-      status: artifact.metadata.reportData?.status || 'final',
+      status: (artifact.metadata.reportData as any)?.status || 'final',
       access: artifact.metadata.access,
-      shareableLink: artifact.metadata.reportData?.access?.shareableLink,
-      downloadUrl: `/api/agents/bertha/advisory-report/download?reportId=${artifact.metadata.reportData?.reportId}`,
-      performance: artifact.metadata.reportData?.performance,
+      shareableLink: (artifact.metadata.reportData as any)?.access?.shareableLink,
+      downloadUrl: `/api/agents/bertha/advisory-report/download?reportId=${(artifact.metadata.reportData as any)?.reportId}`,
+      performance: (artifact.metadata.reportData as any)?.performance,
       createdAt: artifact.createdAt,
       tags: artifact.metadata.tags
     }));
@@ -269,7 +269,7 @@ export async function DELETE(request: NextRequest) {
     const artifacts = await registryClient.getAgentCreations(berthaAgent.id);
     const reportArtifact = artifacts.find(artifact => 
       artifact.metadata.type === 'advisor-report' && 
-      artifact.metadata.reportData?.reportId === reportId
+      (artifact.metadata.reportData as any)?.reportId === reportId
     );
 
     if (!reportArtifact) {

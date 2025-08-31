@@ -183,7 +183,7 @@ export async function POST(
   request: NextRequest,
   context: { params: Promise<TestParams> }
 ) {
-  const { category } = await context.params
+  const { category } = params
   
   if (!testRunners[category as keyof typeof testRunners]) {
     return NextResponse.json(

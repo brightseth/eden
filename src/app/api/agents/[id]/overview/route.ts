@@ -4,10 +4,9 @@ import { getAgentOverview } from '@/lib/db/agents';
 // GET /api/agents/[id]/overview
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  context: { params: Promise<{ id: string  }> }) {
   try {
-    const { id } = await params;
+    const params = await context.params; const { id } = params;
     const overview = await getAgentOverview(id);
     
     if (!overview) {

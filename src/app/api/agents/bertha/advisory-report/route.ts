@@ -317,10 +317,10 @@ async function analyzePortfolio(works: any[]): Promise<PortfolioAnalysis> {
 async function generateMarketInsights(categories: string[]): Promise<MarketInsights> {
   try {
     // Use market intelligence for real insights
-    const marketData = await marketIntelligence.getGlobalMarketTrends();
+    const marketData = await marketIntelligence.getMarketOverview();
 
     return {
-      currentTrends: marketData.trends || [
+      currentTrends: [
         'AI-generated art gaining institutional acceptance',
         'Cross-chain NFT collections showing resilience',
         'Generative art commanding premium prices'

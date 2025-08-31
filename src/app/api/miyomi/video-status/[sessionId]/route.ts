@@ -6,15 +6,12 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
-interface SessionStatusParams {
-  params: {
-    sessionId: string;
-  };
-}
-
-export async function GET(request: NextRequest, { params }: SessionStatusParams) {
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ sessionId: string  }> }) {
   try {
-    const { sessionId } = await params;
+
+    const params = await context.params; const { sessionId } = params;
     console.log('[MIYOMI Status] Checking session:', sessionId);
 
     // Check if this is a demo session

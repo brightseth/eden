@@ -4,10 +4,9 @@ import { createClient } from '@/lib/supabase/server';
 // POST /api/works/[id]/publish - Publish a work
 export async function POST(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+  context: { params: Promise<{ id: string  }> }) {
   try {
-    const { id } = await context.params;
+    const params = await context.params; const { id } = params;
     const supabase = await createClient();
 
     // Get the work

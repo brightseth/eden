@@ -3,10 +3,10 @@ import { createClient } from '@/lib/supabase/server';
 
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
-  const params = await context.params;
+  context: { params: Promise<{ id: string  }> }) {
+
   try {
+    const params = await context.params;
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '50');
     const after = searchParams.get('after'); // ISO timestamp

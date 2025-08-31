@@ -5,10 +5,10 @@ const patchStore = new Map<string, Array<any>>();
 
 export async function POST(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  context: { params: Promise<{ id: string  }> }) {
   try {
-    const { id: agentId } = await params;
+
+    const params = await context.params; const { id: agentId } = params;
     const { patch, source_image_id, dimensions } = await request.json();
     
     if (!patch) {
@@ -63,10 +63,10 @@ export async function POST(
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  context: { params: Promise<{ id: string  }> }) {
   try {
-    const { id: agentId } = await params;
+
+    const params = await context.params; const { id: agentId } = params;
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '10');
     

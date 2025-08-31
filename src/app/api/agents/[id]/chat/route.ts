@@ -45,10 +45,9 @@ interface ChatResponse {
 // GET /api/agents/[id]/chat - Get chat info/status
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+  context: { params: Promise<{ id: string  }> }) {
   try {
-    const { id } = await context.params;
+    const params = await context.params; const { id } = params;
 
     if (!FEATURE_FLAGS.ENABLE_AGENT_CHAT) {
       return NextResponse.json(
@@ -81,10 +80,9 @@ export async function GET(
 // POST /api/agents/[id]/chat - Send message to agent
 export async function POST(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+  context: { params: Promise<{ id: string  }> }) {
   try {
-    const { id } = await context.params;
+    const params = await context.params; const { id } = params;
 
     if (!FEATURE_FLAGS.ENABLE_AGENT_CHAT) {
       return NextResponse.json(
@@ -261,7 +259,7 @@ async function generateCitizenResponse(message: string, context: any[]): Promise
 
 async function generateMiyomiResponse(message: string, context: any[]): Promise<string> {
   try {
-    const sdk = new MiyomiClaudeSDK();
+    const sdk = new MiyomiClaudeSDK(process.env.ANTHROPIC_API_KEY || '');
     return await sdk.chat(message, context);
   } catch (error) {
     console.error('Miyomi SDK chat error:', error);

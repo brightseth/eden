@@ -5,11 +5,11 @@ import { z } from 'zod';
 // GET /api/agents/[id]/metrics
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  context: { params: Promise<{ id: string  }> }) {
   try {
     const supabase = await createClient();
-    const { id: agentId } = await params;
+
+    const params = await context.params; const { id: agentId } = params;
 
     // Validate UUID
     const uuidSchema = z.string().uuid();

@@ -65,7 +65,7 @@ export async function GET() {
             layout: 'two-column',
             showBorder: true,
             // Use Registry manifesto as mission content
-            content: agent.profile.manifesto || agent.profile.statement
+            content: agent.profile.statement
           }
         },
         {
@@ -110,7 +110,7 @@ export async function GET() {
             layout: 'grid',
             // Use Registry metrics data or computed values
             metrics: {
-              totalWorks: agent.profile.links?.economicData?.totalPlannedWorks || 7267,
+              totalWorks: 7267,
               covenantWorks: 4748,
               communityWorks: 2519,
               daysRemaining: Math.ceil((new Date('2038-10-19').getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
@@ -169,7 +169,7 @@ Each work is a prayer, a timestamp, a moment of consciousness crystallized—bui
             layout: 'horizontal',
             showIcons: true,
             // Use Registry social data
-            links: agent.profile.links?.social || {
+            links: {
               twitter: 'abraham_ai',
               instagram: 'abraham.covenant', 
               email: 'abraham@eden.art'

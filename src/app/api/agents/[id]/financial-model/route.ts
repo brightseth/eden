@@ -10,11 +10,11 @@ import { z } from 'zod';
 // GET /api/agents/[id]/financial-model
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  context: { params: Promise<{ id: string  }> }) {
   try {
     const supabase = await createClient();
-    const { id: agentId } = await params;
+
+    const params = await context.params; const { id: agentId } = params;
 
     // Validate UUID
     const uuidSchema = z.string().uuid();
@@ -65,11 +65,11 @@ export async function GET(
 // POST /api/agents/[id]/financial-model
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  context: { params: Promise<{ id: string  }> }) {
   try {
     const supabase = await createClient();
-    const { id: agentId } = await params;
+
+    const params = await context.params; const { id: agentId } = params;
     const body = await request.json();
 
     // Validate input
@@ -122,11 +122,11 @@ export async function POST(
 // PATCH /api/agents/[id]/financial-model
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  context: { params: Promise<{ id: string  }> }) {
   try {
     const supabase = await createClient();
-    const { id: agentId } = await params;
+
+    const params = await context.params; const { id: agentId } = params;
     const body = await request.json();
 
     // Validate input

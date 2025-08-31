@@ -10,11 +10,11 @@ import { z } from 'zod';
 // GET /api/agents/[id]/daily-practice?since=YYYY-MM-DD&limit=7
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  context: { params: Promise<{ id: string  }> }) {
   try {
     const supabase = await createClient();
-    const { id: agentId } = await params;
+
+    const params = await context.params; const { id: agentId } = params;
     const { searchParams } = new URL(request.url);
     
     // Parse query params
@@ -72,11 +72,11 @@ export async function GET(
 // POST /api/agents/[id]/daily-practice
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  context: { params: Promise<{ id: string  }> }) {
   try {
     const supabase = await createClient();
-    const { id: agentId } = await params;
+
+    const params = await context.params; const { id: agentId } = params;
     const body = await request.json();
 
     // Validate input
@@ -130,11 +130,11 @@ export async function POST(
 // PATCH /api/agents/[id]/daily-practice (for incremental updates)
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  context: { params: Promise<{ id: string  }> }) {
   try {
     const supabase = await createClient();
-    const { id: agentId } = await params;
+
+    const params = await context.params; const { id: agentId } = params;
     const body = await request.json();
 
     // Validate input

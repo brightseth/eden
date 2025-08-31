@@ -4,10 +4,9 @@ import { safeStatusFormat } from '@/lib/utils';
 
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+  context: { params: Promise<{ id: string  }> }) {
   try {
-    const { id: agentId } = await context.params;
+    const params = await context.params; const { id: agentId } = params;
 
     // Get agent data from Registry (single source of truth)
     const agent = await registryClient.agents.get(agentId);
@@ -70,8 +69,7 @@ export async function GET(
         influences: [], // Not stored in Registry yet
         socials: {}, // Not stored in Registry yet  
         heroUrl: null, // Not stored in Registry yet
-        avatarUrl: null, // Not stored in Registry yet
-        prototypeLinks: agent.profile?.prototypeLinks?.filter(link => link.status === 'active') || []
+        avatarUrl: null // Not stored in Registry yet
       },
       highlights: recentCreations?.map((creation, index) => ({
         id: creation.id,

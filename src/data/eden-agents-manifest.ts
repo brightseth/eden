@@ -112,6 +112,15 @@ export const EDEN_AGENTS: EdenAgent[] = [
         featured: true
       },
       {
+        id: 'abraham-genesis-auction',
+        title: 'Genesis Auction (Oct 19)',
+        description: 'First AI economic sovereignty experiment - 7 foundational artifacts establishing ecosystem pricing',
+        url: 'https://eden-genesis-registry-q04wci80z-edenprojects.vercel.app/genesis-auction',
+        type: 'prototype',
+        status: 'active',
+        featured: true
+      },
+      {
         id: 'first-works-sale',
         title: 'First Works Sale Interface',
         description: 'October 5, 2025 sale details and collection preview',

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { isFeatureEnabled, FLAGS } from '@/config/flags';
-import { registryApi } from '@/lib/registry/sdk';
+import { getAgent, getAgentCreations } from '@/lib/registry/sdk';
 import { createClient } from '@supabase/supabase-js';
 import { ABRAHAM_BRAND } from '@/data/abrahamBrand';
 
@@ -13,22 +13,23 @@ export async function GET() {
   // Try Registry first if enabled
   if (isFeatureEnabled(FLAGS.ENABLE_ABRAHAM_REGISTRY_INTEGRATION)) {
     try {
-      const agentProfile = await registryApi.getAgentProfile('abraham');
+      const agent = await getAgent('abraham');
+      const creations = await getAgentCreations('abraham', { status: 'published' });
       
-      if (agentProfile && agentProfile.creations && agentProfile.creations.length > 0) {
+      if (creations && creations.length > 0) {
         // Get the most recent creation from Registry
-        const latestCreation = agentProfile.creations[0]; // Assuming sorted by most recent
+        const latestCreation = creations[0]; // Assuming sorted by most recent
         
         return NextResponse.json({
           id: latestCreation.id,
           agent_id: 'abraham',
           archive_type: 'covenant-work',
-          title: latestCreation.title || `Knowledge Synthesis #${latestCreation.archive_number || 'Latest'}`,
+          title: latestCreation.title || `Knowledge Synthesis #${latestCreation.metadata?.archiveNumber || 'Latest'}`,
           description: latestCreation.description || 'Daily knowledge synthesis and collective intelligence documentation',
-          image_url: latestCreation.image_url,
-          archive_url: latestCreation.archive_url || latestCreation.image_url,
-          archive_number: latestCreation.archive_number,
-          created_date: latestCreation.created_date || new Date().toISOString(),
+          image_url: latestCreation.metadata?.imageUrl,
+          archive_url: latestCreation.metadata?.archiveUrl || latestCreation.metadata?.imageUrl,
+          archive_number: latestCreation.metadata?.archiveNumber,
+          created_date: latestCreation.createdAt || new Date().toISOString(),
           metadata: {
             covenant_day: latestCreation.metadata?.covenant_day,
             theme: latestCreation.metadata?.theme || 'Knowledge Synthesis',
