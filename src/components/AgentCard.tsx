@@ -33,6 +33,11 @@ interface AgentCardProps {
 }
 
 export function AgentCard({ agent, variant, showOnchainBadges = true }: AgentCardProps) {
+  // Safety check for undefined agent
+  if (!agent || !agent.id) {
+    console.error('[AgentCard] Received undefined or invalid agent prop');
+    return null;
+  }
   const spiritEnabled = useFeatureFlag('ENABLE_SPIRIT_REGISTRY');
   const badgesEnabled = useFeatureFlag('ENABLE_ONCHAIN_BADGES');
   const [onchainStatus, setOnchainStatus] = useState<OnchainStatus | null>(null);
@@ -70,7 +75,7 @@ export function AgentCard({ agent, variant, showOnchainBadges = true }: AgentCar
     }
 
     fetchOnchainStatus();
-  }, [agent.id, spiritEnabled, badgesEnabled, showOnchainBadges]);
+  }, [agent?.id, spiritEnabled, badgesEnabled, showOnchainBadges]);
 
   const OnchainBadge = () => {
     if (!spiritEnabled || !badgesEnabled || !showOnchainBadges || loadingOnchain) return null;
@@ -107,7 +112,7 @@ export function AgentCard({ agent, variant, showOnchainBadges = true }: AgentCar
   // Launching agents - large cards with full details
   if (variant === 'launching') {
     // Use consistent agent profile routing
-    const href = agent.hasProfile ? `/agents/${agent.id}` : '#';
+    const href = agent?.hasProfile ? `/agents/${agent?.id}` : '#';
     
     return (
       <Link 

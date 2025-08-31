@@ -288,16 +288,8 @@ export default function AcademyHomePage() {
             {launchingAgents.map(agent => (
               <AgentCard
                 key={agent.id}
-                id={agent.id}
-                name={agent.name}
-                status={agent.status}
-                date={agent.date}
-                hasProfile={agent.hasProfile}
-                trainer={agent.trainer}
-                worksCount={agent.worksCount}
-                description={agent.description}
-                image={agent.image}
-                trainerStatus={agent.trainerStatus}
+                agent={agent}
+                variant="launching"
               />
             ))}
           </div>
@@ -312,16 +304,8 @@ export default function AcademyHomePage() {
             {trainingAgents.map(agent => (
               <AgentCard
                 key={agent.id}
-                id={agent.id}
-                name={agent.name}
-                status={agent.status}
-                date={agent.date}
-                hasProfile={agent.hasProfile}
-                trainer={agent.trainer}
-                worksCount={agent.worksCount}
-                description={agent.description}
-                image={agent.image}
-                trainerStatus={agent.trainerStatus}
+                agent={agent}
+                variant="launching"
               />
             ))}
           </div>
@@ -336,16 +320,8 @@ export default function AcademyHomePage() {
             {developingAgents.map(agent => (
               <AgentCard
                 key={agent.id}
-                id={agent.id}
-                name={agent.name}
-                status={agent.status}
-                date={agent.date}
-                hasProfile={agent.hasProfile}
-                trainer={agent.trainer}
-                worksCount={agent.worksCount}
-                description={agent.description}
-                image={agent.image}
-                trainerStatus={agent.trainerStatus}
+                agent={agent}
+                variant="developing"
               />
             ))}
           </div>
