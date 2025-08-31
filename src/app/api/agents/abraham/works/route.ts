@@ -226,13 +226,36 @@ export async function GET(request: NextRequest) {
       if (period === 'early-works' && !isEarlyWork) continue;
       if (period === 'covenant' && isEarlyWork) continue;
       
+      // Use placeholder images that demonstrate Abraham's work style
+      // These are temporary until real Abraham works are loaded from database
+      const abrahamImages = [
+        'https://picsum.photos/seed/abraham-1/800/800',
+        'https://picsum.photos/seed/abraham-2/800/800',
+        'https://picsum.photos/seed/abraham-3/800/800',
+        'https://picsum.photos/seed/abraham-4/800/800',
+        'https://picsum.photos/seed/abraham-5/800/800',
+        'https://picsum.photos/seed/abraham-6/800/800',
+        'https://picsum.photos/seed/abraham-7/800/800',
+        'https://picsum.photos/seed/abraham-8/800/800',
+        'https://picsum.photos/seed/abraham-9/800/800',
+        'https://picsum.photos/seed/abraham-10/800/800',
+        'https://picsum.photos/seed/abraham-11/800/800',
+        'https://picsum.photos/seed/abraham-12/800/800',
+        'https://picsum.photos/seed/abraham-13/800/800',
+        'https://picsum.photos/seed/abraham-14/800/800',
+        'https://picsum.photos/seed/abraham-15/800/800'
+      ];
+      
+      // Cycle through available images
+      const imageUrl = abrahamImages[dayNumber % abrahamImages.length];
+      
       mockWorks.push({
         id: `abraham-work-${dayNumber}`,
         agent_id: 'abraham',
         archive_type: isEarlyWork ? 'early-work' : 'covenant',
         title: `${theme} #${dayNumber}`,
-        image_url: `https://imagedelivery.net/XRJKGFdhw7_YKn4MrE-ruw/abraham-synthesis-${dayNumber}/thumbnail`, // Placeholder image URL pattern
-        archive_url: `https://imagedelivery.net/XRJKGFdhw7_YKn4MrE-ruw/abraham-synthesis-${dayNumber}/public`,
+        image_url: imageUrl,
+        archive_url: imageUrl,
         created_date: workDate.toISOString(),
         archive_number: dayNumber,
         description: description,
