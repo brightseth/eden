@@ -5,7 +5,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
-import { RegistryClient } from '../registry/sdk';
+import { registryClient } from '../registry/registry-client';
 
 export interface EcoWork {
   id: string;
@@ -109,16 +109,13 @@ export interface VerdelisConfig {
 export class VerdelisClaudeSDK {
   private anthropic: Anthropic;
   private config: VerdelisConfig;
-  private registryClient: RegistryClient;
 
   constructor(apiKey?: string) {
     this.anthropic = new Anthropic({
       apiKey: apiKey || process.env.ANTHROPIC_API_KEY!
     });
 
-    this.registryClient = new RegistryClient({
-      baseUrl: process.env.REGISTRY_URL || 'https://eden-genesis-registry.vercel.app/api/v1'
-    });
+    // Use existing registryClient singleton
 
     // Initialize VERDELIS's environmental configuration
     this.config = {
@@ -449,7 +446,7 @@ Format as JSON:
    */
   async syncWithRegistry(ecoWork: EcoWork): Promise<void> {
     try {
-      await this.registryClient.creations.create('verdelis', {
+      await registryClient.creations.create('verdelis', {
         type: 'environmental_art',
         title: ecoWork.title,
         description: ecoWork.description,

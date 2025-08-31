@@ -4,7 +4,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
-import { RegistryClient } from '../registry/sdk';
+import { registryClient } from '../registry/registry-client';
 import { registryGateway } from '../registry/gateway';
 import { isFeatureEnabled, FLAGS } from '../../config/flags';
 import { loreManager } from '../lore/lore-manager';
@@ -99,9 +99,8 @@ export class CitizenClaudeSDK {
       apiKey: apiKey || process.env.ANTHROPIC_API_KEY!
     });
 
-    this.registryClient = new RegistryClient({
-      baseUrl: process.env.REGISTRY_URL || 'https://eden-genesis-registry.vercel.app/api/v1'
-    });
+    // Use singleton registry client
+    this.registryClient = registryClient;
 
     // Initialize CITIZEN's governance configuration
     this.config = {

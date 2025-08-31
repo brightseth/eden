@@ -11,6 +11,15 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false,
   },
   webpack: (config, { isServer }) => {
+    // Exclude packages directory from compilation
+    config.externals = config.externals || [];
+    config.externals.push(function ({context, request}, callback) {
+      if (request && (request.startsWith('./packages/') || request.includes('/packages/'))) {
+        return callback(null, 'commonjs ' + request);
+      }
+      callback();
+    });
+
     // Prevent client-side bundling of server-only modules that cause wallet provider issues
     if (!isServer) {
       config.resolve.fallback = {

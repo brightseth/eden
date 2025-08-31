@@ -4,7 +4,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
-import { RegistryClient } from '../registry/sdk';
+import { registryClient } from '../registry/registry-client';
 
 export interface EducationalToy {
   id: string;
@@ -87,16 +87,13 @@ export interface ToyTestingResults {
 export class GeppettoClaudeSDK {
   private anthropic: Anthropic;
   private config: GeppettoConfig;
-  private registryClient: RegistryClient;
 
   constructor(apiKey?: string) {
     this.anthropic = new Anthropic({
       apiKey: apiKey || process.env.ANTHROPIC_API_KEY!
     });
 
-    this.registryClient = new RegistryClient({
-      baseUrl: process.env.REGISTRY_URL || 'https://eden-genesis-registry.vercel.app/api/v1'
-    });
+    // Use existing registryClient singleton
 
     // Initialize GEPPETTO's design configuration
     this.config = {
@@ -438,7 +435,7 @@ Format as JSON:
    */
   async syncWithRegistry(toy: EducationalToy): Promise<void> {
     try {
-      await this.registryClient.creations.create('geppetto', {
+      await registryClient.creations.create('geppetto', {
         type: 'toy-design',
         title: toy.name,
         description: toy.description,

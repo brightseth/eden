@@ -4,7 +4,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
-import { RegistryClient } from '../registry/sdk';
+import { registryClient } from '../registry/registry-client';
 
 export interface CuratedExhibition {
   id: string;
@@ -81,9 +81,8 @@ export class SueClaudeSDK {
       apiKey: apiKey || process.env.ANTHROPIC_API_KEY!
     });
 
-    this.registryClient = new RegistryClient({
-      baseUrl: process.env.REGISTRY_URL || 'https://eden-genesis-registry.vercel.app/api/v1'
-    });
+    // Use singleton registry client
+    this.registryClient = registryClient;
 
     // Initialize Sue's curatorial configuration
     this.config = {

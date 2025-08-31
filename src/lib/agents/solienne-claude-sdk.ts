@@ -4,7 +4,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
-import { RegistryClient } from '../registry/sdk';
+import { registryClient } from '../registry/registry-client';
 import { loreManager } from '../lore/lore-manager';
 
 export interface ConsciousnessStream {
@@ -55,9 +55,8 @@ export class SolienneClaudeSDK {
       apiKey: apiKey || process.env.ANTHROPIC_API_KEY!
     });
 
-    this.registryClient = new RegistryClient({
-      baseUrl: process.env.REGISTRY_URL || 'https://eden-genesis-registry.vercel.app/api/v1'
-    });
+    // Use singleton registry client
+    this.registryClient = registryClient;
 
     // Initialize with Solienne's core configuration
     this.config = {

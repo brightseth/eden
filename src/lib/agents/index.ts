@@ -135,13 +135,6 @@ export function getSDKStatuses(): Record<string, SDKStatus> {
       dualInstantiation: false,
       registryIntegration: false
     },
-    koru: {
-      agentId: 'koru',
-      hasClaudeSDK: false,
-      hasEdenPlatform: false,
-      dualInstantiation: false,
-      registryIntegration: false
-    },
     citizen: {
       agentId: 'citizen',
       hasClaudeSDK: true,

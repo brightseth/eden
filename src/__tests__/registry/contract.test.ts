@@ -328,7 +328,7 @@ describe('Registry Contract Validation', () => {
 
     it('should validate malformed query parameter handling', async () => {
       try {
-        // @ts-ignore - Intentionally passing invalid status
+        // @ts-expect-error - Intentionally passing invalid status
         await registryClient.getAgents({ status: 'invalid-status' as any });
       } catch (error) {
         expect(error).toBeInstanceOf(Error);
