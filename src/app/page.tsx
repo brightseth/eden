@@ -98,17 +98,13 @@ export default function AcademyHomePage() {
       try {
         console.log('Academy: Fetching agents from Registry SDK...');
         
-        // Use our working Registry API endpoint instead of direct SDK
-        // This avoids client-side issues with Registry SDK query parameters
-        const response = await fetch('/api/registry/health');
-        if (!response.ok) {
-          throw new Error('Registry service unavailable');
-        }
-        
-        // Get agents through individual API calls (which work)
+        // Try to get agents through individual API calls
+        // Don't fail if health check fails - just try to fetch agents
         const agentHandles = ['abraham', 'solienne', 'bertha', 'miyomi', 'sue', 'geppetto', 'koru', 'citizen', 'bart', 'verdelis'];
         const agentPromises = agentHandles.map(handle => 
-          fetch(`/api/registry/agent/${handle}`).then(r => r.ok ? r.json() : null)
+          fetch(`/api/registry/agent/${handle}`)
+            .then(r => r.ok ? r.json() : null)
+            .catch(() => null) // Return null if fetch fails
         );
         
         const agentResponses = await Promise.all(agentPromises);
