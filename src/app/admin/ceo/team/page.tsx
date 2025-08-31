@@ -78,31 +78,31 @@ export default function CEOTeamPage() {
               <div className="grid md:grid-cols-2 gap-x-6 gap-y-3">
                 <div className="flex items-center justify-between">
                   <span>Seth Goldstein</span>
-                  <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs">CEO / Founder</span>
+                  <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs">CEO</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Gene Kogan</span>
                   <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">Co-Founder</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Henry</span>
-                  <span className="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-xs">Partnerships</span>
+                  <span>Xander</span>
+                  <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">Co-Founder</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Xander</span>
-                  <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">Community</span>
+                  <span>Henry</span>
+                  <span className="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-xs">On-Chain Dev</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>JMill</span>
-                  <span className="px-2 py-1 bg-orange-500/20 text-orange-400 rounded text-xs">Content</span>
+                  <span className="px-2 py-1 bg-orange-500/20 text-orange-400 rounded text-xs">Full Stack Dev</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Bashy</span>
-                  <span className="px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded text-xs">Operations</span>
+                  <span className="px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded text-xs">Dev</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Claude Code</span>
-                  <span className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">Development</span>
+                  <span className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">AI Development</span>
                 </div>
               </div>
             </div>

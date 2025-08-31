@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Crown, ArrowLeft, Target, TrendingUp, Users, Calendar } from 'lucide-react';
+import { Crown, ArrowLeft, Target, TrendingUp, Users, Calendar, Brain, Eye } from 'lucide-react';
 
 export default function CEOStrategyPage() {
   return (
