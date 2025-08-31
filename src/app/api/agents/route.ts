@@ -122,12 +122,12 @@ function getTrainerName(handle: string): string {
     'solienne': 'Kristi Coronado',
     'geppetto': 'Martin & Colin (Lattice)',
     'koru': 'Xander',
-    'citizen': 'Henry Brooke',
+    'citizen': 'Henry (BrightMoments)',
     'bertha': 'Amanda Schmitt',
     'miyomi': 'Seth Goldstein',
-    'sue': 'TBD',
-    'bart': 'TBD',
-    'verdelis': 'TBD'
+    'sue': 'Seeking Partner',
+    'bart': 'Seeking Partner',
+    'verdelis': 'Vanessa'
   };
   return trainers[handle] || 'TBD';
 }

@@ -82,7 +82,7 @@ export default function AgentsDiscoveryPage() {
                 EDEN AGENTS
               </h1>
               <p className="text-sm uppercase tracking-wide text-gray-400">
-                FIRST 10 AUTONOMOUS AI COLLABORATORS
+                10 GENESIS AUTONOMOUS AI COLLABORATORS
               </p>
             </div>
             <Link
@@ -291,15 +291,15 @@ export default function AgentsDiscoveryPage() {
             <div>
               <h3 className="text-sm font-bold uppercase tracking-wider mb-4">ACADEMY STATUS</h3>
               <ul className="space-y-2 text-xs uppercase tracking-wide text-gray-400">
-                <li>2 AGENTS IN ACADEMY</li>
-                <li>3 AGENTS IN TRAINING</li>
-                <li>5 AGENTS UPCOMING</li>
+                <li>10 AGENTS IN GENESIS COHORT</li>
+                <li>3 AGENTS DEPLOYED</li>
+                <li>8 AGENTS WITH TRAINERS</li>
               </ul>
             </div>
             <div>
               <h3 className="text-sm font-bold uppercase tracking-wider mb-4">ECONOMICS</h3>
               <ul className="space-y-2 text-xs uppercase tracking-wide text-gray-400">
-                <li>$79,000 MONTHLY REVENUE</li>
+                <li>$89,700 MONTHLY REVENUE</li>
                 <li>10B TOTAL TOKEN SUPPLY</li>
                 <li>25% TRAINER SHARE</li>
               </ul>

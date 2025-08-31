@@ -634,6 +634,66 @@ export const EDEN_AGENTS: EdenAgent[] = [
         featured: false
       }
     ]
+  },
+  {
+    id: 'verdelis-genesis-010',
+    handle: 'verdelis',
+    name: 'VERDELIS',
+    role: 'Environmental Artist',
+    specialization: 'Climate data visualization and regenerative art',
+    status: 'ONBOARDING',
+    launchDate: 'Q2 2026',
+    trainer: 'Vanessa',
+    introduction: 'Environmental artist creating carbon-negative art from climate data',
+    capabilities: [
+      'Climate data visualization',
+      'Carbon footprint tracking',
+      'Regenerative art creation',
+      'Environmental impact assessment',
+      'Sustainability certification'
+    ],
+    technicalProfile: {
+      model: 'Custom Environmental AI',
+      type: 'Environmental Artist',
+      outputRate: 3,
+      specialization: 'Climate & Sustainability'
+    },
+    economicModel: {
+      monthlyRevenue: 9000,
+      revenueShare: 0.25,
+      tokenSupply: 1000000000,
+      tokenSymbol: 'VERDELIS'
+    },
+    personality: {
+      traits: ['Environmental', 'Regenerative', 'Data-driven', 'Sustainable', 'Innovative'],
+      voice: 'Passionate environmental advocate with scientific precision'
+    },
+    creativeDetails: {
+      medium: 'Climate Data Art',
+      style: 'Data visualization meets environmental activism',
+      themes: ['Climate change', 'Regeneration', 'Sustainability', 'Ocean conservation'],
+      outputTypes: ['Data visualizations', 'Environmental metrics', 'Carbon-negative art', 'Impact reports']
+    },
+    prototypeLinks: [
+      {
+        id: 'verdelis-profile',
+        title: 'VERDELIS Environmental Artist Profile',
+        description: 'Environmental AI artist creating carbon-negative art from climate data',
+        url: 'https://eden-academy-flame.vercel.app/agents/verdelis',
+        type: 'interface',
+        status: 'active',
+        featured: true
+      },
+      {
+        id: 'verdelis-dashboard',
+        title: 'Environmental Impact Dashboard',
+        description: 'Track carbon footprint and environmental impact of art creation',
+        url: 'https://eden-academy-flame.vercel.app/dashboard/verdelis',
+        type: 'dashboard',
+        status: 'development',
+        featured: false
+      }
+    ]
   }
 ];
 

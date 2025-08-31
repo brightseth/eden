@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { 
   ArrowLeft, Brain, TrendingUp, Users, Zap, 
   Activity, BookOpen, Target, AlertCircle, Play,
-  ChevronRight, RefreshCw, Download, Share2
+  ChevronRight, RefreshCw, Download, Share2, Image, Plus, ExternalLink
 } from 'lucide-react';
 
 interface TrainingPattern {
@@ -42,12 +42,29 @@ interface CurriculumRecommendation {
   predictedSuccess: number;
 }
 
+interface Diagram {
+  id: string;
+  title: string;
+  description?: string;
+  imageUrl?: string;
+  thumbnailUrl?: string;
+  metadata?: {
+    type: string;
+    tags?: string[];
+    prompt?: string;
+  };
+}
+
 export default function GigabrainDashboard() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'patterns' | 'curriculum' | 'experiments'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'patterns' | 'curriculum' | 'experiments' | 'diagrams'>('overview');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [gigabrainQuery, setGigabrainQuery] = useState('');
   const [gigabrainResponse, setGigabrainResponse] = useState('');
   const [connectionStatus, setConnectionStatus] = useState<'checking' | 'connected' | 'fallback'>('checking');
+  const [diagrams, setDiagrams] = useState<Diagram[]>([]);
+  const [loadingDiagrams, setLoadingDiagrams] = useState(false);
+  const [diagramPrompt, setDiagramPrompt] = useState('');
+  const [generatingDiagram, setGeneratingDiagram] = useState(false);
 
   // Simulated data - would be pulled from actual training histories
   const [patterns, setPatterns] = useState<TrainingPattern[]>([
@@ -71,6 +88,57 @@ export default function GigabrainDashboard() {
     };
     checkConnection();
   }, []);
+
+  // Load diagrams when diagrams tab is selected
+  useEffect(() => {
+    if (activeTab === 'diagrams' && diagrams.length === 0) {
+      loadDiagrams();
+    }
+  }, [activeTab]);
+
+  const loadDiagrams = async () => {
+    setLoadingDiagrams(true);
+    try {
+      const response = await fetch('/api/gigabrain/collection?collectionId=68b47985d10d4706ff134ed2');
+      const data = await response.json();
+      if (data.items) {
+        setDiagrams(data.items);
+      }
+    } catch (error) {
+      console.error('Error loading diagrams:', error);
+    } finally {
+      setLoadingDiagrams(false);
+    }
+  };
+
+  const generateDiagram = async () => {
+    if (!diagramPrompt.trim()) return;
+    
+    setGeneratingDiagram(true);
+    try {
+      const response = await fetch('/api/gigabrain/collection', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: diagramPrompt,
+          type: 'architecture',
+          collectionId: '68b47985d10d4706ff134ed2'
+        })
+      });
+      
+      const data = await response.json();
+      if (data.diagram) {
+        setDiagrams([data.diagram, ...diagrams]);
+        setDiagramPrompt('');
+      }
+    } catch (error) {
+      console.error('Error generating diagram:', error);
+    } finally {
+      setGeneratingDiagram(false);
+    }
+  };
 
   const [currentAgents, setCurrentAgents] = useState<AgentMetrics[]>([
     {
@@ -296,7 +364,7 @@ Please try again in a moment or check the API connection status.`);
       <div className="border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex gap-8">
-            {(['overview', 'patterns', 'curriculum', 'experiments'] as const).map((tab) => (
+            {(['overview', 'patterns', 'curriculum', 'experiments', 'diagrams'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -596,6 +664,162 @@ Please try again in a moment or check the API connection status.`);
               <button className="px-6 py-3 bg-white text-black font-bold hover:bg-gray-200 transition-all">
                 GENERATE EXPERIMENT PROPOSAL
               </button>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'diagrams' && (
+          <div className="space-y-8">
+            {/* Diagram Generation */}
+            <div className="border border-white p-8">
+              <h2 className="text-2xl font-bold mb-6">GENERATE TRAINING DIAGRAM</h2>
+              <div className="flex gap-4 mb-4">
+                <input
+                  type="text"
+                  value={diagramPrompt}
+                  onChange={(e) => setDiagramPrompt(e.target.value)}
+                  placeholder="Describe the diagram you need (e.g., 'Agent training pipeline with 8-day phases')"
+                  className="flex-1 bg-black border border-gray-600 px-4 py-3 text-white placeholder-gray-500"
+                />
+                <button
+                  onClick={generateDiagram}
+                  disabled={generatingDiagram || !diagramPrompt}
+                  className="px-6 py-3 bg-white text-black font-bold hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                  {generatingDiagram ? 'GENERATING...' : 'GENERATE'}
+                </button>
+              </div>
+              <p className="text-sm text-gray-400">
+                Gigabrain will create visual representations of training concepts, architectures, and workflows
+              </p>
+            </div>
+
+            {/* Collection Link */}
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold">GIGABRAIN DIAGRAM COLLECTION</h2>
+              <Link
+                href="https://staging.app.eden.art/collections/68b47985d10d4706ff134ed2"
+                target="_blank"
+                className="flex items-center gap-2 px-4 py-2 border border-white hover:bg-white hover:text-black transition-all"
+              >
+                <ExternalLink className="w-4 h-4" />
+                <span>VIEW ON EDEN</span>
+              </Link>
+            </div>
+
+            {/* Diagram Grid */}
+            {loadingDiagrams ? (
+              <div className="text-center py-12">
+                <p className="text-gray-400">Loading diagrams...</p>
+              </div>
+            ) : diagrams.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {diagrams.map((diagram) => (
+                  <div key={diagram.id} className="border border-gray-600 overflow-hidden group">
+                    {/* Diagram Image */}
+                    <div className="aspect-square bg-gray-900 relative">
+                      {diagram.imageUrl || diagram.thumbnailUrl ? (
+                        <img
+                          src={diagram.thumbnailUrl || diagram.imageUrl}
+                          alt={diagram.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <Image className="w-12 h-12 text-gray-600" />
+                        </div>
+                      )}
+                      
+                      {/* Overlay on hover */}
+                      <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button
+                          onClick={() => window.open(diagram.imageUrl, '_blank')}
+                          className="px-4 py-2 bg-white text-black font-bold"
+                        >
+                          VIEW FULL SIZE
+                        </button>
+                      </div>
+                    </div>
+                    
+                    {/* Diagram Info */}
+                    <div className="p-4">
+                      <h3 className="font-bold mb-2">{diagram.title}</h3>
+                      {diagram.description && (
+                        <p className="text-sm text-gray-400 mb-3">{diagram.description}</p>
+                      )}
+                      
+                      {/* Metadata */}
+                      {diagram.metadata && (
+                        <div className="space-y-2">
+                          {diagram.metadata.type && (
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-gray-500">TYPE:</span>
+                              <span className="text-xs px-2 py-1 border border-gray-600 uppercase">
+                                {diagram.metadata.type}
+                              </span>
+                            </div>
+                          )}
+                          {diagram.metadata.tags && diagram.metadata.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-1">
+                              {diagram.metadata.tags.map((tag, index) => (
+                                <span key={index} className="text-xs px-2 py-1 bg-gray-800">
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 border border-gray-600">
+                <Image className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+                <p className="text-gray-400 mb-4">No diagrams loaded yet</p>
+                <button
+                  onClick={loadDiagrams}
+                  className="px-4 py-2 border border-white hover:bg-white hover:text-black transition-all"
+                >
+                  LOAD DIAGRAMS
+                </button>
+              </div>
+            )}
+
+            {/* Quick Diagram Templates */}
+            <div className="border border-gray-600 p-8">
+              <h3 className="text-xl font-bold mb-4">QUICK DIAGRAM TEMPLATES</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <button
+                  onClick={() => setDiagramPrompt('Agent training pipeline showing all phases from personality calibration to production validation')}
+                  className="p-4 border border-gray-600 hover:border-white transition-all text-left"
+                >
+                  <div className="font-bold mb-1">Training Pipeline</div>
+                  <div className="text-xs text-gray-400">8-day framework</div>
+                </button>
+                <button
+                  onClick={() => setDiagramPrompt('Nested token economics model showing $SPIRIT containing individual agent tokens')}
+                  className="p-4 border border-gray-600 hover:border-white transition-all text-left"
+                >
+                  <div className="font-bold mb-1">Token Economics</div>
+                  <div className="text-xs text-gray-400">Nested structure</div>
+                </button>
+                <button
+                  onClick={() => setDiagramPrompt('Memory seeding optimization chart showing 70% capacity sweet spot')}
+                  className="p-4 border border-gray-600 hover:border-white transition-all text-left"
+                >
+                  <div className="font-bold mb-1">Memory Optimization</div>
+                  <div className="text-xs text-gray-400">Capacity analysis</div>
+                </button>
+                <button
+                  onClick={() => setDiagramPrompt('Trait configuration matrix for creative vs analytical agents')}
+                  className="p-4 border border-gray-600 hover:border-white transition-all text-left"
+                >
+                  <div className="font-bold mb-1">Trait Matrix</div>
+                  <div className="text-xs text-gray-400">Agent types</div>
+                </button>
+              </div>
             </div>
           </div>
         )}
