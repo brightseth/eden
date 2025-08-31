@@ -12,8 +12,16 @@ import {
 // CEO Dashboard Sections
 const ceoTools = [
   {
+    title: 'Live Agent Status',
+    description: 'Real-time status of all 10 Genesis agents with training progress',
+    href: '/admin/ceo/live-status',
+    icon: Activity,
+    category: 'Operations',
+    priority: 'critical'
+  },
+  {
     title: 'Ecosystem Presentation',
-    description: 'Complete 8-agent demo for Henry & Gene - Ready to present!',
+    description: 'Complete 10-agent demo for Henry & Gene - Ready to present!',
     href: '/admin/ceo/ecosystem-presentation',
     icon: Presentation,
     category: 'Presentations',
@@ -21,7 +29,7 @@ const ceoTools = [
   },
   {
     title: 'Master Control Panel',
-    description: 'Real-time monitoring and control of all 8 agents',
+    description: 'Real-time monitoring and control of all 10 agents',
     href: '/admin/ceo/master-control',
     icon: Settings,
     category: 'Operations',
@@ -36,27 +44,11 @@ const ceoTools = [
     priority: 'high'
   },
   {
-    title: 'Widget Configuration',
-    description: 'Configure agent-specific profile widgets and layouts',
-    href: '/admin/widget-config',
-    icon: Layout,
-    category: 'Development',
-    priority: 'high'
-  },
-  {
     title: 'Company Metrics',
     description: 'Real-time Eden Academy performance dashboard',
     href: '/admin/ceo/metrics',
     icon: TrendingUp,
     category: 'Analytics',
-    priority: 'high'
-  },
-  {
-    title: 'Agent Status',
-    description: 'Production agent health and performance',
-    href: '/admin/ceo/agent-status',
-    icon: Activity,
-    category: 'Operations',
     priority: 'high'
   },
   {
@@ -125,12 +117,12 @@ const quickActions = [
   { title: 'View Git Status', icon: GitBranch, action: 'git', danger: false }
 ];
 
-// Key Metrics Summary (updated with full deployment)
+// Key Metrics Summary (updated with all 10 agents)
 const keyMetrics = [
-  { label: 'Active Agents', value: '8/8', change: '+6', status: 'up' },
-  { label: 'Monthly Revenue', value: '$76.7k', change: '+26%', status: 'up' },
-  { label: 'System Health', value: '100%', change: '+25%', status: 'up' },
-  { label: 'Registry Status', value: 'LIVE', change: 'NEW', status: 'up' }
+  { label: 'Active Agents', value: '10/10', change: 'COMPLETE', status: 'up' },
+  { label: 'Monthly Revenue', value: '$89.7k', change: '+38%', status: 'up' },
+  { label: 'System Health', value: '100%', change: 'STABLE', status: 'up' },
+  { label: 'Registry Status', value: 'LIVE', change: 'OPERATIONAL', status: 'up' }
 ];
 
 export default function CEODashboard() {
@@ -232,22 +224,31 @@ export default function CEODashboard() {
                 key={tool.href}
                 href={tool.href}
                 className={`block p-6 rounded-lg border transition-all duration-200 hover:scale-105 ${
-                  isHighPriority
+                  tool.priority === 'critical'
+                    ? 'border-red-500/50 bg-red-500/5 hover:bg-red-500/10 hover:border-red-500'
+                    : isHighPriority
                     ? 'border-yellow-500/50 bg-yellow-500/5 hover:bg-yellow-500/10 hover:border-yellow-500'
                     : 'border-gray-800 bg-gray-900/50 hover:bg-gray-900 hover:border-gray-700'
                 }`}
               >
                 <div className="flex items-start space-x-4 mb-4">
                   <div className={`p-3 rounded-lg ${
+                    tool.priority === 'critical' ? 'bg-red-500/20' :
                     isHighPriority ? 'bg-yellow-500/20' : 'bg-gray-800'
                   }`}>
                     <Icon className={`w-6 h-6 ${
+                      tool.priority === 'critical' ? 'text-red-400' :
                       isHighPriority ? 'text-yellow-400' : 'text-gray-400'
                     }`} />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <h3 className="text-xl font-semibold">{tool.title}</h3>
+                      {tool.priority === 'critical' && (
+                        <span className="text-xs px-2 py-1 bg-red-500/20 text-red-400 rounded">
+                          CRITICAL
+                        </span>
+                      )}
                       {isHighPriority && (
                         <span className="text-xs px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded">
                           HIGH PRIORITY
@@ -288,11 +289,11 @@ export default function CEODashboard() {
             
             <div className="mb-4">
               <div className="text-sm text-purple-200 font-semibold mb-2">
-                🚀 TLDR: Production-Ready Multi-Agent Platform ✅
+                🚀 TLDR: Complete Genesis Cohort Platform ✅
               </div>
               <div className="text-sm text-gray-300">
-                All 8 agents deployed with enterprise-grade security, analytics, and collaboration systems. 
-                Revenue: $76,700/month (+26% growth)
+                All 10 Genesis agents deployed with enterprise-grade security, analytics, and collaboration systems. 
+                Revenue: $89,700/month (+38% growth)
               </div>
             </div>
 
@@ -300,7 +301,7 @@ export default function CEODashboard() {
               <div className="p-3 bg-black/30 rounded-lg border border-green-500/20">
                 <div className="text-xs text-green-400 font-semibold mb-1">CORE INFRASTRUCTURE</div>
                 <div className="text-xs text-gray-300">
-                  • Public Agent Access (8/8 agents) ✅<br/>
+                  • Public Agent Access (10/10 agents) ✅<br/>
                   • Staged Launch Framework ✅<br/>
                   • Enterprise Security Hardening ✅<br/>
                   • Admin Dashboard & Controls ✅
@@ -310,18 +311,18 @@ export default function CEODashboard() {
               <div className="p-3 bg-black/30 rounded-lg border border-blue-500/20">
                 <div className="text-xs text-blue-400 font-semibold mb-1">AGENT ECOSYSTEM</div>
                 <div className="text-xs text-gray-300">
-                  • SOLIENNE: AI Consciousness Gallery ✅<br/>
-                  • BERTHA: Investment Analytics (34.7% ROI) ✅<br/>
-                  • MIYOMI: Live Trading Interface ✅<br/>
-                  • CITIZEN: Multi-trainer Collaboration ✅
+                  • ABRAHAM: Covenant Artist (75% complete) ✅<br/>
+                  • SOLIENNE: Consciousness Explorer (65%) ✅<br/>
+                  • MIYOMI: Market Oracle (82% complete) ✅<br/>
+                  • BERTHA: Art Intelligence (87% complete) ✅
                 </div>
               </div>
               
               <div className="p-3 bg-black/30 rounded-lg border border-yellow-500/20">
                 <div className="text-xs text-yellow-400 font-semibold mb-1">BUSINESS METRICS</div>
                 <div className="text-xs text-gray-300">
-                  • Revenue: $76,700/month (+26%) ✅<br/>
-                  • Deployment: 100% (8/8 agents) ✅<br/>
+                  • Revenue: $89,700/month (+38%) ✅<br/>
+                  • Deployment: 100% (10/10 agents) ✅<br/>
                   • System Health: 100% operational ✅<br/>
                   • Test Coverage: 95% critical systems ✅
                 </div>
@@ -418,23 +419,23 @@ export default function CEODashboard() {
           <div className="space-y-3 text-sm">
             <div className="flex items-center gap-3 text-gray-400">
               <CheckCircle className="w-4 h-4 text-green-400" />
-              <span>🎉 All 8 agents fully deployed - $76.7k/month revenue achieved!</span>
+              <span>🎉 All 10 Genesis agents fully deployed - $89.7k/month revenue achieved!</span>
               <span className="text-xs text-gray-500">Today</span>
             </div>
             <div className="flex items-center gap-3 text-gray-400">
               <Rocket className="w-4 h-4 text-yellow-400" />
-              <span>GEPPETTO & KORU deployed - +$16k/month revenue impact</span>
+              <span>BART & VERDELIS added to Genesis cohort - Complete roster achieved</span>
               <span className="text-xs text-gray-500">2 hours ago</span>
             </div>
             <div className="flex items-center gap-3 text-gray-400">
               <Activity className="w-4 h-4 text-blue-400" />
-              <span>Registry integration completed across all agents</span>
-              <span className="text-xs text-gray-500">3 hours ago</span>
+              <span>Live Agent Status dashboard updated with training progress</span>
+              <span className="text-xs text-gray-500">Just now</span>
             </div>
             <div className="flex items-center gap-3 text-gray-400">
-              <Presentation className="w-4 h-4 text-purple-400" />
-              <span>Ecosystem presentation created for Henry & Gene demo</span>
-              <span className="text-xs text-gray-500">1 hour ago</span>
+              <Crown className="w-4 h-4 text-yellow-400" />
+              <span>CEO Dashboard link added to Seth's trainer page</span>
+              <span className="text-xs text-gray-500">Just now</span>
             </div>
           </div>
         </div>

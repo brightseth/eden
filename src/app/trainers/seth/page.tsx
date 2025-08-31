@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowLeft, Twitter, ArrowUpRight } from 'lucide-react';
+import { ArrowLeft, Twitter, ArrowUpRight, Crown } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 
 export default function SethProfilePage() {
@@ -78,7 +78,49 @@ export default function SethProfilePage() {
                     </div>
                   </div>
                 </Link>
+                
+                <Link href="/academy/agent/miyomi" className="group">
+                  <div className="border border-gray-900 p-6 hover:border-gray-700 transition-all">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <span className="text-xs text-gray-600">AGENT 005</span>
+                        <h3 className="text-2xl font-bold mt-1 mb-2">MIYOMI</h3>
+                        <p className="text-sm text-gray-500">
+                          Market Oracle • Live Trading Signals
+                        </p>
+                        <p className="text-xs text-gray-600 mt-2">
+                          Primary Trainer
+                        </p>
+                      </div>
+                      <ArrowUpRight className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
+                    </div>
+                  </div>
+                </Link>
               </div>
+            </div>
+
+            {/* CEO Dashboard Access */}
+            <div className="mt-12">
+              <h2 className="text-xs font-medium tracking-[0.3em] text-gray-500 mb-6">EXECUTIVE ACCESS</h2>
+              <Link href="/admin/ceo/live-status" className="group">
+                <div className="border border-yellow-500/30 bg-yellow-500/5 p-6 hover:bg-yellow-500/10 transition-all">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Crown className="w-5 h-5 text-yellow-500" />
+                        <h3 className="text-xl font-bold">CEO DASHBOARD</h3>
+                      </div>
+                      <p className="text-sm text-gray-400">
+                        Live agent status • Training progress • Revenue metrics
+                      </p>
+                      <p className="text-xs text-yellow-500/70 mt-2">
+                        Executive access only
+                      </p>
+                    </div>
+                    <ArrowUpRight className="w-4 h-4 text-yellow-500 group-hover:text-yellow-400 transition-colors" />
+                  </div>
+                </div>
+              </Link>
             </div>
           </div>
         </div>
