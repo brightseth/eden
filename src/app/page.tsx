@@ -88,65 +88,64 @@ const FALLBACK_AGENTS: GenesisAgentDisplay[] = [
 ];
 
 export default function AcademyHomePage() {
-  const [agents, setAgents] = useState<GenesisAgentDisplay[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Start with fallback data immediately for better UX
+  const [agents, setAgents] = useState<GenesisAgentDisplay[]>(FALLBACK_AGENTS);
+  const [loading, setLoading] = useState(false); // Don't show loading since we have data
   const [error, setError] = useState<string | null>(null);
-  const [usingFallback, setUsingFallback] = useState(false);
+  const [usingFallback, setUsingFallback] = useState(true);
 
   useEffect(() => {
     async function fetchAgents() {
       try {
-        console.log('Academy: Fetching agents from Registry SDK...');
+        console.log('Academy: Attempting to fetch fresh data from Registry...');
         
-        // Try to get agents through individual API calls
-        // Don't fail if health check fails - just try to fetch agents
+        // Try to get agents through individual API calls with a timeout
         const agentHandles = ['abraham', 'solienne', 'bertha', 'miyomi', 'sue', 'geppetto', 'koru', 'citizen', 'bart', 'verdelis'];
+        
+        // Add timeout to prevent hanging
+        const fetchWithTimeout = (url: string, timeout = 3000) => {
+          return Promise.race([
+            fetch(url).then(r => r.ok ? r.json() : null),
+            new Promise(resolve => setTimeout(() => resolve(null), timeout))
+          ]);
+        };
+        
         const agentPromises = agentHandles.map(handle => 
-          fetch(`/api/registry/agent/${handle}`)
-            .then(r => r.ok ? r.json() : null)
-            .catch(() => null) // Return null if fetch fails
+          fetchWithTimeout(`/api/registry/agent/${handle}`).catch(() => null)
         );
         
         const agentResponses = await Promise.all(agentPromises);
         const validResponses = agentResponses.filter(Boolean);
         
-        // If we got no valid responses, use fallback data
-        if (validResponses.length === 0) {
-          console.warn('Academy: No agents returned from Registry, using fallback data');
-          setAgents(FALLBACK_AGENTS);
-          setUsingFallback(true);
-          setError(null);
-        } else {
+        // Only update if we got valid responses
+        if (validResponses.length > 0) {
           const registryAgents = validResponses
-            .map((agent: Agent) => ({
-              id: agent.id,
-              name: agent.name,
+            .map((agent: any) => ({
+              id: agent.id || agent.handle,
+              name: agent.name || agent.displayName,
               status: mapStatusToDisplay(agent.status),
-              date: getDisplayDate(agent.handle),
-              hasProfile: hasAgentPage(agent.handle),
-              trainer: getTrainerName(agent.handle),
+              date: getDisplayDate(agent.handle || agent.id),
+              hasProfile: hasAgentPage(agent.handle || agent.id),
+              trainer: getTrainerName(agent.handle || agent.id),
               worksCount: agent.worksCount || 0,
               description: agent.description || agent.shortBio || '',
-              image: agent.profileImage || `/agents/${agent.handle}.svg`,
-              trainerStatus: getTrainerStatus(agent.handle)
+              image: agent.profileImage || `/agents/${agent.handle || agent.id}.svg`,
+              trainerStatus: getTrainerStatus(agent.handle || agent.id)
             }));
 
-          console.log('Academy: Fetched', registryAgents.length, 'agents from Registry');
+          console.log('Academy: Updated with', registryAgents.length, 'agents from Registry');
           setAgents(registryAgents);
           setUsingFallback(false);
-          setError(null);
+        } else {
+          console.log('Academy: Continuing with fallback data');
         }
       } catch (error) {
-        console.error('Academy: Error fetching agents, using fallback:', error);
-        // Use fallback data instead of showing error
-        setAgents(FALLBACK_AGENTS);
-        setUsingFallback(true);
-        setError(null);
-      } finally {
-        setLoading(false);
+        console.error('Academy: Registry fetch failed, continuing with fallback:', error);
+        // Keep using fallback data
       }
     }
 
+    // Try to fetch fresh data but don't block on it
     fetchAgents();
   }, []);
 
