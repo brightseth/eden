@@ -3,12 +3,12 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   productionBrowserSourceMaps: true,
   eslint: {
-    // Temporarily ignore ESLint warnings to deploy critical fixes
-    ignoreDuringBuilds: true,
+    // Only ignore during builds if absolutely necessary
+    ignoreDuringBuilds: false,
   },
   typescript: {
-    // Temporarily ignore TypeScript errors to deploy critical fixes
-    ignoreBuildErrors: true,
+    // Enable TypeScript checking to catch build issues
+    ignoreBuildErrors: false,
   },
   webpack: (config, { isServer }) => {
     // Prevent client-side bundling of server-only modules that cause wallet provider issues

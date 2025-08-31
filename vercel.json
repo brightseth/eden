@@ -9,6 +9,10 @@
     "ENABLE_AGENT_CHAT": "true",
     "ENABLE_AGENT_PROTOTYPE_LINKS": "true",
     "ENABLE_AGENT_BETA_SECTION": "true",
+    "ENABLE_SOLIENNE_REGISTRY_INTEGRATION": "true",
+    "NEXT_PUBLIC_REGISTRY_URL": "https://eden-genesis-registry.vercel.app",
+    "REGISTRY_URL": "https://eden-genesis-registry.vercel.app",
+    "NEXT_PUBLIC_SUPABASE_URL": "https://ctlygyrkibupejllgglr.supabase.co",
     "NODE_ENV": "production"
   },
   "functions": {

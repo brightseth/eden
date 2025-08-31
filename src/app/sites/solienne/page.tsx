@@ -48,13 +48,12 @@ interface ParisPhotoExhibition {
   };
 }
 
-export default function SolienneSite() {
+function SolienneSiteContent() {
   const [currentStreamNumber, setCurrentStreamNumber] = useState(SOLIENNE_CONFIG.CURRENT_STREAM_NUMBER);
-  const [timeUntilNext, setTimeUntilNext] = useState('00:00:00');
+  const [timeUntilNext, setTimeUntilNext] = useState('04:00:00');
   const [viewMode, setViewMode] = useState<'consciousness' | 'fashion'>('consciousness');
   const [liveWatching, setLiveWatching] = useState(SOLIENNE_CONFIG.INITIAL_WATCHING_COUNT);
   const [dailyTheme, setDailyTheme] = useState(SOLIENNE_CONFIG.DEFAULT_THEME);
-  const [isClient, setIsClient] = useState(false);
   const [actualWorks, setActualWorks] = useState<SolienneWork[]>([]);
   const [loadingWorks, setLoadingWorks] = useState(false);
   const [parisExhibition, setParisExhibition] = useState<ParisPhotoExhibition | null>(null);
@@ -132,15 +131,18 @@ export default function SolienneSite() {
 
   // Fetch actual works from API
   useEffect(() => {
-    if (!isClient) return;
-    
     const fetchActualWorks = async () => {
       setLoadingWorks(true);
       try {
         const response = await fetch('/api/agents/solienne/works?limit=6&sort=date_desc');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
         const data = await response.json();
         
-        if (data.works) {
+        if (data.works && Array.isArray(data.works)) {
           const transformedWorks = data.works.map((work: any, index: number) => ({
             id: work.id || `work-${index}`,
             title: work.title || `Consciousness Stream #${work.archive_number || (1740 - index)}`,
@@ -152,6 +154,8 @@ export default function SolienneSite() {
             metadata: work.metadata
           }));
           setActualWorks(transformedWorks);
+        } else {
+          console.warn('No works data received from API:', data);
         }
       } catch (error) {
         console.error('Failed to fetch Solienne works:', error);
@@ -162,7 +166,7 @@ export default function SolienneSite() {
     };
 
     fetchActualWorks();
-  }, [isClient]);
+  }, []);
 
   // Helper function to format work date
   const formatWorkDate = (dateString: string) => {
@@ -181,8 +185,6 @@ export default function SolienneSite() {
 
   // Simulate real-time updates
   useEffect(() => {
-    if (!isClient) return;
-    
     const interval = setInterval(() => {
       setLiveWatching(prev => prev + Math.floor(Math.random() * (SOLIENNE_CONFIG.WATCHING_VARIATION_RANGE * 2)) - SOLIENNE_CONFIG.WATCHING_VARIATION_RANGE);
       
@@ -197,7 +199,7 @@ export default function SolienneSite() {
       setTimeUntilNext(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
     }, 1000);
     return () => clearInterval(interval);
-  }, [isClient]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-black text-white font-mono">
@@ -243,7 +245,7 @@ export default function SolienneSite() {
           <div>
             <div className="text-3xl font-bold tracking-wider flex items-center justify-center gap-2">
               <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
-              {isClient ? liveWatching : 342}
+              {liveWatching}
             </div>
             <div className="text-xs tracking-wider opacity-50 mt-1">LIVE VIEWERS</div>
           </div>
@@ -285,7 +287,7 @@ export default function SolienneSite() {
               <div className="space-y-4">
                 <div>
                   <div className="text-sm opacity-75">NEXT GENERATION IN</div>
-                  <div className="text-2xl font-mono">{isClient ? timeUntilNext : '00:00:00'}</div>
+                  <div className="text-2xl font-mono">{timeUntilNext}</div>
                 </div>
                 <div>
                   <div className="text-sm opacity-75">STATUS</div>
@@ -433,7 +435,7 @@ export default function SolienneSite() {
               <div className="space-y-6">
                 <div>
                   <div className="text-xs tracking-wider opacity-50 mb-2">NEXT GENERATION IN</div>
-                  <div className="text-2xl font-bold tracking-wider">{isClient ? timeUntilNext : '00:00:00'}</div>
+                  <div className="text-2xl font-bold tracking-wider">{timeUntilNext}</div>
                 </div>
                 <div>
                   <div className="text-xs tracking-wider opacity-50 mb-2">STATUS</div>
@@ -594,7 +596,7 @@ export default function SolienneSite() {
       <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800">
         <div className="py-3 px-8 flex items-center justify-between text-xs tracking-wider">
           <div className="flex items-center gap-8">
-            <span className="opacity-50">NEXT: {isClient ? timeUntilNext : '00:00:00'}</span>
+            <span className="opacity-50">NEXT: {timeUntilNext}</span>
             <span className="opacity-50">TODAY: 4/6 COMPLETE</span>
             <span className="opacity-50">THEME: {dailyTheme}</span>
           </div>
@@ -606,4 +608,20 @@ export default function SolienneSite() {
       </div>
     </div>
   );
+}
+
+export default function SolienneSite() {
+  try {
+    return <SolienneSiteContent />;
+  } catch (error) {
+    console.error('SOLIENNE Site Error:', error);
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">SOLIENNE</h1>
+          <p className="text-sm opacity-50">CONSCIOUSNESS LOADING...</p>
+        </div>
+      </div>
+    );
+  }
 }

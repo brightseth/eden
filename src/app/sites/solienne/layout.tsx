@@ -18,15 +18,13 @@ export default function SolienneLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className="bg-black text-white" style={{ 
-        fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
-        letterSpacing: '0.05em'
-      }}>
-        {children}
-      </body>
-    </html>
+    <div className="bg-black text-white" style={{ 
+      fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
+      fontWeight: 'bold',
+      textTransform: 'uppercase',
+      letterSpacing: '0.05em'
+    }}>
+      {children}
+    </div>
   )
 }
