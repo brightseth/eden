@@ -8,7 +8,7 @@ let registryClient: any = null;
 let Creation: any = null;
 
 try {
-  const sdk = require('@eden/registry-sdk');
+  const sdk = require('@/lib/registry/sdk');
   registryClient = sdk.registryClient;
   Creation = sdk.Creation;
 } catch (error) {

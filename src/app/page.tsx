@@ -24,7 +24,7 @@ const StatusIndicator = dynamic(() => import('@/components/StatusIndicator').the
   )
 });
 
-const AgentEconomicGrid = dynamic(() => import('@/components/registry/AgentEconomicGrid').then(mod => ({ default: mod.AgentEconomicGrid })), {
+const AgentEconomicGrid = dynamic(() => import('@/components/registry/AgentEconomicGrid'), {
   ssr: false,
   loading: () => <div className="text-center py-8">Loading agent catalog...</div>
 });

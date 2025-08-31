@@ -324,3 +324,6 @@ export const getAgentCreations = (agentId: string, params?: Parameters<typeof re
 // Version info
 export const SDK_VERSION = '1.0.0';
 export const REGISTRY_VERSION = '1.0.0';
+
+// Add missing export for compatibility
+export const registryApi = registryClient;

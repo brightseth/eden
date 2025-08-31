@@ -25,6 +25,19 @@ const apiAuthMiddleware = createAuthMiddleware({
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Skip middleware for static assets to prevent chunk loading issues
+  if (
+    pathname.startsWith('/_next/') ||
+    pathname.includes('/static/') ||
+    pathname.endsWith('.js') ||
+    pathname.endsWith('.css') ||
+    pathname.endsWith('.map') ||
+    pathname.includes('.chunk.') ||
+    pathname.includes('?dpl=')
+  ) {
+    return NextResponse.next();
+  }
+
   // 301 Redirect Vercel hosts to canonical eden2.io domains
   const host = request.headers.get('host');
   if (host && host.includes('vercel.app')) {

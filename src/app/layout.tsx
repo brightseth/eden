@@ -124,19 +124,7 @@ export default function RootLayout({
                     subtree: true
                   });
                 }
-                      }
-                      throw error;
-                    }
-                  };
-                  
-                  // Preserve original Proxy properties
-                  Object.setPrototypeOf(window.Proxy, originalProxy);
-                  Object.defineProperty(window.Proxy, 'revocable', {
-                    value: originalProxy.revocable,
-                    writable: false,
-                    configurable: false
-                  });
-                }
+                
               })();
             `
           }}
