@@ -16,8 +16,8 @@ const agents = [
   // ACTIVE DEVELOPMENT
   { name: 'GEPPETTO', status: 'development', sdk: true, site: true, registry: true, revenue: 8500, role: '3D Sculptor', trainer: 'Martin & Colin/Lattice', progress: 45 },
   { name: 'KORU', status: 'development', sdk: true, site: true, registry: true, revenue: 7500, role: 'Community Poet', trainer: 'Xander', progress: 55 },
-  { name: 'BART', status: 'development', sdk: false, site: false, registry: true, revenue: 6000, role: 'Meme Creator', trainer: 'TBD', progress: 15 },
-  { name: 'VERDELIS', status: 'development', sdk: false, site: false, registry: true, revenue: 9000, role: 'Environmental Artist', trainer: 'Seeking Partner', progress: 20 },
+  { name: 'BART', status: 'development', sdk: false, site: false, registry: true, revenue: 6000, role: 'Meme Creator', trainer: 'Seeking Partner', progress: 15 },
+  { name: 'VERDELIS', status: 'development', sdk: false, site: false, registry: true, revenue: 9000, role: 'Environmental Artist', trainer: 'Vanessa', progress: 20 },
 ];
 
 export default function CEOLiveStatusPage() {

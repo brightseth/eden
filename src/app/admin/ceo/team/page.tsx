@@ -36,22 +36,22 @@ export default function CEOTeamPage() {
         
         {/* Team Summary */}
         <div className="mb-8 p-6 bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-xl border border-purple-500/30">
-          <h2 className="text-2xl font-bold mb-4">Genesis Cohort Team</h2>
+          <h2 className="text-2xl font-bold mb-4">Eden Academy Core Team</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <p className="text-gray-400 text-sm">Total Team</p>
-              <p className="text-3xl font-bold">10</p>
-              <p className="text-xs text-gray-500">trainers & leaders</p>
+              <p className="text-gray-400 text-sm">Core Team</p>
+              <p className="text-3xl font-bold">7</p>
+              <p className="text-xs text-gray-500">team members</p>
             </div>
             <div>
-              <p className="text-gray-400 text-sm">Active Trainers</p>
-              <p className="text-3xl font-bold text-green-400">8</p>
-              <p className="text-xs text-gray-500">agent partnerships</p>
+              <p className="text-gray-400 text-sm">External Trainers</p>
+              <p className="text-3xl font-bold text-green-400">6</p>
+              <p className="text-xs text-gray-500">agent partners</p>
             </div>
             <div>
-              <p className="text-gray-400 text-sm">Seeking Partners</p>
-              <p className="text-3xl font-bold text-yellow-400">2</p>
-              <p className="text-xs text-gray-500">SUE & VERDELIS</p>
+              <p className="text-gray-400 text-sm">Agents Deployed</p>
+              <p className="text-3xl font-bold text-yellow-400">10</p>
+              <p className="text-xs text-gray-500">Genesis cohort</p>
             </div>
             <div>
               <p className="text-gray-400 text-sm">Training Progress</p>
@@ -69,66 +69,95 @@ export default function CEOTeamPage() {
           </h2>
           
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {/* Leadership */}
-            <div className="p-6 bg-gray-900/50 border border-gray-800 rounded-lg">
+            {/* Core Team */}
+            <div className="p-6 bg-gray-900/50 border border-gray-800 rounded-lg md:col-span-2">
               <div className="flex items-center gap-3 mb-4">
                 <Crown className="w-5 h-5 text-yellow-500" />
-                <h3 className="text-lg font-semibold">Leadership</h3>
+                <h3 className="text-lg font-semibold">Core Eden Team</h3>
               </div>
-              <div className="space-y-3">
+              <div className="grid md:grid-cols-2 gap-x-6 gap-y-3">
                 <div className="flex items-center justify-between">
                   <span>Seth Goldstein</span>
-                  <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs">CEO</span>
+                  <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs">CEO / Founder</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Gene Kogan</span>
+                  <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">Co-Founder</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Henry</span>
+                  <span className="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-xs">Partnerships</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Xander</span>
+                  <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">Community</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>JMill</span>
+                  <span className="px-2 py-1 bg-orange-500/20 text-orange-400 rounded text-xs">Content</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Bashy</span>
+                  <span className="px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded text-xs">Operations</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Claude Code</span>
+                  <span className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">Development</span>
                 </div>
               </div>
             </div>
 
-            {/* Agent Trainers */}
-            <div className="p-6 bg-gray-900/50 border border-gray-800 rounded-lg md:col-span-2">
+            {/* Agent Trainer Partnerships */}
+            <div className="p-6 bg-gray-900/50 border border-gray-800 rounded-lg">
               <div className="flex items-center gap-3 mb-4">
                 <Shield className="w-5 h-5 text-green-500" />
-                <h3 className="text-lg font-semibold">Agent Trainers</h3>
+                <h3 className="text-lg font-semibold">Agent Training Partners</h3>
               </div>
-              <div className="grid md:grid-cols-2 gap-x-6 gap-y-3">
+              <div className="space-y-3">
+                <div className="text-xs font-semibold text-gray-400 mb-2">TEAM MEMBERS AS TRAINERS:</div>
                 <div className="flex items-center justify-between">
-                  <span>Gene Kogan</span>
+                  <span className="text-sm">Gene Kogan</span>
                   <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">ABRAHAM</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Kristi Coronado</span>
-                  <span className="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-xs">SOLIENNE</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Seth Goldstein</span>
+                  <span className="text-sm">Seth Goldstein</span>
                   <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">MIYOMI</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Amanda Schmitt</span>
-                  <span className="px-2 py-1 bg-pink-500/20 text-pink-400 rounded text-xs">BERTHA</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Henry (BrightMoments)</span>
+                  <span className="text-sm">Henry</span>
                   <span className="px-2 py-1 bg-orange-500/20 text-orange-400 rounded text-xs">CITIZEN</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Xander</span>
+                  <span className="text-sm">Xander</span>
                   <span className="px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded text-xs">KORU</span>
                 </div>
+                
+                <div className="text-xs font-semibold text-gray-400 mt-4 mb-2">EXTERNAL TRAINERS:</div>
                 <div className="flex items-center justify-between">
-                  <span>Martin & Colin (Lattice)</span>
+                  <span className="text-sm">Kristi Coronado</span>
+                  <span className="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-xs">SOLIENNE</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Amanda Schmitt</span>
+                  <span className="px-2 py-1 bg-pink-500/20 text-pink-400 rounded text-xs">BERTHA</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Martin & Colin</span>
                   <span className="px-2 py-1 bg-indigo-500/20 text-indigo-400 rounded text-xs">GEPPETTO</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>JMill</span>
-                  <span className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">BART</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Bashy</span>
+                  <span className="text-sm">Vanessa</span>
                   <span className="px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded text-xs">VERDELIS</span>
                 </div>
+                
+                <div className="text-xs font-semibold text-gray-400 mt-4 mb-2">SEEKING TRAINERS:</div>
                 <div className="flex items-center justify-between">
-                  <span>Seeking Partner</span>
+                  <span className="text-sm">Open</span>
                   <span className="px-2 py-1 bg-gray-500/20 text-gray-400 rounded text-xs">SUE</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Open</span>
+                  <span className="px-2 py-1 bg-gray-500/20 text-gray-400 rounded text-xs">BART</span>
                 </div>
               </div>
             </div>
@@ -210,7 +239,7 @@ export default function CEOTeamPage() {
             <div className="p-4 bg-gray-900/50 border border-gray-800 rounded-lg text-center">
               <p className="text-3xl font-bold text-yellow-400">8/10</p>
               <p className="text-gray-400 text-sm">Trainers Assigned</p>
-              <p className="text-xs text-yellow-400">2 seeking partners</p>
+              <p className="text-xs text-yellow-400">SUE & BART seeking</p>
             </div>
             <div className="p-4 bg-gray-900/50 border border-gray-800 rounded-lg text-center">
               <p className="text-3xl font-bold text-blue-400">6/10</p>
