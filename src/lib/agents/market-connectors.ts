@@ -7,7 +7,7 @@
 export interface MarketData {
   id: string;
   question: string;
-  platform: 'Kalshi' | 'Polymarket' | 'Manifold' | 'Metaculus';
+  platform: string; // Keep flexible to avoid future breakage - supports Kalshi, Polymarket, Manifold, Metaculus, Melee, Myriad, etc.
   yes_price: number;
   no_price: number;
   volume: number;

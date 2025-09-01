@@ -8,7 +8,7 @@ import { marketAggregator, type MarketData } from './market-connectors';
 
 export interface MarketPick {
   market: string;
-  platform: 'Kalshi' | 'Polymarket' | 'Manifold' | 'Melee' | 'Myriad';
+  platform: string; // Flexible platform support - Kalshi, Polymarket, Manifold, Melee, Myriad, etc.
   position: 'YES' | 'NO' | 'OVER' | 'UNDER';
   confidence: number; // 0-1
   edge: number; // Expected edge in decimal form

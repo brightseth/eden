@@ -7,7 +7,7 @@
  */
 
 // Agent SDK Implementations
-// export { MiyomiClaudeSDK, miyomiSDK } from './miyomi-claude-sdk'; // Temporarily disabled due to market connector issues
+export { MiyomiClaudeSDK, miyomiSDK } from './miyomi-claude-sdk'; // Re-enabled after fixing market connector types
 export { BerthaClaudeSDK, berthaClaude } from './bertha/claude-sdk';
 export { SolienneClaudeSDK, solienneSDK } from './solienne-claude-sdk';
 export { AbrahamClaudeSDK, abrahamSDK } from './abraham-claude-sdk';
@@ -17,10 +17,10 @@ export { BartClaudeSDK, bartSDK } from './bart-claude-sdk';
 export { KoruClaudeSDK, koruSDK } from './koru-claude-sdk';
 
 // Type exports for all SDKs
-// export type { 
-//   MarketPick,
-//   MiyomiConfig 
-// } from './miyomi-claude-sdk'; // Temporarily disabled
+export type { 
+  MarketPick,
+  MiyomiConfig 
+} from './miyomi-claude-sdk'; // Re-enabled after fixing market connector types
 
 export type {
   MarketAnalysis,
@@ -68,10 +68,10 @@ export type {
   CommunityHealth
 } from './koru-claude-sdk';
 
-// Agent Registry for SDK lookup - temporarily minimal for build stability
+// Agent Registry for SDK lookup
 export const AGENT_SDKS = {
-  // All SDKs temporarily disabled due to import issues
-  // Will re-enable after resolving module resolution problems
+  miyomi: () => import('./miyomi-claude-sdk').then(m => m.miyomiSDK),
+  // Other SDKs can be re-enabled as needed
 } as const;
 
 // SDK Status tracking
