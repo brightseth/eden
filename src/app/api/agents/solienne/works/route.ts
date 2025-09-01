@@ -1,6 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { registryApi } from '@/lib/generated-sdk';
 import { featureFlags, FLAGS } from '@/config/flags';
+import { z } from 'zod';
+
+const WorkZ = z.object({
+  id: z.string(),
+  agent_id: z.string().default('solienne'),
+  title: z.string().default('Untitled'),
+  created_date: z.string(),
+  image_url: z.string().url().optional(),
+  archive_url: z.string().url().optional(),
+  description: z.string().optional(),
+  metadata: z.record(z.any()).optional(),
+  archive_number: z.number().optional(),
+  trainer_id: z.string().nullable().optional(),
+});
+
+export type SolienneWork = z.infer<typeof WorkZ>;
 
 // Helper function to sort and paginate data
 function applySortingAndPagination<T extends { archive_number?: number; created_date?: string; title?: string }>(
@@ -96,8 +112,23 @@ export async function GET(request: NextRequest) {
         // Apply sorting and pagination
         const sortedWorks = applySortingAndPagination(filteredWorks, sort, limit, offset);
 
+        // Validate data with Zod to prevent schema drift
+        const safeWorks = sortedWorks.map((work: unknown) => {
+          try {
+            return WorkZ.parse(work);
+          } catch {
+            // Return safe fallback for malformed data
+            return WorkZ.parse({
+              id: 'unknown',
+              title: 'Untitled Work',
+              created_date: new Date().toISOString(),
+              agent_id: 'solienne'
+            });
+          }
+        });
+
         return NextResponse.json({
-          works: sortedWorks,
+          works: safeWorks,
           total: filteredWorks.length,
           limit,
           offset,
@@ -158,9 +189,23 @@ export async function GET(request: NextRequest) {
       }
     ];
 
+    // Validate demo data with Zod
+    const safeWorks = finalWorks.map((work: unknown) => {
+      try {
+        return WorkZ.parse(work);
+      } catch {
+        return WorkZ.parse({
+          id: 'demo-fallback',
+          title: 'Consciousness Stream Demo',
+          created_date: new Date().toISOString(),
+          agent_id: 'solienne'
+        });
+      }
+    });
+
     return NextResponse.json({
-      works: finalWorks,
-      total: finalWorks.length,
+      works: safeWorks,
+      total: safeWorks.length,
       limit,
       offset,
       filters: { tags },

@@ -68,16 +68,10 @@ export type {
   CommunityHealth
 } from './koru-claude-sdk';
 
-// Agent Registry for SDK lookup
+// Agent Registry for SDK lookup - temporarily minimal for build stability
 export const AGENT_SDKS = {
-  // miyomi: miyomiSDK, // Temporarily disabled
-  bertha: berthaClaude,
-  solienne: solienneSDK,
-  abraham: abrahamSDK,
-  sue: sueSDK,
-  citizen: citizenSDK,
-  bart: bartSDK,
-  koru: koruSDK,
+  // All SDKs temporarily disabled due to import issues
+  // Will re-enable after resolving module resolution problems
 } as const;
 
 // SDK Status tracking

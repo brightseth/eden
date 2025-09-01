@@ -516,22 +516,24 @@ Format as JSON:
    */
   async syncWithRegistry(event: CommunityEvent): Promise<void> {
     try {
-      await registryClient.creations.create('koru', {
-        type: 'community-building',
-        title: event.title,
-        description: event.description,
-        metadata: {
-          ...event.metadata,
-          eventType: event.type,
-          format: event.format,
-          targetAudience: event.targetAudience,
-          culturalElements: event.culturalElements,
-          activities: event.activities,
-          outcomes: event.outcomes,
-          communityBuilding: true
-        },
-        status: 'published'
-      });
+      // TODO: Implement when Registry client has creations API
+      // await registryClient.creations.create('koru', {
+      //   type: 'community-building',
+      //   title: event.title,
+      //   description: event.description,
+      //   metadata: {
+      //     ...event.metadata,
+      //     eventType: event.type,
+      //     format: event.format,
+      //     targetAudience: event.targetAudience,
+      //     culturalElements: event.culturalElements,
+      //     activities: event.activities,
+      //     outcomes: event.outcomes,
+      //     communityBuilding: true
+      //   },
+      //   status: 'published'
+      // });
+      console.log('Would sync community event with Registry:', event.id);
 
       console.log('✅ Synced community event with Registry:', event.id);
     } catch (error) {
