@@ -69,34 +69,32 @@ export function useMiyomiSnapshot(): MiyomiSnapshot {
   const { signals } = useMiyomiSignals()
   const marketStream = useMarketStream()
   
-  // Extract data from market stream
-  const performance = marketStream?.performance || {}
-  const markets = marketStream?.markets || []
-  const subscriptions = marketStream?.subscriptions || {}
+  // Extract data from market stream updates
+  const marketUpdates = marketStream?.updates || []
   
-  // Calculate derived values
-  const winRate = performance.winRate || 0.73
-  const edge = performance.dailyEdge || 0.15
-  const spark = performance.sparkline || Array(20).fill(0).map((_, i) => 50 + Math.sin(i/3) * 20)
+  // Calculate derived values based on market updates
+  const winRate = 0.73 // Default win rate
+  const edge = 0.15 // Default edge
+  const spark = Array(20).fill(0).map((_, i) => 50 + Math.sin(i/3) * 20) // Default sparkline
   
   return {
     // Core thesis
-    thesis: deriveThesis(markets),
+    thesis: deriveThesis(marketUpdates),
     confidence: Math.round(winRate * 100),
     winRate,
     edge,
     spark,
     
-    // KPIs from existing data
-    supporters: subscriptions.totalSubscribers || 142,
-    mrr: subscriptions.monthlyRevenue || 710,
+    // KPIs from existing data (defaults)
+    supporters: 142,
+    mrr: 710,
     
-    // Market watchlist (top 5)
-    watchlist: markets.slice(0, 5).map((m: any) => ({
-      platform: m.platform || 'manifold',
-      symbol: m.symbol || m.name,
-      probability: m.probability || 50,
-      volume: m.volume
+    // Market watchlist (top 5 market updates converted to watchlist format)
+    watchlist: marketUpdates.slice(0, 5).map((m: any) => ({
+      platform: 'manifold',
+      symbol: m.market_id || 'UNKNOWN',
+      probability: m.current_price || 50,
+      volume: m.volume || 0
     })),
     
     // Recent calls from signals

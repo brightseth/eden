@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { 
   LaunchPreparation,
-  CollectorAnticipton,
+  CollectorAnticiption,
   launchPreparationManager,
   getAbrahamCovenantReadiness,
   getSolienneFashionReadiness,

@@ -428,9 +428,12 @@ Social Metrics: ${JSON.stringify(assetData.socialMetrics || 'Not available')}`;
         temperature: 0.8,
         system: systemPrompt,
         messages: [
-          ...this.conversationHistory.slice(1), // Skip system prompt
+          ...this.conversationHistory.slice(1).filter((msg: ClaudeMessage) => msg.role !== 'system').map(msg => ({
+            role: msg.role as 'user' | 'assistant',
+            content: msg.content
+          })), // Skip system messages and ensure correct role types
           {
-            role: 'user',
+            role: 'user' as const,
             content: message
           }
         ]

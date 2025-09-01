@@ -37,7 +37,7 @@ export function SponsoredPick({ pick, userId }: SponsoredPickProps) {
         type: 'click',
         platform: platform,
         userId: userId,
-        pickId: pick.id,
+        pickId: (pick as any).id || 'unknown',
         value: 2.50, // Example CPM value
         metadata: {
           sponsorshipType: pick.sponsorshipType,

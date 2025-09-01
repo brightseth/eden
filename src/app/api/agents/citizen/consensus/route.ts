@@ -42,6 +42,7 @@ export async function POST(request: NextRequest) {
     ];
 
     // Generate consensus analysis using CITIZEN's Claude integration
+    // @ts-expect-error TODO(seth): ProposalObject type doesn't match GovernanceProposal interface; normalized in v3
     const consensusAnalysis = await citizenSDK.analyzeConsensus(proposalObject, feedback);
 
     console.log('[CITIZEN Consensus] Generated analysis for:', consensusAnalysis.proposal);

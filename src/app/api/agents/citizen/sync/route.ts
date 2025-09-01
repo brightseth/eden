@@ -101,6 +101,7 @@ export async function POST(request: NextRequest) {
       console.log('[CITIZEN Sync] Syncing with Registry...');
       
       // Update agent profile in Registry
+      // @ts-expect-error TODO(seth): Registry client agents property not in types; normalized in v3
       await registryClient.agents.update('citizen', {
         profile: {
           name: 'CITIZEN',

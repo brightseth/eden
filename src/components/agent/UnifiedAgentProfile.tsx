@@ -179,7 +179,7 @@ export default function UnifiedAgentProfile({ agentSlug }: UnifiedAgentProfilePr
                 <h3 className="text-sm font-bold uppercase tracking-wider mb-4 text-gray-400">
                   TRAINER
                 </h3>
-                <div className="font-bold uppercase text-lg mb-2">{agent.trainer.name}</div>
+                <div className="font-bold uppercase text-lg mb-2">{typeof agent.trainer === 'object' && agent.trainer ? (agent.trainer as any).name : agent.trainer}</div>
                 <div className="text-xs uppercase tracking-wider text-gray-400">
                   LAUNCHING {new Date(agent.launchDate).toLocaleDateString('en-US', { 
                     month: 'short', 

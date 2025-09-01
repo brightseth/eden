@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
     const enhancedConcepts = concepts.map(concept => ({
       ...concept,
       readyToGenerate: concept.urgencyScore > 70,
-      estimatedProductionTime: concept.emotionalFrequency.primary === 'artistic' ? '10-15 minutes' : '5-8 minutes',
+      estimatedProductionTime: concept.emotionalFrequency.primary === 'experimental' ? '10-15 minutes' : '5-8 minutes',
       platformOptimization: {
         tiktok: concept.targetAudience === 'gen_z_investors' ? 'high' : 'medium',
         youtube: concept.trendingPotential === 'viral' ? 'high' : 'medium',

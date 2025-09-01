@@ -5,8 +5,31 @@ import { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 
+type ApplyFormData = {
+  name: string;
+  email: string;
+  twitter: string;
+  organization: string;
+  agentName: string;
+  agentTrack: string;
+  dailyPractice: string;
+  revenueModel: string;
+  targetAudience: string;
+  vision: string;
+  whyYou: string;
+  timeline: string;
+  resources: string;
+  commitment: boolean;
+  openSource: boolean;
+
+  // Optional fields used in the code
+  portfolio?: string;
+  expertise?: string;
+  culturalContext?: string;
+};
+
 export default function ApplyPage() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ApplyFormData>({
     // Trainer Info
     name: '',
     email: '',

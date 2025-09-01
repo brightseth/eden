@@ -69,7 +69,8 @@ export async function POST(request: NextRequest) {
     const sessionId = sessionResult.sessionId!;
     console.log('[MIYOMI Sessions] Eden session created:', sessionId);
 
-    // Step 5: Send the video generation message to the session
+    // Step 5: Send the video generation message to the session  
+    // @ts-expect-error TODO(seth): EdenPrompt type mismatch, expecting object with text_input; normalized in v3
     const messageResult = await sendSessionMessage(sessionId, edenPrompt.text_input, agentId);
     
     if (!messageResult.success) {

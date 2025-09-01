@@ -557,12 +557,9 @@ Keep the core message but optimize for the platform's style and constraints.
 `;
 
       try {
-        const response = await citizenSDK.chat([{
-          role: 'user',
-          content: prompt
-        }]);
+        const response = await citizenSDK.chat(prompt);
         
-        adaptations[platform] = response.content;
+        adaptations[platform] = response;
       } catch (error) {
         console.error(`[CITIZEN Daily] Content adaptation failed for ${platform}:`, error);
         adaptations[platform] = content.content; // Fallback to original
@@ -574,7 +571,7 @@ Keep the core message but optimize for the platform's style and constraints.
 
   // Platform Management
   connectPlatform(platform: string, connector: FarcasterConnector | DiscordConnector | TwitterConnector): void {
-    this.connectors[platform as keyof typeof this.connectors] = connector;
+    (this.connectors as any)[platform] = connector;
     console.log(`[CITIZEN Daily] Connected to ${platform}`);
   }
 

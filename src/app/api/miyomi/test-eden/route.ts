@@ -108,8 +108,8 @@ async function testEdenConnectivity(baseUrl: string, apiKey: string) {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
         'User-Agent': 'MIYOMI-Dashboard/1.0'
-      },
-      timeout: 10000
+      }
+      // Note: Node.js fetch doesn't support timeout in RequestInit
     });
 
     if (!response.ok) {

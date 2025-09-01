@@ -22,7 +22,7 @@ export function AgentChecklist({ checklist }: AgentChecklistProps) {
 
   // Group by stage
   const groupedTasks = checklist.reduce((acc, task) => {
-    const stage = task.stage;
+    const stage = (task as any).stage || 'development';
     if (!acc[stage]) {
       acc[stage] = [];
     }

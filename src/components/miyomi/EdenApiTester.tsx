@@ -23,6 +23,9 @@ interface EdenTestResult {
   };
   mockResponse?: any;
   error?: string;
+  demoVideo?: any;
+  analytics?: any;
+  video?: any;
 }
 
 interface EdenTool {

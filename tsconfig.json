@@ -14,6 +14,9 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "noErrorTruncation": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
     "plugins": [
       {
         "name": "next"
@@ -23,6 +26,16 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "packages", "covenant.disabled.bak", "*.bak", "*.backup*", "deployments", "scripts"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/types/**/*.d.ts"],
+  "exclude": [
+    "node_modules",
+    "packages",
+    "apps/**",
+    "deployments/**",
+    "scripts/**",
+    "covenant.disabled.bak",
+    "**/*.bak",
+    "**/*.backup*",
+    "**/*.disabled/**"
+  ]
 }

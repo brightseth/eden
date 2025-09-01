@@ -4,6 +4,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { spiritClient } from '@/lib/registry/spirit-client';
 import { featureFlags } from '@/config/flags';
+import { normalizeAgent } from '@/lib/agents/normalize';
 
 export async function GET(request: NextRequest) {
   try {
@@ -34,9 +35,9 @@ export async function GET(request: NextRequest) {
       
       try {
         const cohortData = await spiritClient.getGenesisCohort();
-        const agentOnchain = cohortData.agents.find(a => 
-          a.handle?.toLowerCase() === agentId.toLowerCase()
-        );
+        const agentOnchain = cohortData.agents
+          .map(normalizeAgent)
+          .find(a => (a.handle || '').toLowerCase() === agentId.toLowerCase());
         
         const badgeData = {
           agentId,
@@ -81,15 +82,18 @@ export async function GET(request: NextRequest) {
       try {
         const cohortData = await spiritClient.getGenesisCohort();
         
-        const allBadges = cohortData.agents.map(agent => ({
-          handle: agent.handle,
-          name: agent.displayName || agent.handle?.toUpperCase(),
-          isDeployed: !!agent.tokenAddress,
-          tokenAddress: agent.tokenAddress,
-          badgeStatus: agent.tokenAddress ? 'ONCHAIN' : 'OFFCHAIN',
-          badgeColor: agent.tokenAddress ? 'green' : 'yellow',
-          shouldShowBadge: flagStatus.onchainBadges
-        }));
+        const allBadges = cohortData.agents.map(agent => {
+          const normalized = normalizeAgent(agent);
+          return {
+            handle: normalized.handle,
+            name: normalized.displayName,
+            isDeployed: !!normalized.tokenAddress,
+            tokenAddress: normalized.tokenAddress,
+            badgeStatus: normalized.tokenAddress ? 'ONCHAIN' : 'OFFCHAIN',
+            badgeColor: normalized.tokenAddress ? 'green' : 'yellow',
+            shouldShowBadge: flagStatus.onchainBadges
+          };
+        });
         
         const summary = {
           totalAgents: allBadges.length,

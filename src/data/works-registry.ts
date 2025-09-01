@@ -39,13 +39,13 @@ class UnifiedWorksService {
     return {
       id: creation.id,
       agentId: creation.agentId,
-      title: metadata.title || `Work #${creation.id.slice(-4)}`,
+      title: (typeof metadata.title === 'string' ? metadata.title : '') || `Work #${creation.id.slice(-4)}`,
       date: creation.createdAt || new Date().toISOString().split('T')[0],
       type: this.inferWorkType(creation.mediaUri, metadata),
       thumbnail: creation.mediaUri,
-      description: metadata.description || '',
-      tags: metadata.tags || ['generated', 'ai'],
-      metrics: metadata.metrics || this.generateMetrics(),
+      description: (typeof metadata.description === 'string' ? metadata.description : '') || '',
+      tags: Array.isArray(metadata.tags) ? metadata.tags : ['generated', 'ai'],
+      metrics: this.generateMetrics(),
       mediaUri: creation.mediaUri,
       status: creation.status,
       publishedTo: creation.publishedTo,
@@ -371,5 +371,3 @@ export async function getWorksByType(type: UnifiedWork['type'], limit?: number):
 export async function getTopWorks(metric?: keyof UnifiedWork['metrics'], limit?: number): Promise<UnifiedWork[]> {
   return worksService.getTopWorks(metric, limit);
 }
-
-export type { UnifiedWork };

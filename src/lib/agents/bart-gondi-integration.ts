@@ -5,9 +5,9 @@
 
 // COMPLETELY STUBBED - NO WEB3 IMPORTS TO AVOID CLIENT-SIDE ERRORS
 const Gondi = null as any;
-const createWalletClient = () => ({ request: () => Promise.resolve() });
-const http = () => ({});
-const privateKeyToAccount = () => ({ address: '0x0000000000000000000000000000000000000000' });
+const createWalletClient = (config?: any) => ({ request: () => Promise.resolve() });
+const http = (url?: any) => ({});
+const privateKeyToAccount = (key?: any) => ({ address: '0x0000000000000000000000000000000000000000' });
 const mainnet = { id: 1, name: 'mainnet' };
 
 export interface GondiMarketData {
@@ -85,7 +85,7 @@ export interface SingleNftOfferParams {
 }
 
 export class BartGondiService {
-  private gondi: Gondi | null = null;
+  private gondi: any | null = null;
   private isInitialized = false;
 
   constructor() {

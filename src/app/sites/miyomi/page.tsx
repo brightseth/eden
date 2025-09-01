@@ -13,10 +13,7 @@ import {
 import { TrendingUp, Activity, Terminal, Sparkles } from 'lucide-react'
 
 // Lazy load existing components to avoid refactoring
-const OriginalMiyomiSite = dynamic(() => import('./page-original'), { ssr: false })
 const MiyomiDashboard = dynamic(() => import('@/app/dashboard/miyomi/page'), { ssr: false })
-const LiveMarketsPanel = dynamic(() => import('@/components/miyomi/LiveMarketsPanel'), { ssr: false })
-const RevenueDashboard = dynamic(() => import('@/components/miyomi/RevenueDashboard'), { ssr: false })
 
 export default function MiyomiSite() {
   const searchParams = useSearchParams()

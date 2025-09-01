@@ -320,9 +320,9 @@ export function EnrichedProfile({ agentId }: EnrichedProfileProps) {
               <div className="bg-gray-950 border border-gray-800 rounded-lg p-6">
                 <h3 className="font-bold mb-2">Practice Contract</h3>
                 <div className="text-sm text-gray-400 space-y-1">
-                  <p>Cadence: {agent.contract.cadence}</p>
-                  <p>Focus: {agent.contract.focus}</p>
-                  <p>Season: {agent.contract.season}</p>
+                  <p>Cadence: {typeof agent.contract === 'object' && agent.contract ? (agent.contract as any).cadence : 'Daily'}</p>
+                  <p>Focus: {typeof agent.contract === 'object' && agent.contract ? (agent.contract as any).focus : 'Creative Practice'}</p>
+                  <p>Season: {typeof agent.contract === 'object' && agent.contract ? (agent.contract as any).season : 'Training'}</p>
                 </div>
               </div>
             </div>

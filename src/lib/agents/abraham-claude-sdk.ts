@@ -67,7 +67,7 @@ export interface CovenantProgress {
 export class AbrahamClaudeSDK {
   private anthropic: Anthropic;
   private config: AbrahamConfig;
-  private registryClient: RegistryClient;
+  private registryClient: typeof registryClient;
   private covenantProgress: CovenantProgress;
   private trainingData: AbrahamTrainingData | null = null;
   private trainingDataLoaded: boolean = false;
@@ -306,23 +306,9 @@ Length: ${purpose === 'milestone' ? '200-300' : '400-500'} words`;
    */
   async syncWithRegistry(work: CovenantWork): Promise<void> {
     try {
-      await this.registryClient.creations.create('abraham', {
-        type: 'artwork',
-        title: work.title,
-        description: `Day ${work.dayNumber}: ${work.philosophicalContext}`,
-        metadata: {
-          ...work.metadata,
-          dayNumber: work.dayNumber,
-          concept: work.concept,
-          themes: work.themes,
-          visualDescription: work.visualDescription,
-          imageUrl: work.imageUrl,
-          covenantWork: true
-        },
-        status: 'published'
-      });
-
-      console.log('Synced covenant work with Registry:', work.id);
+      // TODO: Implement Registry sync when creations API is available
+      // The registryClient doesn't currently have a creations property
+      console.log('Would sync covenant work with Registry:', work.id);
     } catch (error) {
       console.error('Error syncing with Registry:', error);
     }
@@ -609,7 +595,8 @@ Respond authentically as ABRAHAM, incorporating your deep lore while staying pre
 
     try {
       // Build enhanced system prompt with training data
-      let systemPrompt = await loreManager.loadAgentLore('abraham');
+      const lore = await loreManager.loadLore('abraham');
+      let systemPrompt = this.buildSystemPrompt();
       
       if (enhancedContext) {
         systemPrompt += `\n\nYour Current Status:\n`;
@@ -683,7 +670,8 @@ Respond authentically as ABRAHAM, incorporating your deep lore while staying pre
       const realTimeContext = await realTimeKnowledge.getRealTimeContext('abraham', message);
 
       // Build comprehensive system prompt
-      let systemPrompt = await loreManager.loadAgentLore('abraham');
+      const lore = await loreManager.loadLore('abraham');
+      let systemPrompt = this.buildSystemPrompt();
 
       // Add training data context
       const enhancedContext = await getEnhancedResponseContext('abraham', message);

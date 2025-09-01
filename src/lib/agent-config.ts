@@ -200,5 +200,4 @@ export function getAgentRoutes(agentId: string): string[] {
   return routes;
 }
 
-// Export type for use in components
-export type { AgentConfig, ArchiveConfig, ExhibitionConfig };
+// Types are already exported above as interfaces

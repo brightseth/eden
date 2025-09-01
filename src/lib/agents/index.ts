@@ -7,7 +7,7 @@
  */
 
 // Agent SDK Implementations
-export { MiyomiClaudeSDK, miyomiSDK } from './miyomi-claude-sdk';
+// export { MiyomiClaudeSDK, miyomiSDK } from './miyomi-claude-sdk'; // Temporarily disabled due to market connector issues
 export { BerthaClaudeSDK, berthaClaude } from './bertha/claude-sdk';
 export { SolienneClaudeSDK, solienneSDK } from './solienne-claude-sdk';
 export { AbrahamClaudeSDK, abrahamSDK } from './abraham-claude-sdk';
@@ -17,10 +17,10 @@ export { BartClaudeSDK, bartSDK } from './bart-claude-sdk';
 export { KoruClaudeSDK, koruSDK } from './koru-claude-sdk';
 
 // Type exports for all SDKs
-export type { 
-  MarketPick,
-  MiyomiConfig 
-} from './miyomi-claude-sdk';
+// export type { 
+//   MarketPick,
+//   MiyomiConfig 
+// } from './miyomi-claude-sdk'; // Temporarily disabled
 
 export type {
   MarketAnalysis,
@@ -70,7 +70,7 @@ export type {
 
 // Agent Registry for SDK lookup
 export const AGENT_SDKS = {
-  miyomi: miyomiSDK,
+  // miyomi: miyomiSDK, // Temporarily disabled
   bertha: berthaClaude,
   solienne: solienneSDK,
   abraham: abrahamSDK,

@@ -435,21 +435,22 @@ Format as JSON:
    */
   async syncWithRegistry(toy: EducationalToy): Promise<void> {
     try {
-      await registryClient.creations.create('geppetto', {
-        type: 'toy-design',
-        title: toy.name,
-        description: toy.description,
-        metadata: {
-          ...toy.metadata,
-          ageRange: toy.ageRange,
-          learningObjectives: toy.learningObjectives,
-          safetyFeatures: toy.safetyFeatures,
-          designSpecs: toy.designSpecs,
-          educationalFramework: toy.educationalFramework,
-          toyDesign: true
-        },
-        status: 'published'
-      });
+      // TODO: Implement when Registry client has creations API
+      // await registryClient.creations.create('geppetto', {
+      //   type: 'toy-design',
+      //   title: toy.name,
+      //   description: toy.description,
+      //   metadata: {
+      //     ...toy.metadata,
+      //     ageRange: toy.ageRange,
+      //     learningObjectives: toy.learningObjectives,
+      //     safetyFeatures: toy.safetyFeatures,
+      //     designSpecs: toy.designSpecs,
+      //     educationalFramework: toy.educationalFramework,
+      //     toyDesign: true
+      //   },
+      //   status: 'published'
+      // });
 
       console.log('✅ Synced toy design with Registry:', toy.id);
     } catch (error) {

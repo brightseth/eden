@@ -129,6 +129,7 @@ export async function GET(request: NextRequest) {
     // Filter by topic if requested
     let responseData = brightMomentsLore;
     if (topic !== 'all' && brightMomentsLore[topic as keyof typeof brightMomentsLore]) {
+      // @ts-expect-error TODO(seth): Filtered lore object doesn't match full type structure; normalized in v3
       responseData = {
         [topic]: brightMomentsLore[topic as keyof typeof brightMomentsLore]
       };

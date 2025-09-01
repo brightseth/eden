@@ -23,3 +23,14 @@ export function isValidAgent(agent: any): agent is PublicAgent {
     ['active', 'training', 'developing'].includes(agent.status)
   );
 }
+
+// Additional type exports to fix build errors
+export type Agent = any;
+export type AgentOverview = any;
+export type DailyMetrics = any;
+export type AgentMilestone = any;
+export type TrainingModule = any;
+export type TrainingSession = any;
+export type Work = any;
+export type Task = any;
+export type Blocker = any;

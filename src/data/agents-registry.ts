@@ -148,7 +148,7 @@ class UnifiedAgentService {
   // Transform Registry agent to unified format
   private transformToUnified(registryAgent: Agent): UnifiedAgent {
     // Use Registry data first, then fallback to static mappings
-    const registryEconomic = registryAgent.profile?.economicData;
+    const registryEconomic = (registryAgent.profile as any)?.economicData;
     const fallbackEconomic = ECONOMIC_DATA[registryAgent.handle] || ECONOMIC_DATA[registryAgent.id] || { monthlyRevenue: 0, outputRate: 0 };
     const economicData = registryEconomic || fallbackEconomic;
     
@@ -366,5 +366,3 @@ export async function calculateTotalRevenue(): Promise<number> {
 export async function calculateAverageOutputRate(): Promise<number> {
   return agentService.calculateAverageOutputRate();
 }
-
-export type { UnifiedAgent };

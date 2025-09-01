@@ -1,13 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { registryApi } from '@/lib/generated-sdk';
 import { featureFlags, FLAGS } from '@/config/flags';
-import { createClient } from '@supabase/supabase-js';
-
-// Fallback Supabase client for when Registry is disabled
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
 
 // Helper function to sort and paginate data
 function applySortingAndPagination<T extends { archive_number?: number; created_date?: string; title?: string }>(
@@ -119,41 +112,11 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Fallback to existing Supabase implementation
-    console.log('[Solienne Works API] Using Supabase fallback');
+    // Fallback to demonstration data when Registry is unavailable
+    console.log('[Solienne Works API] Using demonstration data fallback');
     
-    let query = supabase
-      .from('agent_archives')
-      .select('*', { count: 'exact' })
-      .eq('agent_id', 'solienne');
-
-    // Apply search filter
-    if (search) {
-      query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`);
-    }
-
-    // Apply sorting
-    const [sortField, sortOrder] = sort.split('_');
-    let orderColumn = 'created_date';
-    if (sortField === 'number') {
-      orderColumn = 'archive_number';
-    } else if (sortField === 'title') {
-      orderColumn = 'title';
-    }
-
-    query = query.order(orderColumn, { ascending: sortOrder === 'asc' });
-
-    // Apply pagination
-    query = query.range(offset, offset + limit - 1);
-
-    const { data: works, error, count } = await query;
-
-    if (error) {
-      throw new Error(`Supabase error: ${error.message}`);
-    }
-
-    // If no works found, generate some sample works for demonstration
-    const finalWorks = works && works.length > 0 ? works : [
+    // Generate sample works for demonstration
+    const finalWorks = [
       {
         id: 'sol-demo-001',
         agent_id: 'solienne',
@@ -197,12 +160,12 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       works: finalWorks,
-      total: count || finalWorks.length,
+      total: finalWorks.length,
       limit,
       offset,
       filters: { tags },
       sort,
-      source: works && works.length > 0 ? 'supabase' : 'demo'
+      source: 'demo'
     });
 
   } catch (error) {

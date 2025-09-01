@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { toNum } from '@/lib/registry/coerce';
 import { berthaEngine } from '@/lib/agents/bertha/collection-engine';
 
 // POST /api/agents/bertha/portfolio - Analyze portfolio and get recommendations
@@ -71,13 +72,14 @@ export async function POST(request: NextRequest) {
 function calculatePortfolioMetrics(holdings: any[], totalValue: number) {
   // Simple portfolio metrics calculation
   const categoryCount = new Set(holdings.map(h => h.category || 'unknown')).size;
-  const maxCategoryExposure = Math.max(...Object.values(
-    holdings.reduce((acc: any, h) => {
+  const categoryValues = Object.values(
+    holdings.reduce((acc: Record<string, number>, h) => {
       const cat = h.category || 'unknown';
-      acc[cat] = (acc[cat] || 0) + (h.value || 0);
+      acc[cat] = (acc[cat] || 0) + toNum(h.value, 0);
       return acc;
     }, {})
-  )) / Math.max(totalValue, 1);
+  ) as number[];
+  const maxCategoryExposure = Math.max(...categoryValues) / Math.max(totalValue, 1);
   
   return {
     diversification: Math.min(categoryCount / 5, 1), // Max 5 categories for full diversification

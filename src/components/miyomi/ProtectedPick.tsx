@@ -116,9 +116,9 @@ export function ProtectedPick({ pickId, userId, preview }: ProtectedPickProps) {
   return (
     <div className="bg-gray-900 rounded-lg p-6">
       {/* Tier badge */}
-      {pick.accessTier && (
+      {(pick as any).accessTier && (
         <div className="inline-block bg-red-500 text-black px-2 py-1 rounded text-xs font-bold mb-4">
-          {pick.accessTier} ACCESS
+          {(pick as any).accessTier} ACCESS
         </div>
       )}
 

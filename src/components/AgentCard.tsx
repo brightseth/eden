@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useFeatureFlag } from '@/config/flags';
 import { spiritClient } from '@/lib/registry/spirit-client';
+import { normalizeAgent } from '@/lib/agents/normalize';
 
 interface GenesisAgentDisplay {
   id: string;
@@ -52,15 +53,16 @@ export function AgentCard({ agent, variant, showOnchainBadges = true }: AgentCar
         console.log(`[AgentCard] Fetching onchain status for ${agent.id}...`);
         
         const cohortData = await spiritClient.getGenesisCohort();
-        const agentOnchain = cohortData.agents.find(a => 
-          a.handle?.toLowerCase() === agent.id.toLowerCase()
+        const normalizedAgents = cohortData.agents.map(normalizeAgent);
+        const agentOnchain = normalizedAgents.find(a => 
+          (a.handle || '').toLowerCase() === agent.id.toLowerCase()
         );
         
         if (agentOnchain) {
           setOnchainStatus({
             isDeployed: !!agentOnchain.tokenAddress,
             tokenAddress: agentOnchain.tokenAddress,
-            deploymentDate: agentOnchain.deploymentDate,
+            deploymentDate: agentOnchain.deploymentDate as string | undefined,
             verificationStatus: agentOnchain.tokenAddress ? 'verified' : 'unverified',
             lastSyncAt: new Date().toISOString()
           });

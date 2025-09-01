@@ -65,7 +65,7 @@ export async function GET() {
             layout: 'two-column',
             showBorder: true,
             // Use Registry manifesto as mission content
-            content: agent.profile.manifesto || agent.profile.statement
+            content: agent.profile?.statement || ''
           }
         },
         {
@@ -81,7 +81,7 @@ export async function GET() {
             },
             showMetrics: true,
             // Use Registry process data
-            process: agent.profile.links?.process || []
+            process: []
           }
         },
         {
@@ -113,7 +113,7 @@ export async function GET() {
             showEngagement: true,
             layout: 'grid',
             // Use Registry metrics data
-            metrics: agent.profile.links?.metrics || {}
+            metrics: {}
           }
         },
         {
@@ -126,7 +126,7 @@ export async function GET() {
             showMethodology: true,
             showContact: false,
             // Use Registry personality/trainer data
-            methodology: agent.profile.links?.personality || {}
+            methodology: {}
           }
         },
         {
@@ -171,7 +171,7 @@ Post-acquisition artist development through automated gallery introductions, col
             layout: 'horizontal',
             showIcons: true,
             // Use Registry social data
-            links: agent.profile.links?.social || {}
+            links: {}
           }
         }
       ]

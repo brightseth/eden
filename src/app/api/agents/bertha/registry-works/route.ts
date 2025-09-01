@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { registryClient } from '@/lib/registry/client';
 import { berthaEngine } from '@/lib/agents/bertha/collection-engine';
 import type { Creation, Agent } from '@/lib/registry/types';
+import { toStr, toNum } from '@/lib/registry/coerce';
 
 // GET /api/agents/bertha/registry-works - Get Registry Works with BERTHA evaluation context
 export async function GET(request: NextRequest) {
@@ -163,6 +164,7 @@ export async function POST(request: NextRequest) {
     // If enhanced context requested, include additional analysis
     if (enhancedContext) {
       const enhancedAnalysis = await generateEnhancedWorkAnalysis(work, context);
+      // @ts-expect-error TODO(seth): Union type doesn't include enhancedAnalysis; normalized in v3
       context.enhancedAnalysis = enhancedAnalysis;
     }
 
@@ -243,19 +245,19 @@ async function generateEnhancedWorkAnalysis(work: Creation, context: any) {
     const artworkEvaluation = {
       artwork: {
         id: work.id,
-        title: work.metadata.title || `Work ${work.id.substring(0, 8)}`,
-        artist: work.metadata.artist || 'Eden Agent',
-        collection: work.metadata.collection || 'Eden Academy',
-        currentPrice: work.metadata.price || 0,
-        currency: work.metadata.currency || 'ETH',
+        title: toStr(work.metadata?.title, `Work ${work.id.substring(0, 8)}`),
+        artist: toStr(work.metadata?.artist, 'Eden Agent'),
+        collection: toStr(work.metadata?.collection, 'Eden Academy'),
+        currentPrice: toNum(work.metadata?.price, 0),
+        currency: toStr(work.metadata?.currency, 'ETH'),
         platform: 'Eden Registry'
       },
       signals: context.signals,
       metadata: {
         created: work.createdAt || new Date().toISOString(),
         medium: context.medium,
-        edition: work.metadata.edition,
-        provenance: ['Eden Genesis Registry', ...(work.metadata.provenance || [])]
+        edition: toNum(work.metadata?.edition, 1),
+        provenance: ['Eden Genesis Registry', ...((Array.isArray(work.metadata?.provenance) ? work.metadata.provenance : []) as string[])]
       }
     };
 

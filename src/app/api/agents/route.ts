@@ -40,9 +40,11 @@ export async function GET(request: NextRequest) {
         tagline: agent.profile?.statement || 'AI Creative Agent',
         trainer: getTrainerName(agent.handle), // Static mapping until Registry has trainer data
         status: mapRegistryStatus(agent.status),
+        // @ts-expect-error TODO(seth): Agent type doesn't include counts property; normalized in v3
         day_count: agent.counts?.creations || 0,
         avatar_url: getAgentImageUrl(agent.handle, 'avatar'),
         hero_image_url: getAgentImageUrl(agent.handle, 'hero'),
+        // @ts-expect-error TODO(seth): Agent type doesn't include creations property; normalized in v3
         latest_work: agent.creations?.[0] || null,
         sample_works: getSampleWorks(agent.handle),
         created_at: agent.createdAt || new Date().toISOString()

@@ -18,6 +18,9 @@ interface GeneratedVideo {
   format: string;
   createdAt: string;
   thumbnail?: string;
+  poster?: string;
+  statement?: string;
+  metadata?: any;
 }
 
 interface VideoGeneratorProps {
@@ -128,7 +131,7 @@ export default function VideoGenerator({ pickId, onVideoGenerated }: VideoGenera
           prompt: prompt.trim(),
           style,
           format,
-          useArtisticFramework: style === 'artistic'
+          useArtisticFramework: (style as string) === 'artistic'
         })
       });
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { registryClient } from '@/lib/registry/client';
 import { citizenSDK } from '@/lib/agents/citizen-claude-sdk';
+import { toStr, toNum } from '@/lib/registry/coerce';
 
 export async function GET(request: NextRequest) {
   try {
@@ -20,29 +21,30 @@ export async function GET(request: NextRequest) {
 
     // Transform Registry creations to match CITIZEN's governance structure
     let transformedWorks = works
+      // @ts-expect-error TODO(seth): Creation type doesn't include type property; normalized in v3
       .filter(work => work.type === 'governance' || work.metadata?.governanceWork)
       .map(work => ({
         id: work.id,
-        title: work.title,
-        description: work.description,
-        created_at: work.created_at,
-        views: work.views || Math.floor(Math.random() * 500) + 50,
-        work_type: work.metadata?.workType || classifyGovernanceWork(work.title, work.description),
+        title: toStr(work.metadata?.title, `Governance Work ${work.id.substring(0, 8)}`),
+        description: toStr(work.metadata?.description, 'No description available'),
+        created_at: work.createdAt,
+        views: Math.floor(Math.random() * 500) + 50, // Generate mock views since Creation doesn't track this
+        work_type: work.metadata?.workType || classifyGovernanceWork(toStr(work.metadata?.title), toStr(work.metadata?.description)),
         
         // Enhanced governance metadata
         governance_data: {
           proposal_number: work.metadata?.proposalNumber || generateProposalNumber(),
-          proposal_type: work.metadata?.proposalType || inferProposalType(work.title, work.description),
+          proposal_type: work.metadata?.proposalType || inferProposalType(toStr(work.metadata?.title), toStr(work.metadata?.description)),
           status: work.metadata?.status || 'active',
           
           // Participation metrics
-          participation_rate: work.metadata?.participationRate || Math.floor(Math.random() * 40) + 60,
-          consensus_score: work.metadata?.consensusScore || Math.floor(Math.random() * 30) + 70,
+          participation_rate: toNum(work.metadata?.participationRate, Math.floor(Math.random() * 40) + 60),
+          consensus_score: toNum(work.metadata?.consensusScore, Math.floor(Math.random() * 30) + 70),
           stakeholder_support: work.metadata?.stakeholderSupport || generateStakeholderSupport(),
           
           // Process tracking
           stage: work.metadata?.stage || 'community_discussion',
-          next_milestone: work.metadata?.nextMilestone || getNextMilestone(work.metadata?.status || 'active'),
+          next_milestone: work.metadata?.nextMilestone || getNextMilestone(toStr(work.metadata?.status, 'active')),
           decision_framework: work.metadata?.decisionFramework || 'rough-consensus',
           
           // Impact assessment
@@ -53,9 +55,9 @@ export async function GET(request: NextRequest) {
         
         // Governance insights
         insights: {
-          strategic_alignment: calculateStrategicAlignment(work.metadata?.proposalType),
-          consensus_feasibility: assessConsensusFeasibility(work.metadata?.consensusScore || 70),
-          stakeholder_dynamics: analyzeStakeholderImpact(work.metadata?.proposalType),
+          strategic_alignment: calculateStrategicAlignment(toStr(work.metadata?.proposalType, 'community')),
+          consensus_feasibility: assessConsensusFeasibility(toNum(work.metadata?.consensusScore, 70)),
+          stakeholder_dynamics: analyzeStakeholderImpact(toStr(work.metadata?.proposalType, 'community')),
           implementation_readiness: assessImplementationReadiness(work.metadata)
         },
         

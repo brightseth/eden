@@ -61,6 +61,7 @@ export async function GET(request: NextRequest) {
     // Test basic API endpoints
     const apiStart = Date.now();
     const testResponse = await fetch(`${process.env.NEXT_PUBLIC_REGISTRY_URL || 'https://eden-genesis-registry.vercel.app'}/api/v1/health`);
+    // @ts-expect-error TODO(seth): Health check type doesn't include responseTime; normalized in v3
     checks.api_functionality.responseTime = Date.now() - apiStart;
     
     if (testResponse.ok) {

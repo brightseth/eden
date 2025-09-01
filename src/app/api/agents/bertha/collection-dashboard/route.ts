@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { registryClient } from '@/lib/registry/client';
 import { berthaEngine } from '@/lib/agents/bertha/collection-engine';
 import type { Creation, Agent } from '@/lib/registry/types';
+import { toStr, toNum } from '@/lib/registry/coerce';
 
 export interface CollectionDashboard {
   id: string;
@@ -292,16 +293,16 @@ async function analyzeIndividualWork(work: Creation): Promise<WorkAnalysis> {
     const evaluation = {
       artwork: {
         id: work.id,
-        title: work.metadata.title || 'Untitled',
-        artist: work.metadata.artist || 'Eden Agent',
-        currentPrice: work.metadata.price || 0,
+        title: toStr(work.metadata?.title, 'Untitled'),
+        artist: toStr(work.metadata?.artist, 'Eden Agent'),
+        currentPrice: toNum(work.metadata?.price, 0),
         currency: 'ETH',
         platform: 'Eden Registry'
       },
       signals: marketSignals,
       metadata: {
         created: work.createdAt || new Date().toISOString(),
-        medium: work.metadata.medium || 'Digital',
+        medium: toStr(work.metadata?.medium, 'Digital'),
         provenance: ['Eden Genesis Registry']
       }
     };
@@ -310,8 +311,8 @@ async function analyzeIndividualWork(work: Creation): Promise<WorkAnalysis> {
 
     return {
       workId: work.id,
-      title: work.metadata.title || 'Untitled',
-      artist: work.metadata.artist || 'Eden Agent',
+      title: toStr(work.metadata?.title, 'Untitled'),
+      artist: toStr(work.metadata?.artist, 'Eden Agent'),
       qualityScore: qualityScore,
       marketSignals: marketSignals,
       berthaDecision: {
@@ -330,8 +331,8 @@ async function analyzeIndividualWork(work: Creation): Promise<WorkAnalysis> {
     console.warn('Work analysis error:', error);
     return {
       workId: work.id,
-      title: work.metadata.title || 'Untitled',
-      artist: work.metadata.artist || 'Eden Agent',
+      title: toStr(work.metadata?.title, 'Untitled'),
+      artist: toStr(work.metadata?.artist, 'Eden Agent'),
       qualityScore: 0.5,
       marketSignals: { technical: 0.5, cultural: 0.5, market: 0.3, aesthetic: 0.6 },
       berthaDecision: {

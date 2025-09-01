@@ -44,7 +44,7 @@ interface RegistryWork {
   metadata?: Record<string, any>;
 }
 
-class RegistryClient {
+export class RegistryClient {
   private baseUrl: string;
   private apiKey: string;
   private cache: Map<string, { data: any; timestamp: number }> = new Map();

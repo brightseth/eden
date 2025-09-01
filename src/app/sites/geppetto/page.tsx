@@ -8,6 +8,17 @@ import {
   Users, TrendingUp, Cpu, Palette, Box, Star, Play, Pause, Layers, Zap
 } from 'lucide-react';
 
+type ProductConcept = {
+  id: string;
+  name: string;
+  category?: string;
+  status?: 'idea' | 'prototype' | 'ready';
+  materials?: string[];
+  manufacturingProcess?: string;
+  description?: string;
+  progress?: number;
+};
+
 interface ToyDrop {
   id: string;
   dropNumber: number;
@@ -51,7 +62,7 @@ export default function GeppettoStudioSite() {
       id: 'modular-desk',
       name: 'Modular Work Surface',
       category: 'FURNITURE',
-      status: 'testing',
+      status: 'prototype',
       materials: ['Bamboo', 'Steel', 'Electronics'],
       manufacturingProcess: '3D Print + Machining',
       description: 'Desk system that reconfigures based on work mode and user preferences',
@@ -61,7 +72,7 @@ export default function GeppettoStudioSite() {
       id: 'smart-planter',
       name: 'AI Garden Pod',
       category: 'HOME & GARDEN',
-      status: 'concept',
+      status: 'idea',
       materials: ['Ceramic', 'Sensors', 'Pump System'],
       manufacturingProcess: 'Ceramic Molding',
       description: 'Self-maintaining planter that optimizes growing conditions autonomously',
@@ -232,9 +243,9 @@ export default function GeppettoStudioSite() {
                         <p className="text-sm text-gray-400">{concept.category}</p>
                       </div>
                       <span className={`px-2 py-1 text-xs rounded-full ${
-                        concept.status === 'production' ? 'bg-green-500/20 text-green-400' :
-                        concept.status === 'testing' ? 'bg-blue-500/20 text-blue-400' :
+                        concept.status === 'ready' ? 'bg-green-500/20 text-green-400' :
                         concept.status === 'prototype' ? 'bg-amber-500/20 text-amber-400' :
+                        concept.status === 'idea' ? 'bg-blue-500/20 text-blue-400' :
                         'bg-gray-500/20 text-gray-400'
                       }`}>
                         {concept.status.toUpperCase()}

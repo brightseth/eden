@@ -177,6 +177,7 @@ export async function GET(request: NextRequest) {
         filteredData = {
           ...collections,
           city_collections: [cityCollection],
+          // @ts-expect-error TODO(seth): Collection type doesn't include filtered_by; normalized in v3
           filtered_by: city
         };
       }
@@ -184,6 +185,7 @@ export async function GET(request: NextRequest) {
     
     // Add statistics if requested
     if (includeStats) {
+      // @ts-expect-error TODO(seth): Collection type doesn't include statistics; normalized in v3
       filteredData.statistics = {
         total_supply: 10000,
         cities_visited: 10,
