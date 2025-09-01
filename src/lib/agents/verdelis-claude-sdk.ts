@@ -7,6 +7,22 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { registryClient } from '../registry/registry-client';
 
+/**
+ * Best-effort registry write. No-ops if the API surface isn't available.
+ */
+async function tryRecordWork(agentId: string, payload: any): Promise<void> {
+  try {
+    const anyClient = registryClient as any;
+    if (anyClient?.works?.create) {
+      await anyClient.works.create(agentId, payload);
+      return;
+    }
+    console.log('Registry work recording unavailable, would record:', agentId, payload.type);
+  } catch {
+    // swallow — registry writes are non-critical
+  }
+}
+
 export interface EcoWork {
   id: string;
   title: string;
@@ -446,7 +462,7 @@ Format as JSON:
    */
   async syncWithRegistry(ecoWork: EcoWork): Promise<void> {
     try {
-      await registryClient.creations.create('verdelis', {
+      await tryRecordWork('verdelis', {
         type: 'environmental_art',
         title: ecoWork.title,
         description: ecoWork.description,

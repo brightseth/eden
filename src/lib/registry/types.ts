@@ -149,3 +149,10 @@ export interface AgentQuery {
   status?: AgentStatus;
   include?: ('profile' | 'personas' | 'artifacts' | 'progress')[];
 }
+
+export interface AgentChecklist {
+  mustDo: string[];
+  shouldDo: string[];
+  couldDo: string[];
+  blockers: string[];
+}

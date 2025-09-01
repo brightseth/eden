@@ -6,11 +6,13 @@ const supabase = createClientComponentClient();
 export async function getAgentProfile(agentId: string): Promise<ProfileCardData | null> {
   try {
     // Fetch agent data
-    const { data: agent, error: agentError } = await supabase
+    const { data: agentData, error: agentError } = await supabase
       .from('agents')
       .select('*')
       .eq('id', agentId)
       .single();
+    
+    let agent = agentData;
     
     if (agentError || !agent) {
       // Fallback for legacy/exceptional agents not in DB
@@ -84,10 +86,10 @@ export async function getAgentProfile(agentId: string): Promise<ProfileCardData 
         archiveCount: archiveCount || 0,
         dropsCount: 0 // TODO: fetch from drops table
       },
-      trainers: trainers?.map(t => ({
-        id: t.trainers.id,
-        displayName: t.trainers.display_name,
-        link: `/trainers/${t.trainers.id}`
+      trainers: trainers?.map((t: any) => ({
+        id: t.trainers?.id || t.id || '',
+        displayName: t.trainers?.display_name || t.display_name || '',
+        link: `/trainers/${t.trainers?.id || t.id || ''}`
       })) || [],
       links: {
         profile: `/academy/agent/${agentId}`,
@@ -135,11 +137,11 @@ export async function getTrainerProfile(trainerId: string): Promise<ProfileCardD
       avatarUrl: trainer.avatar_url,
       bio: trainer.bio,
       socials: trainer.socials || {},
-      agents: agents?.map(a => ({
-        id: a.agents.id,
-        displayName: a.agents.name,
-        link: `/academy/agent/${a.agents.id}`,
-        status: a.agents.status
+      agents: agents?.map((a: any) => ({
+        id: a.agents?.id || a.id || '',
+        displayName: a.agents?.name || a.name || '',
+        link: `/academy/agent/${a.agents?.id || a.id || ''}`,
+        status: a.agents?.status || a.status || 'UNKNOWN'
       })) || [],
       tags: trainer.tags || [],
       links: {

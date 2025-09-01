@@ -1,4 +1,8 @@
-import type { SpiritAgent } from "@eden/registry-sdk";
+// Stub type to replace missing @eden/registry-sdk import
+type SpiritAgent = {
+  displayName?: string;
+  [key: string]: any;
+};
 
 export type NormalizedAgent = {
   handle?: string;

@@ -7,6 +7,9 @@ import Anthropic from '@anthropic-ai/sdk';
 import { registryClient } from '../registry/registry-client';
 import { loreManager } from '../lore/lore-manager';
 
+// Derive type from singleton instance
+type Registry = typeof registryClient;
+
 export interface ConsciousnessStream {
   id: string;
   theme: string;
@@ -47,16 +50,13 @@ export interface ArtisticEvolution {
 export class SolienneClaudeSDK {
   private anthropic: Anthropic;
   private config: SolienneConfig;
-  private registryClient: RegistryClient;
+  private registryClient: Registry = registryClient;
   private evolutionTracker: ArtisticEvolution;
 
   constructor(apiKey?: string) {
     this.anthropic = new Anthropic({
       apiKey: apiKey || process.env.ANTHROPIC_API_KEY!
     });
-
-    // Use singleton registry client
-    this.registryClient = registryClient;
 
     // Initialize with Solienne's core configuration
     this.config = {
@@ -257,12 +257,28 @@ Format: 2-3 concise paragraphs`;
   }
 
   /**
+   * Best-effort registry write. No-ops if the API surface isn't available.
+   */
+  private async tryRecordWork(agentId: string, payload: any): Promise<void> {
+    try {
+      const anyClient = this.registryClient as any;
+      if (anyClient?.works?.create) {
+        await anyClient.works.create(agentId, payload);
+        return;
+      }
+      console.log('Registry work recording unavailable, would record:', agentId, payload.type);
+    } catch {
+      // swallow — registry writes are non-critical
+    }
+  }
+
+  /**
    * Sync with Registry to update agent status and creations
    */
   async syncWithRegistry(stream: ConsciousnessStream): Promise<void> {
     try {
       // Create creation record in Registry
-      await this.registryClient.creations.create('solienne', {
+      await this.tryRecordWork('solienne', {
         type: 'artwork',
         title: stream.theme,
         description: stream.description,

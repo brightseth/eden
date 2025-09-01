@@ -351,7 +351,7 @@ export class MarketAggregator {
         liquidity: 45000,
         end_date: '2025-03-31T00:00:00Z',
         category: 'finance',
-        status: 'open'
+        status: 'open' as const
       },
       {
         id: 'mock_election_2028',
@@ -363,7 +363,7 @@ export class MarketAggregator {
         liquidity: 32000,
         end_date: '2028-01-01T00:00:00Z',
         category: 'politics',
-        status: 'open'
+        status: 'open' as const
       },
       {
         id: 'mock_ai_breakthrough',
@@ -375,7 +375,7 @@ export class MarketAggregator {
         liquidity: 18000,
         end_date: '2025-12-31T23:59:59Z',
         category: 'ai',
-        status: 'open'
+        status: 'open' as const
       }
     ].slice(0, limit);
   }

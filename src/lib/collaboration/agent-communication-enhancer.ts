@@ -566,7 +566,7 @@ export class AgentCommunicationEnhancer {
 
   // Helper methods
   private determinePriority(context: MessageContext, messageType: AgentMessage['messageType']): AgentMessage['priority'] {
-    if (messageType === 'urgent' || context.deadline) return 'urgent';
+    if (context.deadline) return 'urgent';
     if (messageType === 'collaboration_request') return 'high';
     if (messageType === 'knowledge_share') return 'medium';
     return 'low';

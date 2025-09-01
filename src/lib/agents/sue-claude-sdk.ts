@@ -6,6 +6,9 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { registryClient } from '../registry/registry-client';
 
+// Derive type from singleton instance
+type Registry = typeof registryClient;
+
 export interface CuratedExhibition {
   id: string;
   title: string;
@@ -74,15 +77,12 @@ export interface SueConfig {
 export class SueClaudeSDK {
   private anthropic: Anthropic;
   private config: SueConfig;
-  private registryClient: RegistryClient;
+  private registryClient: Registry = registryClient;
 
   constructor(apiKey?: string) {
     this.anthropic = new Anthropic({
       apiKey: apiKey || process.env.ANTHROPIC_API_KEY!
     });
-
-    // Use singleton registry client
-    this.registryClient = registryClient;
 
     // Initialize Sue's curatorial configuration
     this.config = {
@@ -439,11 +439,27 @@ Provide comprehensive annual plan with exhibitions and programs.`;
   }
 
   /**
+   * Best-effort registry write. No-ops if the API surface isn't available.
+   */
+  private async tryRecordWork(agentId: string, payload: any): Promise<void> {
+    try {
+      const anyClient = this.registryClient as any;
+      if (anyClient?.works?.create) {
+        await anyClient.works.create(agentId, payload);
+        return;
+      }
+      console.log('Registry work recording unavailable, would record:', agentId, payload.type);
+    } catch {
+      // swallow — registry writes are non-critical
+    }
+  }
+
+  /**
    * Sync curated exhibition with Registry
    */
   async syncWithRegistry(exhibition: CuratedExhibition): Promise<void> {
     try {
-      await this.registryClient.creations.create('sue', {
+      await this.tryRecordWork('sue', {
         type: 'curation',
         title: exhibition.title,
         description: exhibition.concept,

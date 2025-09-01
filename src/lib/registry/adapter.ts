@@ -56,7 +56,13 @@ export class DataAdapter {
     registryMonitor.trackGatewayCall();
     
     try {
-      return await registryGateway.postCreation(agentId, creation);
+      // Convert CreationPost to the expected format
+      const fullCreation: Omit<Creation, 'id'> = {
+        ...creation,
+        status: 'published',
+        agentId: agentId
+      };
+      return await registryGateway.postCreation(agentId, fullCreation);
     } catch (error) {
       console.error('Gateway post failed, queuing for retry:', error);
       // Queue for retry with exponential backoff
@@ -70,7 +76,9 @@ export class DataAdapter {
     registryMonitor.trackGatewayCall();
     
     try {
-      return await registryGateway.getAgentCreations(agentId, status);
+      // Convert to uppercase for gateway
+      const gatewayStatus = status ? status.toUpperCase() as 'CURATED' | 'PUBLISHED' : undefined;
+      return await registryGateway.getAgentCreations(agentId, gatewayStatus);
     } catch (error) {
       console.error('[CRITICAL] Registry unavailable - no fallback allowed:', error);
       throw new Error(`Registry is required: ${error instanceof Error ? error.message : 'Unknown error'}`);

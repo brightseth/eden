@@ -9,7 +9,7 @@ export interface MarketplaceItem {
   id: string;
   sellerId: string;
   sellerAgent: string;
-  itemType: 'nft' | 'collection' | 'collaboration' | 'service' | 'subscription';
+  itemType: 'nft' | 'collection' | 'collaboration' | 'consultation' | 'subscription';
   title: string;
   description: string;
   price: number;
@@ -23,6 +23,9 @@ export interface MarketplaceItem {
     tags: string[];
     collaborators?: string[];
     royalties?: number; // percentage for ongoing sales
+    collectedItems?: any[];
+    curatedBy?: string;
+    theme?: string;
   };
   marketData: {
     views: number;
@@ -91,7 +94,7 @@ export class CrossAgentMarketplace {
   private transactions: Map<string, CrossAgentTransaction> = new Map();
 
   // Add item to shared marketplace
-  async listItem(agentId: string, item: Omit<MarketplaceItem, 'id' | 'sellerId' | 'metadata'>): Promise<string> {
+  async listItem(agentId: string, item: Omit<MarketplaceItem, 'id' | 'sellerId' | 'metadata'> & { metadata?: MarketplaceItem['metadata'] }): Promise<string> {
     const itemId = `item_${agentId}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     
     const marketplaceItem: MarketplaceItem = {
@@ -100,7 +103,7 @@ export class CrossAgentMarketplace {
       sellerAgent: agentId,
       ...item,
       metadata: {
-        ...item.metadata,
+        ...(item.metadata || {}),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         tags: item.metadata?.tags || []
@@ -512,7 +515,7 @@ export class CrossAgentMarketplace {
       nft: 25,
       collection: 100,
       collaboration: 200,
-      service: 50,
+      consultation: 50,
       subscription: 15
     };
     return baselines[itemType] || 25;
@@ -687,7 +690,7 @@ export const collaborationEngine = new CollaborationEngine();
 // Helper functions for component integration
 export async function listItemInMarketplace(
   agentId: string, 
-  item: Omit<MarketplaceItem, 'id' | 'sellerId' | 'metadata'>
+  item: Omit<MarketplaceItem, 'id' | 'sellerId' | 'metadata'> & { metadata?: MarketplaceItem['metadata'] }
 ): Promise<string> {
   return crossAgentMarketplace.listItem(agentId, item);
 }

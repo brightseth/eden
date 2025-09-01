@@ -499,7 +499,7 @@ export class LaunchPreparationManager {
   }
 
   // Monitor collector anticipation metrics
-  async trackCollectorAnticiption(agentId: string): Promise<CollectorAnticipton> {
+  async trackCollectorAnticiption(agentId: string): Promise<CollectorAnticiption> {
     // In production, this would integrate with analytics
     return {
       waitlistSize: Math.floor(Math.random() * 200) + 50,

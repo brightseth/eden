@@ -20,6 +20,7 @@ export interface DiscordMessage {
     url?: string;
     fields?: { name: string; value: string; inline?: boolean }[];
     timestamp?: string;
+    footer?: { text: string; icon_url?: string };
   }[];
   components?: any[];
 }
@@ -365,6 +366,7 @@ export class DiscordConnector {
 
   formatDailyInsight(insight: string, topic: string): DiscordMessage {
     return {
+      content: '', // Empty content since we're using embeds
       embeds: [{
         title: `💡 Daily ${topic} Insight`,
         description: insight,

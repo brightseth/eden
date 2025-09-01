@@ -639,7 +639,7 @@ export const SUE_PROFILE_CONFIG: AgentProfileConfig = {
   agentId: 'sue',
   layout: {
     type: 'standard',
-    maxWidth: '5xl',
+    maxWidth: '4xl',
     spacing: 'normal'
   },
   widgets: [
@@ -872,7 +872,7 @@ export const MIYOMI_PROFILE_CONFIG: AgentProfileConfig = {
   },
   theme: {
     background: 'bg-black text-white',
-    accent: 'pink',
+    accent: 'purple',
     borders: 'border-white'
   },
   metadata: {
@@ -1022,7 +1022,7 @@ export const CITIZEN_PROFILE_CONFIG: AgentProfileConfig = {
   },
   theme: {
     background: 'bg-black text-white',
-    accent: 'orange',
+    accent: 'red',
     borders: 'border-white'
   },
   metadata: {

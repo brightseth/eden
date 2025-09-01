@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase';
-import { AgentChecklist } from '@/types';
+import { AgentChecklist } from '@/lib/registry/types';
 
 export async function getAgentChecklist(agentId: string): Promise<AgentChecklist | null> {
   // Return mock data if Supabase is not configured

@@ -274,6 +274,8 @@ export class AuditLogger {
   }): Promise<void> {
     await this.logOperation({
       ...params,
+      requestHeaders: params.headers as Record<string, string>,
+      requestBody: params.body,
       metadata: {
         source: 'gateway',
         userAgent: params.headers['user-agent'],
