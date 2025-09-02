@@ -52,40 +52,56 @@ export default function SOLIENNEGenerationsPage() {
     loadHistoricalStreams();
   }, [filters, currentPage]);
 
+  const fetchPage = async (cursor?: string) => {
+    const u = new URL('/api/agents/solienne/works', location.origin);
+    u.searchParams.set("limit", "100");
+    if (cursor) u.searchParams.set("cursor", cursor);
+    const res = await fetch(u.toString(), { cache: "no-store" });
+    if (!res.ok) throw new Error(`Proxy ${res.status}`);
+    return res.json();
+  };
+
+  const fetchAll = async (limit = 400) => {
+    const acc: any[] = [];
+    let cursor: string | null = null;
+    while (acc.length < limit) {
+      const { works, next_cursor } = await fetchPage(cursor ?? undefined);
+      const valid = works.filter((w: any) => !!w.image_url);
+      acc.push(...valid);
+      if (!next_cursor) break;
+      cursor = next_cursor;
+    }
+    return acc;
+  };
+
   const loadHistoricalStreams = async () => {
     setLoading(true);
     try {
-      // Try to fetch from API first
-      const response = await fetch(`/api/agents/solienne/works?limit=100`);
-      if (response.ok) {
-        const data = await response.json();
-        
-        // Transform API data to consciousness streams format
-        const transformedStreams = data.works?.map((work: any, index: number) => ({
-          id: work.id,
-          title: work.title || `Consciousness Stream #${1740 - index}`,
-          streamNumber: 1740 - index,
-          imageUrl: work.image_url || work.archive_url,
-          createdAt: new Date(work.created_date || work.createdAt),
-          description: work.description || 'Exploration of light, space, and architectural consciousness',
-          themes: work.metadata?.themes || ['consciousness', 'architecture', 'light'],
-          archetype: work.metadata?.archetype || 'architectural',
-          dimensions: work.metadata?.dimensions || { width: 1024, height: 1024 },
-          metadata: {
-            generation_time: work.metadata?.generation_time || Math.random() * 30 + 5,
-            style_prompt: work.metadata?.style_prompt,
-            architectural_elements: work.metadata?.architectural_elements || ['shadow', 'geometry', 'space']
-          }
-        })) || [];
+      const allWorks = await fetchAll(400);
+      
+      // Transform API data to consciousness streams format
+      const transformedStreams = allWorks.map((work: any, index: number) => ({
+        id: work.id,
+        title: work.title || `Consciousness Stream #${1740 - index}`,
+        streamNumber: work.meta?.seq || (1740 - index),
+        imageUrl: work.image_url,
+        createdAt: new Date(work.created_at || Date.now()),
+        description: work.description || 'Exploration of light, space, and architectural consciousness',
+        themes: work.meta?.themes || ['consciousness', 'architecture', 'light'],
+        archetype: work.meta?.archetype || 'architectural',
+        dimensions: work.meta?.dimensions || { width: 1024, height: 1024 },
+        metadata: {
+          generation_time: work.meta?.generation_time || Math.random() * 30 + 5,
+          style_prompt: work.meta?.style_prompt,
+          architectural_elements: work.meta?.architectural_elements || ['shadow', 'geometry', 'space']
+        }
+      }));
 
-        setStreams(transformedStreams);
-      } else {
-        // Fallback to placeholder data for demonstration
-        generatePlaceholderStreams();
-      }
+      setStreams(transformedStreams);
     } catch (error) {
       console.error('Failed to load consciousness streams:', error);
-      generatePlaceholderStreams();
+      // Show error state instead of placeholder
+      setStreams([]);
     } finally {
       setLoading(false);
     }
@@ -341,16 +357,24 @@ export default function SOLIENNEGenerationsPage() {
                     onClick={() => setSelectedStream(stream)}
                   >
                     <div className="aspect-square bg-gray-900 flex items-center justify-center relative overflow-hidden">
-                      <div className="text-center p-3">
-                        <div className="text-xs text-gray-400 mb-1">STREAM</div>
-                        <div className="text-lg font-bold mb-1">#{stream.streamNumber}</div>
-                        <div className="text-xs text-gray-500">
-                          {stream.createdAt.toLocaleDateString('en-US', { 
-                            month: 'short', 
-                            day: 'numeric' 
-                          })}
+                      {stream.imageUrl ? (
+                        <img
+                          src={stream.imageUrl}
+                          alt={stream.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="text-center p-3">
+                          <div className="text-xs text-gray-400 mb-1">STREAM</div>
+                          <div className="text-lg font-bold mb-1">#{stream.streamNumber}</div>
+                          <div className="text-xs text-gray-500">
+                            {stream.createdAt.toLocaleDateString('en-US', { 
+                              month: 'short', 
+                              day: 'numeric' 
+                            })}
+                          </div>
                         </div>
-                      </div>
+                      )}
                       <div className="absolute inset-0 bg-gradient-to-br from-transparent via-gray-800/20 to-gray-700/40 group-hover:from-white/5 group-hover:to-white/10 transition-all duration-500"></div>
                     </div>
                     <div className="p-3">
@@ -382,10 +406,18 @@ export default function SOLIENNEGenerationsPage() {
                   >
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                       <div className="aspect-square bg-gray-900 flex items-center justify-center">
-                        <div className="text-center">
-                          <div className="text-sm text-gray-400 mb-1">STREAM</div>
-                          <div className="text-2xl font-bold">#{stream.streamNumber}</div>
-                        </div>
+                        {stream.imageUrl ? (
+                          <img
+                            src={stream.imageUrl}
+                            alt={stream.title}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="text-center">
+                            <div className="text-sm text-gray-400 mb-1">STREAM</div>
+                            <div className="text-2xl font-bold">#{stream.streamNumber}</div>
+                          </div>
+                        )}
                       </div>
                       <div className="lg:col-span-3">
                         <div className="flex justify-between items-start mb-4">

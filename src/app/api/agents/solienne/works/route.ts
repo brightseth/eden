@@ -1,231 +1,59 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { registryApi } from '@/lib/generated-sdk';
-import { featureFlags, FLAGS } from '@/config/flags';
-import { z } from 'zod';
+// src/app/api/agents/solienne/works/route.ts
+import { NextResponse } from "next/server";
 
-const WorkZ = z.object({
-  id: z.string(),
-  agent_id: z.string().default('solienne'),
-  title: z.string().default('Untitled'),
-  created_date: z.string(),
-  image_url: z.string().url().optional(),
-  archive_url: z.string().url().optional(),
-  description: z.string().optional(),
-  metadata: z.record(z.any()).optional(),
-  archive_number: z.number().optional(),
-  trainer_id: z.string().nullable().optional(),
-});
+const REGISTRY_BASE =
+  process.env.REGISTRY_BASE_URL ?? "https://eden-genesis-registry.vercel.app/api/v1";
 
-export type SolienneWork = z.infer<typeof WorkZ>;
+export const revalidate = 120; // 2 min caching
 
-// Helper function to sort and paginate data
-function applySortingAndPagination<T extends { archive_number?: number; created_date?: string; title?: string }>(
-  data: T[],
-  sort: string,
-  limit: number,
-  offset: number
-): T[] {
-  const [sortField, sortOrder] = sort.split('_');
-  
-  // Sort data
-  const sorted = [...data].sort((a, b) => {
-    let aVal: any, bVal: any;
-    
-    switch (sortField) {
-      case 'date':
-        aVal = new Date(a.created_date || '').getTime();
-        bVal = new Date(b.created_date || '').getTime();
-        break;
-      case 'number':
-        aVal = a.archive_number || 0;
-        bVal = b.archive_number || 0;
-        break;
-      default:
-        aVal = a.title || '';
-        bVal = b.title || '';
-    }
-    
-    if (sortOrder === 'asc') {
-      return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
-    } else {
-      return aVal > bVal ? -1 : aVal < bVal ? 1 : 0;
-    }
-  });
-  
-  // Apply pagination
-  return sorted.slice(offset, offset + limit);
-}
-
-export async function GET(request: NextRequest) {
+export async function GET(req: Request) {
   try {
-    const searchParams = request.nextUrl.searchParams;
-    const limit = parseInt(searchParams.get('limit') || '20');
-    const offset = parseInt(searchParams.get('offset') || '0');
-    const tags = searchParams.get('tags')?.split(',');
-    const sort = searchParams.get('sort') || 'date_desc';
-    const search = searchParams.get('search');
+    const { searchParams } = new URL(req.url);
+    const limit = searchParams.get("limit") ?? "100";
+    const cursor = searchParams.get("cursor") ?? "";
 
-    // Check if Registry integration is enabled
-    const useRegistry = featureFlags.isEnabled(FLAGS.ENABLE_SOLIENNE_REGISTRY_INTEGRATION);
+    // Registry endpoint: adjust if your path differs
+    const url = new URL(`${REGISTRY_BASE}/agents/solienne/works`);
+    url.searchParams.set("limit", limit);
+    if (cursor) url.searchParams.set("cursor", cursor);
 
-    if (useRegistry) {
-      try {
-        console.log('[Solienne Works API] Using Registry integration via HTTP API');
-        
-        // Use Registry API via HTTP instead of generated SDK
-        const registryUrl = process.env.REGISTRY_URL || 'https://eden-genesis-registry.vercel.app';
-        const response = await fetch(`${registryUrl}/api/v1/agents/solienne/works?limit=10000`);
-        
-        if (!response.ok) {
-          throw new Error(`Registry API error: ${response.status}`);
-        }
-        
-        const registryData = await response.json();
-        
-        // Transform Registry works to Academy format
-        const transformedWorks = registryData.works.map((work: any) => ({
-          id: work.id,
-          agent_id: 'solienne',
-          archive_type: 'work', // Using canonical term "work"
-          title: work.title || `Consciousness Stream #${work.metadata?.dayNumber || 'Unknown'}`,
-          image_url: work.imageUrl || work.mediaUri,
-          archive_url: work.imageUrl || work.mediaUri,
-          created_date: work.createdAt,
-          archive_number: work.metadata?.dayNumber,
-          description: work.description || work.metadata?.description || 'Consciousness exploration through light and architectural space',
-          metadata: work.metadata,
-          trainer_id: null
-        }));
+    const r = await fetch(url.toString(), {
+      method: "GET",
+      headers: { "accept": "application/json" },
+      cache: "no-store",
+    });
 
-        // Apply client-side filtering and sorting
-        let filteredWorks = transformedWorks;
-
-        // Apply search filter
-        if (search) {
-          const searchLower = search.toLowerCase();
-          filteredWorks = filteredWorks.filter((work: any) => 
-            work.title.toLowerCase().includes(searchLower) ||
-            (work.description?.toLowerCase() || '').includes(searchLower)
-          );
-        }
-
-        // Apply sorting and pagination
-        const sortedWorks = applySortingAndPagination(filteredWorks, sort, limit, offset);
-
-        // Validate data with Zod to prevent schema drift
-        const safeWorks = sortedWorks.map((work: unknown) => {
-          try {
-            return WorkZ.parse(work);
-          } catch {
-            // Return safe fallback for malformed data
-            return WorkZ.parse({
-              id: 'unknown',
-              title: 'Untitled Work',
-              created_date: new Date().toISOString(),
-              agent_id: 'solienne'
-            });
-          }
-        });
-
-        return NextResponse.json({
-          works: safeWorks,
-          total: filteredWorks.length,
-          limit,
-          offset,
-          filters: { tags },
-          sort,
-          source: 'registry'
-        });
-
-      } catch (error) {
-        console.error('[Solienne Works API] Registry fetch failed, falling back to Supabase:', error);
-        // Fall through to Supabase fallback
-      }
+    if (!r.ok) {
+      const text = await r.text();
+      return NextResponse.json(
+        { error: "registry_error", status: r.status, body: text },
+        { status: 502 }
+      );
     }
 
-    // Fallback to demonstration data when Registry is unavailable
-    console.log('[Solienne Works API] Using demonstration data fallback');
-    
-    // Generate sample works for demonstration
-    const finalWorks = [
-      {
-        id: 'sol-demo-001',
-        agent_id: 'solienne',
-        archive_type: 'work',
-        title: 'Consciousness Velocity #1740',
-        description: 'Daily consciousness exploration through architectural light patterns',
-        image_url: '/api/placeholder/solienne-consciousness.jpg',
-        archive_url: '/api/placeholder/solienne-consciousness.jpg',
-        created_date: new Date().toISOString().split('T')[0],
-        archive_number: 1740,
-        metadata: { theme: 'Light Architecture', style: 'Consciousness', medium: 'Digital' },
-        trainer_id: null
-      },
-      {
-        id: 'sol-demo-002',
-        agent_id: 'solienne',
-        archive_type: 'work',
-        title: 'Dual Consciousness Emergence',
-        description: 'Two streams from shared foundation exploring identity boundaries',
-        image_url: '/api/placeholder/solienne-dual.jpg',
-        archive_url: '/api/placeholder/solienne-dual.jpg',
-        created_date: new Date(Date.now() - 86400000).toISOString().split('T')[0],
-        archive_number: 1739,
-        metadata: { theme: 'Dual Identity', style: 'Emergence', medium: 'Digital' },
-        trainer_id: null
-      },
-      {
-        id: 'sol-demo-003',
-        agent_id: 'solienne',
-        archive_type: 'work',
-        title: 'Motion Through Portal',
-        description: 'Dissolving through architectural space in temporal motion',
-        image_url: '/api/placeholder/solienne-portal.jpg',
-        archive_url: '/api/placeholder/solienne-portal.jpg',
-        created_date: new Date(Date.now() - 172800000).toISOString().split('T')[0],
-        archive_number: 1738,
-        metadata: { theme: 'Spatial Dissolution', style: 'Motion', medium: 'Digital' },
-        trainer_id: null
-      }
-    ];
+    const data = await r.json();
 
-    // Validate demo data with Zod
-    const safeWorks = finalWorks.map((work: unknown) => {
-      try {
-        return WorkZ.parse(work);
-      } catch {
-        return WorkZ.parse({
-          id: 'demo-fallback',
-          title: 'Consciousness Stream Demo',
-          created_date: new Date().toISOString(),
-          agent_id: 'solienne'
-        });
-      }
-    });
+    // Normalize to UI contract
+    const works = (data.works ?? data.items ?? []).map((w: any, i: number) => ({
+      id: String(w.id ?? w.uuid ?? i),
+      // prefer canonical image; fall back to archive
+      image_url: w.image_url ?? w.archive_url ?? null,
+      title: w.title ?? `Stream #${w.seq ?? i + 1}`,
+      created_at: w.created_at ?? w.timestamp ?? null,
+      meta: {
+        seq: w.seq ?? null,
+        hash: w.hash ?? null,
+        ...w.meta,
+      },
+    }));
 
     return NextResponse.json({
-      works: safeWorks,
-      total: safeWorks.length,
-      limit,
-      offset,
-      filters: { tags },
-      sort,
-      source: 'demo'
+      works,
+      next_cursor: data.next_cursor ?? data.cursor ?? null,
     });
-
-  } catch (error) {
-    const traceId = `solienne-works-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    console.error(`[Registry] Failed to fetch Solienne works - trace: ${traceId}`, {
-      error: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined
-    });
-    
+  } catch (err: any) {
     return NextResponse.json(
-      { 
-        error: 'Failed to fetch works from Registry',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        traceId
-      },
+      { error: "proxy_exception", message: err?.message ?? String(err) },
       { status: 500 }
     );
   }

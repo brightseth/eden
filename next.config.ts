@@ -84,6 +84,14 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: '*.replicate.delivery',
       },
+      // Registry direct image host(s)
+      { protocol: "https", hostname: "eden-genesis-registry.vercel.app" },
+      // If images live on R2/S3/IPFS gateways, add them here:
+      { protocol: "https", hostname: "pub-*.r2.dev" },
+      { protocol: "https", hostname: "*.amazonaws.com" },
+      { protocol: "https", hostname: "*.ipfs.w3s.link" },
+      { protocol: "https", hostname: "ipfs.io" },
+      { protocol: "https", hostname: "cloudflare-ipfs.com" },
     ],
     // Disable optimization to fix broken images
     unoptimized: true,
