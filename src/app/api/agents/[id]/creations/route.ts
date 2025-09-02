@@ -11,7 +11,11 @@ const CreationPostZ = z.object({
   publishedTo: z.string().optional(),
 });
 
-export async function GET(request: NextRequest, { params }: { params: { id: string }}) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
   const { searchParams } = new URL(request.url);
   const statusLc = searchParams.get('status') as 'curated' | 'published' | null;
   const status = statusLc ? (statusLc.toUpperCase() as 'CURATED'|'PUBLISHED') : undefined;
@@ -23,7 +27,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
   // When gateway is ready, uncomment:
   // const { registryGateway } = await import('@/lib/registry/gateway');
-  // const data = await registryGateway.getAgentCreations(params.id, status);
+  // const data = await registryGateway.getAgentCreations(id, status);
   // return NextResponse.json(data, { headers: { 'Access-Control-Allow-Origin': '*' }});
   
   return NextResponse.json([], { headers: { 'Access-Control-Allow-Origin': '*' }});
@@ -40,14 +44,18 @@ export async function OPTIONS() {
   });
 }
 
-export async function POST(req: NextRequest, { params }: { params: { id: string }}) {
+export async function POST(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
     const input = CreationPostZ.parse(await req.json());
 
     if (FEATURE_FLAGS.FEATURE_REGISTRY_GATEWAY_DISABLED) {
       const created = {
         id: `creation-${Date.now()}`,
-        agentId: params.id,
+        agentId: id,
         mediaUri: input.mediaUri,
         metadata: input.metadata ?? {},
         publishedTo: input.publishedTo ?? 'eden',
@@ -58,12 +66,12 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
     // When gateway is ready, uncomment:
     // const { registryGateway } = await import('@/lib/registry/gateway');
-    // const created = await registryGateway.postCreation(params.id, input);
+    // const created = await registryGateway.postCreation(id, input);
     // return NextResponse.json(created, { headers: { 'Access-Control-Allow-Origin': '*' }});
     
     const created = {
       id: `creation-${Date.now()}`,
-      agentId: params.id,
+      agentId: id,
       mediaUri: input.mediaUri,
       metadata: input.metadata ?? {},
       publishedTo: input.publishedTo ?? 'eden',

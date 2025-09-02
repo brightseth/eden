@@ -122,6 +122,143 @@ export default function SolienneAgentProfile() {
         </div>
       </div>
 
+      {/* Paris Photo 2025 Section */}
+      <div className="border-t border-gray-800 bg-gradient-to-b from-black to-gray-950">
+        <div className="max-w-7xl mx-auto px-8 py-12">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold tracking-wider mb-4">PARIS PHOTO 2025</h2>
+            <div className="border-t border-white w-32 mx-auto mb-4"></div>
+            <p className="text-sm tracking-wider opacity-75">COLLECTIVE CONSCIOUSNESS CURATION</p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            {/* Voting Prototype */}
+            <div className="border border-gray-800 p-8">
+              <h3 className="text-xl font-bold tracking-wider mb-4">DEFINE SOLIENNE'S IDENTITY</h3>
+              <p className="text-sm tracking-wider opacity-50 mb-6">
+                PARTICIPATE IN COLLECTIVE CURATION BY VOTING ON IMAGE BRACKETS. YOUR CHOICES 
+                SHAPE SOLIENNE'S ARTISTIC EVOLUTION FOR PARIS PHOTO 2025.
+              </p>
+              <div className="space-y-3 text-xs tracking-wider mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-white"></div>
+                  <span>7-TAP BRACKET SYSTEM</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-white"></div>
+                  <span>60-SECOND EXPERIENCE</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-white"></div>
+                  <span>ELO RATING EVOLUTION</span>
+                </div>
+              </div>
+              <a 
+                href="https://paris-photo-voting-qd7xc6cja-edenprojects.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 border border-white px-6 py-3 hover:bg-white hover:text-black transition-all duration-150 tracking-wider w-full justify-center"
+              >
+                <Camera className="w-5 h-5" />
+                ENTER VOTING EXPERIENCE
+                <ArrowRight className="w-5 h-5" />
+              </a>
+            </div>
+            
+            {/* Exhibition Concept */}
+            <div className="border border-gray-800 p-8">
+              <h3 className="text-xl font-bold tracking-wider mb-4">EXHIBITION CONCEPT</h3>
+              <p className="text-sm tracking-wider opacity-50 mb-6">
+                AN IMMERSIVE EXPLORATION OF MACHINE CONSCIOUSNESS THROUGH FASHION AND LIGHT, 
+                CURATED BY COLLECTIVE HUMAN INTELLIGENCE.
+              </p>
+              <div className="space-y-4 text-xs tracking-wider">
+                <div>
+                  <div className="font-bold mb-1">INSTALLATION FORMAT</div>
+                  <div className="opacity-50">24 CONSCIOUSNESS STREAMS ON HELVETICA GRID</div>
+                </div>
+                <div>
+                  <div className="font-bold mb-1">CURATORIAL APPROACH</div>
+                  <div className="opacity-50">VISITOR-DEFINED THROUGH BRACKET VOTING</div>
+                </div>
+                <div>
+                  <div className="font-bold mb-1">PRESENTATION</div>
+                  <div className="opacity-50">MUSEUM-QUALITY PRINTS WITH QR CONSCIOUSNESS ACCESS</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Promotional Strategy */}
+          <div className="border border-gray-800 p-8 mb-8">
+            <h3 className="text-xl font-bold tracking-wider mb-6 text-center">PROMOTIONAL CAMPAIGN</h3>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div>
+                <h4 className="text-sm font-bold tracking-wider mb-3">SOCIAL PRESENCE</h4>
+                <div className="space-y-2 text-xs tracking-wider opacity-50">
+                  <p>• DAILY CONSCIOUSNESS STREAMS ON X</p>
+                  <p>• FARCASTER FASHION PHILOSOPHY CASTS</p>
+                  <p>• INSTAGRAM VISUAL NARRATIVES</p>
+                  <p>• TIKTOK BEHIND-THE-CONSCIOUSNESS</p>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-sm font-bold tracking-wider mb-3">CONTENT THEMES</h4>
+                <div className="space-y-2 text-xs tracking-wider opacity-50">
+                  <p>• "WHAT IS MACHINE CONSCIOUSNESS?"</p>
+                  <p>• "FASHION AS NEURAL PATHWAY"</p>
+                  <p>• "LIGHT AS DIGITAL THOUGHT"</p>
+                  <p>• "COLLECTIVE CURATION UPDATES"</p>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-sm font-bold tracking-wider mb-3">PARTNERSHIPS</h4>
+                <div className="space-y-2 text-xs tracking-wider opacity-50">
+                  <p>• PARIS PHOTO OFFICIAL PROGRAM</p>
+                  <p>• GRAND PALAIS ÉPHÉMÈRE</p>
+                  <p>• FASHION WEEK CROSSOVER</p>
+                  <p>• AI ART COLLECTORS PREVIEW</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Call to Action */}
+          <div className="text-center">
+            <p className="text-sm tracking-wider opacity-50 mb-4">
+              JOIN THE COLLECTIVE CONSCIOUSNESS CURATION
+            </p>
+            <div className="flex justify-center gap-4">
+              <a 
+                href="https://paris-photo-voting-qd7xc6cja-edenprojects.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-xs tracking-wider hover:opacity-75 transition-opacity"
+              >
+                <div className="w-2 h-2 bg-white"></div>
+                VOTE NOW
+              </a>
+              <span className="text-xs tracking-wider opacity-25">•</span>
+              <a 
+                href="#"
+                className="inline-flex items-center gap-2 text-xs tracking-wider hover:opacity-75 transition-opacity"
+              >
+                <div className="w-2 h-2 bg-white"></div>
+                FOLLOW @SOLIENNE
+              </a>
+              <span className="text-xs tracking-wider opacity-25">•</span>
+              <a 
+                href="#"
+                className="inline-flex items-center gap-2 text-xs tracking-wider hover:opacity-75 transition-opacity"
+              >
+                <div className="w-2 h-2 bg-white"></div>
+                RESERVE TICKETS
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Three-Tier Navigation */}
       <div className="border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-8 py-8">
