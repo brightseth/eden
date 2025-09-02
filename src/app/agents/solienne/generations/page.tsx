@@ -22,6 +22,8 @@ interface ConsciousnessStream {
     generation_time?: number;
     style_prompt?: string;
     architectural_elements?: string[];
+    hue?: number;
+    brightness?: number;
   };
 }
 
