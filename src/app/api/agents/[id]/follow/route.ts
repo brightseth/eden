@@ -1,3 +1,6 @@
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 import { NextResponse } from 'next/server';
 
 // Mock follow state - will connect to database later
@@ -5,9 +8,9 @@ const followStore = new Map<string, Set<string>>();
 
 export async function POST(
   request: Request,
-  { params }: any) {
+  { params }: { params: Promise<{ id: string }> }) {
   try {
-  const { id: agentId } = params;
+  const { id: agentId } = await params;
     const { user_id } = await request.json();
     
     if (!user_id) {
@@ -45,9 +48,9 @@ export async function POST(
 
 export async function DELETE(
   request: Request,
-  { params }: any) {
+  { params }: { params: Promise<{ id: string }> }) {
   try {
-  const { id: agentId } = params;
+  const { id: agentId } = await params;
     const { user_id } = await request.json();
     
     if (!user_id) {
@@ -81,9 +84,9 @@ export async function DELETE(
 
 export async function GET(
   request: Request,
-  { params }: any) {
+  { params }: { params: Promise<{ id: string }> }) {
   try {
-  const { id: agentId } = params;
+  const { id: agentId } = await params;
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('user_id');
     

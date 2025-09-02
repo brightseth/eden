@@ -1,3 +1,6 @@
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { FEATURE_FLAGS } from '@/config/flags';
 import { AbrahamClaudeSDK } from '@/lib/agents/abraham-claude-sdk';
@@ -45,9 +48,9 @@ interface ChatResponse {
 // GET /api/agents/[id]/chat - Get chat info/status
 export async function GET(
   request: NextRequest,
-  { params }: any) {
+  { params }: { params: Promise<{ id: string }> }) {
   try {
-  const { id } = params;
+  const { id } = await params;
 
     if (!FEATURE_FLAGS.ENABLE_AGENT_CHAT) {
   return NextResponse.json(
@@ -80,9 +83,9 @@ export async function GET(
 // POST /api/agents/[id]/chat - Send message to agent
 export async function POST(
   request: NextRequest,
-  { params }: any) {
+  { params }: { params: Promise<{ id: string }> }) {
   try {
-  const { id } = params;
+  const { id } = await params;
 
     if (!FEATURE_FLAGS.ENABLE_AGENT_CHAT) {
   return NextResponse.json(

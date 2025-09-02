@@ -1,3 +1,6 @@
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server'
 
 interface TestParams {
@@ -181,9 +184,9 @@ const testRunners = {
 
 export async function POST(
   request: NextRequest,
-  { params }: any
+  { params }: { params: Promise<{ category: string }> }
 ) {
-  const { category } = params
+  const { category } = await params
   
   if (!testRunners[category as keyof typeof testRunners]) {
     return NextResponse.json(

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
 import { 
   CreateDailyPracticeSchema,
   UpdateDailyPracticeSchema,
@@ -7,13 +6,23 @@ import {
 } from '@/lib/validation/schemas';
 import { z } from 'zod';
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+// Lazy load Supabase to avoid bundling issues
+async function getSupabase() {
+  const { createClient } = await import('@/lib/supabase/server');
+  return createClient();
+}
+
 // GET /api/agents/[id]/daily-practice?since=YYYY-MM-DD&limit=7
 export async function GET(
   request: NextRequest,
-  { params }: any) {
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const supabase = await createClient();
-  const { id: agentId } = params;
+    const { id: agentId } = await params;
+    const supabase = await getSupabase();
     const { searchParams } = new URL(request.url);
     
     // Parse query params
@@ -71,10 +80,11 @@ export async function GET(
 // POST /api/agents/[id]/daily-practice
 export async function POST(
   request: NextRequest,
-  { params }: any) {
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const supabase = await createClient();
-  const { id: agentId } = params;
+    const { id: agentId } = await params;
+    const supabase = await getSupabase();
     const body = await request.json();
 
     // Validate input
@@ -128,10 +138,11 @@ export async function POST(
 // PATCH /api/agents/[id]/daily-practice (for incremental updates)
 export async function PATCH(
   request: NextRequest,
-  { params }: any) {
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const supabase = await createClient();
-  const { id: agentId } = params;
+    const { id: agentId } = await params;
+    const supabase = await getSupabase();
     const body = await request.json();
 
     // Validate input

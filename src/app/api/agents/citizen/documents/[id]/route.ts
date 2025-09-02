@@ -1,3 +1,6 @@
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { registryApi } from '@/lib/generated-sdk/registry-api';
 import { existsSync, readFileSync } from 'fs';
@@ -23,9 +26,9 @@ interface DocumentMetadata {
 
 export async function GET(
   request: NextRequest,
-  { params }: any) {
+  { params }: { params: Promise<{ id: string }> }) {
   try {
-  const { id } = params;
+  const { id } = await params;
 
     if (!id) {
   return NextResponse.json(
