@@ -221,13 +221,14 @@ export class InputValidator {
     allowedTags?: string[];
     allowedAttributes?: Record<string, string[]>;
   }): string {
-    const config = options ? {
+    const config: any = options ? {
       ALLOWED_TAGS: options.allowedTags || ['p', 'br', 'strong', 'em', 'a'],
       ALLOWED_ATTR: options.allowedAttributes || { a: ['href'] },
       ALLOW_DATA_ATTR: false
     } : undefined;
 
-    return DOMPurify.sanitize(html, config);
+    const result = DOMPurify.sanitize(html, config);
+    return typeof result === 'string' ? result : result.toString();
   }
 
   // Validate file upload
@@ -352,8 +353,8 @@ export function validateInput<T extends keyof typeof requestSchemas>(
       } catch (error) {
         logger.error('Validation decorator error', {
           method: propertyKey,
-          error: error instanceof Error ? error.message : 'Unknown error'
-        });
+          errorMessage: error instanceof Error ? error.message : 'Unknown error'
+        } as any);
 
         return new Response(
           JSON.stringify({ error: 'Invalid request data' }),

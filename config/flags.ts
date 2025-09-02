@@ -28,6 +28,7 @@ export const FEATURE_FLAGS = {
   // API Integrations
   DUNE_ANALYTICS_ENABLED: !!process.env.DUNE_API_KEY,
   OPENSEA_API_ENABLED: !!process.env.OPENSEA_API_KEY,
+  FEATURE_REGISTRY_GATEWAY_DISABLED: process.env.FEATURE_REGISTRY_GATEWAY_DISABLED === '1',
   
   // Development Features
   MOCK_DATA_FALLBACK: process.env.NODE_ENV === 'development' || process.env.ENABLE_MOCK_DATA === 'true',

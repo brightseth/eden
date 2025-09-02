@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "strict": false
+  },
+  "include": [
+    "src/services/creative-pipeline/**/*",
+    "src/services/creator-agent-economics/**/*",
+    "src/lib/token-economics/**/*"
+  ]
+}

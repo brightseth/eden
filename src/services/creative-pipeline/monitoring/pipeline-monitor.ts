@@ -5,7 +5,7 @@
  * comprehensive metrics, logging, and performance tracking.
  */
 
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 
 interface PipelineMetric {
   creatorProfileId: string;
@@ -46,12 +46,19 @@ interface PipelineHealthMetrics {
 }
 
 export class CreativePipelineMonitor {
-  private supabase: ReturnType<typeof createServerSupabaseClient>;
+  private supabase: any;
   private alertHandlers: Map<string, (alert: PipelineAlert) => void> = new Map();
 
   constructor() {
-    this.supabase = createServerSupabaseClient();
+    // Will be initialized when needed
     this.setupDefaultAlertHandlers();
+  }
+  
+  private async getSupabase() {
+    if (!this.supabase) {
+      this.supabase = await createClient();
+    }
+    return this.supabase;
   }
 
   /**

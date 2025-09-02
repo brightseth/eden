@@ -4,6 +4,7 @@
 import { registryClient } from '@/lib/registry/client';
 import { EDEN_AGENTS } from '@/data/eden-agents-manifest';
 import { worksService } from '@/data/works-registry';
+import { normalizeStatus } from '@/lib/registry/adapters';
 import type { SovereignAgentConfig } from '@/types/agent-sovereign';
 import type { DailyPracticeEntry } from '@/lib/validation/schemas';
 
@@ -226,7 +227,7 @@ export class SovereignDataAggregator {
       id: manifest?.id || manifest?.handle || 'unknown',
       handle: manifest?.handle || 'unknown', 
       displayName: manifest?.name || 'Unknown Agent',
-      status: (manifest?.status || 'academy') as const,
+      status: manifest?.status === 'academy' ? 'academy' : normalizeStatus(manifest?.status ?? 'ACTIVE') as any,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -380,7 +381,7 @@ export class SovereignDataAggregator {
         id: agent.id,
         handle: agent.handle,
         displayName: agent.name,
-        status: agent.status,
+        status: agent.status === 'academy' ? 'academy' : normalizeStatus(agent.status) as any,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       },

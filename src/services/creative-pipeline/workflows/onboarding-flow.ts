@@ -56,13 +56,20 @@ interface OnboardingMetrics {
 export class OnboardingFlowManager {
   private assessmentScorer: CulturalAssessmentScorer;
   private potentialMatcher: AgentPotentialMatcher;
-  private supabase: ReturnType<typeof createServerSupabaseClient>;
+  private supabase: any;
   private metrics: Map<string, OnboardingMetrics> = new Map();
 
   constructor() {
     this.assessmentScorer = new CulturalAssessmentScorer();
     this.potentialMatcher = new AgentPotentialMatcher();
-    this.supabase = createServerSupabaseClient();
+    // Will be initialized when needed
+  }
+  
+  private async getSupabase() {
+    if (!this.supabase) {
+      this.supabase = await createClient();
+    }
+    return this.supabase;
   }
 
   /**

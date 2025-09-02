@@ -92,7 +92,8 @@ export class SovereignIntelligenceEngine {
     else if (publishRatio > 0.5) consistency = 'burst';
 
     // Quality assessment (based on engagement and revenue metrics)
-    const { views, reactions, revenue_usdc } = config.dailyPractice.metrics;
+    const { views, reactions } = config.dailyPractice.metrics;
+    const { revenue_usdc } = config.dailyPractice.financial;
     const engagementRate = views > 0 ? reactions / views : 0;
     const revenuePerWork = published_count > 0 ? revenue_usdc / published_count : 0;
 
@@ -105,7 +106,8 @@ export class SovereignIntelligenceEngine {
 
   private determineEconomicModel(config: SovereignAgentConfig): AgentAnalysis['economicModel'] {
     const { monthlyRevenue } = config.manifest;
-    const { revenue_usdc, collects } = config.dailyPractice.metrics;
+    const { collects } = config.dailyPractice.metrics;
+    const { revenue_usdc } = config.dailyPractice.financial;
     const { integrations } = config.manifest;
 
     if (monthlyRevenue === 0 && revenue_usdc === 0) return 'developing';

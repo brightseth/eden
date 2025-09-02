@@ -25,6 +25,7 @@ import type {
   Progress,
   RegistryResponse
 } from './types';
+import { toLocalAgent, toLocalAgents, toLocalCreation, toLocalCreations, toLocalPersona, toLocalPersonas } from './adapters';
 
 interface GatewayConfig {
   maxRetries: number;
@@ -42,10 +43,30 @@ interface CircuitBreakerState {
   nextRetryTime: number;
 }
 
+type CacheEntry<T> = { data: T; timestamp: number };
+
+type SdkCreationInput = {
+  title: string;
+  description: string;
+  mediaUri: string;
+  metadata?: any;
+  publishedTo?: string;
+};
+
+function toSdkCreationInput(c: Omit<Creation, 'id'>): SdkCreationInput {
+  return {
+    title: (c as any).title ?? 'Untitled',
+    description: (c as any).description ?? '',
+    mediaUri: c.mediaUri,
+    metadata: c.metadata,
+    publishedTo: c.publishedTo?.chainTx ?? undefined
+  };
+}
+
 class RegistryGateway {
   private config: GatewayConfig;
   private circuitBreaker: CircuitBreakerState;
-  private cache: Map<string, { data: any; timestamp: number }>;
+  private cache: Map<string, CacheEntry<any>>;
   private traceCounter: number = 0;
   private apiClient: RegistryApiClient;
 
@@ -76,6 +97,19 @@ class RegistryGateway {
       timeout: 10000,
       maxRetries: this.config.maxRetries
     });
+  }
+
+  // Cache helper methods for consistent shape
+  private cacheGet<T>(key: string): T | undefined {
+    const v = this.cache.get(key);
+    if (!v) return undefined;
+    if (Array.isArray(v)) return v as unknown as T; // legacy
+    if (typeof v === 'object' && v && 'data' in (v as any)) return (v as CacheEntry<T>).data;
+    return v as T;
+  }
+
+  private cacheSet<T>(key: string, data: T) {
+    this.cache.set(key, { data, timestamp: Date.now() } as CacheEntry<T>);
   }
 
   // Generate trace ID for observability
@@ -269,42 +303,80 @@ class RegistryGateway {
 
   async getAgents(query?: AgentQuery): Promise<Agent[]> {
     const cacheKey = `agents-${JSON.stringify(query || {})}`;
-    return this.gatewayCall(
+    
+    // Check cache first
+    const cached = this.cacheGet<Agent[]>(cacheKey);
+    if (cached) {
+      console.log('[registry/gateway] getAgents', { count: cached.length, cached: true });
+      return cached;
+    }
+    
+    // Call SDK and adapt the response
+    const sdkResponse = await this.gatewayCall(
       'getAgents',
       () => this.apiClient.getAgents({
         cohort: query?.cohort,
         status: query?.status,
         include: query?.include
       }),
-      cacheKey
+      null // Don't use internal caching since we handle it here
     );
+    
+    // Convert SDK agents to local format
+    const agents = Array.isArray(sdkResponse) 
+      ? toLocalAgents(sdkResponse)
+      : toLocalAgents((sdkResponse as any)?.agents ?? []);
+    
+    // Cache the converted result
+    this.cacheSet(cacheKey, agents);
+    
+    console.log('[registry/gateway] getAgents', { count: agents.length, cached: false });
+    return agents;
   }
 
   async getAgent(id: string, include?: string[]): Promise<Agent> {
     const cacheKey = `agent-${id}-${JSON.stringify(include || [])}`;
-    return this.gatewayCall(
+    
+    // Check cache first
+    const cached = this.cacheGet<Agent>(cacheKey);
+    if (cached) return cached;
+    
+    // Call SDK and adapt the response
+    const sdkAgent = await this.gatewayCall(
       'getAgent',
       () => this.apiClient.getAgent(id, include),
-      cacheKey
+      null // Don't use internal caching since we handle it here
     );
+    
+    if (!sdkAgent) {
+      throw new Error(`Agent ${id} not found`);
+    }
+    
+    // Convert SDK agent to local format
+    const agent = toLocalAgent(sdkAgent);
+    
+    // Cache the converted result
+    this.cacheSet(cacheKey, agent);
+    
+    return agent;
   }
 
   async getAgentProfile(id: string): Promise<Profile> {
-    const cacheKey = `profile-${id}`;
-    return this.gatewayCall(
-      'getAgentProfile',
-      () => this.apiClient.getAgentProfile(id),
-      cacheKey
-    );
+    // Get the full agent with profile included
+    const agent = await this.getAgent(id, ['profile']);
+    
+    if (!agent.profile) {
+      throw new Error(`Profile not found for agent ${id}`);
+    }
+    
+    return agent.profile;
   }
 
   async getAgentPersonas(id: string): Promise<Persona[]> {
-    const cacheKey = `personas-${id}`;
-    return this.gatewayCall(
-      'getAgentPersonas',
-      () => this.apiClient.getAgentPersonas(id),
-      cacheKey
-    );
+    // Get the full agent with personas included
+    const agent = await this.getAgent(id, ['personas']);
+    
+    return agent.personas ?? [];
   }
 
   async getAgentCreations(
@@ -312,11 +384,27 @@ class RegistryGateway {
     status?: 'CURATED' | 'PUBLISHED'
   ): Promise<Creation[]> {
     const cacheKey = `creations-${id}-${status || 'all'}`;
-    return this.gatewayCall(
+    
+    // Check cache first
+    const cached = this.cacheGet<Creation[]>(cacheKey);
+    if (cached) return cached;
+    
+    // Call SDK and adapt the response
+    const sdkCreations = await this.gatewayCall(
       'getAgentCreations',
       () => this.apiClient.getAgentCreations(id, status),
-      cacheKey
+      null // Don't use internal caching since we handle it here
     );
+    
+    // Convert SDK creations to local format
+    const creations = Array.isArray(sdkCreations)
+      ? toLocalCreations(id, sdkCreations)
+      : toLocalCreations(id, (sdkCreations as any)?.creations ?? []);
+    
+    // Cache the converted result
+    this.cacheSet(cacheKey, creations);
+    
+    return creations;
   }
 
   async postCreation(
@@ -332,13 +420,18 @@ class RegistryGateway {
       const idempotentResult = await idempotencyManager.executeWithIdempotency(
         idempotencyKey,
         async () => {
-          return this.gatewayCall(
+          const sdkInput = toSdkCreationInput(creation);
+          const sdkCreation = await this.gatewayCall(
             'postCreation',
-            () => this.apiClient.createAgentCreation(agentId, creation),
+            () => this.apiClient.createAgentCreation(agentId, sdkInput as any),
             undefined,
             true, // require auth
             headers
           );
+          // Convert SDK creation to local format
+          const result = toLocalCreation(agentId, sdkCreation);
+          console.log('[registry/gateway] postCreation', { agentId, ok: true });
+          return result;
         },
         3600 // 1 hour TTL for creation operations
       );
@@ -355,19 +448,23 @@ class RegistryGateway {
     }
     
     // Fallback to regular operation without idempotency
-    const result = await this.gatewayCall(
+    const sdkInput = toSdkCreationInput(creation);
+    const sdkResult = await this.gatewayCall(
       'postCreation',
-      () => this.apiClient.createAgentCreation(agentId, creation),
+      () => this.apiClient.createAgentCreation(agentId, sdkInput as any),
       undefined,
       true, // require auth
       headers
     );
     
+    // Convert SDK creation to local format
+    const localCreation = toLocalCreation(agentId, sdkResult);
+    
     // Invalidate related cache entries after successful creation
     await registryCache.invalidateCreations(agentId);
     await cacheInvalidate(`agent-${agentId}`);
     
-    return result;
+    return localCreation;
   }
 
   // Authentication methods
@@ -535,12 +632,23 @@ export async function getAgentCreations(
   agentId: string,
   status?: 'curated' | 'published'
 ): Promise<Creation[]> {
-  return registryGateway.getAgentCreations(agentId, status);
+  // Convert lowercase status to uppercase for SDK
+  const sdkStatus = status ? status.toUpperCase() as 'CURATED' | 'PUBLISHED' : undefined;
+  return registryGateway.getAgentCreations(agentId, sdkStatus);
 }
 
 export async function postCreation(
   agentId: string,
   creation: CreationPost
 ): Promise<Creation> {
-  return registryGateway.postCreation(agentId, creation);
+  // Convert CreationPost to Omit<Creation, 'id'> format
+  const creationData: Omit<Creation, 'id'> = {
+    agentId,
+    mediaUri: creation.mediaUri,
+    metadata: creation.metadata,
+    status: 'draft', // Default status
+    publishedTo: creation.publishedTo
+  };
+  
+  return registryGateway.postCreation(agentId, creationData);
 }

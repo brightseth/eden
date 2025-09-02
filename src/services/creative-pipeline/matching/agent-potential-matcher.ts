@@ -119,10 +119,17 @@ export const AGENT_ROLE_DEFINITIONS: AgentRoleDefinition[] = [
  * Prioritizes cultural fit and growth potential over just technical matching
  */
 export class AgentPotentialMatcher {
-  private supabase: ReturnType<typeof createServerSupabaseClient>;
+  private supabase: any;
   
   constructor() {
-    this.supabase = createServerSupabaseClient();
+    // Will be initialized when needed
+  }
+  
+  private async getSupabase() {
+    if (!this.supabase) {
+      this.supabase = await createClient();
+    }
+    return this.supabase;
   }
   
   /**
@@ -491,7 +498,8 @@ export class AgentPotentialMatcher {
 
   // Production database methods
   private async getCreatorProfileData(creatorId: string): Promise<any> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabase();
+    const { data, error } = await supabase
       .from('creator_profiles')
       .select('*')
       .eq('id', creatorId)
@@ -506,7 +514,8 @@ export class AgentPotentialMatcher {
   }
 
   private async getAssessmentResults(creatorId: string): Promise<any[]> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabase();
+    const { data, error } = await supabase
       .from('assessment_scores')
       .select('*')
       .eq('creator_profile_id', creatorId);

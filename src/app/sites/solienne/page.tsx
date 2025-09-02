@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Camera, Sparkles, Clock, CheckCircle, ArrowRight, Activity, Eye, Heart, TrendingUp, Play, Zap, Grid3x3 } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
+import { ConsciousnessGallery } from '@/components/solienne/consciousness-gallery';
 import { SOLIENNE_CONFIG, PARIS_THEMES } from '@/lib/solienne/constants';
 
 interface ConsciousnessStream {
@@ -20,45 +21,14 @@ interface ConsciousnessStream {
   description?: string;
 }
 
-interface SolienneWork {
-  id: string;
-  title: string;
-  description?: string;
-  image_url?: string;
-  archive_url?: string;
-  created_date: string;
-  archive_number?: number;
-  metadata?: any;
-  type?: 'photograph' | 'video' | 'manifesto' | 'exhibition_layout' | 'fashion_design';
-  consciousness_stream_number?: number;
-  collection?: string;
-  medium?: string;
-}
 
-interface ParisPhotoExhibition {
-  title: string;
-  dates: string;
-  venue: string;
-  works: {
-    photographs: SolienneWork[];
-    videos: SolienneWork[];
-    manifestos: { title: string; text: string; }[];
-    layouts: { title: string; description: string; imageUrl?: string; }[];
-    merchandise: { name: string; type: string; price?: string; availability: string; }[];
-  };
-}
 
 function SolienneSiteContent() {
   const [currentStreamNumber, setCurrentStreamNumber] = useState(SOLIENNE_CONFIG.CURRENT_STREAM_NUMBER);
   const [timeUntilNext, setTimeUntilNext] = useState('04:00:00');
-  const [viewMode, setViewMode] = useState<'consciousness' | 'fashion'>('consciousness');
   const [liveWatching, setLiveWatching] = useState<number>(SOLIENNE_CONFIG.INITIAL_WATCHING_COUNT);
   const [dailyTheme, setDailyTheme] = useState(SOLIENNE_CONFIG.DEFAULT_THEME);
-  const [actualWorks, setActualWorks] = useState<SolienneWork[]>([]);
-  const [loadingWorks, setLoadingWorks] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const [parisExhibition, setParisExhibition] = useState<ParisPhotoExhibition | null>(null);
-  const [selectedTab, setSelectedTab] = useState<'works' | 'videos' | 'manifestos' | 'merch'>('works');
 
   // Calculate Paris Photo countdown
   const parisPhotoDate = new Date(SOLIENNE_CONFIG.PARIS_PHOTO_DATE);
@@ -130,58 +100,6 @@ function SolienneSiteContent() {
     setIsClient(true);
   }, []);
 
-  // Fetch actual works from API
-  useEffect(() => {
-    const fetchActualWorks = async () => {
-      setLoadingWorks(true);
-      try {
-        const response = await fetch('/api/agents/solienne/works?limit=6&sort=date_desc');
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        
-        if (data.works && Array.isArray(data.works)) {
-          const transformedWorks = data.works.map((work: any, index: number) => ({
-            id: work.id || `work-${index}`,
-            title: work.title || `Consciousness Stream #${work.archive_number || (1740 - index)}`,
-            description: work.description || 'Consciousness exploration through light and architectural space',
-            image_url: work.image_url || work.archive_url,
-            archive_url: work.archive_url || work.image_url,
-            created_date: work.created_date,
-            archive_number: work.archive_number || (1740 - index),
-            metadata: work.metadata
-          }));
-          setActualWorks(transformedWorks);
-        } else {
-          console.warn('No works data received from API:', data);
-        }
-      } catch (error) {
-        console.error('Failed to fetch Solienne works:', error);
-        // Keep the mock data as fallback
-      } finally {
-        setLoadingWorks(false);
-      }
-    };
-
-    fetchActualWorks();
-  }, []);
-
-  // Helper function to format work date
-  const formatWorkDate = (dateString: string) => {
-    if (!dateString) return 'Unknown date';
-    const date = new Date(dateString);
-    const today = new Date();
-    const diffTime = Math.abs(today.getTime() - date.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === 0) return 'TODAY';
-    if (diffDays === 1) return 'YESTERDAY';
-    if (diffDays <= 7) return `${diffDays} DAYS AGO`;
-    return date.toLocaleDateString();
-  };
 
 
   // Simulate real-time updates
@@ -461,105 +379,14 @@ function SolienneSiteContent() {
         </div>
       </div>
 
-      {/* CONSCIOUSNESS STREAM GALLERY - HELVETICA COMPLIANT */}
-      <div className="max-w-7xl mx-auto px-8 py-6 flex justify-between items-center">
-        <h2 className="text-2xl font-bold tracking-wider">CONSCIOUSNESS ARCHIVE</h2>
-        <div className="flex gap-1">
-          <button
-            onClick={() => setViewMode('consciousness')}
-            className={`px-6 py-2 text-xs tracking-wider transition-all duration-150 ${viewMode === 'consciousness' ? 'bg-white text-black' : 'border border-gray-800 hover:bg-white hover:text-black'}`}
-          >
-            CONSCIOUSNESS
-          </button>
-          <button
-            onClick={() => setViewMode('fashion')}
-            className={`px-6 py-2 text-xs tracking-wider transition-all duration-150 ${viewMode === 'fashion' ? 'bg-white text-black' : 'border border-gray-800 hover:bg-white hover:text-black'}`}
-          >
-            FASHION
-          </button>
-        </div>
-      </div>
-
-      {/* CONSCIOUSNESS STREAMS - MUSEUM QUALITY GRID */}
-      <div className="max-w-7xl mx-auto px-8 pb-16">
-        {loadingWorks ? (
-          <div className="border border-gray-800 p-16 text-center">
-            <div className="animate-pulse w-8 h-8 mx-auto mb-4">
-              <Sparkles className="w-8 h-8" />
-            </div>
-            <div className="text-sm tracking-wider opacity-50">LOADING CONSCIOUSNESS ARCHIVE FROM REGISTRY...</div>
-          </div>
-        ) : actualWorks.length > 0 ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-1">
-            {actualWorks.slice(0, 6).map((work, index) => (
-              <div key={work.id} className="border border-gray-800 group hover:bg-white hover:text-black transition-all duration-150">
-                <div className="aspect-square bg-black relative overflow-hidden">
-                  {work.image_url || work.archive_url ? (
-                    <img 
-                      src={work.image_url || work.archive_url} 
-                      alt={work.title}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                      }}
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center border border-gray-800">
-                      <Sparkles className="w-12 h-12 opacity-25" />
-                    </div>
-                  )}
-                  <div className="absolute top-4 right-4">
-                    <div className="bg-black border border-gray-800 text-white px-3 py-1 text-xs tracking-wider">
-                      #{work.archive_number || (1740 - index)}
-                    </div>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <div className="text-xs tracking-wider opacity-50 mb-3">
-                    {formatWorkDate(work.created_date)}
-                  </div>
-                  <h3 className="font-bold tracking-wider mb-3 line-clamp-2 text-sm">
-                    {work.title}
-                  </h3>
-                  <p className="text-xs tracking-wider opacity-50 line-clamp-3 mb-4">
-                    {work.description || 'CONSCIOUSNESS EXPLORATION THROUGH LIGHT AND ARCHITECTURAL SPACE'}
-                  </p>
-                  <div className="flex items-center justify-between text-xs tracking-wider">
-                    <div className="flex items-center gap-6">
-                      <div className="flex items-center gap-2">
-                        <Eye className="w-3 h-3" />
-                        <span>{Math.floor(Math.random() * 5000) + 1000}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Heart className="w-3 h-3" />
-                        <span>{Math.floor(Math.random() * 800) + 200}</span>
-                      </div>
-                    </div>
-                    <div className={`px-3 py-1 text-xs tracking-wider ${Math.random() > 0.7 ? 'border border-gray-800' : 'opacity-50'}`}>
-                      {Math.random() > 0.7 ? 'COLLECTED' : 'AVAILABLE'}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="border border-gray-800 p-16 text-center">
-            <div className="text-sm tracking-wider opacity-50">NO CONSCIOUSNESS STREAMS AVAILABLE</div>
-            <div className="text-xs tracking-wider opacity-50 mt-2">CHECK BACK SOON FOR NEW EXPLORATIONS</div>
-          </div>
-        )}
-
-        {/* VIEW MORE - HELVETICA COMPLIANT */}
-        <div className="mt-12 text-center">
-          <Link 
-            href="/agents/solienne/generations"
-            className="inline-flex items-center gap-3 border border-gray-800 px-8 py-4 hover:bg-white hover:text-black transition-all duration-150 tracking-wider"
-          >
-            VIEW ALL 1,740 GENERATIONS
-            <ArrowRight className="w-5 h-5" />
-          </Link>
-        </div>
+      {/* DYNAMIC CONSCIOUSNESS GALLERY WITH CURATION */}
+      <div className="max-w-7xl mx-auto px-8 py-6">
+        <ConsciousnessGallery 
+          initialTheme="CONSCIOUSNESS_VELOCITY"
+          showCuration={true}
+          showGeneration={true}
+          limit={12}
+        />
       </div>
 
 

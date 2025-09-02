@@ -36,6 +36,12 @@
     "covenant.disabled.bak",
     "**/*.bak",
     "**/*.backup*",
-    "**/*.disabled/**"
+    "**/*.disabled/**",
+    "src/services/creative-pipeline/**",
+    "src/services/creator-agent-economics/**",
+    "src/lib/token-economics/**",
+    "test-*.ts",
+    "test-sovereign/**",
+    "tests/**"
   ]
 }

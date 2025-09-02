@@ -6,9 +6,17 @@ import { registryClient } from './client';
 import { dataAdapter } from './adapter';
 import { dataReconciliation, type ReconciledAgent } from './data-reconciliation';
 import { featureFlags, FLAGS } from '@/config/flags';
+import { normalizeStatus } from './adapters';
 import { EDEN_AGENTS, type EdenAgent } from '@/data/eden-agents-manifest';
 import { ABRAHAM_WORKS, SOLIENNE_WORKS, MIYOMI_WORKS, AMANDA_WORKS, CITIZEN_WORKS } from '@/data/agent-works';
 import type { Agent, Creation, AgentQuery } from './types';
+
+// Helper functions for slug handling
+const toSlug = (s: string) =>
+  s?.toLowerCase?.().trim().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '') ?? '';
+
+const deriveHandle = (a: EdenAgent & Record<string, any>) =>
+  a.handle ?? a.slug ?? toSlug(a.name ?? a.id);
 
 export class RegistryMigrationService {
   private migrationInProgress = false;
@@ -19,10 +27,10 @@ export class RegistryMigrationService {
   private transformManifestToRegistry(manifestAgent: EdenAgent): Agent {
     return {
       id: manifestAgent.id,
-      handle: manifestAgent.slug,
+      handle: deriveHandle(manifestAgent as any),
       displayName: manifestAgent.name,
       cohort: manifestAgent.cohort,
-      status: this.mapManifestStatusToRegistry(manifestAgent.status),
+      status: normalizeStatus(manifestAgent.status),
       visibility: 'PUBLIC',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -54,25 +62,15 @@ export class RegistryMigrationService {
         agentId: manifestAgent.id,
         profileComplete: true,
         personaComplete: true,
-        artifactsComplete: manifestAgent.status !== 'planning',
+        artifactsComplete: manifestAgent.status !== 'DEVELOPING',
         firstCreationComplete: manifestAgent.status === 'academy' || manifestAgent.status === 'graduated',
-        onboardingComplete: manifestAgent.status !== 'planning',
+        onboardingComplete: manifestAgent.status !== 'DEVELOPING',
         percentComplete: this.calculateProgressPercent(manifestAgent.status),
         lastActivityAt: new Date().toISOString(),
       }
     };
   }
 
-  private mapManifestStatusToRegistry(manifestStatus: string): Agent['status'] {
-    const statusMap: Record<string, Agent['status']> = {
-      'training': 'ONBOARDING',
-      'academy': 'ACTIVE',
-      'graduated': 'GRADUATED',
-      'launching': 'ONBOARDING',
-      'planning': 'INVITED'
-    };
-    return statusMap[manifestStatus] || 'INVITED';
-  }
 
   private inferPrimaryMedium(specialization: string): string {
     if (specialization.toLowerCase().includes('art')) return 'visual_art';
@@ -122,7 +120,7 @@ export class RegistryMigrationService {
       agents = agents.filter(a => a.cohort === query.cohort);
     }
     if (query?.status) {
-      agents = agents.filter(a => this.mapManifestStatusToRegistry(a.status) === query.status);
+      agents = agents.filter(a => normalizeStatus(a.status) === query.status);
     }
 
     const transformedAgents = agents.map(agent => this.transformManifestToRegistry(agent));
@@ -152,7 +150,7 @@ export class RegistryMigrationService {
     }
 
     // Fallback to static manifest
-    const manifestAgent = EDEN_AGENTS.find(a => a.id === id || a.slug === id);
+    const manifestAgent = EDEN_AGENTS.find(a => a.id === id || deriveHandle(a as any) === id);
     if (!manifestAgent) return null;
 
     return this.transformManifestToRegistry(manifestAgent);
@@ -170,10 +168,10 @@ export class RegistryMigrationService {
     }
 
     // Fallback to static works data
-    const agent = EDEN_AGENTS.find(a => a.id === agentId || a.slug === agentId);
+    const agent = EDEN_AGENTS.find(a => a.id === agentId || deriveHandle(a as any) === agentId);
     if (!agent) return [];
 
-    const staticWorks = this.getStaticWorksBySlug(agent.slug);
+    const staticWorks = this.getStaticWorksBySlug(deriveHandle(agent as any));
     return staticWorks.map(work => ({
       id: work.id,
       agentId: agentId,
@@ -242,7 +240,7 @@ export class RegistryMigrationService {
           }
 
           // Migrate works if agent exists
-          const staticWorks = this.getStaticWorksBySlug(manifestAgent.slug);
+          const staticWorks = this.getStaticWorksBySlug(deriveHandle(manifestAgent as any));
           for (const work of staticWorks) {
             console.log(`[Migration] Would migrate work: ${work.title}`);
             // Note: Using postCreation once Registry is fully operational

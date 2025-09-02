@@ -173,7 +173,7 @@ export class TokenEconomicsService {
               amount: 100,
               currency: 'USD'
             }
-          },
+          } as any,
           capacity: {
             maxConcurrent: 3,
             timePerService: 10,
@@ -348,6 +348,17 @@ export class TokenEconomicsService {
     };
     
     return base;
+  }
+
+  // TODO: Specialize for Koru's community-driven model
+  // Expected deltas:
+  // - Community/ritual-weighted KPIs (engagement > revenue initially)
+  // - Event-driven revenue splits (community gatherings, ritual facilitation)
+  // - Collaborative creation incentives (group works, shared ownership)
+  // - Social cohesion metrics (community health, connection strength)
+  // Mirror Sue's baseline until Koru spec lands.
+  private getKoruEconomics(base: EdenTokenModel): EdenTokenModel {
+    return this.getSueEconomics(base);
   }
 
   private getMiyomiEconomics(base: EdenTokenModel): EdenTokenModel {
@@ -541,7 +552,7 @@ export class TokenEconomicsService {
   // Continue with other agents...
   private getGeppettoEconomics(base: EdenTokenModel): EdenTokenModel {
     base.utilization = {
-      primaryFocus: ['custom_art', 'services', 'collaboration'],
+      primaryFocus: ['custom_art', 'consultation', 'collaboration'],
       revenueWeighting: {
         artSales: 40,    // Physical product sales
         services: 45,    // Design services
@@ -586,7 +597,7 @@ export class TokenEconomicsService {
 
   private getSueEconomics(base: EdenTokenModel): EdenTokenModel {
     base.utilization = {
-      primaryFocus: ['curation', 'services', 'art_consulting'],
+      primaryFocus: ['curation', 'consultation', 'collaboration'],
       revenueWeighting: {
         artSales: 25,    // Curated art sales
         services: 50,    // Art curation and consulting services  
@@ -606,11 +617,7 @@ export class TokenEconomicsService {
           primary: 'Emerging artists and collectors',
           secondary: 'Art institutions and galleries'
         },
-        pricing: {
-          curationServices: { min: 500, max: 5000, currency: 'USD' },
-          portfolioReview: { min: 200, max: 1000, currency: 'USD' },
-          ongoingGuidance: { min: 100, max: 500, currency: 'USD', recurring: 'monthly' }
-        }
+        marketSize: {} as any
       },
       scalingStrategy: {
         phase1: 'Build curation expertise and client base',

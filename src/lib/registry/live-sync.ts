@@ -3,13 +3,13 @@
 
 import { RegistryClient, Agent as RegistryAgent, Creation } from './sdk';
 
-interface LegacyRegistryAgent extends RegistryAgent {
+interface LegacyRegistryAgent extends Omit<RegistryAgent, 'role' | 'status' | 'visibility' | 'profile'> {
   id: string;
   handle: string;
   displayName: string;
-  role: string;
-  status: string;
-  visibility: string;
+  role: string; // Override with string type
+  status: string; // Override with string type
+  visibility: string; // Override with string type
   cohort: string;
   profile: {
     statement: string;

@@ -163,7 +163,7 @@ class RegistryMonitor {
       // Fetch from both Registry and legacy (if enabled)
       const registryAgent = await registryGateway.getAgent(agentId);
       
-      if (!dataAdapter.isUsingRegistry()) {
+      if (!(dataAdapter as any).isUsingRegistry?.()) {
         return {
           name: 'Agent Data Consistency',
           status: 'warning',

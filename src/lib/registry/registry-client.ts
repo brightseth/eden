@@ -152,8 +152,10 @@ export class RegistryClient {
         statement: registryAgent.profile?.statement || '',
         description: registryAgent.profile?.statement || ''
       },
-      counts: registryAgent.counts || registryAgent._count || { creations: 0, personas: 0, artifacts: 0 },
-      creations: registryAgent.creations || []
+      // Include any additional fields that exist on the registry agent
+      ...(registryAgent.counts ? { counts: registryAgent.counts } : {}),
+      ...(registryAgent._count ? { _count: registryAgent._count } : {}),
+      ...(registryAgent.creations ? { creations: registryAgent.creations } : {})
     };
   }
 

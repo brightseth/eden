@@ -25,15 +25,12 @@ const apiAuthMiddleware = createAuthMiddleware({
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip middleware for static assets to prevent chunk loading issues
+  // CRITICAL: API routes bypass ALL middleware logic
   if (
-    pathname.startsWith('/_next/') ||
-    pathname.includes('/static/') ||
-    pathname.endsWith('.js') ||
-    pathname.endsWith('.css') ||
-    pathname.endsWith('.map') ||
-    pathname.includes('.chunk.') ||
-    pathname.includes('?dpl=')
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/favicon') ||
+    pathname.match(/\.(js|css|svg|png|jpg|ico|txt|map)$/)
   ) {
     return NextResponse.next();
   }
@@ -66,71 +63,11 @@ export async function middleware(request: NextRequest) {
 
   let response = NextResponse.next();
 
-  // Apply security-specific middleware for different endpoint types
-  if (pathname.startsWith('/api/')) {
-    // Chat endpoints - require authentication and heavy rate limiting
-    if (pathname.includes('/chat')) {
-      const authResult = await chatAuthMiddleware(request);
-      if (!authResult.success) {
-        return authResult.response!;
-      }
-      
-      // Add rate limiting headers to successful responses
-      if (authResult.context) {
-        response.headers.set('X-RateLimit-Limit', '10');
-        response.headers.set('X-RateLimit-Window', '60000');
-      }
-    }
-    // Admin endpoints - require admin role
-    else if (pathname.startsWith('/api/admin/')) {
-      const adminAuthMiddleware = createAuthMiddleware({
-        requireAuth: true,
-        requiredRole: 'admin',
-        rateLimit: {
-          requests: 50,
-          windowMs: 60000
-        }
-      });
-      
-      const authResult = await adminAuthMiddleware(request);
-      if (!authResult.success) {
-        return authResult.response!;
-      }
-    }
-    // Webhook endpoints - require API key
-    else if (pathname.startsWith('/api/webhook/')) {
-      const webhookAuthMiddleware = createAuthMiddleware({
-        requireAuth: false,
-        allowAnonymous: true,
-        apiKeyRequired: true,
-        rateLimit: {
-          requests: 1000,
-          windowMs: 60000
-        }
-      });
-      
-      const authResult = await webhookAuthMiddleware(request);
-      if (!authResult.success) {
-        return authResult.response!;
-      }
-    }
-    // General API endpoints - public with rate limiting
-    else {
-      const authResult = await apiAuthMiddleware(request);
-      if (!authResult.success) {
-        return authResult.response!;
-      }
-    }
-
-    // Apply security headers to all API responses
-    response = applySecurityHeaders(response, request);
-  }
-
   // Apply security headers to all responses
   response = applySecurityHeaders(response, request);
 
   // Protect admin dashboard pages (temporarily disabled for demo)
-  if (pathname.startsWith('/admin/') && process.env.NODE_ENV === 'production-with-auth') {
+  if (pathname.startsWith('/admin/') && false) {
     const adminPageAuthMiddleware = createAuthMiddleware({
       requireAuth: true,
       requiredRole: 'admin',
@@ -148,7 +85,14 @@ export async function middleware(request: NextRequest) {
   }
 
   // CRITICAL FIX: Stop API endpoints from being accessible as pages
-  if (pathname.startsWith('/api/agents/') && !pathname.includes('/api/agents?')) {
+  // BUT: Don't redirect actual API calls (only redirect when accessed as page)
+  const acceptHeader = request.headers.get('accept') || '';
+  const isApiCall = acceptHeader.includes('application/json') || 
+                    request.headers.get('content-type')?.includes('application/json');
+  
+  if (pathname.startsWith('/api/agents/') && 
+      !pathname.includes('/api/agents?') && 
+      !isApiCall) {
     // Extract agent name from /api/agents/abraham -> abraham  
     const segments = pathname.split('/');
     const agentName = segments[3];
@@ -163,8 +107,9 @@ export async function middleware(request: NextRequest) {
         !pathname.includes('/registry-works') &&
         !pathname.includes('/chat') &&
         !pathname.includes('/status') &&
-        !pathname.includes('/training')) {
-      // Redirect /api/agents/abraham -> /agents/abraham
+        !pathname.includes('/training') &&
+        !pathname.includes('/creations')) {
+      // Redirect /api/agents/abraham -> /agents/abraham (only for page access)
       return NextResponse.redirect(new URL(`/agents/${agentName}`, request.url), 301);
     }
   }

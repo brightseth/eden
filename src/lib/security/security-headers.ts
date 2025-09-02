@@ -331,6 +331,7 @@ export class SecurityHeaders {
         enabled: false // Disable in development for easier debugging
       },
       cors: {
+        enabled: true,
         origins: [
           'http://localhost:3000',
           'https://localhost:3000',

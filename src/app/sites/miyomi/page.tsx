@@ -20,6 +20,9 @@ export default function MiyomiSite() {
   const [mode, setMode] = useState<'creative' | 'trader'>('creative')
   const [activeTab, setActiveTab] = useState<'insight' | 'practice' | 'terminal'>('insight')
   
+  // Check if live mode is enabled
+  const isLive = process.env.NEXT_PUBLIC_FLAG_MIYOMI_LIVE === '1'
+  
   // Use our adapter to get snapshot data
   const snapshot = useMiyomiSnapshot()
   const { headline, subtext, mood } = insightSummary(snapshot)
@@ -56,9 +59,16 @@ export default function MiyomiSite() {
       <div className="border-b border-white/20">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            {/* Breadcrumb */}
-            <div className="text-sm uppercase tracking-wider opacity-60">
-              EDEN ACADEMY / SITES / MIYOMI
+            {/* Breadcrumb with health chip */}
+            <div className="flex items-center gap-3">
+              <div className="text-sm uppercase tracking-wider opacity-60">
+                EDEN ACADEMY / SITES / MIYOMI
+              </div>
+              <div className={`px-2 py-1 text-xs uppercase tracking-wider rounded ${
+                isLive ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'
+              }`}>
+                {isLive ? 'Live' : 'Demo/Cached'}
+              </div>
             </div>
             
             {/* Mode Toggle */}

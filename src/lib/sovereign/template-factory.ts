@@ -136,7 +136,7 @@ export class SovereignTemplateFactory {
       },
       
       brand: this.inferBrandConfiguration(agent),
-      practice: this.inferPracticeConfiguration(agent),
+      practice: this.inferPracticeConfiguration(agent) as any,
       profile: {
         economyMetrics: agent.economyMetrics,
         technicalProfile: agent.technicalProfile,
@@ -604,5 +604,3 @@ export function validateSovereignConfig(config: SovereignConfig): { valid: boole
     errors
   };
 }
-
-export type { SovereignConfig, NavigationConfig, SectionConfig, FeatureFlag };

@@ -666,5 +666,3 @@ export const enhancedSovereignFactory = new EnhancedSovereignFactory();
 export async function generateIntelligentSovereignSite(agentIdOrHandle: string) {
   return enhancedSovereignFactory.generateIntelligentSovereignSite(agentIdOrHandle);
 }
-
-export type { EnhancedSovereignSite };

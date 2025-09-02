@@ -7,6 +7,11 @@ import { useState, useEffect, useCallback } from 'react';
 import { Agent, AgentProfileConfig } from '@/lib/profile/types';
 import { registryClient, RegistryResponse } from './registry-client';
 
+// Type guards for discriminating response unions
+function isOk<T>(r: RegistryResponse<T> | { error: string; source: 'fallback' }): r is RegistryResponse<T> & { data: T } {
+  return (r as any).data !== undefined;
+}
+
 export interface UseAgentResult {
   agent: Agent | null;
   config: AgentProfileConfig | null;
@@ -47,18 +52,15 @@ export function useAgent(handle: string): UseAgentResult {
       ]);
 
       // Handle agent response - always set data if available, even from fallback
-      if (agentResponse.data) {
+      if (isOk(agentResponse)) {
         setAgent(agentResponse.data);
         setSource(agentResponse.source);
-      } else if (agentResponse.error) {
-        // Only set error if it's a legitimate not found, not a connection issue
-        if (!agentResponse.error.includes('Registry unavailable')) {
-          setError(agentResponse.error);
-        }
+      } else if (agentResponse.error && !agentResponse.error.includes('Registry unavailable')) {
+        setError(agentResponse.error);
       }
 
       // Handle config response - warn but don't fail
-      if (configResponse.data) {
+      if (isOk(configResponse)) {
         setConfig(configResponse.data);
       } else if (configResponse.error) {
         console.warn(`[useAgent] Config error for ${handle}:`, configResponse.error);
