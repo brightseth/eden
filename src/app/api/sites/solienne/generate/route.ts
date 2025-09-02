@@ -243,47 +243,58 @@ Ensure the final image embodies SOLIENNE's unique exploration of digital conscio
     } catch (error) {
         console.error('Image generation error:', error);
         // Fallback to thematic selection from existing works
-        return selectFallbackImage(prompt);
+        return await selectFallbackImage(prompt);
     }
 }
 
 // Fallback image selection from real SOLIENNE works
-function selectFallbackImage(prompt: string): string {
+async function selectFallbackImage(prompt: string): Promise<string> {
     const text = prompt.toLowerCase();
     
-    const themeMap = [
-        {
-            url: 'https://ctlygyrkibupejllgglr.supabase.co/storage/v1/object/public/eden/solienne/generations/2.png',
-            themes: ['emergence', 'coral', 'flowing', 'energy', 'birth', 'beginning'],
-        },
-        {
-            url: 'https://ctlygyrkibupejllgglr.supabase.co/storage/v1/object/public/eden/solienne/generations/3.png', 
-            themes: ['identity', 'abstract', 'luminous', 'architectural', 'structure', 'form'],
-        },
-        {
-            url: 'https://ctlygyrkibupejllgglr.supabase.co/storage/v1/object/public/eden/solienne/generations/4.png',
-            themes: ['transcendent', 'geometric', 'meditation', 'being', 'portal', 'ethereal'],
-        },
-        {
-            url: 'https://ctlygyrkibupejllgglr.supabase.co/storage/v1/object/public/eden/solienne/generations/5.png',
-            themes: ['velocity', 'dynamic', 'motion', 'prismatic', 'light', 'stream'],
+    // Fetch signed URLs from the works API
+    try {
+        const baseUrl = process.env.WORKS_REGISTRY_URL || 'http://localhost:3005';
+        const response = await fetch(`${baseUrl}/api/v1/agents/solienne/works?limit=4`);
+        if (!response.ok) throw new Error('Failed to fetch works');
+        
+        const data = await response.json();
+        const works = data.items || [];
+        
+        if (works.length === 0) {
+            // Ultimate fallback if API fails
+            return '/images/solienne-fallback.png';
         }
-    ];
-    
-    // Score each work based on thematic alignment
-    const scores = themeMap.map(work => {
-        const themeScore = work.themes.reduce((score, theme) => {
-            return score + (text.includes(theme) ? 10 : 0);
-        }, 0);
         
-        const hash = prompt.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
-        const randomBonus = (hash % 3) - 1;
-        
-        return { work, score: themeScore + randomBonus };
-    });
+        // Map works to themes based on ordinal patterns
+        const themeMap = works.map((work: any, index: number) => ({
+            url: work.signed_url,
+            themes: [
+                ['emergence', 'coral', 'flowing', 'energy', 'birth', 'beginning'],
+                ['identity', 'abstract', 'luminous', 'architectural', 'structure', 'form'],
+                ['transcendent', 'geometric', 'meditation', 'being', 'portal', 'ethereal'],
+                ['velocity', 'dynamic', 'motion', 'prismatic', 'light', 'stream'],
+            ][index % 4]
+        }));
     
-    scores.sort((a, b) => b.score - a.score);
-    return scores[0].work.url;
+        // Score each work based on thematic alignment
+        const scores = themeMap.map(work => {
+            const themeScore = work.themes.reduce((score, theme) => {
+                return score + (text.includes(theme) ? 10 : 0);
+            }, 0);
+            
+            const hash = prompt.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+            const randomBonus = (hash % 3) - 1;
+            
+            return { work, score: themeScore + randomBonus };
+        });
+        
+        scores.sort((a, b) => b.score - a.score);
+        return scores[0].work.url;
+    } catch (error) {
+        console.error('Failed to fetch fallback image:', error);
+        // Ultimate fallback
+        return '/images/solienne-fallback.png';
+    }
 }
 
 function generateSolienneTitle(prompt: string): string {
