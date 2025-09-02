@@ -22,21 +22,18 @@ const generateConsciousnessStreams = (count: number = 24) => {
     const themeIndex = i % themes.length;
     const titleIndex = i % titles.length;
     
-    // Generate different placeholder patterns based on stream number
-    const hue = (streamNum * 137.5) % 360; // Golden angle for even distribution
-    const saturation = 20 + (streamNum % 3) * 20; // 20%, 40%, or 60%
-    const lightness = 10 + (streamNum % 4) * 10; // 10%, 20%, 30%, or 40%
-    
     return {
       id: `consciousness_stream_${String(i + 1).padStart(3, '0')}`,
-      image_url: `https://via.placeholder.com/400x400/${Math.floor(hue/360*16).toString(16).repeat(3)}/${Math.floor((360-hue)/360*16).toString(16).repeat(3)}?text=${encodeURIComponent(titles[titleIndex])}`,
+      image_url: `/images/gallery/solienne-hero.png`,
       title: `${titles[titleIndex]} #${String(streamNum).padStart(3, '0')}`,
       description: `Consciousness exploration through digital light and architectural space - Stream ${streamNum}`,
       meta: { 
         seq: streamNum, 
         theme: themes[themeIndex],
         archetype: 'consciousness',
-        generation_time: Math.random() * 30 + 5
+        generation_time: Math.random() * 30 + 5,
+        hue: (streamNum * 137.5) % 360, // For CSS filter variety
+        brightness: 0.8 + (streamNum % 5) * 0.1 // 0.8 to 1.2
       }
     };
   });

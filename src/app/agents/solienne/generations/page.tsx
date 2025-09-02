@@ -93,7 +93,9 @@ export default function SOLIENNEGenerationsPage() {
         metadata: {
           generation_time: work.meta?.generation_time || Math.random() * 30 + 5,
           style_prompt: work.meta?.style_prompt,
-          architectural_elements: work.meta?.architectural_elements || ['shadow', 'geometry', 'space']
+          architectural_elements: work.meta?.architectural_elements || ['shadow', 'geometry', 'space'],
+          hue: work.meta?.hue || 0,
+          brightness: work.meta?.brightness || 1
         }
       }));
 
@@ -362,6 +364,9 @@ export default function SOLIENNEGenerationsPage() {
                           src={stream.imageUrl}
                           alt={stream.title}
                           className="w-full h-full object-cover"
+                          style={{
+                            filter: `hue-rotate(${stream.metadata?.hue || 0}deg) brightness(${stream.metadata?.brightness || 1}) contrast(1.2)`
+                          }}
                         />
                       ) : (
                         <div className="text-center p-3">
@@ -411,6 +416,9 @@ export default function SOLIENNEGenerationsPage() {
                             src={stream.imageUrl}
                             alt={stream.title}
                             className="w-full h-full object-cover"
+                            style={{
+                              filter: `hue-rotate(${stream.metadata?.hue || 0}deg) brightness(${stream.metadata?.brightness || 1}) contrast(1.2)`
+                            }}
                           />
                         ) : (
                           <div className="text-center">
