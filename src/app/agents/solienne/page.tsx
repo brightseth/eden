@@ -239,6 +239,14 @@ export default function SolienneAgentProfile() {
                 VOTE NOW
               </a>
               <span className="text-xs tracking-wider opacity-25">•</span>
+              <Link 
+                href="/agents/solienne/paris-photo"
+                className="inline-flex items-center gap-2 text-xs tracking-wider hover:opacity-75 transition-opacity"
+              >
+                <div className="w-2 h-2 bg-white"></div>
+                FULL DETAILS
+              </Link>
+              <span className="text-xs tracking-wider opacity-25">•</span>
               <a 
                 href="#"
                 className="inline-flex items-center gap-2 text-xs tracking-wider hover:opacity-75 transition-opacity"

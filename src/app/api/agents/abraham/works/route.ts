@@ -1,8 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { registryApi, Creation } from '@/lib/generated-sdk';
-import { featureFlags, FLAGS } from '@/config/flags';
-import { createClient } from '@supabase/supabase-js';
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";import { registryApi, Creation } from '@/lib/generated-sdk';
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";import { featureFlags, FLAGS } from '@/config/flags';
+
+export const runtime = "nodejs";
+
+// Lazy load Supabase to avoid bundling issues
+async function getSupabase() {
+  const { createClient } = await import("@/lib/supabase/server");
+  return getSupabase();
+}
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 // Fallback Supabase client for when Registry is disabled
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

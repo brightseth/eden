@@ -1,8 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import Anthropic from '@anthropic-ai/sdk';
-import { inferCapturedAt } from '@/lib/date-extraction';
 
+export const runtime = "nodejs";
+
+// Lazy load Supabase to avoid bundling issues
+async function getSupabase() {
+  const { createClient } = await import("@/lib/supabase/server");
+  return getSupabase();
+}
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";import Anthropic from '@anthropic-ai/sdk';
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";import { inferCapturedAt } from '@/lib/date-extraction';
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 // Initialize Anthropic client
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -87,7 +99,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = await createClient();
+    const supabase = await getSupabase();
 
     // Check budget
     const budgetOk = await checkBudget(supabase);
@@ -247,7 +259,7 @@ export async function POST(request: NextRequest) {
 
 // GET endpoint to check tagger status
 export async function GET() {
-  const supabase = await createClient();
+  const supabase = await getSupabase();
   
   // Get today's budget status
   const { data: budget } = await supabase

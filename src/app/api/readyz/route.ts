@@ -1,7 +1,17 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
-import { registryClient } from '@/lib/registry/client';
 
+export const runtime = "nodejs";
+
+// Lazy load Supabase to avoid bundling issues
+async function getSupabase() {
+  const { createClient } = await import("@/lib/supabase/server");
+  return getSupabase();
+}
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";import { registryClient } from '@/lib/registry/client';
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 /**
  * Readiness probe - checks external dependencies
  * Returns 200 only when all critical systems are healthy
@@ -20,7 +30,7 @@ export async function GET() {
   // Database connectivity check
   try {
     const dbStart = Date.now();
-    const supabase = await createClient();
+    const supabase = await getSupabase();
     
     // Simple connectivity test - just count records from a known table
     const { count, error } = await supabase

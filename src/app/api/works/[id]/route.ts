@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
 
+export const runtime = "nodejs";
+
+// Lazy load Supabase to avoid bundling issues
+async function getSupabase() {
+  const { createClient } = await import("@/lib/supabase/server");
+  return getSupabase();
+}
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 // DELETE /api/works/[id] - Delete a work
 export async function DELETE(
   request: NextRequest,
   { params }: any) {
   try {
-  const { id: workId } = params;
+  const { id: workId } = await params;
     
     if (!workId) {
   return NextResponse.json(
@@ -15,7 +23,7 @@ export async function DELETE(
       );
     }
     
-    const supabase = await createClient();
+    const supabase = await getSupabase();
     
     // Delete the work (cascades to related records)
     const { error } = await supabase

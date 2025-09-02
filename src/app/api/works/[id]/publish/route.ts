@@ -1,13 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
 
+export const runtime = "nodejs";
+
+// Lazy load Supabase to avoid bundling issues
+async function getSupabase() {
+  const { createClient } = await import("@/lib/supabase/server");
+  return getSupabase();
+}
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 // POST /api/works/[id]/publish - Publish a work
 export async function POST(
   request: NextRequest,
   { params }: any) {
   try {
-  const { id } = params;
-    const supabase = await createClient();
+  const { id } = await params;
+    const supabase = await getSupabase();
 
     // Get the work
     const { data: work, error: fetchError } = await supabase

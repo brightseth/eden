@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
 
+export const runtime = "nodejs";
+
+// Lazy load Supabase to avoid bundling issues
+async function getSupabase() {
+  const { createClient } = await import("@/lib/supabase/server");
+  return getSupabase();
+}
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 // POST /api/collects - Create collect record (stub)
 export async function POST(request: NextRequest) {
   try {
@@ -14,7 +22,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = await createClient();
+    const supabase = await getSupabase();
 
     // Verify work exists and is published
     const { data: work } = await supabase
@@ -67,7 +75,7 @@ export async function GET(request: NextRequest) {
     const work_id = searchParams.get('work_id');
     const collector = searchParams.get('collector');
 
-    const supabase = await createClient();
+    const supabase = await getSupabase();
 
     let query = supabase
       .from('collects')

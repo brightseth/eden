@@ -1,9 +1,23 @@
 import { NextResponse } from 'next/server';
-import { isFeatureEnabled, FLAGS } from '@/config/flags';
-import { registryApi } from '@/lib/registry/sdk';
-import { createClient } from '@supabase/supabase-js';
-import { ABRAHAM_BRAND } from '@/data/abrahamBrand';
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";import { isFeatureEnabled, FLAGS } from '@/config/flags';
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";import { registryApi } from '@/lib/registry/sdk';
+
+export const runtime = "nodejs";
+
+// Lazy load Supabase to avoid bundling issues
+async function getSupabase() {
+  const { createClient } = await import("@/lib/supabase/server");
+  return getSupabase();
+}
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";import { ABRAHAM_BRAND } from '@/data/abrahamBrand';
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_KEY!

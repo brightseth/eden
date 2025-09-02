@@ -4,11 +4,19 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
 
+export const runtime = "nodejs";
+
+// Lazy load Supabase to avoid bundling issues
+async function getSupabase() {
+  const { createClient } = await import("@/lib/supabase/server");
+  return getSupabase();
+}
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = await getSupabase();
     
     // Get latest trained configuration
     const { data, error } = await supabase
@@ -51,7 +59,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
-    const supabase = await createClient();
+    const supabase = await getSupabase();
     
     // Save new configuration
     const { error } = await supabase

@@ -1,6 +1,14 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
 
+export const runtime = "nodejs";
+
+// Lazy load Supabase to avoid bundling issues
+async function getSupabase() {
+  const { createClient } = await import("@/lib/supabase/server");
+  return getSupabase();
+}
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 /**
  * Database connectivity and schema validation endpoint
  * Tests actual database connections and returns structured data
@@ -16,7 +24,7 @@ export async function GET() {
   };
 
   try {
-    const supabase = await createClient();
+    const supabase = await getSupabase();
     
     // Test 1: Agent Archives table
     const archivesStart = Date.now();

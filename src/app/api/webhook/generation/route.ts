@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
 
+export const runtime = "nodejs";
+
+// Lazy load Supabase to avoid bundling issues
+async function getSupabase() {
+  const { createClient } = await import("@/lib/supabase/server");
+  return getSupabase();
+}
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 export async function POST(request: NextRequest) {
   try {
     // Parse webhook payload
@@ -25,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Store in database
-    const supabase = await createClient();
+    const supabase = await getSupabase();
     const { data, error } = await supabase
       .from('creations')
       .insert({

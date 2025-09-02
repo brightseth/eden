@@ -1,7 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
-import { createClient } from '@/lib/supabase/server';
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";import Anthropic from '@anthropic-ai/sdk';
+
+export const runtime = "nodejs";
+
+// Lazy load Supabase to avoid bundling issues
+async function getSupabase() {
+  const { createClient } = await import("@/lib/supabase/server");
+  return getSupabase();
+}
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 // Nina's stricter curator prompt
 const NINA_SYSTEM_PROMPT = `You are Nina Roehrs, Paris Photo Digital Sector curator. Be brutally selective. Only the top 15–25% of works are INCLUDE. Treat MAYBE as default. If uncertain, EXCLUDE. Benchmark against Sherman, Tillmans, Leibovitz, Paglen, Elwes.
 
@@ -52,7 +62,7 @@ export async function POST(request: NextRequest) {
     // If we have a work_id, fetch the work details
     let work = null;
     if (work_id) {
-      const supabase = await createClient();
+      const supabase = await getSupabase();
       const { data } = await supabase
         .from('works')
         .select('*')
@@ -141,7 +151,7 @@ export async function POST(request: NextRequest) {
 
     // If we have a work_id, save as a critique
     if (work_id) {
-      const supabase = await createClient();
+      const supabase = await getSupabase();
       
       // Save critique
       const { data: critique, error } = await supabase

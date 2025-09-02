@@ -2,7 +2,9 @@
 // Critical Path: HOUR 12-18 - Email automation endpoint
 
 import { NextRequest, NextResponse } from 'next/server';
-// Conditional import to avoid Resend errors during build
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";// Conditional import to avoid Resend errors during build
 let covenantEmailService: any;
 let sendWitnessWelcome: any;
 let notifyWitnessMilestone: any;
@@ -21,8 +23,14 @@ try {
   notifyWitnessMilestone = () => false;
   sendEmergencyCovenantAlert = () => false;
 }
-import { createClient } from '@supabase/supabase-js';
 
+// Lazy load Supabase to avoid bundling issues
+async function getSupabase() {
+  const { createClient } = await import("@/lib/supabase/server");
+  return getSupabase();
+}
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_KEY!
