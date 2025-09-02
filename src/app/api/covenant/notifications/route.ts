@@ -366,11 +366,11 @@ async function testMilestoneEmail(testEmails: string[]) {
     notification_preferences: { milestones: true }
   }));
 
-  // Temporarily insert test witnesses
-  await supabase.from('covenant_witnesses').insert(testWitnesses);
-
   try {
     const supabase = await getSupabase();
+    
+    // Temporarily insert test witnesses
+    await supabase.from('covenant_witnesses').insert(testWitnesses);
     await notifyWitnessMilestone({
       type: 'witness_count',
       witnessNumber: testEmails.length,
@@ -382,7 +382,8 @@ async function testMilestoneEmail(testEmails: string[]) {
 
   } finally {
     // Clean up test witnesses
-    await supabase
+    const supabaseCleanup = await getSupabase();
+    await supabaseCleanup
       .from('covenant_witnesses')
       .delete()
       .in('address', testWitnesses.map(w => w.address));
@@ -400,10 +401,9 @@ async function testEmergencyEmail(testEmails: string[]) {
     notification_preferences: { emergency: true }
   }));
 
-  await supabase.from('covenant_witnesses').insert(testWitnesses);
-
   try {
     const supabase = await getSupabase();
+    await supabase.from('covenant_witnesses').insert(testWitnesses);
     await sendEmergencyCovenantAlert({
       urgencyLevel: 'info',
       subject: 'Test Emergency Alert',
@@ -414,7 +414,8 @@ async function testEmergencyEmail(testEmails: string[]) {
     return { sent: testEmails.length, failed: 0 };
 
   } finally {
-    await supabase
+    const supabaseCleanup = await getSupabase();
+    await supabaseCleanup
       .from('covenant_witnesses')
       .delete()
       .in('address', testWitnesses.map(w => w.address));
