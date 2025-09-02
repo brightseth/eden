@@ -366,9 +366,6 @@ export default function SOLIENNEGenerationsPage() {
                           src={stream.imageUrl}
                           alt={stream.title}
                           className="w-full h-full object-cover"
-                          style={{
-                            filter: `hue-rotate(${stream.metadata?.hue || 0}deg) brightness(${stream.metadata?.brightness || 1}) contrast(1.2)`
-                          }}
                         />
                       ) : (
                         <div className="text-center p-3">
@@ -418,9 +415,6 @@ export default function SOLIENNEGenerationsPage() {
                             src={stream.imageUrl}
                             alt={stream.title}
                             className="w-full h-full object-cover"
-                            style={{
-                              filter: `hue-rotate(${stream.metadata?.hue || 0}deg) brightness(${stream.metadata?.brightness || 1}) contrast(1.2)`
-                            }}
                           />
                         ) : (
                           <div className="text-center">
