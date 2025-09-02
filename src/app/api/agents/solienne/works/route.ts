@@ -3,8 +3,9 @@
 
 import { NextResponse } from "next/server";
 
-// Temporary: Using local works-registry while production Registry is down
-const REGISTRY_BASE = "http://localhost:3005";
+// Configuration for works-registry endpoint
+// In production: set WORKS_REGISTRY_URL in environment
+const REGISTRY_BASE = process.env.WORKS_REGISTRY_URL || "http://localhost:3005";
 
 // Hop-by-hop headers to strip
 const HOP_BY_HOP_HEADERS = [
@@ -24,12 +25,20 @@ export async function GET(req: Request) {
     const src = new URL(req.url);
     const registryUrl = `${REGISTRY_BASE}/api/v1/agents/solienne/works${src.search}`;
     
+    // Build request headers with optional bypass token
+    const requestHeaders: Record<string, string> = { 
+      'x-academy': 'eden',
+      'x-forwarded-for': req.headers.get('x-forwarded-for') || 'unknown'
+    };
+    
+    // Add bypass token if configured (for Vercel protection)
+    if (process.env.WORKS_REGISTRY_BYPASS) {
+      requestHeaders['x-vercel-protection-bypass'] = process.env.WORKS_REGISTRY_BYPASS;
+    }
+    
     // Forward to Registry with academy identifier
     const response = await fetch(registryUrl, {
-      headers: { 
-        'x-academy': 'eden',
-        'x-forwarded-for': req.headers.get('x-forwarded-for') || 'unknown'
-      },
+      headers: requestHeaders,
       cache: 'no-store'
     });
 
@@ -43,16 +52,16 @@ export async function GET(req: Request) {
     }
 
     // Strip hop-by-hop headers
-    const headers = new Headers(response.headers);
-    HOP_BY_HOP_HEADERS.forEach(h => headers.delete(h));
+    const responseHeaders = new Headers(response.headers);
+    HOP_BY_HOP_HEADERS.forEach(h => responseHeaders.delete(h));
     
     // Add cache control
-    headers.set('cache-control', 'public, max-age=60, stale-while-revalidate=300');
+    responseHeaders.set('cache-control', 'public, max-age=60, stale-while-revalidate=300');
     
     // Return proxied response
     return new Response(response.body, {
       status: response.status,
-      headers
+      headers: responseHeaders
     });
     
   } catch (error) {
