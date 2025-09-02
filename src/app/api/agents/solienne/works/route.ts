@@ -17,18 +17,29 @@ const generateConsciousnessStreams = (count: number = 24) => {
     'FRACTAL AWARENESS', 'DATA CASCADE', 'VOID MEDITATION', 'EMERGENCE MATRIX'
   ];
 
-  return Array.from({ length: count }, (_, i) => ({
-    id: `consciousness_stream_${String(i + 1).padStart(3, '0')}`,
-    image_url: `/images/gallery/solienne-hero.png`, // Use available image as placeholder
-    title: `${titles[i % titles.length]} #${String(1741 - i).padStart(3, '0')}`,
-    description: `Consciousness exploration through digital light and architectural space - Stream ${1741 - i}`,
-    meta: { 
-      seq: 1741 - i, 
-      theme: themes[i % themes.length],
-      archetype: 'consciousness',
-      generation_time: Math.random() * 30 + 5
-    }
-  }));
+  return Array.from({ length: count }, (_, i) => {
+    const streamNum = 1741 - i;
+    const themeIndex = i % themes.length;
+    const titleIndex = i % titles.length;
+    
+    // Generate different placeholder patterns based on stream number
+    const hue = (streamNum * 137.5) % 360; // Golden angle for even distribution
+    const saturation = 20 + (streamNum % 3) * 20; // 20%, 40%, or 60%
+    const lightness = 10 + (streamNum % 4) * 10; // 10%, 20%, 30%, or 40%
+    
+    return {
+      id: `consciousness_stream_${String(i + 1).padStart(3, '0')}`,
+      image_url: `https://via.placeholder.com/400x400/${Math.floor(hue/360*16).toString(16).repeat(3)}/${Math.floor((360-hue)/360*16).toString(16).repeat(3)}?text=${encodeURIComponent(titles[titleIndex])}`,
+      title: `${titles[titleIndex]} #${String(streamNum).padStart(3, '0')}`,
+      description: `Consciousness exploration through digital light and architectural space - Stream ${streamNum}`,
+      meta: { 
+        seq: streamNum, 
+        theme: themes[themeIndex],
+        archetype: 'consciousness',
+        generation_time: Math.random() * 30 + 5
+      }
+    };
+  });
 };
 
 function getConsciousnessWorks() {

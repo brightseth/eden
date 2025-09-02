@@ -88,6 +88,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "eden-genesis-registry.vercel.app" },
       // Paris Photo voting prototype images
       { protocol: "https", hostname: "paris-photo-voting-qd7xc6cja-edenprojects.vercel.app" },
+      // Placeholder image service
+      { protocol: "https", hostname: "via.placeholder.com" },
       // If images live on R2/S3/IPFS gateways, add them here:
       { protocol: "https", hostname: "pub-*.r2.dev" },
       { protocol: "https", hostname: "*.amazonaws.com" },
