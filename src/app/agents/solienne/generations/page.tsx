@@ -67,8 +67,26 @@ export default function SOLIENNEGenerationsPage() {
     const acc: any[] = [];
     let cursor: string | null = null;
     while (acc.length < limit) {
-      const { works, next_cursor } = await fetchPage(cursor ?? undefined);
-      const valid = works.filter((w: any) => !!w.image_url);
+      const data = await fetchPage(cursor ?? undefined);
+      // Handle both old and new API formats
+      const works = data.works || data.items || [];
+      const next_cursor = data.next_cursor || data.nextCursor;
+      
+      // Transform items to expected format if needed
+      const transformed = works.map((w: any) => ({
+        id: w.id,
+        title: w.title,
+        image_url: w.image_url || w.signed_url,
+        created_at: w.created_at || new Date().toISOString(),
+        description: w.description,
+        meta: {
+          seq: w.ordinal || parseInt(w.id?.replace(/\D/g, '') || '0'),
+          themes: w.themes || ['consciousness'],
+          archetype: w.archetype || 'architectural'
+        }
+      }));
+      
+      const valid = transformed.filter((w: any) => !!w.image_url);
       acc.push(...valid);
       if (!next_cursor) break;
       cursor = next_cursor;

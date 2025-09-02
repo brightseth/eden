@@ -3,7 +3,8 @@
 
 import { NextResponse } from "next/server";
 
-const REGISTRY_BASE = process.env.REGISTRY_BASE_URL ?? "https://eden-genesis-registry.vercel.app";
+// Temporary: Using local works-registry while production Registry is down
+const REGISTRY_BASE = "http://localhost:3005";
 
 // Hop-by-hop headers to strip
 const HOP_BY_HOP_HEADERS = [

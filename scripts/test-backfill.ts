@@ -3,7 +3,7 @@
 import fetch from 'node-fetch';
 
 const REGISTRY_BASE = 'https://eden-genesis-registry.vercel.app';
-const SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN0bHlneXJraWJ1cGVqbGxnZ2xyIiwicm9sZSI6InNlcnZpY2UiLCJpYXQiOjE3MjI4NzY2NDgsImV4cCI6MjAzODQ1MjY0OH0.y47o6uUz0lxH_OUjFnw86gBMSM0PqEYjNOQxABb_FSU';
+const REGISTRY_SERVICE_KEY = 'registry-service-key-2025-eden-solienne-works';
 
 async function test() {
   console.log('Testing backfill with 5 works...');
@@ -20,7 +20,7 @@ async function test() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${SERVICE_KEY}`
+      'x-registry-service': REGISTRY_SERVICE_KEY
     },
     body: JSON.stringify({ works })
   });

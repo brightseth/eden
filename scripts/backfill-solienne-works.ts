@@ -11,9 +11,10 @@ import fetch from 'node-fetch';
 const BATCH_SIZE = 50;
 const EXPECTED_COUNT = 1740;
 const REGISTRY_BASE = process.env.REGISTRY_BASE_URL || 'https://eden-genesis-registry.vercel.app';
-const SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN0bHlneXJraWJ1cGVqbGxnZ2xyIiwicm9sZSI6InNlcnZpY2UiLCJpYXQiOjE3MjI4NzY2NDgsImV4cCI6MjAzODQ1MjY0OH0.y47o6uUz0lxH_OUjFnw86gBMSM0PqEYjNOQxABb_FSU';
+const REGISTRY_SERVICE_KEY = process.env.REGISTRY_SERVICE_KEY || 'registry-service-key-2025-eden-solienne-works';
 
 // Initialize Supabase client to check file existence
+const SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN0bHlneXJraWJ1cGVqbGxnZ2xyIiwicm9sZSI6InNlcnZpY2UiLCJpYXQiOjE3MjI4NzY2NDgsImV4cCI6MjAzODQ1MjY0OH0.y47o6uUz0lxH_OUjFnw86gBMSM0PqEYjNOQxABb_FSU';
 const supabase = createClient(
   'https://ctlygyrkibupejllgglr.supabase.co',
   SUPABASE_SERVICE_KEY
@@ -85,7 +86,7 @@ async function backfillBatch(start: number, end: number): Promise<Partial<Backfi
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+        'x-registry-service': REGISTRY_SERVICE_KEY
       },
       body: JSON.stringify({ works })
     });
