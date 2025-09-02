@@ -3,8 +3,15 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";// Conditional import to avoid Resend errors during build
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+// Lazy load Supabase to avoid bundling issues
+async function getSupabase() {
+  const { createClient } = await import("@/lib/supabase/server");
+  return createClient();
+}
+
 let covenantEmailService: any;
 let sendWitnessWelcome: any;
 let notifyWitnessMilestone: any;
@@ -24,21 +31,10 @@ try {
   sendEmergencyCovenantAlert = () => false;
 }
 
-// Lazy load Supabase to avoid bundling issues
-async function getSupabase() {
-  const { createClient } = await import("@/lib/supabase/server");
-  return getSupabase();
-}
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
-
 // POST /api/covenant/notifications - Send notifications
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await getSupabase();
     const body = await request.json();
     const { type, ...data } = body;
 
@@ -80,6 +76,7 @@ export async function POST(request: NextRequest) {
 // GET /api/covenant/notifications - Get notification history
 export async function GET(request: NextRequest) {
   try {
+    const supabase = await getSupabase();
     const url = new URL(request.url);
     const witnessAddress = url.searchParams.get('witness');
     const status = url.searchParams.get('status');
@@ -131,6 +128,7 @@ async function handleWelcomeNotification(data: {
   ensName?: string;
 }) {
   try {
+    const supabase = await getSupabase();
     const success = await sendWitnessWelcome({
       address: data.address,
       email: data.email,
@@ -165,6 +163,7 @@ async function handleMilestoneNotification(data: {
   message: string;
 }) {
   try {
+    const supabase = await getSupabase();
     await notifyWitnessMilestone({
       type: data.type,
       witnessNumber: data.witnessNumber,
@@ -194,6 +193,7 @@ async function handleEmergencyNotification(data: {
   deadlineDate?: string;
 }) {
   try {
+    const supabase = await getSupabase();
     await sendEmergencyCovenantAlert({
       urgencyLevel: data.urgencyLevel,
       subject: data.subject,
@@ -222,6 +222,7 @@ async function handleDailyAuctionNotification(data: {
   endTime: string;
 }) {
   try {
+    const supabase = await getSupabase();
     // Get all witnesses who want daily auction notifications
     const { data: witnesses, error } = await supabase
       .from('covenant_witnesses')
@@ -243,6 +244,7 @@ async function handleDailyAuctionNotification(data: {
 
     for (const witness of witnesses) {
       try {
+    const supabase = await getSupabase();
         const success = await covenantEmailService.sendDailyAuctionAlert(
           { address: witness.address, email: witness.email },
           { day: data.day, title: data.title, endTime: new Date(data.endTime) }
@@ -276,6 +278,7 @@ async function handleLaunchCountdownNotification(data: {
   daysRemaining: number;
 }) {
   try {
+    const supabase = await getSupabase();
     await covenantEmailService.sendLaunchCountdownAlert(data.daysRemaining);
 
     return NextResponse.json({
@@ -297,6 +300,7 @@ async function handleBatchTestNotification(data: {
   testEmails?: string[];
 }) {
   try {
+    const supabase = await getSupabase();
     const testEmails = data.testEmails || ['test@example.com'];
     let results: any = {};
 
@@ -332,6 +336,7 @@ async function testWelcomeEmail(testEmails: string[]) {
 
   for (let i = 0; i < testEmails.length; i++) {
     try {
+    const supabase = await getSupabase();
       const success = await sendWitnessWelcome({
         address: `0x${'1'.repeat(40)}`,
         email: testEmails[i],
@@ -365,6 +370,7 @@ async function testMilestoneEmail(testEmails: string[]) {
   await supabase.from('covenant_witnesses').insert(testWitnesses);
 
   try {
+    const supabase = await getSupabase();
     await notifyWitnessMilestone({
       type: 'witness_count',
       witnessNumber: testEmails.length,
@@ -397,6 +403,7 @@ async function testEmergencyEmail(testEmails: string[]) {
   await supabase.from('covenant_witnesses').insert(testWitnesses);
 
   try {
+    const supabase = await getSupabase();
     await sendEmergencyCovenantAlert({
       urgencyLevel: 'info',
       subject: 'Test Emergency Alert',
@@ -418,6 +425,7 @@ async function testEmergencyEmail(testEmails: string[]) {
 // Helper function - not exported from route file
 async function checkAndSendMilestones() {
   try {
+    const supabase = await getSupabase();
     const { data: stats } = await supabase
       .from('covenant_witnesses')
       .select('witness_number')

@@ -1,19 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = "nodejs";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 // Lazy load Supabase to avoid bundling issues
 async function getSupabase() {
   const { createClient } = await import("@/lib/supabase/server");
-  return getSupabase();
+  return createClient();
 }
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
 // Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
 
 // Market data providers (placeholder - would integrate actual APIs)
 async function fetchMarketOpportunities() {
@@ -88,6 +83,7 @@ async function analyzeMark(market: any, config: any) {
 // GET /api/agents/miyomi/schedule - Check schedule status
 export async function GET(request: NextRequest) {
   try {
+    const supabase = await getSupabase();
     // Get config
     const { data: config } = await supabase
       .from('miyomi_config')
@@ -123,6 +119,7 @@ export async function GET(request: NextRequest) {
 // POST /api/agents/miyomi/schedule - Trigger analysis run
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await getSupabase();
     // Verify internal API token or cron secret
     const authHeader = request.headers.get('Authorization');
     const expectedToken = process.env.INTERNAL_API_TOKEN;
@@ -233,6 +230,7 @@ export async function POST(request: NextRequest) {
 
 // Helper to update daily stats
 async function updateDailyStats() {
+  const supabase = await getSupabase();
   const today = new Date().toISOString().split('T')[0];
   
   const { data: picks } = await supabase

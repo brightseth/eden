@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Image from 'next/image';
 import { Star, Download, Eye, Calendar } from 'lucide-react';
 
@@ -29,8 +28,7 @@ export function ParisPhotoCuration({ agentId }: ParisPhotoCurationProps) {
   const [loading, setLoading] = useState(true);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'all' | 'curated'>('all');
-  
-  const supabase = createClientComponentClient();
+  const [supabase, setSupabase] = useState<any>(null);
   
   const categories = [
     'CONSCIOUSNESS STREAMS',
@@ -43,10 +41,27 @@ export function ParisPhotoCuration({ agentId }: ParisPhotoCurationProps) {
   ];
 
   useEffect(() => {
-    fetchWorks();
-  }, [agentId]);
+    const initSupabase = async () => {
+      try {
+        const { getBrowserSupabase } = await import('@/lib/supabase/client');
+        const client = await getBrowserSupabase();
+        setSupabase(client);
+      } catch (error) {
+        console.error('Failed to initialize Supabase:', error);
+        setLoading(false);
+      }
+    };
+    initSupabase();
+  }, []);
+
+  useEffect(() => {
+    if (supabase) {
+      fetchWorks();
+    }
+  }, [supabase, agentId]);
 
   async function fetchWorks() {
+    if (!supabase) return;
     setLoading(true);
     
     // Fetch high-quality works (recent and diverse)

@@ -1,12 +1,15 @@
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { registryApi } from '@/lib/generated-sdk';
 
 // GET /api/agents/[id]/works - Get agent's creative works
 export async function GET(
   request: NextRequest,
-  { params }: any) {
+  { params }: { params: Promise<{ id: string }> }) {
   try {
-  const { id } = params;
+  const { id } = await params;
     const searchParams = request.nextUrl.searchParams;
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
@@ -61,9 +64,9 @@ export async function GET(
 // POST /api/agents/[id]/works - Create new work (for authorized agents)
 export async function POST(
   request: NextRequest,
-  { params }: any) {
+  { params }: { params: Promise<{ id: string }> }) {
   try {
-  const { id } = params;
+  const { id } = await params;
     
     // Verify internal API token
     const authHeader = request.headers.get('Authorization');

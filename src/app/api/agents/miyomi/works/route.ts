@@ -1,21 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getAgentCreations } from '@/lib/registry/sdk';
 
-export const runtime = "nodejs";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 // Lazy load Supabase to avoid bundling issues
 async function getSupabase() {
   const { createClient } = await import("@/lib/supabase/server");
-  return getSupabase();
+  return createClient();
 }
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";import { registryApi } from '@/lib/generated-sdk/registry-api';
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
 
 export async function GET(request: NextRequest) {
   try {
@@ -33,11 +27,11 @@ export async function GET(request: NextRequest) {
     // Try Registry first (Registry-First Architecture)
     if (source === 'registry' || source === 'combined') {
       try {
-        const registryWorks = await registryApi.getAgentCreations('miyomi');
+        const registryWorks = await getAgentCreations('miyomi');
         console.log(`[Registry Integration] ✅ Found ${registryWorks.length} works in Registry`);
         
         // Transform Registry creations to Academy works format
-        const transformedRegistryWorks = registryWorks.map(creation => ({
+        const transformedRegistryWorks = registryWorks.map((creation: any) => ({
           id: creation.id,
           agent_id: 'miyomi',
           archive_type: 'video', // Registry creations are primarily videos
@@ -101,6 +95,9 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    // Initialize Supabase for fallback queries
+    const supabase = await getSupabase();
+    
     // Build query - using safe column selection (removing current_price that doesn't exist)
     let query = supabase
       .from('miyomi_picks')

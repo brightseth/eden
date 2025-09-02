@@ -354,18 +354,31 @@ export class RegistryCache {
   }
 }
 
-// Export singleton instance
-export const registryCache = new RegistryCache();
+// Export singleton instance (lazy)
+let _registryCache: RegistryCache | null = null;
 
-// Initialize connection (server-side only)
-if (typeof window === 'undefined') {
-  registryCache.connect().catch(console.error);
-
-  // Cleanup interval for fallback cache
-  setInterval(() => {
-    registryCache.cleanupFallback();
-  }, 60000); // Every minute
+export function getRegistryCache(): RegistryCache {
+  if (!_registryCache) {
+    _registryCache = new RegistryCache();
+    // Only connect if not disabled
+    if (typeof window === 'undefined' && process.env.FEATURE_CACHE_DISABLED !== '1') {
+      _registryCache.connect().catch(console.error);
+      
+      // Cleanup interval for fallback cache
+      setInterval(() => {
+        _registryCache?.cleanupFallback();
+      }, 60000); // Every minute
+    }
+  }
+  return _registryCache;
 }
+
+// For backward compatibility
+export const registryCache = new Proxy({} as RegistryCache, {
+  get(target, prop, receiver) {
+    return Reflect.get(getRegistryCache(), prop, receiver);
+  }
+});
 
 // Convenience functions
 export async function cacheGet<T>(key: string): Promise<T | null> {

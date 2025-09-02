@@ -1,12 +1,15 @@
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { getAgentOverview } from '@/lib/db/agents';
 
 // GET /api/agents/[id]/overview
 export async function GET(
   request: NextRequest,
-  { params }: any) {
+  { params }: { params: Promise<{ id: string }> }) {
   try {
-  const { id  } = params;
+  const { id  } = await params;
     const overview = await getAgentOverview(id);
     
     if (!overview) {

@@ -57,7 +57,8 @@ export default function CitizenTrainingPage() {
     setResult(null);
 
     try {
-      const response = await fetch('/api/agents/citizen/training', {
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+      const response = await fetch(`${baseUrl}/api/agents/citizen/training`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -97,7 +98,8 @@ export default function CitizenTrainingPage() {
 
   const fetchSyncStatus = async () => {
     try {
-      const response = await fetch('/api/agents/citizen/sync');
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+      const response = await fetch(`${baseUrl}/api/agents/citizen/sync`);
       const data = await response.json();
       setSyncStatus(data);
     } catch (error) {
@@ -108,7 +110,8 @@ export default function CitizenTrainingPage() {
   const performSync = async () => {
     setIsSyncing(true);
     try {
-      const response = await fetch('/api/agents/citizen/sync', {
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+      const response = await fetch(`${baseUrl}/api/agents/citizen/sync`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ force: true })

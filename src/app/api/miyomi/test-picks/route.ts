@@ -1,23 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = "nodejs";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 // Lazy load Supabase to avoid bundling issues
 async function getSupabase() {
   const { createClient } = await import("@/lib/supabase/server");
-  return getSupabase();
+  return createClient();
 }
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
 // Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
 
 // POST /api/miyomi/test-picks - Create test picks for demo
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await getSupabase();
     const testPicks = [
       {
         market: 'Fed Rate Cut by March 2025?',
@@ -127,6 +123,7 @@ export async function POST(request: NextRequest) {
 // DELETE /api/miyomi/test-picks - Clean up test picks
 export async function DELETE(request: NextRequest) {
   try {
+    const supabase = await getSupabase();
     console.log('[MIYOMI Test] Cleaning up test picks...');
 
     // Delete test picks (those with market names containing 'Fed Rate' or 'Bitcoin' etc.)

@@ -1,3 +1,6 @@
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { Asset } from '@/types/content';
 
@@ -16,8 +19,8 @@ const getAssetStore = () => {
 // GET /api/agents/[id]/published - Public feed for agent's published assets
 export async function GET(
   request: NextRequest,
-  { params }: any) {
-  const { id  } = params;
+  { params }: { params: Promise<{ id: string }> }) {
+  const { id  } = await params;
   const searchParams = request.nextUrl.searchParams;
   
   // Pagination params

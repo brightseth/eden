@@ -5,15 +5,14 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = "nodejs";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 // Lazy load Supabase to avoid bundling issues
 async function getSupabase() {
   const { createClient } = await import("@/lib/supabase/server");
-  return getSupabase();
+  return createClient();
 }
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   try {
     const supabase = await getSupabase();

@@ -1,3 +1,6 @@
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 // Agent Profile Configuration API
 // Implements ADR-025: Agent Profile Widget System
 
@@ -11,9 +14,9 @@ import {
 // GET /api/agents/[id]/profile-config - Get agent profile configuration
 export async function GET(
   request: NextRequest,
-  { params }: any) {
+  { params }: { params: Promise<{ id: string }> }) {
   try {
-  const { id: agent } = params;
+  const { id: agent } = await params;
     
     console.log(`[ProfileConfig] Fetching configuration for agent: ${agent}`);
     
@@ -41,7 +44,7 @@ export async function GET(
     console.error(`[ProfileConfig] Error fetching configuration:`, error);
     
     // Graceful degradation - return minimal fallback config
-  const { id: agent } = params;
+  const { id: agent } = await params;
     const fallbackConfig = getFallbackProfileConfig(agent);
     
     return NextResponse.json(fallbackConfig, { status: 200 });

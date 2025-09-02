@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { useMiyomiSnapshot } from '@/features/miyomi/adapters'
@@ -15,7 +15,7 @@ import { TrendingUp, Activity, Terminal, Sparkles } from 'lucide-react'
 // Lazy load existing components to avoid refactoring
 const MiyomiDashboard = dynamic(() => import('@/app/dashboard/miyomi/page'), { ssr: false })
 
-export default function MiyomiSite() {
+function MiyomiSiteContent() {
   const searchParams = useSearchParams()
   const [mode, setMode] = useState<'creative' | 'trader'>('creative')
   const [activeTab, setActiveTab] = useState<'insight' | 'practice' | 'terminal'>('insight')
@@ -304,5 +304,17 @@ export default function MiyomiSite() {
         )}
       </div>
     </main>
+  )
+}
+
+export default function MiyomiSite() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="animate-pulse">Loading...</div>
+      </div>
+    }>
+      <MiyomiSiteContent />
+    </Suspense>
   )
 }

@@ -3,8 +3,6 @@
  * Handles tiers, payments, and access control for premium picks
  */
 
-import { createClient } from '@supabase/supabase-js';
-
 export interface SubscriptionTier {
   id: string;
   name: 'FREE' | 'CONTRARIAN' | 'ORACLE' | 'WHALE';
@@ -148,10 +146,18 @@ export class MiyomiSubscriptionManager {
   };
 
   constructor() {
-    this.supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_KEY!
-    );
+    this.supabase = null as any;
+  }
+
+  private async ensureSupabase() {
+    if (!this.supabase) {
+      const { createClient } = await import('@supabase/supabase-js');
+      this.supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_KEY!
+      );
+    }
+    return this.supabase;
   }
 
   /**
@@ -186,7 +192,8 @@ export class MiyomiSubscriptionManager {
     };
 
     // Store in database
-    const { data, error } = await this.supabase
+    const supabase = await this.ensureSupabase();
+    const { data, error } = await supabase
       .from('miyomi_subscriptions')
       .insert(subscription)
       .single();
@@ -295,7 +302,8 @@ export class MiyomiSubscriptionManager {
    */
   async getRevenueMetrics(): Promise<RevenueMetrics> {
     // Get all active subscriptions
-    const { data: subscriptions } = await this.supabase
+    const supabase = await this.ensureSupabase();
+    const { data: subscriptions } = await supabase
       .from('miyomi_subscriptions')
       .select('*')
       .eq('status', 'active');
@@ -325,7 +333,7 @@ export class MiyomiSubscriptionManager {
     });
 
     // Calculate churn (simplified - would need historical data)
-    const { data: churned } = await this.supabase
+    const { data: churned } = await supabase
       .from('miyomi_subscriptions')
       .select('count')
       .eq('status', 'canceled')
@@ -394,7 +402,8 @@ export class MiyomiSubscriptionManager {
   }
 
   private async getUserSubscription(userId: string): Promise<UserSubscription | null> {
-    const { data } = await this.supabase
+    const supabase = await this.ensureSupabase();
+    const { data } = await supabase
       .from('miyomi_subscriptions')
       .select('*')
       .eq('userId', userId)
@@ -405,7 +414,8 @@ export class MiyomiSubscriptionManager {
   }
 
   private async getPickDetails(pickId: string): Promise<any> {
-    const { data } = await this.supabase
+    const supabase = await this.ensureSupabase();
+    const { data } = await supabase
       .from('miyomi_picks')
       .select('*')
       .eq('id', pickId)
@@ -418,7 +428,8 @@ export class MiyomiSubscriptionManager {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    const { count } = await this.supabase
+    const supabase = await this.ensureSupabase();
+    const { count } = await supabase
       .from('miyomi_pick_access')
       .select('count')
       .eq('userId', userId)
@@ -446,7 +457,8 @@ export class MiyomiSubscriptionManager {
   }
 
   private async trackRevenue(userId: string, amount: number, type: string) {
-    await this.supabase
+    const supabase = await this.ensureSupabase();
+    await supabase
       .from('miyomi_revenue')
       .insert({
         userId,

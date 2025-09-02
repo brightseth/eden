@@ -1,23 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = "nodejs";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 // Lazy load Supabase to avoid bundling issues
 async function getSupabase() {
   const { createClient } = await import("@/lib/supabase/server");
-  return getSupabase();
+  return createClient();
 }
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
 // Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
 
 // GET /api/agents/miyomi/picks - Get recent picks
 export async function GET(request: NextRequest) {
   try {
+    const supabase = await getSupabase();
     const searchParams = request.nextUrl.searchParams;
     const limit = parseInt(searchParams.get('limit') || '10');
     const status = searchParams.get('status');
@@ -63,6 +59,7 @@ export async function GET(request: NextRequest) {
 // POST /api/agents/miyomi/picks - Create new pick (internal use)
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await getSupabase();
     // Verify internal API token
     const authHeader = request.headers.get('Authorization');
     const expectedToken = process.env.INTERNAL_API_TOKEN;
@@ -137,6 +134,7 @@ export async function POST(request: NextRequest) {
 // PATCH /api/agents/miyomi/picks - Update pick status
 export async function PATCH(request: NextRequest) {
   try {
+    const supabase = await getSupabase();
     // Verify internal API token
     const authHeader = request.headers.get('Authorization');
     const expectedToken = process.env.INTERNAL_API_TOKEN;
@@ -206,6 +204,7 @@ export async function PATCH(request: NextRequest) {
 
 // Helper function to update performance stats
 async function updatePerformanceStats() {
+  const supabase = await getSupabase();
   const today = new Date().toISOString().split('T')[0];
   
   // Get today's stats

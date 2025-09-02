@@ -1,23 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = "nodejs";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 // Lazy load Supabase to avoid bundling issues
 async function getSupabase() {
   const { createClient } = await import("@/lib/supabase/server");
-  return getSupabase();
+  return createClient();
 }
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
 // Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
 
 // GET /api/agents/miyomi/performance - Get performance metrics
 export async function GET(request: NextRequest) {
   try {
+    const supabase = await getSupabase();
     const searchParams = request.nextUrl.searchParams;
     const period = searchParams.get('period') || '30'; // days
     const groupBy = searchParams.get('groupBy') || 'day';

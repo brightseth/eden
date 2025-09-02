@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 interface GalleryPreviewProps {
   agentId: string;
@@ -13,9 +12,25 @@ interface GalleryPreviewProps {
 export function GalleryPreview({ agentId, limit = 6, className = '' }: GalleryPreviewProps) {
   const [images, setImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  const supabase = createClientComponentClient();
+  const [supabase, setSupabase] = useState<any>(null);
 
   useEffect(() => {
+    const initSupabase = async () => {
+      try {
+        const { getBrowserSupabase } = await import('@/lib/supabase/client');
+        const client = await getBrowserSupabase();
+        setSupabase(client);
+      } catch (error) {
+        console.error('Failed to initialize Supabase:', error);
+        setLoading(false);
+      }
+    };
+    initSupabase();
+  }, []);
+
+  useEffect(() => {
+    if (!supabase) return;
+    
     async function fetchImages() {
       const { data } = await supabase
         .from('agent_archives')
@@ -31,7 +46,7 @@ export function GalleryPreview({ agentId, limit = 6, className = '' }: GalleryPr
     }
 
     fetchImages();
-  }, [agentId, limit]);
+  }, [supabase, agentId, limit]);
 
   if (loading) {
     return (

@@ -1,18 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = "nodejs";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 // Lazy load Supabase to avoid bundling issues
 async function getSupabase() {
   const { createClient } = await import("@/lib/supabase/server");
-  return getSupabase();
+  return createClient();
 }
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
 export async function GET(
   request: NextRequest,
-  { params }: any) {
+  { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '50');
     const after = searchParams.get('after'); // ISO timestamp
@@ -23,7 +23,7 @@ export async function GET(
     let query = supabase
       .from('creations')
       .select('*')
-      .eq('agent_name', params.id.toUpperCase())
+      .eq('agent_name', id.toUpperCase())
       .eq('state', 'published')
       .eq('status', 'available')
       .order('created_at', { ascending: false })
@@ -62,7 +62,7 @@ export async function GET(
     
     // Set cache headers (60 seconds)
     const response = NextResponse.json({
-      agent: params.id,
+      agent: id,
       count: creations.length,
       creations,
       next_cursor: creations.length === limit ? creations[creations.length - 1]?.created_at : null
@@ -71,7 +71,7 @@ export async function GET(
     response.headers.set('Cache-Control', 'public, max-age=60, s-maxage=60, stale-while-revalidate=30');
     
     // Add ETag for efficient caching
-    const etag = `"${params.id}-${creations.length}-${creations[0]?.id || 'empty'}"`;
+    const etag = `"${id}-${creations.length}-${creations[0]?.id || 'empty'}"`;
     response.headers.set('ETag', etag);
     
     // Check if client has valid cache

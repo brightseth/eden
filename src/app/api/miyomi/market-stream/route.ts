@@ -1,18 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = "nodejs";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 // Lazy load Supabase to avoid bundling issues
 async function getSupabase() {
   const { createClient } = await import("@/lib/supabase/server");
-  return getSupabase();
+  return createClient();
 }
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
 
 // GET /api/miyomi/market-stream - Server-sent events for live market data
 export async function GET(request: NextRequest) {
@@ -32,6 +27,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    const supabase = await getSupabase();
     const encoder = new TextEncoder();
     
     const stream = new ReadableStream({
@@ -47,6 +43,7 @@ export async function GET(request: NextRequest) {
         // Set up interval for market updates
         const interval = setInterval(async () => {
           try {
+    const supabase = await getSupabase();
             const updates = await generateMarketUpdates();
             const data = `data: ${JSON.stringify({
               type: 'market_update',
@@ -108,6 +105,7 @@ export async function GET(request: NextRequest) {
 // POST /api/miyomi/market-stream - Trigger manual market update
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await getSupabase();
     const body = await request.json();
     const { market_ids } = body;
 
@@ -145,6 +143,7 @@ export async function POST(request: NextRequest) {
 // Generate simulated market updates
 async function generateMarketUpdates() {
   try {
+    const supabase = await getSupabase();
     // Get active picks from database
     const { data: picks, error } = await supabase
       .from('miyomi_picks')
@@ -228,6 +227,7 @@ async function generateSpecificMarketUpdates(picks: any[]) {
 // Update pick performance in database
 async function updatePickPerformance(update: any) {
   try {
+    const supabase = await getSupabase();
     // Update performance table
     await supabase
       .from('miyomi_performance')

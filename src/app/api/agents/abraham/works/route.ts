@@ -1,25 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { featureFlags, FLAGS } from '@/config/flags';
+import { registryApi } from '@/lib/registry/sdk';
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";import { registryApi, Creation } from '@/lib/generated-sdk';
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";import { featureFlags, FLAGS } from '@/config/flags';
 
-export const runtime = "nodejs";
 
 // Lazy load Supabase to avoid bundling issues
 async function getSupabase() {
   const { createClient } = await import("@/lib/supabase/server");
-  return getSupabase();
+  return createClient();
 }
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
 // Fallback Supabase client for when Registry is disabled
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
 
 // Helper function to sort and paginate data
 function applySortingAndPagination<T extends { archive_number?: number; created_date?: string; title?: string }>(
@@ -60,7 +53,7 @@ function applySortingAndPagination<T extends { archive_number?: number; created_
 }
 
 // Helper function to transform Registry Creation to Academy work format
-function transformCreationToWork(creation: Creation, index?: number): any {
+function transformCreationToWork(creation: any, index?: number): any {
   return {
     id: creation.id,
     agent_id: 'abraham',
@@ -152,6 +145,8 @@ export async function GET(request: NextRequest) {
 
   // Fallback to existing Supabase implementation
   console.log('[Abraham Works API] Using Supabase fallback');
+  
+  const supabase = await getSupabase();
   
   // Query the agent_archives table where Abraham's 3,693 works are actually stored
   let query = supabase

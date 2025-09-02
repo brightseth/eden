@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { 
   Search, 
   Filter, 
@@ -48,6 +47,7 @@ export function CurationInterface({ agentId, title }: CurationInterfaceProps) {
   const [availableTags, setAvailableTags] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'date' | 'number' | 'title'>('date');
+  const [supabase, setSupabase] = useState<any>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [selectedWorks, setSelectedWorks] = useState<Set<string>>(new Set());
   const [showFilters, setShowFilters] = useState(false);
@@ -55,14 +55,30 @@ export function CurationInterface({ agentId, title }: CurationInterfaceProps) {
   const [totalCount, setTotalCount] = useState(0);
   
   const itemsPerPage = 24;
-  const supabase = createClientComponentClient();
+
+  // Initialize Supabase client
+  useEffect(() => {
+    const initSupabase = async () => {
+      try {
+        const { getBrowserSupabase } = await import('@/lib/supabase/client');
+        const client = await getBrowserSupabase();
+        setSupabase(client);
+      } catch (error) {
+        console.error('Failed to initialize Supabase:', error);
+      }
+    };
+    initSupabase();
+  }, []);
 
   useEffect(() => {
-    fetchWorks();
-    fetchAvailableTags();
-  }, [page, searchTerm, selectedTags, sortBy, sortOrder]);
+    if (supabase) {
+      fetchWorks();
+      fetchAvailableTags();
+    }
+  }, [supabase, page, searchTerm, selectedTags, sortBy, sortOrder]);
 
   async function fetchWorks() {
+    if (!supabase) return;
     setLoading(true);
     
     let query = supabase
@@ -108,6 +124,7 @@ export function CurationInterface({ agentId, title }: CurationInterfaceProps) {
   }
 
   async function fetchAvailableTags() {
+    if (!supabase) return;
     const { data } = await supabase
       .from('agent_archives')
       .select('metadata')

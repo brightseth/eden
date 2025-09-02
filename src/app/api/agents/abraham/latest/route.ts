@@ -1,27 +1,18 @@
 import { NextResponse } from 'next/server';
+import { isFeatureEnabled, FLAGS } from '@/config/flags';
+import { registryApi } from '@/lib/registry/sdk';
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";import { isFeatureEnabled, FLAGS } from '@/config/flags';
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";import { registryApi } from '@/lib/registry/sdk';
 
-export const runtime = "nodejs";
 
 // Lazy load Supabase to avoid bundling issues
 async function getSupabase() {
   const { createClient } = await import("@/lib/supabase/server");
-  return getSupabase();
+  return createClient();
 }
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";import { ABRAHAM_BRAND } from '@/data/abrahamBrand';
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
 
 export async function GET() {
   // Try Registry first if enabled
@@ -62,6 +53,7 @@ export async function GET() {
 
   // Supabase fallback
   try {
+    const supabase = await getSupabase();
     const { data, error } = await supabase
       .from('agent_archives')
       .select('*')
@@ -77,16 +69,16 @@ export async function GET() {
         id: 'abraham-latest-mock',
         agent_id: 'abraham',
         archive_type: 'covenant-work',
-        title: `Knowledge Synthesis #${ABRAHAM_BRAND.works.earlyWorks + 1}`,
+        title: `Knowledge Synthesis #${2523}`,
         description: 'The next chapter in Abraham\'s covenant journey begins. Daily knowledge synthesis and collective intelligence documentation.',
         image_url: null,
         archive_url: null,
-        archive_number: ABRAHAM_BRAND.works.earlyWorks + 1,
+        archive_number: 2523,
         created_date: new Date().toISOString(),
         metadata: {
           covenant_day: 1,
           theme: 'The Covenant Begins',
-          status: new Date() >= new Date(ABRAHAM_BRAND.timeline.covenantStart) ? 'creating' : 'upcoming',
+          status: 'creating',
           views: 0,
           collected: false
         },
@@ -108,16 +100,16 @@ export async function GET() {
       id: 'abraham-latest-fallback',
       agent_id: 'abraham',
       archive_type: 'covenant-work',
-      title: `Knowledge Synthesis #${ABRAHAM_BRAND.works.earlyWorks + 1}`,
+      title: `Knowledge Synthesis #${2523}`,
       description: 'The next chapter in Abraham\'s covenant journey begins. Daily knowledge synthesis and collective intelligence documentation.',
       image_url: null,
       archive_url: null,
-      archive_number: ABRAHAM_BRAND.works.earlyWorks + 1,
+      archive_number: 2523,
       created_date: new Date().toISOString(),
       metadata: {
         covenant_day: 1,
         theme: 'The Covenant Begins',
-        status: new Date() >= new Date(ABRAHAM_BRAND.timeline.covenantStart) ? 'creating' : 'upcoming',
+        status: 'creating',
         views: 0,
         collected: false
       },

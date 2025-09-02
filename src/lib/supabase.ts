@@ -1,21 +1,17 @@
-import { createClient } from '@supabase/supabase-js';
-import { Database } from '../types/database';
+// Lazy-loaded Supabase client to avoid bundling issues
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+export const supabase = null as any;
 
-// Only create client if environment variables are set
-export const supabase = supabaseUrl && supabaseAnonKey 
-  ? createClient<Database>(supabaseUrl, supabaseAnonKey)
-  : null as any;
-
-// For server-side operations
-export const createServerSupabase = () => {
+export const createServerSupabase = async () => {
+  const { createClient } = await import('@supabase/supabase-js');
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY || '';
+  
   if (!supabaseUrl || !supabaseServiceKey) {
     return null as any;
   }
-  return createClient<Database>(supabaseUrl, supabaseServiceKey, {
+  
+  return createClient(supabaseUrl, supabaseServiceKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false

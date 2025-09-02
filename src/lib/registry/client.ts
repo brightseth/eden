@@ -433,12 +433,27 @@ class RegistryClient {
   }
 }
 
-// Export singleton instance
-export const registryClient = new RegistryClient();
+// Export singleton instance (lazy-initialized)
+let _registryClient: RegistryClient | null = null;
+
+export const getRegistryClient = () => {
+  if (!_registryClient) {
+    _registryClient = new RegistryClient();
+  }
+  return _registryClient;
+};
+
+// For backward compatibility
+export const registryClient = new Proxy({} as RegistryClient, {
+  get(target, prop, receiver) {
+    return Reflect.get(getRegistryClient(), prop, receiver);
+  }
+});
 
 // Export for Next.js ISR helpers
 export async function getAgentsForISR(query?: AgentQuery) {
-  const { agents, revalidate } = await registryClient.getAgentsWithISR(query);
+  const client = getRegistryClient();
+  const { agents, revalidate } = await client.getAgentsWithISR(query);
   return {
     props: { agents },
     revalidate,

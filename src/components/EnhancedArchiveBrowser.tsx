@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { 
   Search, 
   Filter, 
@@ -77,14 +76,30 @@ export function EnhancedArchiveBrowser({
   const [showFilters, setShowFilters] = useState(false);
   
   const itemsPerPage = 24;
-  const supabase = createClientComponentClient();
+  const [supabase, setSupabase] = useState<any>(null);
+
+  useEffect(() => {
+    const initSupabase = async () => {
+      try {
+        const { getBrowserSupabase } = await import('@/lib/supabase/client');
+        const client = await getBrowserSupabase();
+        setSupabase(client);
+      } catch (error) {
+        console.error('Failed to initialize Supabase:', error);
+        setLoading(false);
+      }
+    };
+    initSupabase();
+  }, []);
   
   useEffect(() => {
-    fetchArchives();
-    if (agentId === 'solienne') {
-      fetchAvailableTags();
+    if (supabase) {
+      fetchArchives();
+      if (agentId === 'solienne') {
+        fetchAvailableTags();
+      }
     }
-  }, [page, searchTerm, sortBy, sortOrder]); // Removed selectedTags until column is added
+  }, [supabase, page, searchTerm, sortBy, sortOrder]); // Removed selectedTags until column is added
   
   async function fetchAvailableTags() {
     try {

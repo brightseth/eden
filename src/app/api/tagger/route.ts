@@ -1,20 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import Anthropic from '@anthropic-ai/sdk';
 
-export const runtime = "nodejs";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 // Lazy load Supabase to avoid bundling issues
 async function getSupabase() {
   const { createClient } = await import("@/lib/supabase/server");
-  return getSupabase();
+  return createClient();
 }
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";import Anthropic from '@anthropic-ai/sdk';
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";import { inferCapturedAt } from '@/lib/date-extraction';
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
 // Initialize Anthropic client
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -220,11 +216,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Extract and update captured_at date with improved extraction
-    const capturedAt = await inferCapturedAt({
-      filename,
-      media_url,
-      fallback: new Date().toISOString()
-    });
+    const capturedAt = new Date().toISOString();
     
     // Always update captured_at and filename if we have them
     const updateData: any = { captured_at: capturedAt };

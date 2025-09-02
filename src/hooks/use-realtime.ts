@@ -7,12 +7,14 @@ export function useRealtimeSubscription() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    const supabase = createClient();
-    const channels: RealtimeChannel[] = [];
+    let channels: RealtimeChannel[] = [];
+    
+    const setupSubscriptions = async () => {
+      const supabase = await createClient();
 
-    // Subscribe to daily_metrics changes
-    const metricsChannel = supabase
-      .channel('daily_metrics_changes')
+      // Subscribe to daily_metrics changes
+      const metricsChannel = supabase
+        .channel('daily_metrics_changes')
       .on(
         'postgres_changes',
         {
@@ -96,12 +98,18 @@ export function useRealtimeSubscription() {
       )
       .subscribe();
     
-    channels.push(agentsChannel);
+      channels.push(agentsChannel);
+    };
+
+    setupSubscriptions();
 
     // Cleanup on unmount
     return () => {
-      channels.forEach(channel => {
-        supabase.removeChannel(channel);
+      // Cleanup will happen asynchronously
+      createClient().then(supabase => {
+        channels.forEach(channel => {
+          supabase.removeChannel(channel);
+        });
       });
     };
   }, [queryClient]);

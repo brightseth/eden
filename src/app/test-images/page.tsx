@@ -2,14 +2,30 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 export default function TestImagesPage() {
   const [works, setWorks] = useState<any[]>([]);
   const [error, setError] = useState<string>('');
-  const supabase = createClientComponentClient();
+  const [supabase, setSupabase] = useState<any>(null);
+
+  // Initialize Supabase client dynamically
+  useEffect(() => {
+    const initSupabase = async () => {
+      try {
+        const { getBrowserSupabase } = await import('@/lib/supabase/client');
+        const client = await getBrowserSupabase();
+        setSupabase(client);
+      } catch (error) {
+        console.error('Failed to initialize Supabase:', error);
+        setError('Failed to connect to database');
+      }
+    };
+    initSupabase();
+  }, []);
 
   useEffect(() => {
+    if (!supabase) return;
+    
     async function fetchWorks() {
       console.log('Fetching Solienne works...');
       
@@ -29,7 +45,7 @@ export default function TestImagesPage() {
     }
 
     fetchWorks();
-  }, []);
+  }, [supabase]);
 
   return (
     <div className="min-h-screen bg-black text-white p-8">

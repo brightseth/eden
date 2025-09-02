@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -58,21 +57,38 @@ export function ArchiveBrowser({
   const [error, setError] = useState<string | null>(null);
   const [selectedTrainer, setSelectedTrainer] = useState<string>('');
   const [trainers, setTrainers] = useState<{ id: string; name: string; count: number }[]>([]);
+  const [supabase, setSupabase] = useState<any>(null);
   const itemsPerPage = 24;
   
-  const supabase = createClientComponentClient();
+  // Initialize Supabase client dynamically
+  useEffect(() => {
+    const initSupabase = async () => {
+      try {
+        const { getBrowserSupabase } = await import('@/lib/supabase/client');
+        const client = await getBrowserSupabase();
+        setSupabase(client);
+      } catch (error) {
+        console.error('Failed to initialize Supabase:', error);
+        setError('Failed to connect to database');
+      }
+    };
+    initSupabase();
+  }, []);
+
+  useEffect(() => {
+    if (supabase) {
+      fetchArchives();
+    }
+  }, [supabase, page, searchTerm, curationTag, selectedTrainer]);
   
   useEffect(() => {
-    fetchArchives();
-  }, [page, searchTerm, curationTag, selectedTrainer]);
-  
-  useEffect(() => {
-    if (enableTrainerFilter) {
+    if (enableTrainerFilter && supabase) {
       fetchTrainerStats();
     }
-  }, [enableTrainerFilter]);
+  }, [enableTrainerFilter, supabase]);
   
   async function fetchArchives() {
+    if (!supabase) return;
     setLoading(true);
     
     let query = supabase
@@ -119,6 +135,7 @@ export function ArchiveBrowser({
   }
   
   async function fetchTrainerStats() {
+    if (!supabase) return;
     const { data } = await supabase
       .from('agent_archives')
       .select('trainer_id')

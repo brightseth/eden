@@ -3,20 +3,15 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = "nodejs";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 // Lazy load Supabase to avoid bundling issues
 async function getSupabase() {
   const { createClient } = await import("@/lib/supabase/server");
-  return getSupabase();
+  return createClient();
 }
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
 // Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
 
 interface WitnessRegistration {
   address: string;
@@ -42,6 +37,7 @@ interface WitnessRecord extends WitnessRegistration {
 // GET /api/covenant/witnesses - Fetch all witnesses
 export async function GET(request: NextRequest) {
   try {
+    const supabase = await getSupabase();
     const url = new URL(request.url);
     const limit = parseInt(url.searchParams.get('limit') || '100');
     const offset = parseInt(url.searchParams.get('offset') || '0');
@@ -114,6 +110,7 @@ export async function GET(request: NextRequest) {
 // POST /api/covenant/witnesses - Register new witness
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await getSupabase();
     const body = await request.json() as WitnessRegistration;
 
     // Validate required fields
@@ -227,6 +224,7 @@ export async function POST(request: NextRequest) {
 // PUT /api/covenant/witnesses/[address] - Update witness preferences
 export async function PUT(request: NextRequest) {
   try {
+    const supabase = await getSupabase();
     const body = await request.json();
     const url = new URL(request.url);
     const address = url.pathname.split('/').pop()?.toLowerCase();
@@ -286,6 +284,7 @@ async function sendWelcomeNotification(witness: {
   ensName?: string;
 }) {
   try {
+    const supabase = await getSupabase();
     // In production, integrate with email service (SendGrid, Resend, etc.)
     console.log(`[WITNESS NOTIFICATION] Welcome Witness #${witness.witnessNumber}:`, witness.email);
     
@@ -315,6 +314,7 @@ async function sendWelcomeNotification(witness: {
 // Helper function: Log witness milestones
 async function logWitnessMilestone(witnessNumber: number, address: string) {
   try {
+    const supabase = await getSupabase();
     console.log(`[COVENANT MILESTONE] Witness #${witnessNumber} registered: ${address}`);
     
     // Log to covenant events table
@@ -345,6 +345,7 @@ async function logWitnessMilestone(witnessNumber: number, address: string) {
 // Helper function - not exported from route file
 async function getWitnessStats() {
   try {
+    const supabase = await getSupabase();
     const { count } = await supabase
       .from('covenant_witnesses')
       .select('*', { count: 'exact' })

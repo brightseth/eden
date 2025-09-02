@@ -1,23 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = "nodejs";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 // Lazy load Supabase to avoid bundling issues
 async function getSupabase() {
   const { createClient } = await import("@/lib/supabase/server");
-  return getSupabase();
+  return createClient();
 }
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
 // Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
 
 // GET /api/miyomi/real-picks - Load picks from database
 export async function GET(request: NextRequest) {
   try {
+    const supabase = await getSupabase();
     const searchParams = request.nextUrl.searchParams;
     const limit = parseInt(searchParams.get('limit') || '20');
     const status = searchParams.get('status'); // PENDING, LIVE, WIN, LOSS
@@ -100,6 +96,7 @@ export async function GET(request: NextRequest) {
 // POST /api/miyomi/real-picks - Save new pick to database
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await getSupabase();
     const body = await request.json();
     console.log('[MIYOMI Real Picks] POST request:', body);
 
@@ -178,6 +175,7 @@ export async function POST(request: NextRequest) {
 // PATCH /api/miyomi/real-picks - Update pick performance
 export async function PATCH(request: NextRequest) {
   try {
+    const supabase = await getSupabase();
     const body = await request.json();
     const { id, status, current_price } = body;
     
@@ -257,6 +255,7 @@ export async function PATCH(request: NextRequest) {
 
 // Helper functions
 async function getTotalCount() {
+  const supabase = await getSupabase();
   const { count } = await supabase
     .from('miyomi_picks')
     .select('*', { count: 'exact', head: true });
@@ -265,6 +264,7 @@ async function getTotalCount() {
 
 
 async function updatePersonalityStats() {
+  const supabase = await getSupabase();
   // Get all performance records
   const { data: performance } = await supabase
     .from('miyomi_performance')

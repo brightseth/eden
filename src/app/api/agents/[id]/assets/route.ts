@@ -1,3 +1,6 @@
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { Asset, AssetKind } from '@/types/content';
 
@@ -47,9 +50,9 @@ async function enqueueCuration(assetId: string) {
 // GET /api/agents/[id]/assets - Fetch agent's assets
 export async function GET(
   request: NextRequest,
-  { params }: any
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
   const searchParams = request.nextUrl.searchParams;
   const state = searchParams.get('state');
   const kind = searchParams.get('kind');
@@ -72,9 +75,9 @@ export async function GET(
 // POST /api/agents/[id]/assets - Upload new assets
 export async function POST(
   request: NextRequest,
-  { params }: any
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
   try {
     const data = await request.json();
     const { files, urls, title, description, tags = [] } = data;
@@ -136,9 +139,9 @@ export async function POST(
 // PATCH /api/agents/[id]/assets/[assetId] - Update asset
 export async function PATCH(
   request: NextRequest,
-  { params }: any
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
   try {
     const segments = request.nextUrl.pathname.split('/');
     const assetId = segments[segments.length - 1];

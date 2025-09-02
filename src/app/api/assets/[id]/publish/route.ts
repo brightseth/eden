@@ -1,3 +1,6 @@
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { Asset, AssetState } from '@/types/content';
 
@@ -22,8 +25,8 @@ const emitEvent = (type: string, payload: any) => {
 // POST /api/assets/[id]/publish - Publish an asset
 export async function POST(
   request: NextRequest,
-  { params }: any) {
-  const { id  } = params;
+  { params }: { params: Promise<{ id: string }> }) {
+  const { id  } = await params;
   
   try {
     const assetStore = getAssetStore();

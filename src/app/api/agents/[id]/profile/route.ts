@@ -1,12 +1,15 @@
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { registryClient } from '@/lib/registry/sdk';
 import { safeStatusFormat } from '@/lib/utils';
 
 export async function GET(
   request: NextRequest,
-  { params }: any) {
+  { params }: { params: Promise<{ id: string }> }) {
   try {
-  const { id: agentId } = params;
+  const { id: agentId } = await params;
 
     // Get agent data from Registry (single source of truth)
     const agent = await registryClient.agents.get(agentId);

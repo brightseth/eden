@@ -1,10 +1,13 @@
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 import { NextResponse } from 'next/server';
 
 // Agent autonomy tracker - measures maturation, not competition
 export async function GET(
   request: Request,
-  { params }: any) {
-  const { id  } = params;
+  { params }: { params: Promise<{ id: string }> }) {
+  const { id  } = await params;
   
   // Mock data - will connect to real metrics later
   const mockAutonomy = generateAutonomyMetrics(id);

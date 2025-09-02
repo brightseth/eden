@@ -44,7 +44,7 @@ export interface Creation {
 
 // Save a curation result from Nina
 export async function saveCuration(curation: Curation) {
-  const supabase = createClient();
+  const supabase = await createClient();
   
   const { data, error } = await supabase
     .from('curations')
@@ -75,7 +75,7 @@ export async function saveCuration(curation: Curation) {
 
 // Publish a curation to creations
 export async function publishCuration(curationId: string, title: string) {
-  const supabase = createClient();
+  const supabase = await createClient();
   
   // Get the curation
   const { data: curation, error: fetchError } = await supabase
@@ -121,7 +121,7 @@ export async function publishCuration(curationId: string, title: string) {
 
 // Get recent curations for an agent
 export async function getRecentCurations(agentName: string, limit = 10) {
-  const supabase = createClient();
+  const supabase = await createClient();
   
   const { data, error } = await supabase
     .from('curations')
@@ -140,7 +140,7 @@ export async function getRecentCurations(agentName: string, limit = 10) {
 
 // Get agent creations
 export async function getAgentCreations(agentName: string) {
-  const supabase = createClient();
+  const supabase = await createClient();
   
   const { data, error } = await supabase
     .from('creations')
@@ -159,7 +159,7 @@ export async function getAgentCreations(agentName: string) {
 
 // Get curation stats for an agent
 export async function getCurationStats(agentName: string) {
-  const supabase = createClient();
+  const supabase = await createClient();
   
   const { data, error } = await supabase
     .from('curations')
