@@ -1,0 +1,43 @@
+name: No Public Storage URLs
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-public-urls:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Check for public storage URLs
+      run: |
+        echo "🔍 Checking for forbidden public storage URLs..."
+        
+        # Search for any public storage URLs
+        if grep -r --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+           -E "storage/v1/object/public" ./src; then
+          echo "❌ ERROR: Found public storage URLs in codebase!"
+          echo "Registry-first architecture violation detected."
+          echo "All storage access must go through Registry signed URLs."
+          exit 1
+        fi
+        
+        echo "✅ No public storage URLs found"
+        
+    - name: Check for Supabase direct access
+      run: |
+        echo "🔍 Checking for direct Supabase access..."
+        
+        # Look for direct Supabase storage URLs
+        if grep -r --include="*.ts" --include="*.tsx" \
+           -E "ctlygyrkibupejllgglr\.supabase\.co" ./src; then
+          echo "❌ ERROR: Found direct Supabase URLs!"
+          echo "Use Registry API for all storage access."
+          exit 1
+        fi
+        
+        echo "✅ No direct Supabase access found"
