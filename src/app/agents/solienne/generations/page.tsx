@@ -119,11 +119,17 @@ export default function SOLIENNEGenerationsPage() {
         }
       }));
 
-      setStreams(transformedStreams);
+      if (transformedStreams.length === 0) {
+        console.log('No works returned from API, generating placeholder streams');
+        generatePlaceholderStreams();
+      } else {
+        setStreams(transformedStreams);
+      }
     } catch (error) {
       console.error('Failed to load consciousness streams:', error);
-      // Show error state instead of placeholder
-      setStreams([]);
+      // Graceful degradation: show placeholder streams instead of empty state
+      console.log('Using placeholder streams due to API failure');
+      generatePlaceholderStreams();
     } finally {
       setLoading(false);
     }

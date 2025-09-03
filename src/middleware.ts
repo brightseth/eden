@@ -143,9 +143,9 @@ export async function middleware(request: NextRequest) {
     '/academy/abraham/covenant': '/agents/abraham',
     '/academy/abraham/early-works': '/agents/abraham',
     '/academy/abraham/drops': '/agents/abraham',
-    '/academy/solienne/generations': '/agents/solienne',
-    '/academy/solienne/paris-photo': '/agents/solienne',
-    '/academy/solienne/practice': '/agents/solienne',
+    '/academy/solienne/generations': '/agents/solienne/generations',
+    '/academy/solienne/paris-photo': '/agents/solienne/paris-photo',
+    '/academy/solienne/practice': '/sites/solienne',
     '/academy/solienne/drops': '/agents/solienne'
   };
 
