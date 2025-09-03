@@ -142,8 +142,13 @@ export function AgentCard({ agent, variant, showOnchainBadges = true }: AgentCar
 
   // Developing agents - medium cards
   if (variant === 'developing') {
+    const href = agent?.hasProfile ? `/agents/${agent?.id}` : '#';
+    
     return (
-      <div className="border border-white p-6">
+      <Link 
+        href={href}
+        className="border border-white p-6 hover:bg-white hover:text-black transition-all block group"
+      >
         <div className="flex justify-between items-start mb-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
@@ -152,13 +157,13 @@ export function AgentCard({ agent, variant, showOnchainBadges = true }: AgentCar
             </div>
             <p className="text-xs mb-2">{agent.date || 'Q1 2026'}</p>
           </div>
-          <span className="text-xs bg-black text-white border border-white px-2 py-1">
+          <span className="text-xs bg-black text-white border border-white px-2 py-1 group-hover:bg-black group-hover:text-white">
             IN DEVELOPMENT
           </span>
         </div>
         <p className="text-xs opacity-75 mb-2">{agent.trainer}</p>
         <TokenInfo />
-      </div>
+      </Link>
     );
   }
 
