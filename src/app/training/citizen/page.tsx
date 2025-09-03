@@ -97,9 +97,9 @@ export default function CitizenTrainingPage() {
   };
 
   const fetchSyncStatus = async () => {
+    if (typeof window === 'undefined') return; // Skip during SSR/build
     try {
-      const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-      const response = await fetch(`${baseUrl}/api/agents/citizen/sync`);
+      const response = await fetch(`/api/agents/citizen/sync`);
       const data = await response.json();
       setSyncStatus(data);
     } catch (error) {
@@ -108,10 +108,10 @@ export default function CitizenTrainingPage() {
   };
 
   const performSync = async () => {
+    if (typeof window === 'undefined') return; // Skip during SSR/build
     setIsSyncing(true);
     try {
-      const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-      const response = await fetch(`${baseUrl}/api/agents/citizen/sync`, {
+      const response = await fetch(`/api/agents/citizen/sync`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ force: true })
