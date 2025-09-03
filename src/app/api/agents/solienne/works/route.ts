@@ -1,74 +1,54 @@
-// Academy → Registry Pure Proxy
-// No fallbacks, no direct storage access
+import { NextResponse } from 'next/server';
 
-import { NextResponse } from "next/server";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
-// Configuration for works-registry endpoint
-// In production: set WORKS_REGISTRY_URL in environment
-const REGISTRY_BASE = process.env.WORKS_REGISTRY_URL || "http://localhost:3005";
+const BASE = process.env.WORKS_REGISTRY_URL;
+const BYPASS = process.env.WORKS_REGISTRY_BYPASS;
 
-// Hop-by-hop headers to strip
-const HOP_BY_HOP_HEADERS = [
-  'transfer-encoding',
-  'connection', 
-  'keep-alive',
-  'upgrade',
-  'proxy-authenticate',
-  'proxy-authorization',
-  'te',
-  'trailer'
-];
+const HOP = new Set(['connection','keep-alive','proxy-authenticate','proxy-authorization','te','trailer','transfer-encoding','upgrade']);
 
 export async function GET(req: Request) {
+  if (!BASE) {
+    return NextResponse.json({ error: 'WORKS_REGISTRY_URL not set' }, { status: 500 });
+  }
+
+  const u = new URL(req.url);
+  const target = `${BASE}/api/v1/agents/solienne/works${u.search}`;
+  const ac = new AbortController();
+  const t = setTimeout(() => ac.abort(), 7000);
+
   try {
-    // Build Registry URL with proper path
-    const src = new URL(req.url);
-    const registryUrl = `${REGISTRY_BASE}/api/v1/agents/solienne/works${src.search}`;
-    
-    // Build request headers with optional bypass token
-    const requestHeaders: Record<string, string> = { 
+    const headers: Record<string, string> = { 
+      'accept': 'application/json',
       'x-academy': 'eden',
       'x-forwarded-for': req.headers.get('x-forwarded-for') || 'unknown'
     };
     
-    // Add bypass token if configured (for Vercel protection)
-    if (process.env.WORKS_REGISTRY_BYPASS) {
-      requestHeaders['x-vercel-protection-bypass'] = process.env.WORKS_REGISTRY_BYPASS;
+    if (BYPASS) {
+      headers['x-vercel-protection-bypass'] = BYPASS;
     }
-    
-    // Forward to Registry with academy identifier
-    const response = await fetch(registryUrl, {
-      headers: requestHeaders,
-      cache: 'no-store'
+
+    const r = await fetch(target, {
+      headers,
+      cache: 'no-store',
+      signal: ac.signal
     });
-
-    // Handle errors
-    if (!response.ok) {
-      console.error(`Registry error: ${response.status} for ${registryUrl}`);
-      return NextResponse.json(
-        { error: 'Registry unavailable', status: response.status },
-        { status: response.status }
-      );
+    
+    const h = new Headers(r.headers);
+    for (const k of Array.from(h.keys())) {
+      if (HOP.has(k.toLowerCase())) h.delete(k);
     }
-
-    // Strip hop-by-hop headers
-    const responseHeaders = new Headers(response.headers);
-    HOP_BY_HOP_HEADERS.forEach(h => responseHeaders.delete(h));
     
     // Add cache control
-    responseHeaders.set('cache-control', 'public, max-age=60, stale-while-revalidate=300');
+    h.set('cache-control', 'public, max-age=60, stale-while-revalidate=300');
     
-    // Return proxied response
-    return new Response(response.body, {
-      status: response.status,
-      headers: responseHeaders
-    });
-    
-  } catch (error) {
-    console.error('[SOLIENNE Works Proxy] Fatal error:', error);
-    return NextResponse.json(
-      { error: 'Proxy error', message: error instanceof Error ? error.message : 'Unknown' },
-      { status: 500 }
-    );
+    return new NextResponse(r.body, { status: r.status, headers: h });
+  } catch (e: any) {
+    const reason = e.name === 'AbortError' ? 'timeout' : String(e);
+    console.error(`[SOLIENNE Works Proxy] Failed: ${reason} for ${target}`);
+    return NextResponse.json({ error: 'proxy_failed', reason, target }, { status: 502 });
+  } finally {
+    clearTimeout(t);
   }
 }
