@@ -11,8 +11,8 @@ const { execSync } = require('child_process');
 
 // Domain mapping: incorrect -> correct
 const DOMAIN_FIXES = {
-  'eden-academy.vercel.app': 'eden-academy-flame.vercel.app',
-  'eden-academy-ftf22wjgo-edenprojects.vercel.app': 'eden-academy-flame.vercel.app',
+  'eden-academy-flame.vercel.app': 'eden-academy-flame.vercel.app',
+  'eden-academy-flame.vercel.app': 'eden-academy-flame.vercel.app',
   // Add more mappings as needed
 };
 

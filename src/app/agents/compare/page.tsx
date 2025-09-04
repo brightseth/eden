@@ -129,7 +129,7 @@ export default function AgentComparisonPage() {
                   <td className="p-4 text-xs uppercase tracking-wider text-gray-400">TRAINER</td>
                   {compareAgents.map(agent => (
                     <td key={agent.id} className="p-4 text-sm font-bold uppercase">
-                      {agent.trainer.name}
+                      {agent.trainer || 'TBA'}
                     </td>
                   ))}
                 </tr>

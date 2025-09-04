@@ -14,7 +14,7 @@ const REGISTRY_ENDPOINTS = [
 ];
 
 const EDEN_SERVICES = [
-  'https://eden-academy.vercel.app',
+  'https://eden-academy-flame.vercel.app',
   'https://design-critic-agent.vercel.app',
   'https://amanda-art-agent.vercel.app',
   'https://abraham.ai',

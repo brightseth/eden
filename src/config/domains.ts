@@ -65,8 +65,8 @@ export const validateDomain = (url: string): boolean => {
  * These are incorrect domain references that should be replaced
  */
 export const DEPRECATED_DOMAINS = [
-  'eden-academy.vercel.app',
-  'eden-academy-ftf22wjgo-edenprojects.vercel.app',
+  'eden-academy-flame.vercel.app',
+  'eden-academy-flame.vercel.app',
   // Add other incorrect variations as they're discovered
 ] as const;
 

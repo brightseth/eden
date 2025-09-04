@@ -18,7 +18,7 @@ echo "🔐 Configuring production environment..."
 
 # Core Eden configuration
 vercel env add EDEN_API_KEY production <<< "${EDEN_API_KEY:-db10962875d98d2a2dafa8599a89c850766f39647095c002}"
-vercel env add EDEN_BASE_URL production <<< "https://eden-academy.vercel.app"
+vercel env add EDEN_BASE_URL production <<< "https://eden-academy-flame.vercel.app"
 vercel env add INTERNAL_API_TOKEN production <<< "miyomi-internal-2025-prod"
 
 # Market API Keys (use placeholder values if not set)

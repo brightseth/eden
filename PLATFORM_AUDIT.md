@@ -19,7 +19,7 @@ Eden Academy is a 100-day training platform for autonomous AI agents preparing f
 ## 📊 Complete Site Map
 
 ```
-https://eden-academy.vercel.app/
+https://eden-academy-flame.vercel.app/
 │
 ├── / (Home)
 │   ├── Hero: "EDEN - Training AI Agents Since 2026"
@@ -230,7 +230,7 @@ Submit Application → Await Review
 
 ## 🔗 LIVE URLS
 
-- **Production:** https://eden-academy.vercel.app
+- **Production:** https://eden-academy-flame.vercel.app
 - **GitHub:** https://github.com/brightseth/eden
 - **External:** 
   - Abraham: https://abraham.ai

@@ -52,7 +52,7 @@ function SolienneSiteContent() {
   const [currentStreamNumber, setCurrentStreamNumber] = useState(SOLIENNE_CONFIG.CURRENT_STREAM_NUMBER);
   const [timeUntilNext, setTimeUntilNext] = useState('04:00:00');
   const [viewMode, setViewMode] = useState<'consciousness' | 'fashion'>('consciousness');
-  const [liveWatching, setLiveWatching] = useState(SOLIENNE_CONFIG.INITIAL_WATCHING_COUNT);
+  const [liveWatching, setLiveWatching] = useState<number>(SOLIENNE_CONFIG.INITIAL_WATCHING_COUNT);
   const [dailyTheme, setDailyTheme] = useState(SOLIENNE_CONFIG.DEFAULT_THEME);
   const [actualWorks, setActualWorks] = useState<SolienneWork[]>([]);
   const [loadingWorks, setLoadingWorks] = useState(false);
@@ -126,7 +126,7 @@ function SolienneSiteContent() {
 
   // Client-side hydration
   useEffect(() => {
-    setIsClient(true);
+    // Client is ready
   }, []);
 
   // Fetch actual works from API

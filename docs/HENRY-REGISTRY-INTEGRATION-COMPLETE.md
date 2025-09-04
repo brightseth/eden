@@ -262,7 +262,7 @@ if (useRegistry) {
 
 ### Production URLs (Eden Academy)
 ```
-Production: https://eden-academy.vercel.app
+Production: https://eden-academy-flame.vercel.app
 ├── /apply → Application form ready for Henry's Registry
 ├── /sites/abraham → Registry-powered Abraham site  
 ├── /sites/solienne → Registry-powered Solienne site

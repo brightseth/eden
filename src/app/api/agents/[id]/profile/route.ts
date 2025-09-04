@@ -71,7 +71,7 @@ export async function GET(
         socials: {}, // Not stored in Registry yet  
         heroUrl: null, // Not stored in Registry yet
         avatarUrl: null, // Not stored in Registry yet
-        prototypeLinks: agent.profile?.prototypeLinks?.filter(link => link.status === 'active') || []
+        prototypeLinks: []
       },
       highlights: recentCreations?.map((creation, index) => ({
         id: creation.id,

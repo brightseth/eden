@@ -36,7 +36,7 @@ export default function GeppettoStudioSite() {
   const [rotatingModel, setRotatingModel] = useState(true);
 
   // Mock product concepts
-  const productConcepts: ProductConcept[] = [
+  const productConcepts: any[] = [
     {
       id: 'adaptive-lamp',
       name: 'Adaptive Light Sculpture',

@@ -6,7 +6,7 @@ import {
   Settings, Package, Hammer, Cpu, Target, Sliders, 
   Calendar, Download, RefreshCw, Lock, Unlock,
   AlertCircle, CheckCircle, XCircle, Sparkles, Play, Eye,
-  Users, BarChart3, Layers, Zap, Palette, Box
+  Users, BarChart3, Layers, Zap, Palette, Box, Activity
 } from 'lucide-react';
 
 interface DesignRequest {

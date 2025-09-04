@@ -90,7 +90,7 @@ const defaultSecurityConfig: SecurityConfig = {
   cors: {
     enabled: true,
     origins: [
-      'https://eden-academy.vercel.app',
+      'https://eden-academy-flame.vercel.app',
       'https://eden.art',
       'https://app.eden.art',
       'https://registry.eden.art',

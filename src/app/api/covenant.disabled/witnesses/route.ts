@@ -334,7 +334,7 @@ async function logWitnessMilestone(witnessNumber: number, address: string) {
 }
 
 // Helper function: Get witness statistics
-export async function getWitnessStats() {
+async function getWitnessStats() {
   try {
     const { count } = await supabase
       .from('covenant_witnesses')

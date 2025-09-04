@@ -163,7 +163,10 @@ export async function middleware(request: NextRequest) {
         !pathname.includes('/registry-works') &&
         !pathname.includes('/chat') &&
         !pathname.includes('/status') &&
-        !pathname.includes('/training')) {
+        !pathname.includes('/training') &&
+        !pathname.includes('/eden-creations') &&
+        !pathname.includes('/curate') &&
+        !pathname.includes('/documents')) {
       // Redirect /api/agents/abraham -> /agents/abraham
       return NextResponse.redirect(new URL(`/agents/${agentName}`, request.url), 301);
     }

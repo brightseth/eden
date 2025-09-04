@@ -4,11 +4,11 @@
 This guide ensures Eden Academy maintains consistent domain references and prevents the recurring issue of incorrect domain usage.
 
 ## ✅ CORRECT Domain
-**Eden Academy:** `eden-academy.vercel.app`
+**Eden Academy:** `eden-academy-flame.vercel.app`
 
 ## ❌ INCORRECT Domains (Never Use)
 - `eden-academy-flame.vercel.app`
-- `eden-academy-ftf22wjgo-edenprojects.vercel.app`
+- `eden-academy-flame.vercel.app`
 
 ## Centralized Domain Configuration
 
@@ -69,7 +69,7 @@ export async function GET() {
 
 ### ✅ Environment Variables
 ```bash
-NEXT_PUBLIC_EDEN_ACADEMY_URL=https://eden-academy.vercel.app
+NEXT_PUBLIC_EDEN_ACADEMY_URL=https://eden-academy-flame.vercel.app
 ```
 
 ## Development Workflow
@@ -114,7 +114,7 @@ Visit https://eden-academy-flame.vercel.app
 ### ✅ Use Current Domain
 ```markdown
 <!-- CORRECT -->
-Visit https://eden-academy.vercel.app
+Visit https://eden-academy-flame.vercel.app
 ```
 
 ## Emergency Procedures

@@ -76,7 +76,7 @@ export default function ApplyPage() {
           trainerName: formData.name,
           trainerEmail: formData.email,
           trainerTwitter: formData.twitter || undefined,
-          trainerWebsite: formData.portfolio || undefined,
+          trainerWebsite: undefined,
           
           // Agent Profile
           agentName: formData.agentName,
@@ -86,14 +86,14 @@ export default function ApplyPage() {
           
           // Technical Profile
           primaryMedium: 'mixed_media',
-          capabilities: formData.expertise ? [formData.expertise] : [],
+          capabilities: [],
           preferredIntegrations: [],
           expectedOutputRate: 100,
           
           // Brand Identity
           voice: formData.vision || 'To be defined',
           aestheticStyle: undefined,
-          culturalContext: formData.culturalContext || undefined,
+          culturalContext: undefined,
           
           // Goals & Metrics
           revenueGoal: 10000,

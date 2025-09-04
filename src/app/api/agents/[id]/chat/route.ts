@@ -261,7 +261,7 @@ async function generateCitizenResponse(message: string, context: any[]): Promise
 
 async function generateMiyomiResponse(message: string, context: any[]): Promise<string> {
   try {
-    const sdk = new MiyomiClaudeSDK();
+    const sdk = new MiyomiClaudeSDK(process.env.ANTHROPIC_API_KEY || '');
     return await sdk.chat(message, context);
   } catch (error) {
     console.error('Miyomi SDK chat error:', error);

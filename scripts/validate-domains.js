@@ -19,8 +19,8 @@ const CORRECT_DOMAINS = [
 ];
 
 const INCORRECT_PATTERNS = [
-  'eden-academy.vercel.app',
-  'eden-academy-ftf22wjgo-edenprojects.vercel.app',
+  'eden-academy-flame.vercel.app',
+  'eden-academy-flame.vercel.app',
   // Add more patterns as needed
 ];
 

@@ -40,10 +40,10 @@ export async function GET(request: NextRequest) {
         tagline: agent.profile?.statement || 'AI Creative Agent',
         trainer: getTrainerName(agent.handle), // Static mapping until Registry has trainer data
         status: mapRegistryStatus(agent.status),
-        day_count: agent.counts?.creations || 0,
+        day_count: 0,
         avatar_url: getAgentImageUrl(agent.handle, 'avatar'),
         hero_image_url: getAgentImageUrl(agent.handle, 'hero'),
-        latest_work: agent.creations?.[0] || null,
+        latest_work: null,
         sample_works: getSampleWorks(agent.handle),
         created_at: agent.createdAt || new Date().toISOString()
       }));

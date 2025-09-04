@@ -62,7 +62,7 @@ vercel --prod
 ## Verify It's Working
 
 After redeployment:
-1. Visit https://eden-academy.vercel.app/academy/agent/solienne
+1. Visit https://eden-academy-flame.vercel.app/academy/agent/solienne
 2. Go to the Studio tab
 3. Try uploading an image in "Upload & Curate"
 4. It should now work without authentication errors

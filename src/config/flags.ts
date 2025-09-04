@@ -180,6 +180,15 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
     rolloutStrategy: 'beta',
     culturalImpact: 'Provides live demo of BERTHA collection analysis capabilities for trainers',
     rollbackPlan: 'Disable flag, return 404 for /bertha-demo, redirect to main agent page'
+  },
+
+  ENABLE_EDEN_API_INTEGRATION: {
+    key: 'ENABLE_EDEN_API_INTEGRATION',
+    description: 'Enable Eden.art API integration for fetching agent creations',
+    defaultValue: process.env.ENABLE_EDEN_API_INTEGRATION === 'true' || process.env.NODE_ENV === 'development',
+    rolloutStrategy: 'beta',
+    culturalImpact: 'SOLIENNE profile displays real creations from Eden.art platform',
+    rollbackPlan: 'Disable flag, fallback to Academy-only works display'
   }
 };
 
@@ -291,4 +300,5 @@ export const FLAGS = {
   ENABLE_AGENT_PROTOTYPE_LINKS: 'ENABLE_AGENT_PROTOTYPE_LINKS',
   ENABLE_AGENT_BETA_SECTION: 'ENABLE_AGENT_BETA_SECTION',
   ENABLE_BERTHA_DEMO: 'ENABLE_BERTHA_DEMO',
+  ENABLE_EDEN_API_INTEGRATION: 'ENABLE_EDEN_API_INTEGRATION',
 } as const;

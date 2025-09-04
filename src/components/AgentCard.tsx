@@ -52,16 +52,16 @@ export function AgentCard({ agent, variant, showOnchainBadges = true }: AgentCar
         console.log(`[AgentCard] Fetching onchain status for ${agent.id}...`);
         
         const cohortData = await spiritClient.getGenesisCohort();
-        const agentOnchain = cohortData.agents.find(a => 
+        const agentOnchain = cohortData.agents.find((a: any) => 
           a.handle?.toLowerCase() === agent.id.toLowerCase()
         );
         
         if (agentOnchain) {
           setOnchainStatus({
-            isDeployed: !!agentOnchain.tokenAddress,
-            tokenAddress: agentOnchain.tokenAddress,
-            deploymentDate: agentOnchain.deploymentDate,
-            verificationStatus: agentOnchain.tokenAddress ? 'verified' : 'unverified',
+            isDeployed: !!(agentOnchain as any).tokenAddress,
+            tokenAddress: (agentOnchain as any).tokenAddress,
+            deploymentDate: (agentOnchain as any).deploymentDate,
+            verificationStatus: (agentOnchain as any).tokenAddress ? 'verified' : 'unverified',
             lastSyncAt: new Date().toISOString()
           });
         }

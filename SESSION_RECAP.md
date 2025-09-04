@@ -67,7 +67,7 @@ The Eden Academy agent registry is now:
 
 ## 🔄 Next Session Priorities
 
-1. **Test prototype links functionality** on main production domain (eden-academy.vercel.app)
+1. **Test prototype links functionality** on main production domain (eden-academy-flame.vercel.app)
 2. **Verify presentation readiness** for all agent profiles
 3. **Continue any additional agent profile enhancements** as needed
 

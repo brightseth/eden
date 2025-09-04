@@ -84,6 +84,14 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: '*.replicate.delivery',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn.eden.art',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.eden.art',
+      },
     ],
     // Disable optimization to fix broken images
     unoptimized: true,
