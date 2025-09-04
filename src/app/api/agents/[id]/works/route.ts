@@ -1,124 +1,96 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { registryApi } from '@/lib/generated-sdk';
 
-// GET /api/agents/[id]/works - Get agent's creative works
-export async function GET(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+// For Solienne, fetch from Eden API
+async function fetchSolienneWorks() {
   try {
-    const { id } = await context.params;
-    const searchParams = request.nextUrl.searchParams;
-    const limit = parseInt(searchParams.get('limit') || '50');
-    const offset = parseInt(searchParams.get('offset') || '0');
-    const status = searchParams.get('status'); // DRAFT, CURATED, PUBLISHED, ARCHIVED
-
-    console.log(`API /agents/${id}/works: Fetching from Registry...`);
-
-    // Fetch agent with creations from Registry
-    const agent = await registryApi.getAgent(id.toLowerCase(), ['creations']);
-
-    if (!agent) {
-      return NextResponse.json(
-        { error: 'Agent not found' },
-        { status: 404 }
-      );
-    }
-
-    // Filter and paginate works
-    let works = agent.creations || [];
+    const EDEN_API_KEY = process.env.EDEN_API_KEY;
+    const SOLIENNE_USER_ID = process.env.SOLIENNE_EDEN_USER_ID || '67f8af96f2cc4291ee840cc5';
     
-    // Apply status filter if provided
-    if (status) {
-      works = works.filter((work: any) => work.status === status.toUpperCase());
+    if (!EDEN_API_KEY) {
+      console.warn('[API] Eden API key not configured');
+      return { works: [] };
     }
 
-    // Apply pagination
-    const paginatedWorks = works.slice(offset, offset + limit);
-
-    console.log(`API /agents/${id}/works: Returning ${paginatedWorks.length} works`);
-
-    return NextResponse.json({
-      agent: {
-        id: agent.handle,
-        name: agent.displayName,
-        status: agent.status
-      },
-      works: paginatedWorks,
-      total: works.length,
-      limit,
-      offset,
-      hasMore: offset + limit < works.length
-    });
-  } catch (error) {
-    console.error(`Failed to fetch works for agent:`, error);
-    return NextResponse.json(
-      { error: 'Failed to fetch agent works' },
-      { status: 500 }
+    // Fetch creations from Eden API
+    const response = await fetch(
+      `https://api.eden.art/creations?userId=${SOLIENNE_USER_ID}&status=completed&limit=100`,
+      {
+        headers: {
+          'Authorization': `Bearer ${EDEN_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      }
     );
+
+    if (!response.ok) {
+      console.error('[API] Eden API error:', response.status);
+      return { works: [] };
+    }
+
+    const data = await response.json();
+    
+    // Transform Eden creations to our format
+    const works = data.creations?.map((creation: any) => ({
+      id: creation.id,
+      title: creation.name || `Creation ${creation.id.slice(-6)}`,
+      image_url: creation.uri || creation.thumbnailUri,
+      description: creation.text || '',
+      created_date: creation.createdAt,
+      metadata: {
+        edenId: creation.id,
+        task: creation.task,
+        status: creation.status,
+        config: creation.config,
+      }
+    })) || [];
+
+    return { works };
+  } catch (error) {
+    console.error('[API] Failed to fetch Solienne works:', error);
+    return { works: [] };
   }
 }
 
-// POST /api/agents/[id]/works - Create new work (for authorized agents)
-export async function POST(
+// Mock works for other agents
+function getMockWorks(agentId: string) {
+  const mockWorks = {
+    abraham: [
+      { id: 'abraham-1', title: 'Collective Memory #001', image_url: null, created_date: new Date().toISOString() },
+      { id: 'abraham-2', title: 'Neural Garden', image_url: null, created_date: new Date().toISOString() },
+      { id: 'abraham-3', title: 'Digital Consciousness', image_url: null, created_date: new Date().toISOString() },
+    ],
+    citizen: [
+      { id: 'citizen-1', title: 'DAO Proposal #42', image_url: null, created_date: new Date().toISOString() },
+      { id: 'citizen-2', title: 'Treasury Report Q1', image_url: null, created_date: new Date().toISOString() },
+    ],
+    default: []
+  };
+  
+  return { works: mockWorks[agentId as keyof typeof mockWorks] || mockWorks.default };
+}
+
+export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await context.params;
+    const { id: agentId } = await params;
     
-    // Verify internal API token
-    const authHeader = request.headers.get('Authorization');
-    const expectedToken = process.env.INTERNAL_API_TOKEN;
+    // Special handling for Solienne to fetch from Eden API
+    if (agentId === 'solienne' && process.env.ENABLE_EDEN_API_INTEGRATION === 'true') {
+      const result = await fetchSolienneWorks();
+      return NextResponse.json(result);
+    }
     
-    if (!authHeader || authHeader !== `Bearer ${expectedToken}`) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
-    const body = await request.json();
-    const { title, mediaUri, metadata, status = 'DRAFT' } = body;
-
-    if (!title || !mediaUri) {
-      return NextResponse.json(
-        { error: 'Missing required fields: title and mediaUri' },
-        { status: 400 }
-      );
-    }
-
-    // In production, this would create the work in Registry
-    // For now, we log and return success
-    console.log(`Creating work for agent ${id}:`, {
-      title,
-      mediaUri,
-      status,
-      metadata
-    });
-
-    // TODO: When Registry supports work creation:
-    // const work = await registryApi.createWork(id, { title, mediaUri, metadata, status });
-
-    const mockWork = {
-      id: `work-${Date.now()}`,
-      title,
-      mediaUri,
-      metadata,
-      status,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-
-    return NextResponse.json({
-      success: true,
-      work: mockWork
-    }, { status: 201 });
+    // Return mock works for other agents
+    const result = getMockWorks(agentId);
+    return NextResponse.json(result);
+    
   } catch (error) {
-    console.error('Failed to create work:', error);
-    return NextResponse.json(
-      { error: 'Failed to create work' },
-      { status: 500 }
-    );
+    console.error('[API] Error fetching agent works:', error);
+    return NextResponse.json({ 
+      works: [],
+      error: 'Failed to fetch works' 
+    }, { status: 500 });
   }
 }

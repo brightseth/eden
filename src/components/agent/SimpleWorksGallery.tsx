@@ -108,11 +108,18 @@ export default function SimpleWorksGallery({ agentSlug, works, agentName }: Simp
             onClick={() => setSelectedWork(work)}
           >
             {/* Work Image/Placeholder */}
-            <div className="aspect-square bg-gray-900 flex items-center justify-center border-b border-gray-600 group-hover:border-white transition-all">
+            <div className="aspect-square bg-gray-900 flex items-center justify-center border-b border-gray-600 group-hover:border-white transition-all relative overflow-hidden">
               {work.imageUrl ? (
-                <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                  <span className="text-xs text-gray-400">IMAGE PLACEHOLDER</span>
-                </div>
+                <img
+                  src={work.imageUrl}
+                  alt={work.title}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    target.parentElement?.classList.add('image-error');
+                  }}
+                />
               ) : (
                 <div className="text-center">
                   <div className="text-xs text-gray-400 mb-2">{agentName}</div>
