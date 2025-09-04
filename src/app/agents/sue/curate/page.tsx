@@ -54,12 +54,10 @@ export default function SUECuratorialInterface() {
           const abrahamData = await abrahamResponse.json();
           const abrahamWorks = abrahamData.works?.map((w: any) => ({
             id: w.id,
-            title: w.title || `Abraham Work #${w.archive_number}`,
-            imageUrl: w.image_url?.startsWith('/api/proxy-image') 
-              ? w.image_url 
-              : `/api/proxy-image?url=${encodeURIComponent(w.image_url || '')}`,
+            title: w.title || `Abraham Work #${w.id}`,
+            imageUrl: w.image_url || '',
             agent: 'abraham',
-            createdAt: w.created_date,
+            createdAt: w.created_date || new Date().toISOString(),
             description: w.description
           })) || [];
           works.push(...abrahamWorks);
@@ -68,15 +66,15 @@ export default function SUECuratorialInterface() {
 
       // Fetch Solienne works if selected
       if (selectedAgent === 'all' || selectedAgent === 'solienne') {
-        const solienneResponse = await fetch('/api/agents/solienne/works-fast?limit=20');
+        const solienneResponse = await fetch('/api/agents/solienne/works?limit=20');
         if (solienneResponse.ok) {
           const solienneData = await solienneResponse.json();
-          const solienneWorks = solienneData.items?.map((w: any) => ({
+          const solienneWorks = solienneData.works?.map((w: any) => ({
             id: w.id,
             title: w.title || `Solienne Stream #${w.id}`,
-            imageUrl: `/api/proxy-image?url=${encodeURIComponent(w.signed_url || w.image_url || '')}`,
+            imageUrl: w.image_url || '',
             agent: 'solienne',
-            createdAt: w.created_at,
+            createdAt: w.created_date || w.created_at || new Date().toISOString(),
             description: w.description
           })) || [];
           works.push(...solienneWorks);
@@ -186,13 +184,13 @@ export default function SUECuratorialInterface() {
             </div>
             <div className="flex items-center gap-4">
               <a
-                href="https://api.eden.art"
+                href="https://eden.art"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-4 py-2 border border-gray-600 hover:border-white transition-all"
               >
                 <ExternalLink className="w-4 h-4" />
-                EDEN API
+                EDEN.ART
               </a>
               <a
                 href="https://design-critic-agent.vercel.app/nina-unified.html"

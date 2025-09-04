@@ -11,9 +11,9 @@ async function fetchSolienneWorks() {
       return { works: [] };
     }
 
-    // Fetch creations from Eden API
+    // Fetch creations from Eden API using correct v2/agents endpoint
     const response = await fetch(
-      `https://api.eden.art/creations?userId=${SOLIENNE_USER_ID}&status=completed&limit=100`,
+      `https://api.eden.art/v2/agents/${SOLIENNE_USER_ID}/creations?limit=20`,
       {
         headers: {
           'Authorization': `Bearer ${EDEN_API_KEY}`,
@@ -29,21 +29,24 @@ async function fetchSolienneWorks() {
 
     const data = await response.json();
     
-    // Transform Eden creations to our format
-    const works = data.creations?.map((creation: any) => ({
-      id: creation.id,
-      title: creation.name || `Creation ${creation.id.slice(-6)}`,
-      image_url: creation.uri || creation.thumbnailUri,
-      description: creation.text || '',
-      created_date: creation.createdAt,
+    // Transform Eden creations to our format (Eden API v2 response has docs array)
+    const creations = data.docs || data.creations || [];
+    const works = creations.map((creation: any) => ({
+      id: creation._id || creation.id || creation.taskId,
+      title: creation.name || creation.publicName || creation.concept || `Creation ${creation._id?.slice(-6) || 'Unknown'}`,
+      image_url: creation.url || creation.uri || creation.s3_result || null,
+      description: creation.concept || creation.name || creation.description || '',
+      created_date: creation.createdAt || creation.created_at || new Date().toISOString(),
       metadata: {
-        edenId: creation.id,
-        task: creation.task,
-        status: creation.status,
-        config: creation.config,
+        edenId: creation._id || creation.id,
+        task: creation.tool || creation.generator || creation.task,
+        status: creation.status || 'completed',
+        config: creation.task?.args || creation.attributes || creation.config || {},
+        mediaType: creation.mediaAttributes?.mimeType,
       }
-    })) || [];
+    }));
 
+    console.log(`[API] Successfully fetched ${works.length} works from Eden API`);
     return { works };
   } catch (error) {
     console.error('[API] Failed to fetch Solienne works:', error);
