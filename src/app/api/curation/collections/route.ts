@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { FEATURE_FLAGS } from '@/config/flags';
+import { FEATURE_FLAGS } from '../../../../config/flags';
 import { CreateCollectionSchema, CollectionSchema } from '@/lib/types/curation';
 
 // Mock data for MVP - replace with database operations

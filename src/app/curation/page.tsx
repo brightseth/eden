@@ -7,7 +7,7 @@ import {
   Plus, Folder, BarChart3, Zap, Users, Brain,
   ArrowRight, CheckCircle, XCircle, AlertCircle, Star, ExternalLink
 } from 'lucide-react';
-import { FEATURE_FLAGS } from '@/../../config/flags';
+import { FEATURE_FLAGS } from '../../../config/flags';
 import { Work, Collection, CurationResult, CuratorAgent, SessionType } from '@/lib/types/curation';
 
 interface CurationSession {
@@ -40,6 +40,7 @@ export default function UnifiedCurationDashboard() {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [selectedWorks, setSelectedWorks] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedAgent, setSelectedAgent] = useState<'all' | 'abraham' | 'solienne'>('all');
   const [selectedCurator, setSelectedCurator] = useState<CuratorAgent>('sue');
@@ -55,52 +56,83 @@ export default function UnifiedCurationDashboard() {
 
   const fetchEdenWorks = async () => {
     setLoading(true);
+    setError(null);
+    
     try {
       const works: Work[] = [];
+      const fetchPromises: Promise<any>[] = [];
       
       // Fetch Abraham works if selected
       if (selectedAgent === 'all' || selectedAgent === 'abraham') {
-        const abrahamResponse = await fetch('/api/agents/abraham/works?limit=20');
-        if (abrahamResponse.ok) {
-          const abrahamData = await abrahamResponse.json();
-          const abrahamWorks = abrahamData.works?.map((w: any) => ({
-            id: w.id,
-            externalId: w.id,
-            title: w.title || `Abraham Work #${w.id}`,
-            imageUrl: w.image_url || '/api/placeholder/400/400',
-            agentSource: 'abraham',
-            description: w.description || 'Collective intelligence exploration',
-            createdAt: w.created_date || new Date().toISOString(),
-            updatedAt: w.created_date || new Date().toISOString(),
-          })) || [];
-          works.push(...abrahamWorks);
-        }
+        fetchPromises.push(
+          fetch('/api/agents/abraham/works?limit=20', {
+            headers: { 'Content-Type': 'application/json' }
+          }).then(async (response) => {
+            if (!response.ok) {
+              throw new Error(`Abraham API error: ${response.status}`);
+            }
+            const data = await response.json();
+            return { source: 'abraham', data };
+          }).catch((err) => {
+            console.warn('Abraham works fetch failed:', err);
+            return { source: 'abraham', data: { works: [] } };
+          })
+        );
       }
 
       // Fetch Solienne works if selected
       if (selectedAgent === 'all' || selectedAgent === 'solienne') {
-        const solienneResponse = await fetch('/api/agents/solienne/works?limit=20');
-        if (solienneResponse.ok) {
-          const solienneData = await solienneResponse.json();
-          const solienneWorks = solienneData.works?.map((w: any) => ({
-            id: w.id,
-            externalId: w.id,
-            title: w.title || `Solienne Stream #${w.id}`,
-            imageUrl: w.image_url || '/api/placeholder/400/400',
-            agentSource: 'solienne',
-            description: w.description || 'Consciousness exploration',
-            createdAt: w.created_date || w.created_at || new Date().toISOString(),
-            updatedAt: w.created_date || w.created_at || new Date().toISOString(),
-          })) || [];
-          works.push(...solienneWorks);
-        }
+        fetchPromises.push(
+          fetch('/api/agents/solienne/works?limit=20', {
+            headers: { 'Content-Type': 'application/json' }
+          }).then(async (response) => {
+            if (!response.ok) {
+              throw new Error(`Solienne API error: ${response.status}`);
+            }
+            const data = await response.json();
+            return { source: 'solienne', data };
+          }).catch((err) => {
+            console.warn('Solienne works fetch failed:', err);
+            return { source: 'solienne', data: { works: [] } };
+          })
+        );
       }
+
+      // Wait for all fetches to complete
+      const results = await Promise.allSettled(fetchPromises);
+      
+      results.forEach((result) => {
+        if (result.status === 'fulfilled' && result.value) {
+          const { source, data } = result.value;
+          
+          if (data.works?.length > 0) {
+            const agentWorks = data.works.map((w: any) => ({
+              id: w.id || `${source}-${Date.now()}-${Math.random()}`,
+              externalId: w.id,
+              title: w.title || `${source === 'abraham' ? 'Abraham Work' : 'Solienne Stream'} #${w.id?.slice(-4) || 'New'}`,
+              imageUrl: w.image_url || w.imageUrl || '/api/placeholder/400/400',
+              agentSource: source,
+              description: w.description || `${source === 'abraham' ? 'Collective intelligence exploration' : 'Consciousness exploration'}`,
+              createdAt: w.created_date || w.created_at || w.createdAt || new Date().toISOString(),
+              updatedAt: w.updated_date || w.updated_at || w.updatedAt || new Date().toISOString(),
+            }));
+            works.push(...agentWorks);
+          }
+        }
+      });
 
       // Sort by date, newest first
       works.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
       setWorks(works);
+      
+      // Show success message if no works found
+      if (works.length === 0) {
+        setError('No works found. Try refreshing or check if Eden API endpoints are available.');
+      }
+      
     } catch (error) {
       console.error('Failed to fetch Eden works:', error);
+      setError(`Failed to fetch works: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
@@ -369,6 +401,26 @@ export default function UnifiedCurationDashboard() {
                     </button>
                   )}
                 </div>
+              </div>
+            )}
+
+            {/* Error Display */}
+            {error && (
+              <div className="mb-8 p-4 border border-red-600 bg-red-950/20 text-red-400">
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="w-5 h-5" />
+                  <span className="font-bold">Error</span>
+                </div>
+                <p className="mt-2">{error}</p>
+                <button
+                  onClick={() => {
+                    setError(null);
+                    fetchEdenWorks();
+                  }}
+                  className="mt-3 px-4 py-2 border border-red-400 text-red-400 hover:bg-red-400 hover:text-black transition-all"
+                >
+                  Retry
+                </button>
               </div>
             )}
 

@@ -189,6 +189,51 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
     rolloutStrategy: 'beta',
     culturalImpact: 'SOLIENNE profile displays real creations from Eden.art platform',
     rollbackPlan: 'Disable flag, fallback to Academy-only works display'
+  },
+
+  ART_CURATION_SYSTEM_ENABLED: {
+    key: 'ART_CURATION_SYSTEM_ENABLED',
+    description: 'Enable unified art curation system with AI-powered analysis',
+    defaultValue: process.env.ART_CURATION_SYSTEM_ENABLED === 'true' || process.env.NODE_ENV === 'development',
+    rolloutStrategy: 'beta',
+    culturalImpact: 'SUE and Nina can perform batch curation analysis on Eden works',
+    rollbackPlan: 'Disable flag, fallback to individual SUE curate interface only'
+  },
+
+  BATCH_CURATION_ENABLED: {
+    key: 'BATCH_CURATION_ENABLED',
+    description: 'Enable batch curation analysis for multiple works simultaneously',
+    defaultValue: process.env.BATCH_CURATION_ENABLED !== 'false',
+    rolloutStrategy: 'beta',
+    culturalImpact: 'Curators can analyze multiple works in single sessions',
+    rollbackPlan: 'Disable batch mode, single work analysis only'
+  },
+
+  TOURNAMENT_MODE_ENABLED: {
+    key: 'TOURNAMENT_MODE_ENABLED',
+    description: 'Enable tournament-style head-to-head work comparison',
+    defaultValue: process.env.TOURNAMENT_MODE_ENABLED !== 'false',
+    rolloutStrategy: 'beta',
+    culturalImpact: 'AI curators can run elimination tournaments to find top works',
+    rollbackPlan: 'Disable tournament features, single/batch analysis only'
+  },
+
+  REVERSE_ENGINEERING_ENABLED: {
+    key: 'REVERSE_ENGINEERING_ENABLED',
+    description: 'Enable reverse prompt engineering from analyzed works',
+    defaultValue: process.env.REVERSE_ENGINEERING_ENABLED !== 'false',
+    rolloutStrategy: 'beta',
+    culturalImpact: 'Analysis includes AI prompt suggestions for similar work creation',
+    rollbackPlan: 'Hide reverse engineering sections from curation results'
+  },
+
+  COLLECTION_MANAGEMENT_ENABLED: {
+    key: 'COLLECTION_MANAGEMENT_ENABLED',
+    description: 'Enable curated collection creation and management',
+    defaultValue: process.env.COLLECTION_MANAGEMENT_ENABLED !== 'false',
+    rolloutStrategy: 'beta',
+    culturalImpact: 'Curators can create and manage thematic work collections',
+    rollbackPlan: 'Hide collection features, individual work analysis only'
   }
 };
 
@@ -301,4 +346,9 @@ export const FLAGS = {
   ENABLE_AGENT_BETA_SECTION: 'ENABLE_AGENT_BETA_SECTION',
   ENABLE_BERTHA_DEMO: 'ENABLE_BERTHA_DEMO',
   ENABLE_EDEN_API_INTEGRATION: 'ENABLE_EDEN_API_INTEGRATION',
+  ART_CURATION_SYSTEM_ENABLED: 'ART_CURATION_SYSTEM_ENABLED',
+  BATCH_CURATION_ENABLED: 'BATCH_CURATION_ENABLED',
+  TOURNAMENT_MODE_ENABLED: 'TOURNAMENT_MODE_ENABLED',
+  REVERSE_ENGINEERING_ENABLED: 'REVERSE_ENGINEERING_ENABLED',
+  COLLECTION_MANAGEMENT_ENABLED: 'COLLECTION_MANAGEMENT_ENABLED',
 } as const;

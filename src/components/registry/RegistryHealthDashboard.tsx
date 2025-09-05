@@ -56,7 +56,11 @@ export default function RegistryHealthDashboard() {
       const healthData = await registryGateway.healthCheck()
       setHealth({
         status: healthData.status,
-        circuitBreaker: healthData.circuitBreaker,
+        circuitBreaker: {
+          failures: (healthData.circuitBreaker as any)?.failures || 0,
+          isOpen: (healthData.circuitBreaker as any)?.isOpen || false,
+          lastFailure: (healthData.circuitBreaker as any)?.lastFailure || 0
+        },
         cache: healthData.cache
       })
     } catch (error) {

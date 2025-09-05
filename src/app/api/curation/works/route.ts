@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { FEATURE_FLAGS } from '@/config/flags';
+import { FEATURE_FLAGS } from '../../../../config/flags';
 import { CreateWorkSchema, WorkSchema } from '@/lib/types/curation';
 
 // Mock curated works data - in production this would come from database
@@ -154,12 +154,29 @@ export async function POST(request: NextRequest) {
     // In a real implementation, this would save to database
     const newWork = {
       id: `550e8400-e29b-41d4-a716-${Date.now()}`,
-      ...validatedData,
+      externalId: validatedData.externalId || `ext-${Date.now()}`,
+      title: validatedData.title,
+      description: validatedData.description || 'New work added to curation system',
+      imageUrl: validatedData.imageUrl,
+      agentSource: validatedData.agentSource,
+      // Set default curation values for uncurated works
+      curatorAgent: 'sue',
+      curationScore: 0,
+      curationVerdict: 'MAYBE',
+      curationAnalysis: 'Newly added work pending curation analysis',
+      curationStrengths: [],
+      curationImprovements: [],
+      culturalRelevance: 0,
+      technicalExecution: 0,
+      conceptualDepth: 0,
+      emotionalResonance: 0,
+      innovationIndex: 0,
+      reversePrompt: 'Placeholder reverse engineering prompt - pending analysis',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
-    // Add to mock works for this session
+    // Add to mock works for this session  
     mockCuratedWorks.push(newWork);
 
     return NextResponse.json({
