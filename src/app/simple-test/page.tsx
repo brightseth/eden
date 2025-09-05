@@ -8,7 +8,7 @@ export default function SimpleTest() {
         <h2>Quick Links:</h2>
         <ul>
           <li><a href="/test-proxy-images" style={{ color: 'cyan' }}>Test Proxy Images</a></li>
-          <li><a href="/agents/nina/bot" style={{ color: 'cyan' }}>Nina Bot</a></li>
+          <li><a href="/agents/sue/nina-bot" style={{ color: 'cyan' }}>SUE's Nina Bot Interface</a></li>
           <li><a href="/agents/sue/curate" style={{ color: 'cyan' }}>SUE Curate</a></li>
         </ul>
       </div>

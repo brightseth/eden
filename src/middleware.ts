@@ -197,6 +197,10 @@ export async function middleware(request: NextRequest) {
     '/academy/agent/agent08': '/apply',
     '/academy/agent/agent09': '/apply',
     '/academy/agent/agent10': '/apply',
+    // Redirect old Nina bot paths to SUE's nina-bot interface
+    '/agents/nina/bot': '/agents/sue/nina-bot',
+    '/agents/nina/critique': '/agents/sue/nina-bot',
+    '/agents/nina': '/agents/sue',
     // Redirect old structure to new canonical paths
     '/academy/abraham/covenant': '/agents/abraham',
     '/academy/abraham/early-works': '/agents/abraham',

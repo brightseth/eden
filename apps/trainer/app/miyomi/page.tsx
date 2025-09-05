@@ -312,10 +312,7 @@ export default function MiyomiDashboard() {
 
         {activeTab === 'trading' && (
           <div>
-            <LiveTradingInterface 
-              isSubscribed={true} // For demo purposes
-              onSubscriptionRequired={() => alert('Subscription required for live trading!')}
-            />
+            <LiveTradingInterface />
           </div>
         )}
 

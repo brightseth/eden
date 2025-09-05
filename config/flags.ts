@@ -25,6 +25,13 @@ export const FEATURE_FLAGS = {
   ENABLE_WIDGET_PROFILE_SYSTEM: process.env.ENABLE_WIDGET_PROFILE_SYSTEM === 'true' || false,
   ENABLE_EDEN2038_INTEGRATION: process.env.ENABLE_EDEN2038_INTEGRATION === 'true' || process.env.NODE_ENV === 'development',
   
+  // ART CURATION SYSTEM - New Feature Flag
+  ART_CURATION_SYSTEM_ENABLED: process.env.ART_CURATION_SYSTEM_ENABLED === 'true' || process.env.NODE_ENV === 'development',
+  BATCH_CURATION_ENABLED: process.env.BATCH_CURATION_ENABLED !== 'false', // Enabled by default
+  TOURNAMENT_MODE_ENABLED: process.env.TOURNAMENT_MODE_ENABLED !== 'false', // Enabled by default
+  REVERSE_ENGINEERING_ENABLED: process.env.REVERSE_ENGINEERING_ENABLED !== 'false', // Enabled by default
+  COLLECTION_MANAGEMENT_ENABLED: process.env.COLLECTION_MANAGEMENT_ENABLED !== 'false', // Enabled by default
+  
   // API Integrations
   DUNE_ANALYTICS_ENABLED: !!process.env.DUNE_API_KEY,
   OPENSEA_API_ENABLED: !!process.env.OPENSEA_API_KEY,

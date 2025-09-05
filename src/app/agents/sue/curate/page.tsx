@@ -193,13 +193,18 @@ export default function SUECuratorialInterface() {
                 EDEN.ART
               </a>
               <a
-                href="https://design-critic-agent.vercel.app/nina-unified.html"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/curation"
                 className="flex items-center gap-2 px-4 py-2 border border-gray-600 hover:border-white transition-all"
               >
                 <ExternalLink className="w-4 h-4" />
-                NINA BOT
+                UNIFIED CURATION
+              </a>
+              <a
+                href="/agents/nina/critique"
+                className="flex items-center gap-2 px-4 py-2 border border-gray-600 hover:border-white transition-all"
+              >
+                <ExternalLink className="w-4 h-4" />
+                NINA × SOLIENNE
               </a>
             </div>
           </div>
