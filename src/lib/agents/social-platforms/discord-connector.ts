@@ -365,14 +365,15 @@ export class DiscordConnector {
 
   formatDailyInsight(insight: string, topic: string): DiscordMessage {
     return {
+      content: `💡 Daily ${topic} Insight`,
       embeds: [{
         title: `💡 Daily ${topic} Insight`,
         description: insight,
         color: 0x00D4AA, // Teal
-        timestamp: new Date().toISOString(),
-        footer: {
-          text: 'CITIZEN • DAO Governance Coordinator'
-        }
+        timestamp: new Date().toISOString()
+        // footer: {
+        //   text: 'CITIZEN • DAO Governance Coordinator'
+        // }
       }]
     };
   }

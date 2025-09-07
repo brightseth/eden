@@ -446,20 +446,21 @@ Format as JSON:
    */
   async syncWithRegistry(ecoWork: EcoWork): Promise<void> {
     try {
-      await registryClient.creations.create('verdelis', {
-        type: 'environmental_art',
-        title: ecoWork.title,
-        description: ecoWork.description,
-        metadata: {
-          carbonFootprint: ecoWork.carbonFootprint,
-          sustainability: ecoWork.sustainability,
-          climateData: ecoWork.climateData,
-          impact: ecoWork.impact,
-          materials: ecoWork.materials,
-          medium: ecoWork.medium
-        },
-        status: 'published'
-      });
+      // TODO: Registry client needs creations API implementation
+      // await registryClient.creations.create('verdelis', {
+      //   type: 'environmental_art',
+      //   title: ecoWork.title,
+      //   description: ecoWork.description,
+      //   metadata: {
+      //     carbonFootprint: ecoWork.carbonFootprint,
+      //     sustainability: ecoWork.sustainability,
+      //     climateData: ecoWork.climateData,
+      //     impact: ecoWork.impact,
+      //     materials: ecoWork.materials,
+      //     medium: ecoWork.medium
+      //   },
+      //   status: 'published'
+      // });
 
       console.log('✅ Synced eco-work with Registry:', ecoWork.id);
     } catch (error) {

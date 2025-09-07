@@ -469,4 +469,4 @@ Respond to questions about prediction markets, contrarian strategies, market psy
 }
 
 // Export singleton instance
-export const miyomiSDK = new MiyomiClaudeSDK(process.env.ANTHROPIC_API_KEY!);
+export const miyomiSDK = new MiyomiClaudeSDK(process.env.ANTHROPIC_API_KEY || '');

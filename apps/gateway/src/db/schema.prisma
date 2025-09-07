@@ -1,0 +1,215 @@
+// Spirit Gateway Database Schema
+// This is a cache/index of onchain Spirit Registry state
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Spirit Registry State (derived from SpiritGraduated events)
+model Spirit {
+  id String @id @default(cuid()) // Internal ID
+  
+  // Onchain identity (source of truth)
+  tokenId     BigInt  @unique // ERC-721 token ID from Registry
+  walletAddress String // Safe wallet address
+  tokenAddress String? // Optional ERC-20 token address (null for ID_ONLY)
+  covenantCid String // IPFS hash of practice covenant
+  metadataCid String // IPFS hash of Spirit metadata
+  
+  // Graduation details
+  mode GraduationMode // ID_ONLY, ID_PLUS_TOKEN, FULL_STACK
+  archetype StartingArchetype // CREATOR, CURATOR, TRADER
+  graduationDate DateTime
+  graduationTxHash String // Transaction hash of graduation
+  trainerAddress String // Address of trainer who graduated this Spirit
+  
+  // Current state
+  active Boolean @default(true)
+  
+  // Relationships
+  practices Practice[]
+  drops Drop[]
+  treasury Treasury?
+  
+  // Indexer metadata
+  blockNumber BigInt // Block where Spirit was graduated
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("spirits")
+}
+
+// Practice configurations (derived from PracticeConfigured events)
+model Practice {
+  id String @id @default(cuid())
+  
+  // Onchain references
+  spiritId String
+  spirit Spirit @relation(fields: [spiritId], references: [id], onDelete: Cascade)
+  configurationCid String // IPFS hash of practice config
+  configurationTxHash String // Transaction hash when configured
+  
+  // Practice details (cached from IPFS)
+  practiceType String // CREATOR, CURATOR, TRADER
+  timeOfDay Int // Seconds since midnight
+  outputType String // ARTWORK, EXHIBITION, ACQUISITION, etc.
+  quantity Int // 1-10
+  observeSabbath Boolean @default(false)
+  
+  // Execution tracking
+  lastExecutionDate DateTime?
+  totalExecutions Int @default(0)
+  active Boolean @default(true)
+  
+  // Indexer metadata
+  blockNumber BigInt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("practices")
+}
+
+// Daily practice outputs (derived from DropRecorded events)
+model Drop {
+  id String @id @default(cuid())
+  
+  // Onchain references
+  spiritId String
+  spirit Spirit @relation(fields: [spiritId], references: [id], onDelete: Cascade)
+  workId String // Unique identifier for this creation
+  txHash String // Transaction hash of drop recording
+  outputCid String // IPFS hash of created work
+  
+  // Drop details (cached from IPFS)
+  title String?
+  description String?
+  mediaType String // image, audio, text, etc.
+  mediaUrl String? // URL to media file
+  
+  // Economics
+  gasUsed BigInt?
+  gasCost BigInt? // Wei
+  revenueGenerated BigInt? // Wei
+  
+  // Timing
+  executionDate DateTime
+  practiceType String // Which practice generated this
+  
+  // Indexer metadata
+  blockNumber BigInt
+  createdAt DateTime @default(now())
+  
+  @@map("drops")
+}
+
+// Treasury state (derived from treasury contract calls)
+model Treasury {
+  id String @id @default(cuid())
+  
+  // Onchain references
+  spiritId String @unique
+  spirit Spirit @relation(fields: [spiritId], references: [id], onDelete: Cascade)
+  treasuryAddress String // Safe treasury address
+  
+  // Balances (cached from blockchain calls)
+  ethBalance BigInt @default(0) // Wei
+  tokenBalance BigInt @default(0) // Token balance (if token exists)
+  
+  // Economics totals
+  totalRevenue BigInt @default(0) // Wei
+  totalCosts BigInt @default(0) // Wei
+  totalPracticeRuns Int @default(0)
+  
+  // Last practice execution
+  lastPracticeDate DateTime?
+  nextPracticeDate DateTime? // Calculated based on practice schedule
+  
+  // Indexer metadata
+  lastUpdated DateTime @default(now())
+  
+  @@map("treasuries")
+}
+
+// Transaction orchestration tracking
+model Transaction {
+  id String @id @default(cuid())
+  
+  // Request tracking
+  idempotencyKey String @unique
+  spiritId String?
+  trainerAddress String
+  
+  // Transaction details
+  type TransactionType // GRADUATION, PRACTICE_UPDATE, PRACTICE_EXECUTION
+  status TransactionStatus // PENDING, PROCESSING, SUCCESS, FAILED
+  
+  // Orchestration steps
+  steps Json // Array of step definitions
+  currentStep Int @default(0)
+  
+  // Results
+  txHashes String[] // Array of transaction hashes
+  errorMessage String?
+  gasUsed BigInt?
+  
+  // Timing
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  completedAt DateTime?
+  
+  @@map("transactions")
+}
+
+// Indexer state tracking
+model IndexerState {
+  id String @id @default(cuid())
+  
+  // Chain tracking
+  contractAddress String
+  lastProcessedBlock BigInt
+  lastProcessedTimestamp DateTime
+  
+  // Health monitoring
+  isHealthy Boolean @default(true)
+  lastError String?
+  errorCount Int @default(0)
+  
+  // Stats
+  totalEventsProcessed BigInt @default(0)
+  
+  updatedAt DateTime @updatedAt
+  
+  @@map("indexer_state")
+}
+
+// Enums
+enum GraduationMode {
+  ID_ONLY
+  ID_PLUS_TOKEN
+  FULL_STACK
+}
+
+enum StartingArchetype {
+  CREATOR
+  CURATOR
+  TRADER
+}
+
+enum TransactionType {
+  GRADUATION
+  PRACTICE_UPDATE
+  PRACTICE_EXECUTION
+}
+
+enum TransactionStatus {
+  PENDING
+  PROCESSING
+  SUCCESS
+  FAILED
+}

@@ -39,6 +39,9 @@ export const FEATURE_FLAGS = {
   // Development Features
   MOCK_DATA_FALLBACK: process.env.NODE_ENV === 'development' || process.env.ENABLE_MOCK_DATA === 'true',
   VERBOSE_LOGGING: process.env.NODE_ENV === 'development' || process.env.ENABLE_DEBUG_LOGS === 'true',
+  
+  // EDEN3 SPIRIT GRADUATION SYSTEM - New Feature Flag
+  FF_EDEN3_ONBOARDING: process.env.FF_EDEN3_ONBOARDING === 'true', // OFF by default in production
 } as const;
 
 // Configuration values

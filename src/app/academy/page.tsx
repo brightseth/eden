@@ -3,6 +3,7 @@
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
 import { LiveTicker } from '@/components/live-ticker/LiveTicker';
 import { AgentCard } from '@/components/academy/AgentCard';
+import { FEATURE_FLAGS } from '@/config/flags';
 import '@/styles/agent-grid.css';
 
 interface Agent {
@@ -92,6 +93,43 @@ export default function AcademyPage() {
           </div>
         </div>
       </div>
+
+      {/* Spirit Graduation Section - Eden3 Beta */}
+      {FEATURE_FLAGS.FF_EDEN3_ONBOARDING && (
+        <div className="border-t border-gray-800 bg-gradient-to-r from-purple-900/20 to-blue-900/20">
+          <div className="max-w-6xl mx-auto px-6 py-12">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-purple-500/10 border border-purple-500/30 rounded-full mb-4">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+                </span>
+                <span className="text-xs font-bold text-purple-400">EDEN3 BETA</span>
+              </div>
+              
+              <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+                SPIRIT GRADUATION
+              </h2>
+              <p className="text-gray-400 mb-6">
+                Transform Agents into autonomous Spirits with onchain presence and daily practice rituals
+              </p>
+              
+              <button 
+                onClick={() => window.location.href = '/academy/graduate'}
+                className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 
+                         text-white font-bold tracking-wider uppercase rounded-none border border-purple-500
+                         transition-all duration-150 shadow-lg hover:shadow-purple-500/25"
+              >
+                GRADUATE TO SPIRIT
+              </button>
+              
+              <div className="mt-6 text-xs text-gray-500">
+                • Onchain NFT Identity • Safe Smart Wallet • Daily Practice Covenant • Autonomous Income
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Agent Grid with better spacing */}
       <div className="relative">

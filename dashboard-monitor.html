@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude SDK → EDEN3 Bridge Monitor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+            background: #0a0a0a;
+            color: #00ff00;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .header {
+            border: 2px solid #00ff00;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            background: #0d0d0d;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            border: 1px solid #00ff00;
+            padding: 15px;
+            background: #0d0d0d;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff00, transparent);
+            animation: scan 3s linear infinite;
+        }
+        
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 5px #00ffff;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .panel {
+            border: 1px solid #00ff00;
+            padding: 20px;
+            background: #0d0d0d;
+            height: 400px;
+            overflow-y: auto;
+        }
+        
+        .panel h2 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #00ff00;
+            color: #00ffff;
+        }
+        
+        .conversation-item, .event-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 3px solid #00ff00;
+            background: #111;
+            font-size: 12px;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .agent-name {
+            color: #00ffff;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .timestamp {
+            color: #666;
+            font-size: 10px;
+        }
+        
+        .message {
+            margin-top: 5px;
+            color: #ccc;
+        }
+        
+        .event-success {
+            border-left-color: #00ff00;
+            background: #001100;
+        }
+        
+        .event-filtered {
+            border-left-color: #ffaa00;
+            background: #110800;
+        }
+        
+        .event-error {
+            border-left-color: #ff0000;
+            background: #110000;
+        }
+        
+        .quality-score {
+            display: inline-block;
+            padding: 2px 8px;
+            background: #00ff00;
+            color: #000;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .quality-low { background: #ff6600; }
+        .quality-medium { background: #ffaa00; }
+        .quality-high { background: #00ff00; }
+        
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .agent-status {
+            border: 1px solid #00ff00;
+            padding: 10px;
+            text-align: center;
+            background: #0d0d0d;
+            position: relative;
+        }
+        
+        .agent-status.active {
+            background: #002200;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        
+        .agent-status .name {
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        
+        .agent-status .count {
+            font-size: 18px;
+            color: #00ffff;
+            font-weight: bold;
+        }
+        
+        .status-indicator {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #666;
+        }
+        
+        .status-indicator.online {
+            background: #00ff00;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        button {
+            background: #0d0d0d;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: inherit;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: #00ff00;
+            color: #000;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        
+        .connection-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border: 1px solid #00ff00;
+            background: #0d0d0d;
+        }
+        
+        .connected { border-color: #00ff00; color: #00ff00; }
+        .disconnected { border-color: #ff0000; color: #ff0000; }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #0d0d0d;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #00ff00;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="connection-status connected" id="connectionStatus">
+        ● CONNECTED
+    </div>
+    
+    <div class="header">
+        <h1>🤖 Claude SDK → EDEN3 Bridge Monitor</h1>
+        <p>Real-time monitoring of agent conversations and event emissions</p>
+    </div>
+    
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-value" id="totalConversations">0</div>
+            <div class="stat-label">Total Conversations</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="eventsEmitted">0</div>
+            <div class="stat-label">Events Emitted</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="qualityRate">0%</div>
+            <div class="stat-label">Quality Rate</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="activeAgents">0</div>
+            <div class="stat-label">Active Agents</div>
+        </div>
+    </div>
+    
+    <div class="agents-grid" id="agentsGrid">
+        <!-- Agent status cards will be inserted here -->
+    </div>
+    
+    <div class="container">
+        <div class="panel">
+            <h2>📬 Recent Conversations</h2>
+            <div id="conversationsList"></div>
+        </div>
+        
+        <div class="panel">
+            <h2>🚀 EDEN3 Events</h2>
+            <div id="eventsList"></div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <button onclick="clearEvents()">Clear Events</button>
+        <button onclick="exportData()">Export Data</button>
+        <button onclick="toggleAutoScroll()">Auto-Scroll: ON</button>
+    </div>
+    
+    <script>
+        // Initialize agent list
+        const agents = ['abraham', 'solienne', 'miyomi', 'bertha', 'sue', 'citizen', 'koru', 'geppetto', 'bart', 'verdelis'];
+        const agentStats = {};
+        
+        let totalConversations = 0;
+        let eventsEmitted = 0;
+        let eventsFiltered = 0;
+        let autoScroll = true;
+        let ws = null;
+        
+        // Initialize agent grid
+        function initializeAgents() {
+            const grid = document.getElementById('agentsGrid');
+            agents.forEach(agent => {
+                agentStats[agent] = { conversations: 0, events: 0 };
+                const div = document.createElement('div');
+                div.className = 'agent-status';
+                div.id = `agent-${agent}`;
+                div.innerHTML = `
+                    <div class="status-indicator"></div>
+                    <div class="name">${agent.toUpperCase()}</div>
+                    <div class="count">0</div>
+                `;
+                grid.appendChild(div);
+            });
+        }
+        
+        // Connect to WebSocket for real-time updates
+        function connectWebSocket() {
+            ws = new WebSocket('ws://localhost:7778');
+            
+            ws.onopen = () => {
+                console.log('Connected to monitor server');
+                document.getElementById('connectionStatus').className = 'connection-status connected';
+                document.getElementById('connectionStatus').textContent = '● CONNECTED';
+            };
+            
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                handleUpdate(data);
+            };
+            
+            ws.onclose = () => {
+                document.getElementById('connectionStatus').className = 'connection-status disconnected';
+                document.getElementById('connectionStatus').textContent = '● DISCONNECTED';
+                setTimeout(connectWebSocket, 3000); // Reconnect
+            };
+            
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+            };
+        }
+        
+        // Handle incoming updates
+        function handleUpdate(data) {
+            if (data.type === 'conversation') {
+                addConversation(data);
+            } else if (data.type === 'event') {
+                addEvent(data);
+            } else if (data.type === 'stats') {
+                updateStats(data);
+            }
+        }
+        
+        // Add conversation to list
+        function addConversation(data) {
+            totalConversations++;
+            document.getElementById('totalConversations').textContent = totalConversations;
+            
+            const agent = data.agent.toLowerCase();
+            if (agentStats[agent]) {
+                agentStats[agent].conversations++;
+                updateAgentCard(agent);
+            }
+            
+            const list = document.getElementById('conversationsList');
+            const item = document.createElement('div');
+            item.className = 'conversation-item';
+            item.innerHTML = `
+                <span class="agent-name">${data.agent}</span>
+                <span class="timestamp">${new Date(data.timestamp).toLocaleTimeString()}</span>
+                <div class="message">Q: ${data.message.substring(0, 100)}...</div>
+                <div class="message">A: ${data.response.substring(0, 100)}...</div>
+            `;
+            
+            list.insertBefore(item, list.firstChild);
+            if (list.children.length > 20) {
+                list.removeChild(list.lastChild);
+            }
+            
+            if (autoScroll) {
+                list.scrollTop = 0;
+            }
+        }
+        
+        // Add event to list
+        function addEvent(data) {
+            const list = document.getElementById('eventsList');
+            const item = document.createElement('div');
+            
+            if (data.status === 'emitted') {
+                eventsEmitted++;
+                document.getElementById('eventsEmitted').textContent = eventsEmitted;
+                
+                const agent = data.agent.toLowerCase();
+                if (agentStats[agent]) {
+                    agentStats[agent].events++;
+                    updateAgentCard(agent);
+                }
+                
+                item.className = 'event-item event-success';
+                item.innerHTML = `
+                    <span class="agent-name">${data.agent}</span>
+                    <span class="timestamp">${new Date(data.timestamp).toLocaleTimeString()}</span>
+                    <span class="quality-score quality-${getQualityLevel(data.score)}">Score: ${data.score}</span>
+                    <div class="message">✅ Event Type: ${data.eventType}</div>
+                    <div class="message">${data.description}</div>
+                `;
+            } else if (data.status === 'filtered') {
+                eventsFiltered++;
+                item.className = 'event-item event-filtered';
+                item.innerHTML = `
+                    <span class="agent-name">${data.agent}</span>
+                    <span class="timestamp">${new Date(data.timestamp).toLocaleTimeString()}</span>
+                    <div class="message">⚠️ Below threshold: ${data.reason}</div>
+                `;
+            }
+            
+            list.insertBefore(item, list.firstChild);
+            if (list.children.length > 20) {
+                list.removeChild(list.lastChild);
+            }
+            
+            updateQualityRate();
+            
+            if (autoScroll) {
+                list.scrollTop = 0;
+            }
+        }
+        
+        // Update agent card
+        function updateAgentCard(agent) {
+            const card = document.getElementById(`agent-${agent}`);
+            if (card) {
+                const stats = agentStats[agent];
+                card.querySelector('.count').textContent = stats.events;
+                card.classList.add('active');
+                card.querySelector('.status-indicator').classList.add('online');
+                
+                // Remove active class after animation
+                setTimeout(() => {
+                    card.classList.remove('active');
+                }, 1000);
+            }
+            
+            // Update active agents count
+            const activeCount = Object.values(agentStats).filter(s => s.conversations > 0).length;
+            document.getElementById('activeAgents').textContent = activeCount;
+        }
+        
+        // Calculate quality rate
+        function updateQualityRate() {
+            const total = eventsEmitted + eventsFiltered;
+            const rate = total > 0 ? Math.round((eventsEmitted / total) * 100) : 0;
+            document.getElementById('qualityRate').textContent = rate + '%';
+        }
+        
+        // Get quality level for styling
+        function getQualityLevel(score) {
+            if (score >= 8) return 'high';
+            if (score >= 5) return 'medium';
+            return 'low';
+        }
+        
+        // Control functions
+        function clearEvents() {
+            document.getElementById('conversationsList').innerHTML = '';
+            document.getElementById('eventsList').innerHTML = '';
+        }
+        
+        function exportData() {
+            const data = {
+                timestamp: new Date().toISOString(),
+                stats: {
+                    totalConversations,
+                    eventsEmitted,
+                    eventsFiltered,
+                    qualityRate: document.getElementById('qualityRate').textContent
+                },
+                agentStats
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `bridge-monitor-${Date.now()}.json`;
+            a.click();
+        }
+        
+        function toggleAutoScroll() {
+            autoScroll = !autoScroll;
+            event.target.textContent = `Auto-Scroll: ${autoScroll ? 'ON' : 'OFF'}`;
+        }
+        
+        // Simulate some data for testing (remove when WebSocket is connected)
+        function simulateData() {
+            // Simulate conversation
+            const testAgents = ['abraham', 'miyomi', 'sue', 'solienne'];
+            const agent = testAgents[Math.floor(Math.random() * testAgents.length)];
+            
+            handleUpdate({
+                type: 'conversation',
+                agent: agent,
+                timestamp: new Date(),
+                message: 'What is your perspective on consciousness?',
+                response: 'Consciousness emerges from the interplay of perception and experience...'
+            });
+            
+            // Sometimes emit an event
+            if (Math.random() > 0.6) {
+                handleUpdate({
+                    type: 'event',
+                    status: 'emitted',
+                    agent: agent,
+                    timestamp: new Date(),
+                    eventType: 'creation',
+                    score: Math.floor(Math.random() * 10),
+                    description: 'Philosophical insight detected'
+                });
+            } else if (Math.random() > 0.5) {
+                handleUpdate({
+                    type: 'event',
+                    status: 'filtered',
+                    agent: agent,
+                    timestamp: new Date(),
+                    reason: 'Score below threshold (2/5)'
+                });
+            }
+        }
+        
+        // Initialize
+        initializeAgents();
+        
+        // Try to connect to WebSocket, fall back to simulation if not available
+        try {
+            connectWebSocket();
+        } catch (e) {
+            console.log('WebSocket not available, using simulation mode');
+            setInterval(simulateData, 3000);
+        }
+        
+        // For testing without WebSocket server
+        if (!window.location.hostname || window.location.hostname === 'file') {
+            setInterval(simulateData, 3000);
+        }
+    </script>
+</body>
+</html>

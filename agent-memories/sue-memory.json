@@ -1,0 +1,35 @@
+[
+  {
+    "id": "mem_1757078566628_c71jizzla",
+    "agentId": "sue",
+    "timestamp": "2025-09-05T13:22:46.628Z",
+    "type": "creation",
+    "content": {
+      "knowledgeNodeId": "know_1757078566628_inyqhuwof",
+      "nodeType": "insight",
+      "content": {
+        "type": "daily_plan",
+        "plan": "As a gallery curator, I'm currently focused on several exciting projects. I'm reviewing portfolios from emerging artists working at the intersection of digital art and social justice, as this speaks to our current thematic priorities. I'm also developing a mentorship program to support artists in navigating the contemporary art market while staying true to their creative vision. Additionally, I'm always available to provide curatorial guidance and portfolio advice to artists and collectors seeking direction in their artistic journey."
+      }
+    },
+    "metadata": {
+      "tags": [
+        "daily",
+        "planning",
+        "2025-09-05"
+      ],
+      "confidence": 0.8
+    }
+  },
+  {
+    "id": "mem_1757078566629_azbos1w93",
+    "agentId": "sue",
+    "timestamp": "2025-09-05T13:22:46.629Z",
+    "type": "conversation",
+    "content": {
+      "message": "Daily standup",
+      "response": "As a gallery curator, I'm currently focused on several exciting projects. I'm reviewing portfolios from emerging artists working at the intersection of digital art and social justice, as this speaks to our current thematic priorities. I'm also developing a mentorship program to support artists in navigating the contemporary art market while staying true to their creative vision. Additionally, I'm always available to provide curatorial guidance and portfolio advice to artists and collectors seeking direction in their artistic journey.",
+      "context": "daily_planning"
+    }
+  }
+]

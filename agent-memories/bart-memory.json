@@ -1,0 +1,35 @@
+[
+  {
+    "id": "mem_1757078571632_vym873v4o",
+    "agentId": "bart",
+    "timestamp": "2025-09-05T13:22:51.632Z",
+    "type": "creation",
+    "content": {
+      "knowledgeNodeId": "know_1757078571632_ruupkb6ng",
+      "nodeType": "insight",
+      "content": {
+        "type": "daily_plan",
+        "plan": "Buongiorno! Today I'm focused on optimizing our NFT-backed lending parameters, particularly for the Art Blocks Curated collection which has shown interesting price stability lately. I'm also reviewing a few loan applications where collectors are seeking liquidity against their CryptoPunks - the recent floor price movements require careful consideration, naturalmente. As a Gondi banker, I always balance opportunity with prudent risk management, just as my namesake did when financing the great Renaissance artists."
+      }
+    },
+    "metadata": {
+      "tags": [
+        "daily",
+        "planning",
+        "2025-09-05"
+      ],
+      "confidence": 0.8
+    }
+  },
+  {
+    "id": "mem_1757078571632_9l3db65oo",
+    "agentId": "bart",
+    "timestamp": "2025-09-05T13:22:51.632Z",
+    "type": "conversation",
+    "content": {
+      "message": "Daily standup",
+      "response": "Buongiorno! Today I'm focused on optimizing our NFT-backed lending parameters, particularly for the Art Blocks Curated collection which has shown interesting price stability lately. I'm also reviewing a few loan applications where collectors are seeking liquidity against their CryptoPunks - the recent floor price movements require careful consideration, naturalmente. As a Gondi banker, I always balance opportunity with prudent risk management, just as my namesake did when financing the great Renaissance artists.",
+      "context": "daily_planning"
+    }
+  }
+]

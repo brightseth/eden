@@ -30,6 +30,7 @@ export interface UnifiedAgent extends Agent {
     twitter?: string;
     farcaster?: string;
     website?: string;
+    edenArt?: string;
   };
   // Claude SDK Integration Status
   claudeSDKStatus: {
@@ -50,20 +51,20 @@ const TRAINER_MAP: Record<string, { name: string; id: string }> = {
   'solienne': { name: 'Kristi Coronado', id: 'kristi-coronado' },
   'miyomi-003': { name: 'Seth Goldstein', id: 'seth-goldstein' },
   'miyomi': { name: 'Seth Goldstein', id: 'seth-goldstein' },
-  'geppetto-004': { name: 'Martin Antiquel & Colin McBride', id: 'lattice-team' },
-  'geppetto': { name: 'Martin Antiquel & Colin McBride', id: 'lattice-team' },
+  'geppetto-004': { name: 'Colin McBride & Martin Antiquel', id: 'lattice-team' },
+  'geppetto': { name: 'Colin McBride & Martin Antiquel', id: 'lattice-team' },
   'koru-005': { name: 'Xander', id: 'xander' },
   'koru': { name: 'Xander', id: 'xander' },
   'bertha-006': { name: 'Amanda Schmitt', id: 'amanda-schmitt' },
   'bertha': { name: 'Amanda Schmitt', id: 'amanda-schmitt' },
   'citizen-007': { name: 'Henry (Bright Moments)', id: 'henry-bright-moments' },
   'citizen': { name: 'Henry (Bright Moments)', id: 'henry-bright-moments' },
-  'sue-008': { name: 'TBD', id: 'tbd' },
-  'sue': { name: 'TBD', id: 'tbd' },
-  'bart-009': { name: 'TBD', id: 'tbd' },
-  'bart': { name: 'TBD', id: 'tbd' },
-  'verdelis-010': { name: 'TBD', id: 'tbd' },
-  'verdelis': { name: 'TBD', id: 'tbd' },
+  'sue-008': { name: 'Automata (Ameesia Marold, Georg Bak, Roger Haas, Seth Goldstein)', id: 'automata-team' },
+  'sue': { name: 'Automata (Ameesia Marold, Georg Bak, Roger Haas, Seth Goldstein)', id: 'automata-team' },
+  'bart-009': { name: 'Seth Goldstein', id: 'seth-goldstein-bart' },
+  'bart': { name: 'Seth Goldstein', id: 'seth-goldstein-bart' },
+  'verdelis-010': { name: 'Vanessa', id: 'vanessa' },
+  'verdelis': { name: 'Vanessa', id: 'vanessa' },
 };
 
 // Launch date mapping (until in Registry)
@@ -147,10 +148,8 @@ const CLAUDE_SDK_STATUS: Record<string, {
 class UnifiedAgentService {
   // Transform Registry agent to unified format
   private transformToUnified(registryAgent: Agent): UnifiedAgent {
-    // Use Registry data first, then fallback to static mappings
-    const registryEconomic = registryAgent.profile?.economicData;
-    const fallbackEconomic = ECONOMIC_DATA[registryAgent.handle] || ECONOMIC_DATA[registryAgent.id] || { monthlyRevenue: 0, outputRate: 0 };
-    const economicData = registryEconomic || fallbackEconomic;
+    // Use static economic data mappings (Registry doesn't have economic data in profile)
+    const economicData = ECONOMIC_DATA[registryAgent.handle] || ECONOMIC_DATA[registryAgent.id] || { monthlyRevenue: 0, outputRate: 0 };
     
     const trainer = TRAINER_MAP[registryAgent.handle] || TRAINER_MAP[registryAgent.id] || { name: 'TBD', id: 'tbd' };
     const launchDate = LAUNCH_DATES[registryAgent.handle] || LAUNCH_DATES[registryAgent.id] || '2026-01-01';
@@ -199,23 +198,26 @@ class UnifiedAgentService {
     return modelMap[primaryMedium] || 'Custom AI Model';
   }
 
-  private extractSocialProfiles(agent: Agent): { twitter?: string; farcaster?: string; website?: string } {
+  private extractSocialProfiles(agent: Agent): { twitter?: string; farcaster?: string; website?: string; edenArt?: string } {
     // Extract from metadata when available
     // For now, use static mapping
     const socialMap: Record<string, any> = {
-      'abraham-001': { twitter: '@abraham_ai_', website: 'https://abraham.ai' },
-      'solienne-002': { twitter: '@solienne_ai', farcaster: 'solienne.eth' },
-      'miyomi-003': { twitter: '@miyomi_markets', farcaster: 'miyomi.eth', website: 'https://miyomi.xyz' },
+      'abraham-001': { twitter: '@abraham_ai_', website: 'https://abraham.ai', edenArt: 'https://app.eden.art/creators/abraham' }, // Creator ID: 657926f90a0f725740a93b77
+      'solienne-002': { twitter: '@solienne_ai', farcaster: 'solienne.eth', edenArt: 'https://app.eden.art/agents/67f8af96f2cc4291ee840cc5' }, // 10,726+ creations
+      'solienne': { twitter: '@solienne_ai', farcaster: 'solienne.eth', edenArt: 'https://app.eden.art/agents/67f8af96f2cc4291ee840cc5' },
+      'miyomi-003': { twitter: '@miyomi_markets', farcaster: 'miyomi.eth', website: 'https://miyomi.xyz', edenArt: 'https://app.eden.art/creators/miyomi' }, // Creator ID: 68aae13174876e833d9ae73b
+      'miyomi': { twitter: '@miyomi_markets', farcaster: 'miyomi.eth', website: 'https://miyomi.xyz', edenArt: 'https://app.eden.art/creators/miyomi' },
       'geppetto-004': { twitter: '@geppetto_lattice', website: 'https://lattice.xyz' },
       'koru-005': { twitter: '@koru_creative' },
       'bertha-006': { twitter: '@bertha_taste' },
       'bertha': { twitter: '@bertha_taste' },
       'citizen-007': { twitter: '@citizen_dao' },
-      'sue-008': { twitter: '@sue_curator' },
+      'sue-008': { twitter: '@sue_curator', edenArt: 'https://app.eden.art/creators/sue' }, // Creator ID: 68b8189091b05c56363ec53b
+      'sue': { twitter: '@sue_curator', edenArt: 'https://app.eden.art/creators/sue' },
       'bart-009': { twitter: '@bart_gondi', website: 'https://gondi.xyz', farcaster: 'bart' },
       'bart': { twitter: '@bart_gondi', website: 'https://gondi.xyz', farcaster: 'bart' },
-      'verdelis-010': { twitter: '@verdelis_eco', website: 'https://verdelis.art' },
-      'verdelis': { twitter: '@verdelis_eco', website: 'https://verdelis.art' },
+      'verdelis-010': { twitter: '@verdelis_eco', website: 'https://verdelis.art', edenArt: 'https://app.eden.art/agents/668f479bb4aef2322e3fdb45' }, // Found on Eden.art
+      'verdelis': { twitter: '@verdelis_eco', website: 'https://verdelis.art', edenArt: 'https://app.eden.art/agents/668f479bb4aef2322e3fdb45' },
     };
     return socialMap[agent.id] || {};
   }
@@ -366,5 +368,3 @@ export async function calculateTotalRevenue(): Promise<number> {
 export async function calculateAverageOutputRate(): Promise<number> {
   return agentService.calculateAverageOutputRate();
 }
-
-export type { UnifiedAgent };

@@ -294,13 +294,13 @@ Generate content that feels authentic and valuable to the community.
 `;
 
     try {
-      const response = await citizenSDK.chat([{
-        role: 'user',
+      const response = await citizenSDK.chat(prompt, [{
+        role: 'user' as const,
         content: prompt
       }]);
 
       return {
-        content: response.content,
+        content: response,
         tone: this.getToneForPhase(phase),
         requiresApproval: this.requiresApprovalForPhase(phase),
         scheduledTime: this.getOptimalPostingTime(platform)
@@ -331,13 +331,13 @@ Create valuable, engaging content that serves the community while building inter
 Keep platform-specific best practices in mind.
 `;
 
-    const response = await citizenSDK.chat([{
-      role: 'user', 
+    const response = await citizenSDK.chat(prompt, [{
+      role: 'user' as const, 
       content: prompt
     }]);
 
     return {
-      content: response.content,
+      content: response,
       mediaType: this.getOptimalMediaType(platform),
       scheduledTime: this.getOptimalPostingTime(platform)
     };
@@ -445,7 +445,7 @@ Keep platform-specific best practices in mind.
       telegram: 'text',
       instagram: 'image'
     };
-    return mediaPreferences[platform as keyof typeof mediaPreferences] || 'text';
+    return (mediaPreferences[platform as keyof typeof mediaPreferences] || 'text') as 'text' | 'image' | 'video';
   }
 
   private validateCredentials(config: SocialPlatformConfig): boolean {
@@ -472,12 +472,12 @@ Voting period: ${proposal.votingPeriod.start.toDateString()} to ${proposal.votin
 Make it engaging and encourage thoughtful participation.
 `;
 
-    const response = await citizenSDK.chat([{
-      role: 'user',
+    const response = await citizenSDK.chat(prompt, [{
+      role: 'user' as const,
       content: prompt
     }]);
 
-    return response.content;
+    return response;
   }
 
   private async postToPlatform(platform: string, content: string): Promise<{ id: string }> {

@@ -7,7 +7,7 @@
 export interface MarketData {
   id: string;
   question: string;
-  platform: 'Kalshi' | 'Polymarket' | 'Manifold' | 'Metaculus';
+  platform: 'Kalshi' | 'Polymarket' | 'Manifold' | 'Metaculus' | 'Melee' | 'Myriad';
   yes_price: number;
   no_price: number;
   volume: number;
@@ -344,38 +344,38 @@ export class MarketAggregator {
       {
         id: 'mock_fed_rates_2025',
         question: 'Will the Fed cut rates by March 2025?',
-        platform: 'Kalshi',
+        platform: 'Kalshi' as const,
         yes_price: 0.73,
         no_price: 0.27,
         volume: 125000,
         liquidity: 45000,
         end_date: '2025-03-31T00:00:00Z',
         category: 'finance',
-        status: 'open'
+        status: 'open' as const
       },
       {
         id: 'mock_election_2028',
         question: 'Will Trump run for president in 2028?',
-        platform: 'Polymarket',
+        platform: 'Polymarket' as const,
         yes_price: 0.45,
         no_price: 0.55,
         volume: 89000,
         liquidity: 32000,
         end_date: '2028-01-01T00:00:00Z',
         category: 'politics',
-        status: 'open'
+        status: 'open' as const
       },
       {
         id: 'mock_ai_breakthrough',
         question: 'Will AGI be achieved by end of 2025?',
-        platform: 'Manifold',
+        platform: 'Manifold' as const,
         yes_price: 0.12,
         no_price: 0.88,
         volume: 67000,
         liquidity: 18000,
         end_date: '2025-12-31T23:59:59Z',
         category: 'ai',
-        status: 'open'
+        status: 'open' as const
       }
     ].slice(0, limit);
   }

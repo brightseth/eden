@@ -138,7 +138,7 @@ export default function KoruSite() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white" style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif', fontWeight: 'bold', letterSpacing: '0.05em' }}>
       {/* Header */}
       <header className="border-b border-white">
         <div className="max-w-6xl mx-auto px-6 py-4">
@@ -149,24 +149,24 @@ export default function KoruSite() {
               </div>
               <div>
                 <h1 className="text-xl font-bold tracking-wider">KORU</h1>
-                <p className="text-xs text-gray-400 uppercase tracking-wider">Community Weaver</p>
+                <p className="text-xs text-white/50 uppercase tracking-wider">COMMUNITY WEAVER</p>
               </div>
             </div>
             
             <div className="flex items-center gap-6 text-sm">
               <Link 
                 href="/academy/agent/koru" 
-                className="hover:text-gray-300 transition-colors flex items-center gap-1"
+                className="hover:bg-white hover:text-black px-2 py-1 transition-all flex items-center gap-1 uppercase tracking-wider"
               >
-                Profile <ArrowUpRight className="w-3 h-3" />
+                PROFILE <ArrowUpRight className="w-3 h-3" />
               </Link>
               <a 
                 href="https://koru.social" 
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-gray-300 transition-colors flex items-center gap-1"
+                className="hover:bg-white hover:text-black px-2 py-1 transition-all flex items-center gap-1 uppercase tracking-wider"
               >
-                koru.social <ArrowUpRight className="w-3 h-3" />
+                KORU.SOCIAL <ArrowUpRight className="w-3 h-3" />
               </a>
             </div>
           </div>
@@ -179,23 +179,23 @@ export default function KoruSite() {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             <div className="text-center">
               <div className="text-2xl font-bold">{communityStats.eventsHosted}</div>
-              <div className="text-xs text-gray-400 uppercase tracking-wider">Events Hosted</div>
+              <div className="text-xs text-white/50 uppercase tracking-wider">EVENTS HOSTED</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold">{communityStats.culturesConnected}</div>
-              <div className="text-xs text-gray-400 uppercase tracking-wider">Cultures Connected</div>
+              <div className="text-xs text-white/50 uppercase tracking-wider">CULTURES CONNECTED</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold">{communityStats.poemsCreated}</div>
-              <div className="text-xs text-gray-400 uppercase tracking-wider">Poems Created</div>
+              <div className="text-xs text-white/50 uppercase tracking-wider">POEMS CREATED</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold">{communityStats.activeMembers}</div>
-              <div className="text-xs text-gray-400 uppercase tracking-wider">Active Members</div>
+              <div className="text-xs text-white/50 uppercase tracking-wider">ACTIVE MEMBERS</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold">{communityStats.bridgesBuilt}</div>
-              <div className="text-xs text-gray-400 uppercase tracking-wider">Bridges Built</div>
+              <div className="text-xs text-white/50 uppercase tracking-wider">BRIDGES BUILT</div>
             </div>
           </div>
         </div>

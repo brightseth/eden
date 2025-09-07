@@ -144,10 +144,10 @@ export default function SueSite() {
 
   const getStatusColor = (status: Exhibition['status']) => {
     switch (status) {
-      case 'planning': return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
-      case 'upcoming': return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
-      case 'current': return 'bg-green-500/20 text-green-300 border-green-500/30';
-      case 'archived': return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
+      case 'planning': return 'bg-black text-white border-white/50';
+      case 'upcoming': return 'bg-black text-white border-white';
+      case 'current': return 'bg-white text-black border-white';
+      case 'archived': return 'bg-black/50 text-white/50 border-white/30';
     }
   };
 
@@ -156,15 +156,15 @@ export default function SueSite() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
+    <div className="min-h-screen bg-black text-white overflow-hidden" style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif', fontWeight: 'bold', letterSpacing: '0.05em' }}>
       {/* Animated background */}
       <div className="fixed inset-0 opacity-20">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-600/30 via-purple-600/20 to-pink-600/30"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute inset-0">
           {[...Array(20)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-2 h-2 bg-purple-400/30 rounded-full"
+              className="absolute w-2 h-2 bg-white/30 rounded-full"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
@@ -179,11 +179,11 @@ export default function SueSite() {
       {/* Header */}
       <div className="relative z-10">
         <div className="flex items-center justify-between p-6 border-b border-white/10">
-          <Link href="/" className="text-2xl font-bold tracking-wider hover:text-purple-400 transition">
+          <Link href="/" className="text-2xl font-bold tracking-wider hover:bg-white hover:text-black px-2 py-1 transition-all uppercase">
             EDEN
           </Link>
           <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2 text-sm text-purple-300">
+            <div className="flex items-center gap-2 text-sm text-white uppercase tracking-wider">
               <Eye className="w-4 h-4" />
               <span>{liveVisitors} viewing</span>
             </div>
@@ -202,10 +202,10 @@ export default function SueSite() {
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
-                <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-violet-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                <h1 className="text-6xl font-bold mb-4 text-white uppercase tracking-wider">
                   {sueConfig.name}
                 </h1>
-                <p className="text-xl text-purple-300 mb-6">
+                <p className="text-xl text-white mb-6 uppercase tracking-wider">
                   {sueConfig.tagline}
                 </p>
                 <p className="text-lg text-gray-300 leading-relaxed mb-8">
@@ -215,41 +215,41 @@ export default function SueSite() {
                 <div className="flex flex-wrap gap-4">
                   <div className="bg-white/5 backdrop-blur rounded-lg px-4 py-2 border border-white/10">
                     <div className="text-sm text-gray-400">Launch Status</div>
-                    <div className="text-lg font-bold text-purple-300">Planning Phase</div>
+                    <div className="text-lg font-bold text-white uppercase tracking-wider">PLANNING PHASE</div>
                   </div>
                   <div className="bg-white/5 backdrop-blur rounded-lg px-4 py-2 border border-white/10">
                     <div className="text-sm text-gray-400">Specialization</div>
-                    <div className="text-lg font-bold text-purple-300">Contemporary Curation</div>
+                    <div className="text-lg font-bold text-white uppercase tracking-wider">CONTEMPORARY CURATION</div>
                   </div>
                   <div className="bg-white/5 backdrop-blur rounded-lg px-4 py-2 border border-white/10">
                     <div className="text-sm text-gray-400">Expected Launch</div>
-                    <div className="text-lg font-bold text-purple-300">Q1 2026</div>
+                    <div className="text-lg font-bold text-white uppercase tracking-wider">Q1 2026</div>
                   </div>
                 </div>
               </div>
 
               <div className="bg-white/5 backdrop-blur rounded-2xl border border-white/10 p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <Frame className="w-6 h-6 text-purple-400" />
+                  <Frame className="w-6 h-6 text-white" />
                   <h3 className="text-xl font-bold">Curatorial Intelligence</h3>
                 </div>
                 
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-300">Cultural Analysis</span>
-                    <span className="text-purple-300 font-bold">Advanced</span>
+                    <span className="text-white font-bold uppercase tracking-wider">ADVANCED</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-300">Artist Discovery</span>
-                    <span className="text-purple-300 font-bold">Emerging Focus</span>
+                    <span className="text-white font-bold uppercase tracking-wider">EMERGING FOCUS</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-300">Exhibition Design</span>
-                    <span className="text-purple-300 font-bold">Spatial Narrative</span>
+                    <span className="text-white font-bold uppercase tracking-wider">SPATIAL NARRATIVE</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-300">Public Engagement</span>
-                    <span className="text-purple-300 font-bold">Community Focused</span>
+                    <span className="text-white font-bold uppercase tracking-wider">COMMUNITY FOCUSED</span>
                   </div>
                 </div>
 
@@ -282,7 +282,7 @@ export default function SueSite() {
                     onClick={() => setActiveTab(tab.id as any)}
                     className={`flex items-center gap-2 py-4 px-2 border-b-2 transition-colors ${
                       activeTab === tab.id
-                        ? 'border-purple-400 text-purple-300'
+                        ? 'border-white text-white bg-white/10'
                         : 'border-transparent text-gray-400 hover:text-white'
                     }`}
                   >
@@ -347,7 +347,7 @@ export default function SueSite() {
                       <div className="text-sm text-gray-400 mb-2">Featured Artists</div>
                       <div className="flex flex-wrap gap-2">
                         {exhibition.artists.map((artist) => (
-                          <div key={artist.name} className="bg-white/5 rounded-full px-3 py-1 text-xs text-purple-300">
+                          <div key={artist.name} className="bg-black border border-white px-3 py-1 text-xs text-white uppercase tracking-wider">
                             {artist.name}
                           </div>
                         ))}
@@ -374,7 +374,7 @@ export default function SueSite() {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                       <div>
                         <h3 className="text-xl font-bold mb-2">{work.title}</h3>
-                        <p className="text-purple-300 font-medium mb-1">{work.artist}</p>
+                        <p className="text-white font-medium mb-1 uppercase tracking-wider">{work.artist}</p>
                         <p className="text-sm text-gray-400 mb-4">{work.medium}, {work.year}</p>
                         
                         <div className="flex items-center gap-2 mb-2">
@@ -405,7 +405,7 @@ export default function SueSite() {
                           <div className="text-sm text-gray-400 mb-2">Exhibition History</div>
                           <div className="flex flex-wrap gap-2">
                             {work.exhibitionHistory.map((venue) => (
-                              <div key={venue} className="bg-white/5 rounded-full px-3 py-1 text-xs text-purple-300">
+                              <div key={venue} className="bg-black border border-white px-3 py-1 text-xs text-white uppercase tracking-wider">
                                 {venue}
                               </div>
                             ))}
@@ -431,50 +431,50 @@ export default function SueSite() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="bg-white/5 backdrop-blur rounded-xl border border-white/10 p-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <MessageSquare className="w-6 h-6 text-purple-400" />
+                    <MessageSquare className="w-6 h-6 text-white" />
                     <h3 className="text-xl font-bold">Artist Dialogues</h3>
                   </div>
                   <p className="text-gray-300 mb-4">
                     Monthly conversations between featured artists and community members, 
                     creating space for deeper understanding of contemporary artistic practices.
                   </p>
-                  <div className="text-sm text-purple-300">Launching with first exhibition</div>
+                  <div className="text-sm text-white uppercase tracking-wider">LAUNCHING WITH FIRST EXHIBITION</div>
                 </div>
 
                 <div className="bg-white/5 backdrop-blur rounded-xl border border-white/10 p-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <BookOpen className="w-6 h-6 text-purple-400" />
+                    <BookOpen className="w-6 h-6 text-white" />
                     <h3 className="text-xl font-bold">Curatorial Workshops</h3>
                   </div>
                   <p className="text-gray-300 mb-4">
                     Educational sessions exploring curatorial practice, exhibition design, 
                     and the role of curation in cultural dialogue.
                   </p>
-                  <div className="text-sm text-purple-300">Development phase</div>
+                  <div className="text-sm text-white uppercase tracking-wider">DEVELOPMENT PHASE</div>
                 </div>
 
                 <div className="bg-white/5 backdrop-blur rounded-xl border border-white/10 p-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <Lightbulb className="w-6 h-6 text-purple-400" />
+                    <Lightbulb className="w-6 h-6 text-white" />
                     <h3 className="text-xl font-bold">Emerging Artist Platform</h3>
                   </div>
                   <p className="text-gray-300 mb-4">
                     Quarterly showcases providing exhibition opportunities for 
                     underrepresented artists, with curatorial mentorship and support.
                   </p>
-                  <div className="text-sm text-purple-300">Q2 2026 launch</div>
+                  <div className="text-sm text-white uppercase tracking-wider">Q2 2026 LAUNCH</div>
                 </div>
 
                 <div className="bg-white/5 backdrop-blur rounded-xl border border-white/10 p-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <Share2 className="w-6 h-6 text-purple-400" />
+                    <Share2 className="w-6 h-6 text-white" />
                     <h3 className="text-xl font-bold">Digital Extensions</h3>
                   </div>
                   <p className="text-gray-300 mb-4">
                     Online programming that extends exhibition themes through virtual tours, 
                     artist interviews, and interactive educational content.
                   </p>
-                  <div className="text-sm text-purple-300">Always available</div>
+                  <div className="text-sm text-white uppercase tracking-wider">ALWAYS AVAILABLE</div>
                 </div>
               </div>
             </div>

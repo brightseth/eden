@@ -7,14 +7,26 @@
  */
 
 // Agent SDK Implementations
-export { MiyomiClaudeSDK, miyomiSDK } from './miyomi-claude-sdk';
-export { BerthaClaudeSDK, berthaClaude } from './bertha/claude-sdk';
-export { SolienneClaudeSDK, solienneSDK } from './solienne-claude-sdk';
-export { AbrahamClaudeSDK, abrahamSDK } from './abraham-claude-sdk';
-export { SueClaudeSDK, sueSDK } from './sue-claude-sdk';
-export { CitizenClaudeSDK, citizenSDK } from './citizen-claude-sdk';
-export { BartClaudeSDK, bartSDK } from './bart-claude-sdk';
-export { KoruClaudeSDK, koruSDK } from './koru-claude-sdk';
+export { MiyomiClaudeSDK } from './miyomi-claude-sdk';
+export { BerthaClaudeSDK } from './bertha/claude-sdk';
+export { SolienneClaudeSDK } from './solienne-claude-sdk';
+export { AbrahamClaudeSDK } from './abraham-claude-sdk';
+export { SueClaudeSDK } from './sue-claude-sdk';
+export { CitizenClaudeSDK } from './citizen-claude-sdk';
+export { BartClaudeSDK } from './bart-claude-sdk';
+export { KoruClaudeSDK } from './koru-claude-sdk';
+
+// Import SDK instances
+import { miyomiSDK } from './miyomi-claude-sdk';
+import { berthaClaude } from './bertha/claude-sdk';
+import { solienneSDK } from './solienne-claude-sdk';
+import { abrahamSDK } from './abraham-claude-sdk';
+import { sueSDK } from './sue-claude-sdk';
+import { citizenSDK } from './citizen-claude-sdk';
+import { bartSDK } from './bart-claude-sdk';
+import { koruSDK } from './koru-claude-sdk';
+
+export { miyomiSDK, berthaClaude, solienneSDK, abrahamSDK, sueSDK, citizenSDK, bartSDK, koruSDK };
 
 // Type exports for all SDKs
 export type { 

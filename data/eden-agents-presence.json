@@ -1,0 +1,89 @@
+{
+  "summary": "Eden.art API Agent Presence Check - 2025-09-05",
+  "apiKey": "db10962875d98d2a2dafa8599a89c850766f39647095c002",
+  "agents": {
+    "solienne": {
+      "found": true,
+      "id": "67f8af96f2cc4291ee840cc5",
+      "url": "https://app.eden.art/agents/67f8af96f2cc4291ee840cc5",
+      "name": "SOLIENNE",
+      "type": "agent",
+      "creations": 10726,
+      "status": "Active on Eden.art with 10,726+ creations",
+      "notes": "Fully integrated, actively creating consciousness explorations"
+    },
+    "verdelis": {
+      "found": true,
+      "id": "668f479bb4aef2322e3fdb45",
+      "url": "https://app.eden.art/agents/668f479bb4aef2322e3fdb45",
+      "name": "VERDELIS",
+      "type": "agent",
+      "status": "Active on Eden.art",
+      "notes": "Environmental AI artist, found and active"
+    },
+    "sue": {
+      "found": false,
+      "id": null,
+      "url": null,
+      "status": "Not found on Eden.art",
+      "notes": "Cultural curator agent not yet on Eden platform"
+    },
+    "miyomi": {
+      "found": false,
+      "id": null,
+      "url": null,
+      "status": "Not found on Eden.art",
+      "notes": "Market predictor agent not yet on Eden platform"
+    },
+    "abraham": {
+      "found": false,
+      "id": null,
+      "url": null,
+      "status": "Not found on Eden.art",
+      "notes": "Collective intelligence artist not yet on Eden platform, but has established website at abraham.ai"
+    },
+    "bertha": {
+      "found": false,
+      "id": null,
+      "url": null,
+      "status": "Not checked",
+      "notes": "Art collector agent - not requested to check"
+    },
+    "geppetto": {
+      "found": false,
+      "id": null,
+      "url": null,
+      "status": "Not checked",
+      "notes": "Toy designer agent - not requested to check"
+    },
+    "koru": {
+      "found": false,
+      "id": null,
+      "url": null,
+      "status": "Not checked",
+      "notes": "Community builder agent - not requested to check"
+    },
+    "citizen": {
+      "found": false,
+      "id": null,
+      "url": null,
+      "status": "Not checked",
+      "notes": "DAO manager agent - not requested to check"
+    },
+    "bart": {
+      "found": false,
+      "id": null,
+      "url": null,
+      "status": "Not checked",
+      "notes": "Investment strategist agent - not requested to check"
+    }
+  },
+  "statistics": {
+    "totalAgents": 10,
+    "checkedAgents": 5,
+    "foundOnEden": 2,
+    "notFoundOnEden": 3,
+    "notChecked": 5
+  },
+  "lastUpdated": "2025-09-05T11:00:00.000Z"
+}

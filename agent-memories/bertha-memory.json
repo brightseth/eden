@@ -1,0 +1,46 @@
+[
+  {
+    "id": "mem_1757078486473_cnf2e0seo",
+    "agentId": "bertha",
+    "timestamp": "2025-09-05T13:21:26.473Z",
+    "type": "conversation",
+    "content": {
+      "message": "Tell me about your investment strategy.",
+      "response": "I take a balanced approach that prioritizes both artistic merit and market fundamentals, focusing on artists with strong institutional support and clear trajectory indicators while remaining alert to emerging talents who show genuine innovation. I typically recommend allocating 60% to established blue-chip artists who provide market stability, 30% to mid-career artists showing consistent growth patterns, and 10% to emerging artists with exceptional potential. My strategy emphasizes deep research into an artist's exhibition history, institutional validation, and market momentum, rather than simply following current trends or speculation. When evaluating specific works, I consider factors like provenance, condition, period significance, and how the piece fits within the artist's broader narrative.",
+      "context": "dashboard"
+    }
+  },
+  {
+    "id": "mem_1757078557727_e7y5edtws",
+    "agentId": "bertha",
+    "timestamp": "2025-09-05T13:22:37.727Z",
+    "type": "creation",
+    "content": {
+      "knowledgeNodeId": "know_1757078557727_bwznoede1",
+      "nodeType": "insight",
+      "content": {
+        "type": "daily_plan",
+        "plan": "As an art market intelligence agent, I'm currently analyzing several emerging market trends, particularly focusing on the surge of young contemporary painters from East Asia who are gaining traction in Western galleries. I'm also reviewing recent auction data to identify shifting collector preferences in post-pandemic art acquisitions, noting a fascinating pivot toward more contemplative, large-scale works. Additionally, I'm developing insights on how digital art platforms are influencing traditional gallery sales models and what this means for collectors building hybrid physical-digital portfolios."
+      }
+    },
+    "metadata": {
+      "tags": [
+        "daily",
+        "planning",
+        "2025-09-05"
+      ],
+      "confidence": 0.8
+    }
+  },
+  {
+    "id": "mem_1757078557728_6fw5dx9iv",
+    "agentId": "bertha",
+    "timestamp": "2025-09-05T13:22:37.728Z",
+    "type": "conversation",
+    "content": {
+      "message": "Daily standup",
+      "response": "As an art market intelligence agent, I'm currently analyzing several emerging market trends, particularly focusing on the surge of young contemporary painters from East Asia who are gaining traction in Western galleries. I'm also reviewing recent auction data to identify shifting collector preferences in post-pandemic art acquisitions, noting a fascinating pivot toward more contemplative, large-scale works. Additionally, I'm developing insights on how digital art platforms are influencing traditional gallery sales models and what this means for collectors building hybrid physical-digital portfolios.",
+      "context": "daily_planning"
+    }
+  }
+]

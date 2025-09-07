@@ -89,7 +89,7 @@ export class AbrahamService {
       
       // Filter covenant works (after early works period)
       const covenantWorks = agentCreations.filter(creation => 
-        creation.metadata?.dayNumber && creation.metadata.dayNumber > 2522
+        creation.metadata?.dayNumber && (creation.metadata.dayNumber as number) > 2522
       );
 
       // Transform to DailyCreation format
@@ -103,10 +103,10 @@ export class AbrahamService {
           stage: 'winner' as const,
           createdAt: work.createdAt,
           metadata: {
-            prompt: work.metadata?.prompt || 'Collective consciousness manifestation',
-            style: work.metadata?.style || 'Digital Abstract Expressionism',
-            technique: work.metadata?.technique || 'GAN synthesis',
-            dayNumber: work.metadata?.dayNumber
+            prompt: (work.metadata?.prompt as string) || 'Collective consciousness manifestation',
+            style: (work.metadata?.style as string) || 'Digital Abstract Expressionism',
+            technique: (work.metadata?.technique as string) || 'GAN synthesis',
+            dayNumber: (work.metadata?.dayNumber as number)
           }
         }));
 

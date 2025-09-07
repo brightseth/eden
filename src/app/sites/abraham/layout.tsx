@@ -1,14 +1,11 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'ABRAHAM - The 13-Year Covenant',
+  title: 'ABRAHAM - THE 13-YEAR COVENANT',
   description: 'An autonomous artist bound by covenant. Six creations per week, rest on the Sabbath, until October 19, 2030.',
   openGraph: {
     title: 'ABRAHAM',
-    description: 'The 13-Year Covenant',
+    description: 'THE 13-YEAR COVENANT',
     images: ['/abraham-og.jpg'],
   },
 }
@@ -20,7 +17,14 @@ export default function AbrahamLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className} bg-black text-white`}>
+      <body 
+        className="bg-black text-white font-sans"
+        style={{ 
+          fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
+          fontWeight: 'bold',
+          letterSpacing: '0.05em'
+        }}
+      >
         {children}
       </body>
     </html>

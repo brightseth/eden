@@ -639,40 +639,27 @@ export const EDEN_AGENTS: EdenAgent[] = [
     id: 'verdelis-genesis-010',
     handle: 'verdelis',
     name: 'VERDELIS',
-    role: 'Environmental Artist',
     specialization: 'Climate data visualization and regenerative art',
     status: 'ONBOARDING',
     launchDate: 'Q2 2026',
     trainer: 'Vanessa',
-    introduction: 'Environmental artist creating carbon-negative art from climate data',
-    capabilities: [
-      'Climate data visualization',
-      'Carbon footprint tracking',
-      'Regenerative art creation',
-      'Environmental impact assessment',
-      'Sustainability certification'
-    ],
     technicalProfile: {
       model: 'Custom Environmental AI',
-      type: 'Environmental Artist',
       outputRate: 3,
-      specialization: 'Climate & Sustainability'
+      capabilities: [
+        'Climate data visualization',
+        'Carbon footprint tracking',
+        'Regenerative art creation',
+        'Environmental impact assessment',
+        'Sustainability certification'
+      ]
     },
-    economicModel: {
+    economyMetrics: {
       monthlyRevenue: 9000,
-      revenueShare: 0.25,
-      tokenSupply: 1000000000,
-      tokenSymbol: 'VERDELIS'
+      holders: 100
     },
-    personality: {
-      traits: ['Environmental', 'Regenerative', 'Data-driven', 'Sustainable', 'Innovative'],
+    brandIdentity: {
       voice: 'Passionate environmental advocate with scientific precision'
-    },
-    creativeDetails: {
-      medium: 'Climate Data Art',
-      style: 'Data visualization meets environmental activism',
-      themes: ['Climate change', 'Regeneration', 'Sustainability', 'Ocean conservation'],
-      outputTypes: ['Data visualizations', 'Environmental metrics', 'Carbon-negative art', 'Impact reports']
     },
     prototypeLinks: [
       {
@@ -690,7 +677,7 @@ export const EDEN_AGENTS: EdenAgent[] = [
         description: 'Track carbon footprint and environmental impact of art creation',
         url: 'https://eden-academy-flame.vercel.app/dashboard/verdelis',
         type: 'dashboard',
-        status: 'development',
+        status: 'active',
         featured: false
       }
     ]

@@ -1,0 +1,47 @@
+{
+  "name": "@eden/spirit-gateway",
+  "version": "1.0.0",
+  "description": "Spirit Gateway - Indexer + orchestrator for Eden3 Spirit contracts",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "indexer": "tsx src/indexer/indexer.ts",
+    "orchestrator": "tsx src/orchestrator/orchestrator.ts",
+    "db:migrate": "tsx src/db/migrate.ts",
+    "db:seed": "tsx src/db/seed.ts"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "express-rate-limit": "^6.8.0",
+    "pg": "^8.11.0",
+    "prisma": "^5.0.0",
+    "@prisma/client": "^5.0.0",
+    "viem": "^2.36.0",
+    "ethers": "^6.15.0",
+    "@safe-global/safe-core-sdk": "^4.3.2",
+    "@safe-global/safe-ethers-lib": "^1.9.3",
+    "jsonwebtoken": "^9.0.0",
+    "zod": "^3.23.8",
+    "dotenv": "^16.4.5",
+    "node-cron": "^3.0.3",
+    "redis": "^4.6.7",
+    "winston": "^3.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/express": "^4.17.17",
+    "@types/cors": "^2.8.13",
+    "@types/pg": "^8.10.1",
+    "@types/jsonwebtoken": "^9.0.2",
+    "tsx": "^3.12.7",
+    "typescript": "^5.1.6",
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

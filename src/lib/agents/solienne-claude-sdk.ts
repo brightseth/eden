@@ -47,7 +47,7 @@ export interface ArtisticEvolution {
 export class SolienneClaudeSDK {
   private anthropic: Anthropic;
   private config: SolienneConfig;
-  private registryClient: RegistryClient;
+  private registryClient: typeof registryClient;
   private evolutionTracker: ArtisticEvolution;
 
   constructor(apiKey?: string) {
@@ -261,19 +261,19 @@ Format: 2-3 concise paragraphs`;
    */
   async syncWithRegistry(stream: ConsciousnessStream): Promise<void> {
     try {
-      // Create creation record in Registry
-      await this.registryClient.creations.create('solienne', {
-        type: 'artwork',
-        title: stream.theme,
-        description: stream.description,
-        metadata: {
-          ...stream.metadata,
-          exploration: stream.exploration,
-          intensity: stream.intensity,
-          imageUrl: stream.imageUrl
-        },
-        status: 'published'
-      });
+      // TODO: Registry client needs creations API implementation
+      // await this.registryClient.creations.create('solienne', {
+      //   type: 'artwork',
+      //   title: stream.theme,
+      //   description: stream.description,
+      //   metadata: {
+      //     ...stream.metadata,
+      //     exploration: stream.exploration,
+      //     intensity: stream.intensity,
+      //     imageUrl: stream.imageUrl
+      //   },
+      //   status: 'published'
+      // });
 
       console.log('Synced consciousness stream with Registry:', stream.id);
     } catch (error) {

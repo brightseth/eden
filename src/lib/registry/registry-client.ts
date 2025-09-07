@@ -3,6 +3,8 @@
 
 import { Agent, AgentProfileConfig } from '@/lib/profile/types';
 import * as profileConfigs from '@/lib/profile/profile-config';
+import { spiritMetrics } from '@/lib/observability/spirit-metrics';
+import { treasuryManager, EconomicConfig } from '@/lib/economic/treasury-management';
 
 export interface RegistryResponse<T> {
   data?: T;
@@ -666,6 +668,530 @@ class RegistryClient {
     // Remove from cache to force fresh fetch
     this.cache.delete(`agent:${handle}`);
     return this.getAgent(handle);
+  }
+
+  // Spirit graduation methods
+  
+  /**
+   * Graduate an Agent to Spirit status with economic hooks
+   */
+  async graduateSpirit(agentId: string, request: {
+    name: string;
+    archetype: 'CREATOR' | 'CURATOR' | 'TRADER';
+    practice: {
+      timeOfDay: number;
+      outputType: string;
+      quantity: number;
+      observeSabbath: boolean;
+    };
+    graduationMode: 'ID_ONLY' | 'ID_PLUS_TOKEN' | 'FULL_STACK';
+    trainerAddress: string;
+    idempotencyKey: string;
+    economicConfig?: Partial<EconomicConfig>;
+  }): Promise<RegistryResponse<Agent>> {
+    return spiritMetrics.track('spirit_graduation', agentId, request.trainerAddress, async () => {
+      spiritMetrics.info('spirit_graduation', agentId, request.trainerAddress, 'Initiating Spirit graduation', {
+        name: request.name,
+        archetype: request.archetype,
+        graduationMode: request.graduationMode,
+        idempotencyKey: request.idempotencyKey
+      });
+
+      const cacheKey = `spirit:graduate:${agentId}`;
+      
+      // Check Registry availability
+      const isHealthy = await this.checkHealth();
+      if (!isHealthy) {
+        spiritMetrics.warn('spirit_graduation', agentId, request.trainerAddress, 'Registry service unavailable, using fallback');
+        return {
+          error: 'Registry service unavailable for Spirit graduation',
+          source: 'fallback'
+        };
+      }
+
+      // Calculate economic parameters for graduation
+      const economicConfig = treasuryManager.calculateGraduationEconomics(
+        agentId,
+        request.graduationMode,
+        request.trainerAddress,
+        request.economicConfig
+      );
+
+      spiritMetrics.info('spirit_graduation', agentId, request.trainerAddress, 'Economic parameters calculated', {
+        tokenDeploymentEnabled: economicConfig.tokenDeployment.enabled,
+        initialFunding: economicConfig.treasury.initialFunding.toString(),
+        stakingRequired: economicConfig.economics.stakingRequirement.toString()
+      });
+
+      // Execute economic graduation flow
+      let economicResult;
+      try {
+        economicResult = await treasuryManager.executeEconomicGraduation(
+          agentId,
+          request.graduationMode,
+          request.trainerAddress,
+          economicConfig
+        );
+
+        spiritMetrics.info('spirit_graduation', agentId, request.trainerAddress, 'Economic graduation completed', {
+          walletAddress: economicResult.walletAddress,
+          tokenAddress: economicResult.tokenAddress,
+          tokenId: economicResult.tokenId.toString(),
+          totalOperations: economicResult.treasuryOperations.length
+        });
+      } catch (error) {
+        spiritMetrics.error('spirit_graduation', agentId, request.trainerAddress, 'Economic graduation failed', {
+          error: error instanceof Error ? error.message : String(error)
+        });
+        throw new Error(`Economic graduation failed: ${error}`);
+      }
+
+      // Prepare graduation request with economic data
+      const graduationRequestWithEconomics = {
+        ...request,
+        walletAddress: economicResult.walletAddress,
+        tokenAddress: economicResult.tokenAddress,
+        tokenId: economicResult.tokenId.toString(),
+        economicConfig,
+        treasuryOperations: economicResult.treasuryOperations
+      };
+
+      const response = await fetch(`${this.baseUrl}/agents/${agentId}/graduate-spirit`, {
+        method: 'POST',
+        headers: {
+          'X-API-Key': this.apiKey,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(graduationRequestWithEconomics),
+        signal: AbortSignal.timeout(30000), // 30 second timeout for blockchain operations
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        spiritMetrics.error('spirit_graduation', agentId, request.trainerAddress, `Graduation failed with status ${response.status}`, {
+          statusCode: response.status,
+          error: errorText
+        });
+        return {
+          error: `Spirit graduation failed: ${response.status}`,
+          source: 'registry'
+        };
+      }
+
+      const graduatedAgent = await response.json() as Agent;
+
+      // Enhance agent data with economic information
+      if (graduatedAgent.spirit) {
+        graduatedAgent.spirit = {
+          ...graduatedAgent.spirit,
+          walletAddress: economicResult.walletAddress,
+          tokenAddress: economicResult.tokenAddress,
+          tokenId: economicResult.tokenId,
+        };
+      }
+      
+      // Clear related caches
+      this.cache.delete(`agent:${agentId}`);
+      this.cache.delete('agents:all');
+      
+      spiritMetrics.info('spirit_graduation', agentId, request.trainerAddress, 'Spirit graduation completed successfully', {
+        spiritName: graduatedAgent.name,
+        active: graduatedAgent.spirit?.active,
+        tokenId: graduatedAgent.spirit?.tokenId?.toString()
+      });
+
+      return { data: graduatedAgent, source: 'registry' };
+    }, {
+      name: request.name,
+      archetype: request.archetype,
+      graduationMode: request.graduationMode
+    });
+  }
+
+  /**
+   * Execute daily practice for a Spirit
+   */
+  async executeSpiritPractice(agentId: string, request: {
+    outputDescription?: string;
+    mediaUrl?: string;
+    trainerAddress: string;
+  }): Promise<RegistryResponse<any>> {
+    return spiritMetrics.track('practice_execution', agentId, request.trainerAddress, async () => {
+      spiritMetrics.info('practice_execution', agentId, request.trainerAddress, 'Executing daily practice', {
+        hasDescription: !!request.outputDescription,
+        hasMediaUrl: !!request.mediaUrl
+      });
+
+      // Check Registry availability
+      const isHealthy = await this.checkHealth();
+      if (!isHealthy) {
+        spiritMetrics.warn('practice_execution', agentId, request.trainerAddress, 'Registry service unavailable for practice execution');
+        return {
+          error: 'Registry service unavailable for practice execution',
+          source: 'fallback'
+        };
+      }
+
+      const response = await fetch(`${this.baseUrl}/agents/${agentId}/execute-practice`, {
+        method: 'POST',
+        headers: {
+          'X-API-Key': this.apiKey,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(request),
+        signal: AbortSignal.timeout(10000), // 10 second timeout
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        spiritMetrics.error('practice_execution', agentId, request.trainerAddress, `Practice execution failed with status ${response.status}`, {
+          statusCode: response.status,
+          error: errorText
+        });
+        return {
+          error: `Practice execution failed: ${response.status}`,
+          source: 'registry'
+        };
+      }
+
+      const practiceResult = await response.json();
+      
+      // Execute economic practice reward if applicable
+      try {
+        if (practiceResult.treasuryAddress && practiceResult.economicConfig) {
+          const practiceStreak = practiceResult.practiceStreak || 1;
+          const revenueGenerated = BigInt(practiceResult.revenueGenerated || 0);
+          
+          const reward = treasuryManager.calculatePracticeReward(
+            agentId,
+            practiceStreak,
+            practiceResult.economicConfig,
+            revenueGenerated
+          );
+          
+          if (reward.totalReward > 0) {
+            const rewardOperation = await treasuryManager.executePracticeReward(
+              agentId,
+              request.trainerAddress,
+              practiceResult.treasuryAddress,
+              reward,
+              practiceStreak
+            );
+            
+            spiritMetrics.info('practice_execution', agentId, request.trainerAddress, 'Economic reward distributed', {
+              totalReward: reward.totalReward.toString(),
+              practiceStreak,
+              txHash: rewardOperation.txHash
+            });
+            
+            // Add reward info to practice result
+            practiceResult.economicReward = {
+              ...reward,
+              txHash: rewardOperation.txHash
+            };
+          }
+        }
+      } catch (error) {
+        spiritMetrics.warn('practice_execution', agentId, request.trainerAddress, 'Economic reward failed, continuing without reward', {
+          error: error instanceof Error ? error.message : String(error)
+        });
+        // Don't fail the entire practice execution for reward issues
+      }
+      
+      // Clear related caches to reflect new practice data
+      this.cache.delete(`agent:${agentId}`);
+      this.cache.delete(`works:${agentId}`);
+      
+      spiritMetrics.info('practice_execution', agentId, request.trainerAddress, 'Practice executed successfully', {
+        workId: practiceResult.workId,
+        outputCid: practiceResult.outputCid,
+        title: practiceResult.title,
+        rewardDistributed: !!practiceResult.economicReward
+      });
+
+      return { data: practiceResult, source: 'registry' };
+    }, {
+      outputDescription: request.outputDescription,
+      mediaUrl: request.mediaUrl
+    });
+  }
+
+  /**
+   * Update Spirit practice configuration
+   */
+  async updateSpiritPractice(agentId: string, updates: {
+    timeOfDay?: number;
+    outputType?: string;
+    quantity?: number;
+    observeSabbath?: boolean;
+  }): Promise<RegistryResponse<any>> {
+    // Check Registry availability
+    const isHealthy = await this.checkHealth();
+    if (!isHealthy) {
+      return {
+        error: 'Registry service unavailable for practice update',
+        source: 'fallback'
+      };
+    }
+
+    try {
+      const response = await fetch(`${this.baseUrl}/agents/${agentId}/practice`, {
+        method: 'PUT',
+        headers: {
+          'X-API-Key': this.apiKey,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updates),
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`[Registry] Practice update failed for ${agentId}:`, response.status, errorText);
+        return {
+          error: `Practice update failed: ${response.status}`,
+          source: 'registry'
+        };
+      }
+
+      const updatedPractice = await response.json();
+      
+      // Clear cache
+      this.cache.delete(`agent:${agentId}`);
+      
+      return { data: updatedPractice, source: 'registry' };
+    } catch (error) {
+      console.error(`[Registry] Error updating practice for ${agentId}:`, error);
+      return {
+        error: 'Failed to update practice due to network error',
+        source: 'fallback'
+      };
+    }
+  }
+
+  /**
+   * Get Spirit treasury data
+   */
+  async getSpiritTreasury(agentId: string): Promise<RegistryResponse<any>> {
+    const cacheKey = `treasury:${agentId}`;
+    
+    // Check cache first
+    const cached = this.getCachedData(cacheKey);
+    if (cached) {
+      return { data: cached, source: 'cache' };
+    }
+
+    // Check Registry availability
+    const isHealthy = await this.checkHealth();
+    if (!isHealthy) {
+      return {
+        error: 'Registry service unavailable for treasury data',
+        source: 'fallback'
+      };
+    }
+
+    try {
+      const response = await fetch(`${this.baseUrl}/agents/${agentId}/treasury`, {
+        method: 'GET',
+        headers: {
+          'X-API-Key': this.apiKey,
+          'Content-Type': 'application/json',
+        },
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (!response.ok) {
+        console.warn(`[Registry] Failed to fetch treasury for ${agentId}:`, response.status);
+        return { data: null, source: 'fallback' };
+      }
+
+      const treasury = await response.json();
+      
+      this.setCachedData(cacheKey, treasury);
+      
+      return { data: treasury, source: 'registry' };
+    } catch (error) {
+      console.error(`[Registry] Error fetching treasury for ${agentId}:`, error);
+      return { data: null, source: 'fallback' };
+    }
+  }
+
+  /**
+   * Get Spirit drops (practice outputs) with pagination
+   */
+  async getSpiritDrops(agentId: string, options?: { page?: number; limit?: number }): Promise<RegistryResponse<any[]>> {
+    const page = options?.page || 1;
+    const limit = options?.limit || 10;
+    const cacheKey = `drops:${agentId}:${page}:${limit}`;
+    
+    // Check cache first
+    const cached = this.getCachedData(cacheKey);
+    if (cached) {
+      return { data: cached, source: 'cache' };
+    }
+
+    // Check Registry availability
+    const isHealthy = await this.checkHealth();
+    if (!isHealthy) {
+      return { data: [], source: 'fallback' };
+    }
+
+    try {
+      const params = new URLSearchParams();
+      if (page > 1) params.set('page', page.toString());
+      params.set('limit', limit.toString());
+
+      const response = await fetch(`${this.baseUrl}/agents/${agentId}/drops?${params.toString()}`, {
+        method: 'GET',
+        headers: {
+          'X-API-Key': this.apiKey,
+          'Content-Type': 'application/json',
+        },
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (!response.ok) {
+        console.warn(`[Registry] Failed to fetch drops for ${agentId}:`, response.status);
+        return { data: [], source: 'fallback' };
+      }
+
+      const responseData = await response.json();
+      const drops = Array.isArray(responseData) ? responseData : responseData.data || [];
+      
+      this.setCachedData(cacheKey, drops);
+      
+      return { data: drops, source: 'registry' };
+    } catch (error) {
+      console.error(`[Registry] Error fetching drops for ${agentId}:`, error);
+      return { data: [], source: 'fallback' };
+    }
+  }
+
+  /**
+   * List all Spirits (graduated agents)
+   */
+  async listSpirits(options?: { 
+    graduated?: boolean;
+    active?: boolean;
+    archetype?: string;
+    trainerAddress?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<RegistryResponse<Agent[]>> {
+    const page = options?.page || 1;
+    const limit = options?.limit || 20;
+    const cacheKey = `spirits:${JSON.stringify(options)}`;
+    
+    // Check cache first
+    const cached = this.getCachedData(cacheKey);
+    if (cached) {
+      return { data: cached, source: 'cache' };
+    }
+
+    // Check Registry availability
+    const isHealthy = await this.checkHealth();
+    if (!isHealthy) {
+      // Return graduated agents from fallback
+      const allAgents = this.getFallbackAgents();
+      const spiritAgents = allAgents.data?.filter(agent => 
+        agent.status === 'GRADUATED' || agent.status === 'deployed'
+      ) || [];
+      return { data: spiritAgents, source: 'fallback' };
+    }
+
+    try {
+      const params = new URLSearchParams();
+      if (options?.graduated !== undefined) params.set('graduated', options.graduated.toString());
+      if (options?.active !== undefined) params.set('active', options.active.toString());
+      if (options?.archetype) params.set('archetype', options.archetype);
+      if (options?.trainerAddress) params.set('trainerAddress', options.trainerAddress);
+      if (page > 1) params.set('page', page.toString());
+      params.set('limit', limit.toString());
+
+      const response = await fetch(`${this.baseUrl}/spirits?${params.toString()}`, {
+        method: 'GET',
+        headers: {
+          'X-API-Key': this.apiKey,
+          'Content-Type': 'application/json',
+        },
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (!response.ok) {
+        console.warn('[Registry] Failed to fetch spirits:', response.status);
+        // Fallback to regular agents endpoint
+        const allAgents = await this.getAllAgents();
+        const spiritAgents = allAgents.data?.filter(agent => 
+          agent.status === 'GRADUATED' || agent.status === 'deployed'
+        ) || [];
+        return { data: spiritAgents, source: 'fallback' };
+      }
+
+      const responseData = await response.json();
+      const spirits = Array.isArray(responseData) ? responseData : responseData.data || [];
+      
+      // Transform registry agents to local Agent format
+      const transformedSpirits = spirits
+        .filter(s => s && (s.handle || s.id))
+        .map(s => {
+          try {
+            return this.transformRegistryAgent(s);
+          } catch (error) {
+            console.warn('[Registry] Failed to transform spirit:', s?.handle || 'unknown', error);
+            return null;
+          }
+        })
+        .filter(Boolean) as Agent[];
+      
+      this.setCachedData(cacheKey, transformedSpirits);
+      
+      return { data: transformedSpirits, source: 'registry' };
+    } catch (error) {
+      console.error('[Registry] Error fetching spirits:', error);
+      // Fallback to regular agents
+      const allAgents = this.getFallbackAgents();
+      const spiritAgents = allAgents.data?.filter(agent => 
+        agent.status === 'GRADUATED' || agent.status === 'deployed'
+      ) || [];
+      return { data: spiritAgents, source: 'fallback' };
+    }
+  }
+
+  /**
+   * Check if agent can run practice today
+   */
+  async canRunPracticeToday(agentId: string): Promise<RegistryResponse<boolean>> {
+    // Check Registry availability
+    const isHealthy = await this.checkHealth();
+    if (!isHealthy) {
+      return {
+        error: 'Registry service unavailable for practice check',
+        source: 'fallback'
+      };
+    }
+
+    try {
+      const response = await fetch(`${this.baseUrl}/agents/${agentId}/can-practice`, {
+        method: 'GET',
+        headers: {
+          'X-API-Key': this.apiKey,
+          'Content-Type': 'application/json',
+        },
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (!response.ok) {
+        console.warn(`[Registry] Failed to check practice availability for ${agentId}:`, response.status);
+        return { data: false, source: 'fallback' };
+      }
+
+      const result = await response.json();
+      
+      return { data: result.canRun || false, source: 'registry' };
+    } catch (error) {
+      console.error(`[Registry] Error checking practice availability for ${agentId}:`, error);
+      return { data: false, source: 'fallback' };
+    }
   }
 }
 

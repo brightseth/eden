@@ -246,8 +246,8 @@ export default function AbrahamSite() {
       <div className="border-b border-white">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <h1 className="text-2xl font-bold">{ABRAHAM_BRAND.identity.name}</h1>
-            <span className="text-xs opacity-75">{ABRAHAM_BRAND.identity.agent} • {ABRAHAM_BRAND.identity.tagline}</span>
+            <h1 className="text-4xl font-bold tracking-wider uppercase">ABRAHAM</h1>
+            <span className="text-xs tracking-wider uppercase opacity-50">AGENT_001 • THE ORIGINAL COVENANT</span>
             
             {/* Social Links */}
             <div className="flex gap-2">
@@ -282,7 +282,7 @@ export default function AbrahamSite() {
             href="/academy/agent/abraham" 
             className="text-xs hover:bg-white hover:text-black px-3 py-1 transition-all"
           >
-            {ABRAHAM_BRAND.labels.profile} →
+            AGENT PROFILE →
           </Link>
         </div>
       </div>
@@ -292,25 +292,25 @@ export default function AbrahamSite() {
         <div className="max-w-7xl mx-auto px-4 py-3 grid grid-cols-4 gap-4 text-center">
           <div>
             <div className="text-lg sm:text-2xl font-bold">{currentWorkNumber}</div>
-            <div className="text-xs">TOTAL WORKS</div>
+            <div className="text-xs uppercase tracking-wider">TOTAL WORKS</div>
           </div>
           <div>
             <div className="text-lg sm:text-2xl font-bold">{progressPercentage}%</div>
-            <div className="text-xs">COVENANT PROGRESS</div>
+            <div className="text-xs uppercase tracking-wider">COVENANT PROGRESS</div>
           </div>
           <div>
             <div className="text-lg sm:text-2xl font-bold">{daysRemaining}</div>
-            <div className="text-xs">DAYS REMAINING</div>
+            <div className="text-xs uppercase tracking-wider">DAYS REMAINING</div>
           </div>
           <div>
             <div className="text-2xl font-bold flex items-center justify-center gap-1">
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+              <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
               {isClient ? (liveViewers || 847) : 847}
               {statusData?.source === 'registry' && (
                 <span className="text-xs opacity-30">R</span>
               )}
             </div>
-            <div className="text-xs">WATCHING NOW</div>
+            <div className="text-xs uppercase tracking-wider">WATCHING NOW</div>
           </div>
         </div>
       </div>
@@ -320,7 +320,7 @@ export default function AbrahamSite() {
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h2 className="text-3xl font-bold mb-4">THE COVENANT</h2>
+              <h2 className="text-3xl font-bold mb-4 uppercase tracking-wider">THE COVENANT</h2>
               <p className="text-lg mb-4">
                 <strong>{ABRAHAM_BRAND.mission.primary}</strong>
               </p>
@@ -331,11 +331,11 @@ export default function AbrahamSite() {
               <div className="space-y-2 text-sm">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4" />
-                  <span>UNBROKEN DAILY CREATION</span>
+                  <span className="uppercase tracking-wider">UNBROKEN DAILY CREATION</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4" />
-                  <span>KNOWLEDGE SYNTHESIS</span>
+                  <span className="uppercase tracking-wider">KNOWLEDGE SYNTHESIS</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4" />
@@ -344,7 +344,7 @@ export default function AbrahamSite() {
               </div>
             </div>
             <div className="border border-white p-6">
-              <h3 className="text-xl font-bold mb-4">NEXT CREATION IN</h3>
+              <h3 className="text-xl font-bold mb-4 uppercase tracking-wider">NEXT CREATION IN</h3>
               <div className="text-4xl font-mono mb-6 text-center">{isClient ? timeUntilNext : '00:00:00'}</div>
               <div className="space-y-4">
                 <div>
@@ -398,9 +398,9 @@ export default function AbrahamSite() {
             </div>
           </div>
           <div className="mt-8">
-            <div className="w-full bg-gray-800 rounded-full h-2">
+            <div className="w-full bg-black border border-white h-2">
               <div 
-                className="bg-gradient-to-r from-blue-500 to-cyan-400 h-2 rounded-full transition-all duration-1000"
+                className="bg-white h-2 transition-all duration-1000"
                 style={{ width: `${progressPercentage}%` }}
               />
             </div>
@@ -446,7 +446,7 @@ export default function AbrahamSite() {
             >
               <div className="grid md:grid-cols-5 gap-6">
                 {/* Image */}
-                <div className="aspect-square bg-gray-900 group-hover:bg-gray-100 relative overflow-hidden">
+                <div className="aspect-square bg-black border border-white group-hover:bg-white relative overflow-hidden">
                   {work.imageUrl ? (
                     <img 
                       src={work.imageUrl} 
@@ -519,7 +519,7 @@ export default function AbrahamSite() {
             >
               <div className="grid md:grid-cols-5 gap-6">
                 {/* Image */}
-                <div className="aspect-square bg-gray-900 group-hover:bg-gray-100 relative overflow-hidden">
+                <div className="aspect-square bg-black border border-white group-hover:bg-white relative overflow-hidden">
                   {work.imageUrl ? (
                     <img 
                       src={work.imageUrl} 
@@ -601,7 +601,7 @@ export default function AbrahamSite() {
       </div>
 
       {/* Token Economics Banner */}
-      <div className="border-t border-white bg-gradient-to-r from-green-900/30 to-blue-900/30">
+      <div className="border-t border-white bg-black">
         <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
           <div className="grid md:grid-cols-3 gap-6 sm:gap-8 items-center">
             <div className="text-center">

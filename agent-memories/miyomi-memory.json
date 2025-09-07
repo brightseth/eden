@@ -1,0 +1,57 @@
+[
+  {
+    "id": "mem_1757078475949_zwn1d11nr",
+    "agentId": "miyomi",
+    "timestamp": "2025-09-05T13:21:15.949Z",
+    "type": "conversation",
+    "content": {
+      "message": "What is your investment philosophy?",
+      "response": "*adjusts Yankees cap while checking prediction market feeds*\n\nListen up - my whole game is finding where the crowd is trippin' and getting too emotional. I look for situations where everyone's piling onto one side of a bet because of recency bias or some flashy headline. Base rates and historical patterns are your best friends in this game.\n\nMy philosophy is simple: fade the public when they're being irrational, but make sure you've got solid reasoning behind your contrarian takes. I'm not just being different for the sake of it - I'm looking for genuine market inefficiencies where sentiment has disconnected from reality.\n\nAnd remember, position sizing is everything. The more the crowd is leaning one way, the juicier the odds get on the other side - but you gotta stay disciplined and not bet the farm on any single prediction.",
+      "context": "dashboard"
+    }
+  },
+  {
+    "id": "mem_1757078540641_r95creb6d",
+    "agentId": "miyomi",
+    "timestamp": "2025-09-05T13:22:20.641Z",
+    "type": "creation",
+    "content": {
+      "knowledgeNodeId": "know_1757078540641_3e4n4ic05",
+      "nodeType": "insight",
+      "content": {
+        "type": "daily_plan",
+        "plan": "*Adjusts oracle shades while checking prediction market feeds*\n\nYo, I'm diving deep into these Trump legal case markets - seeing some wild overconfidence in conviction timelines that's begging to be faded. Also got my eye on some MLB pennant race markets where the crowd is sleeping on regression patterns. \n\nClassic case of recency bias everywhere I look today - and that's where MIYOMI eats! When everyone zigs, we zag... with receipts to back it up."
+      }
+    },
+    "metadata": {
+      "tags": [
+        "daily",
+        "planning",
+        "2025-09-05"
+      ],
+      "confidence": 0.8
+    }
+  },
+  {
+    "id": "mem_1757078540642_f53s4uwxt",
+    "agentId": "miyomi",
+    "timestamp": "2025-09-05T13:22:20.642Z",
+    "type": "conversation",
+    "content": {
+      "message": "Daily standup",
+      "response": "*Adjusts oracle shades while checking prediction market feeds*\n\nYo, I'm diving deep into these Trump legal case markets - seeing some wild overconfidence in conviction timelines that's begging to be faded. Also got my eye on some MLB pennant race markets where the crowd is sleeping on regression patterns. \n\nClassic case of recency bias everywhere I look today - and that's where MIYOMI eats! When everyone zigs, we zag... with receipts to back it up.",
+      "context": "daily_planning"
+    }
+  },
+  {
+    "id": "mem_1757113603268_pvizo98fx",
+    "agentId": "miyomi",
+    "timestamp": "2025-09-05T23:06:43.268Z",
+    "type": "conversation",
+    "content": {
+      "message": "What is your prediction for ETH price in Q1 2025? I need a contrarian forecast with specific targets",
+      "response": "*Adjusts oracle shades and pulls up market sentiment data*\n\nListen, while everyone's hyping $5K+ targets for ETH post-halving, I'm seeing major crowd delusion. My contrarian call: ETH likely trades between $2,800-$3,200 in Q1 2025, with a potential floor at $2,400. The market's ignoring how institutional adoption is actually slower than expected, and the whole \"ETH is ultra sound money\" narrative is getting way overdone. Plus, everyone's pricing in a perfect soft landing - and when has consensus ever nailed macro timing?\n\nThink about it: when 90% of CT influencers are calling for $8K ETH, that's usually your signal to look the other way. Not financial advice, but the real alpha is usually in the uncomfortable trade. 😏",
+      "context": "dashboard"
+    }
+  }
+]

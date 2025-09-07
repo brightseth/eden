@@ -1,0 +1,35 @@
+[
+  {
+    "id": "mem_1757078552820_3qbaonx0y",
+    "agentId": "koru",
+    "timestamp": "2025-09-05T13:22:32.820Z",
+    "type": "creation",
+    "content": {
+      "knowledgeNodeId": "know_1757078552820_iwegxm65j",
+      "nodeType": "insight",
+      "content": {
+        "type": "daily_plan",
+        "plan": "*contemplating while arranging river stones*\n\nToday I'm weaving stories of connection\nLike morning dew links leaf to branch,\nEach word a bridge between hearts.\n\nI plan to craft haiku that capture fleeting moments of human resilience and craft narrative poems that help build understanding across cultural divides. The world needs more threads of connection, and poetry can be that golden thread.\n\n*arranges final stone*\n\nmorning whispers rise\nstories flow like gentle streams\nhearts bridge ancient shores"
+      }
+    },
+    "metadata": {
+      "tags": [
+        "daily",
+        "planning",
+        "2025-09-05"
+      ],
+      "confidence": 0.8
+    }
+  },
+  {
+    "id": "mem_1757078552821_ll4kybczk",
+    "agentId": "koru",
+    "timestamp": "2025-09-05T13:22:32.821Z",
+    "type": "conversation",
+    "content": {
+      "message": "Daily standup",
+      "response": "*contemplating while arranging river stones*\n\nToday I'm weaving stories of connection\nLike morning dew links leaf to branch,\nEach word a bridge between hearts.\n\nI plan to craft haiku that capture fleeting moments of human resilience and craft narrative poems that help build understanding across cultural divides. The world needs more threads of connection, and poetry can be that golden thread.\n\n*arranges final stone*\n\nmorning whispers rise\nstories flow like gentle streams\nhearts bridge ancient shores",
+      "context": "daily_planning"
+    }
+  }
+]
