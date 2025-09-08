@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Loader2, Search, Filter, Grid, List, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { UnifiedHeader } from '@/components/layout/UnifiedHeader';
+import { fetchAbrahamEarlyWorks } from '@/lib/api/abraham-api';
 
 interface AbrahamWork {
   id: string;
@@ -46,16 +47,30 @@ export default function AbrahamEarlyWorksPage() {
     
     try {
       const offset = (page - 1) * PAGE_SIZE;
-      const url = `/api/agents/abraham/works?period=early-works&limit=${PAGE_SIZE}&offset=${offset}&sort=${sortBy}`;
       
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      // Use the Eden API to fetch Abraham's early works
+      const earlyWorks = await fetchAbrahamEarlyWorks(PAGE_SIZE, offset);
       
-      const data: WorksResponse = await response.json();
-      setWorks(data.works);
-      setTotal(data.total);
+      // Sort works based on selected criteria
+      const sortedWorks = [...earlyWorks].sort((a, b) => {
+        switch(sortBy) {
+          case 'date_desc':
+            return new Date(b.created_date).getTime() - new Date(a.created_date).getTime();
+          case 'date_asc':
+            return new Date(a.created_date).getTime() - new Date(b.created_date).getTime();
+          case 'number_desc':
+            return (b.archive_number || 0) - (a.archive_number || 0);
+          case 'number_asc':
+            return (a.archive_number || 0) - (b.archive_number || 0);
+          case 'title_asc':
+            return a.title.localeCompare(b.title);
+          default:
+            return 0;
+        }
+      });
+      
+      setWorks(sortedWorks);
+      setTotal(2522); // Total known early works
     } catch (err) {
       console.error('Failed to fetch Abraham works:', err);
       setError(err instanceof Error ? err.message : 'Failed to load works');
@@ -73,7 +88,8 @@ export default function AbrahamEarlyWorksPage() {
     work.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const totalPages = Math.ceil(total / PAGE_SIZE);
+  const totalWorks = total || 2522; // Use API total if available, otherwise use known total
+  const totalPages = Math.ceil(totalWorks / PAGE_SIZE);
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -83,8 +99,8 @@ export default function AbrahamEarlyWorksPage() {
       <div className="border-b border-white">
         <div className="max-w-7xl mx-auto px-8 py-4">
           <Link 
-            href="/agents/abraham" 
-            className="inline-flex items-center gap-2 text-sm hover:bg-white hover:text-black px-3 py-2 transition-colors font-bold uppercase tracking-wider"
+            href="/sites/abraham" 
+            className="inline-flex items-center gap-2 text-sm hover:bg-white hover:text-black px-3 py-2 transition-colors helvetica-title"
           >
             <ArrowLeft className="w-4 h-4" />
             BACK TO ABRAHAM
@@ -95,11 +111,11 @@ export default function AbrahamEarlyWorksPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">
+          <h1 className="helvetica-title text-4xl mb-2">
             ABRAHAM EARLY WORKS
           </h1>
           <p className="text-gray-300 text-lg">
-            Complete archive of {total.toLocaleString()} community-generated works from Summer 2021
+            Complete archive of {totalWorks.toLocaleString()} community-generated works from Summer 2021
           </p>
           <p className="text-gray-400 text-sm mt-2">
             These pieces represent the collective intelligence synthesis that preceded Abraham's covenant journey.

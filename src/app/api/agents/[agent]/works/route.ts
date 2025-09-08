@@ -1,5 +1,80 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Initialize Supabase REST API directly to avoid SDK module issues
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY || '';
+
+// For Abraham, fetch from Supabase agent_archives table using REST API
+async function fetchAbrahamWorks(limit: number = 24, offset: number = 0, sort: string = 'archive_number') {
+  try {
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error('[API] Supabase environment variables not configured');
+      return { works: [], total: 0 };
+    }
+
+    // Build query parameters
+    const params = new URLSearchParams({
+      select: '*',
+      agent_id: 'eq.abraham',
+      archive_type: 'eq.early-work',
+      limit: limit.toString(),
+      offset: offset.toString()
+    });
+
+    // Add sorting
+    let orderParam = 'archive_number.asc';
+    switch(sort) {
+      case 'date_desc':
+        orderParam = 'created_date.desc';
+        break;
+      case 'date_asc':
+        orderParam = 'created_date.asc';
+        break;
+      case 'number_desc':
+        orderParam = 'archive_number.desc';
+        break;
+      case 'number_asc':
+        orderParam = 'archive_number.asc';
+        break;
+      case 'title_asc':
+        orderParam = 'title.asc';
+        break;
+    }
+    params.append('order', orderParam);
+
+    // Make direct REST API call
+    const response = await fetch(
+      `${supabaseUrl}/rest/v1/agent_archives?${params.toString()}`,
+      {
+        headers: {
+          'apikey': supabaseServiceKey,
+          'Authorization': `Bearer ${supabaseServiceKey}`,
+          'Prefer': 'count=exact'
+        }
+      }
+    );
+
+    if (!response.ok) {
+      console.error('[API] Supabase REST API error:', response.status);
+      return { works: [], total: 0 };
+    }
+
+    const data = await response.json();
+    const totalCount = response.headers.get('content-range')?.split('/')[1] || '0';
+
+    console.log(`[API] Successfully fetched ${data?.length || 0} Abraham works from Supabase`);
+    return { 
+      works: data || [], 
+      total: parseInt(totalCount),
+      limit,
+      offset
+    };
+  } catch (error) {
+    console.error('[API] Failed to fetch Abraham works:', error);
+    return { works: [], total: 0 };
+  }
+}
+
 // For Solienne, fetch from Eden API
 async function fetchSolienneWorks() {
   try {
@@ -74,10 +149,20 @@ function getMockWorks(agentId: string) {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ agent: string }> }
 ) {
   try {
-    const { id: agentId } = await params;
+    const { agent: agentId } = await params;
+    const { searchParams } = new URL(request.url);
+    const limit = parseInt(searchParams.get('limit') || '24');
+    const offset = parseInt(searchParams.get('offset') || '0');
+    const sort = searchParams.get('sort') || 'archive_number';
+    
+    // Special handling for Abraham to fetch from Supabase agent_archives
+    if (agentId === 'abraham') {
+      const result = await fetchAbrahamWorks(limit, offset, sort);
+      return NextResponse.json(result);
+    }
     
     // Special handling for Solienne to fetch from Eden API
     if (agentId === 'solienne' && process.env.ENABLE_EDEN_API_INTEGRATION === 'true') {
