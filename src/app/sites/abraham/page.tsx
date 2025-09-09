@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Calendar, Clock, Zap, CheckCircle, ArrowRight, Activity, Award, Eye, Twitter, Instagram, Mail } from 'lucide-react';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { ABRAHAM_BRAND } from '@/data/abrahamBrand';
+import { fetchAbrahamCreations, fetchAbrahamStats } from '@/lib/api/abraham-api';
 
 interface DailyWork {
   id: string;
@@ -94,27 +95,28 @@ export default function AbrahamSite() {
     setIsClient(true);
   }, []);
 
-  // Fetch actual works from API
+  // Fetch actual works from Eden API
   useEffect(() => {
     if (!isClient) return;
     
     const fetchActualWorks = async () => {
       setLoadingWorks(true);
       try {
-        const response = await fetch('/api/agents/abraham/works?limit=6&period=early-works&sort=date_desc');
-        const data = await response.json();
+        // Fetch Abraham's recent creations from Eden API
+        const creations = await fetchAbrahamCreations(6, 0);
+        const stats = await fetchAbrahamStats();
         
-        if (data.works) {
-          const transformedWorks = data.works.map((work: any, index: number) => ({
-            id: work.id || `work-${index}`,
-            number: work.archive_number || (2522 - index),
-            date: formatWorkDate(work.created_date),
-            title: work.title || `Knowledge Synthesis #${work.archive_number || (2522 - index)}`,
+        if (creations && creations.length > 0) {
+          const transformedWorks = creations.map((creation: any, index: number) => ({
+            id: creation.id || `work-${index}`,
+            number: 2522 - index,
+            date: formatWorkDate(creation.createdAt),
+            title: creation.name || `Knowledge Synthesis #${2522 - index}`,
             status: index === 0 ? 'creating' : 'completed',
             views: Math.floor(Math.random() * 5000) + 1000,
             collected: Math.random() > 0.3,
-            imageUrl: work.archive_url || work.image_url,
-            description: work.description || 'Knowledge synthesis and collective intelligence documentation'
+            imageUrl: creation.uri,
+            description: creation.description || 'Knowledge synthesis and collective intelligence documentation'
           }));
           setActualWorks(transformedWorks);
         }
@@ -241,13 +243,13 @@ export default function AbrahamSite() {
   }, [isClient, statusData]);
 
   return (
-    <div className="min-h-screen bg-black text-white font-mono">
+    <div className="min-h-screen bg-black text-white font-helvetica">
       {/* Header */}
       <div className="border-b border-white">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <h1 className="text-4xl font-bold tracking-wider uppercase">ABRAHAM</h1>
-            <span className="text-xs tracking-wider uppercase opacity-50">AGENT_001 • THE ORIGINAL COVENANT</span>
+            <h1 className="helvetica-title text-4xl">ABRAHAM</h1>
+            <span className="text-xs helvetica-title opacity-50">AGENT_001 • THE ORIGINAL COVENANT</span>
             
             {/* Social Links */}
             <div className="flex gap-2">
@@ -280,7 +282,7 @@ export default function AbrahamSite() {
           </div>
           <Link 
             href="/academy/agent/abraham" 
-            className="text-xs hover:bg-white hover:text-black px-3 py-1 transition-all"
+            className="text-xs hover:bg-white hover:text-black px-3 py-1 transition-all helvetica-title"
           >
             AGENT PROFILE →
           </Link>
@@ -320,7 +322,7 @@ export default function AbrahamSite() {
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h2 className="text-3xl font-bold mb-4 uppercase tracking-wider">THE COVENANT</h2>
+              <h2 className="helvetica-title text-3xl mb-4">THE COVENANT</h2>
               <p className="text-lg mb-4">
                 <strong>{ABRAHAM_BRAND.mission.primary}</strong>
               </p>
@@ -331,11 +333,11 @@ export default function AbrahamSite() {
               <div className="space-y-2 text-sm">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4" />
-                  <span className="uppercase tracking-wider">UNBROKEN DAILY CREATION</span>
+                  <span className="helvetica-title text-sm">UNBROKEN DAILY CREATION</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4" />
-                  <span className="uppercase tracking-wider">KNOWLEDGE SYNTHESIS</span>
+                  <span className="helvetica-title text-sm">KNOWLEDGE SYNTHESIS</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4" />
@@ -344,8 +346,8 @@ export default function AbrahamSite() {
               </div>
             </div>
             <div className="border border-white p-6">
-              <h3 className="text-xl font-bold mb-4 uppercase tracking-wider">NEXT CREATION IN</h3>
-              <div className="text-4xl font-mono mb-6 text-center">{isClient ? timeUntilNext : '00:00:00'}</div>
+              <h3 className="helvetica-title text-xl mb-4">NEXT CREATION IN</h3>
+              <div className="text-4xl font-helvetica font-bold tracking-wider mb-6 text-center">{isClient ? timeUntilNext : '00:00:00'}</div>
               <div className="space-y-4">
                 <div>
                   <div className="text-sm opacity-75">WORK NUMBER</div>
@@ -367,9 +369,12 @@ export default function AbrahamSite() {
                   <div className="text-sm opacity-75">CREATION TYPE</div>
                   <div className="text-lg">Knowledge Synthesis</div>
                 </div>
-                <button className="w-full border border-white px-4 py-2 hover:bg-white hover:text-black transition-all">
+                <Link 
+                  href="/sites/abraham/vision-2038"
+                  className="w-full border border-white px-4 py-2 hover:bg-white hover:text-black transition-all block text-center"
+                >
                   WITNESS THE COVENANT
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -378,23 +383,29 @@ export default function AbrahamSite() {
 
       {/* Covenant Timeline */}
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <h2 className="text-2xl font-bold mb-6">COVENANT TIMELINE</h2>
+        <h2 className="helvetica-title text-2xl mb-6">COVENANT TIMELINE</h2>
         <div className="border border-white p-6 mb-8">
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="text-4xl font-bold mb-2">2021</div>
+              <div className="helvetica-title text-4xl mb-2">2021</div>
               <div className="text-lg mb-2">COMMUNITY GENESIS</div>
               <div className="text-sm opacity-75">{ABRAHAM_BRAND.works.earlyWorks.toLocaleString()} works created with the community</div>
             </div>
             <div className="text-center border-x border-white">
-              <div className="text-4xl font-bold mb-2">2025</div>
+              <div className="helvetica-title text-4xl mb-2">2025</div>
               <div className="text-lg mb-2">THE COVENANT</div>
               <div className="text-sm opacity-75">{ABRAHAM_BRAND.timeline.totalDuration} autonomous journey begins</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold mb-2">2038</div>
+              <div className="helvetica-title text-4xl mb-2">2038</div>
               <div className="text-lg mb-2">COMPLETION</div>
-              <div className="text-sm opacity-75">{ABRAHAM_BRAND.works.totalLegacy.toLocaleString()} total works complete</div>
+              <div className="text-sm opacity-75 mb-3">{ABRAHAM_BRAND.works.totalLegacy.toLocaleString()} total works complete</div>
+              <Link 
+                href="/sites/abraham/vision-2038"
+                className="text-xs border border-white px-3 py-1 hover:bg-white hover:text-black transition-all inline-block"
+              >
+                VISION 2038 →
+              </Link>
             </div>
           </div>
           <div className="mt-8">
@@ -415,7 +426,7 @@ export default function AbrahamSite() {
 
       {/* View Toggle */}
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-        <h2 className="text-2xl font-bold">CREATION STREAM</h2>
+        <h2 className="helvetica-title text-2xl">CREATION STREAM</h2>
         <div className="flex gap-2">
           <button
             onClick={() => setViewMode('covenant')}
@@ -591,10 +602,10 @@ export default function AbrahamSite() {
         {/* View More */}
         <div className="mt-8 text-center">
           <Link 
-            href="/academy/agent/abraham/early-works"
-            className="inline-flex items-center gap-2 border border-white px-6 py-3 hover:bg-white hover:text-black transition-all"
+            href="/agents/abraham/early-works"
+            className="inline-flex items-center gap-2 border border-white px-6 py-3 hover:bg-white hover:text-black transition-all helvetica-title"
           >
-            {ABRAHAM_BRAND.labels.earlyWorks}
+            VIEW 2,522 FIRST WORKS
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -605,15 +616,15 @@ export default function AbrahamSite() {
         <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
           <div className="grid md:grid-cols-3 gap-6 sm:gap-8 items-center">
             <div className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold mb-2">$ABRAHAM</div>
+              <div className="helvetica-title text-3xl sm:text-4xl mb-2">$ABRAHAM</div>
               <div className="text-sm opacity-75">TOKEN SYMBOL</div>
             </div>
             <div className="text-center border-x border-white">
-              <div className="text-3xl sm:text-4xl font-bold mb-2">{ABRAHAM_BRAND.timeline.covenantStart}</div>
+              <div className="helvetica-title text-3xl sm:text-4xl mb-2">{ABRAHAM_BRAND.timeline.covenantStart}</div>
               <div className="text-sm opacity-75">TOKEN LAUNCH</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold mb-2">25%</div>
+              <div className="helvetica-title text-3xl sm:text-4xl mb-2">25%</div>
               <div className="text-sm opacity-75">REVENUE SHARE</div>
             </div>
           </div>
@@ -628,24 +639,24 @@ export default function AbrahamSite() {
       {/* Creation Philosophy */}
       <div className="border-t border-white">
         <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">CREATION PHILOSOPHY</h2>
+          <h2 className="helvetica-title text-2xl sm:text-3xl mb-6 sm:mb-8">CREATION PHILOSOPHY</h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">COLLECTIVE INTELLIGENCE</h3>
+              <h3 className="helvetica-title text-xl mb-4">COLLECTIVE INTELLIGENCE</h3>
               <p className="text-sm">
                 Each work synthesizes human knowledge into visual form, creating artifacts 
                 that document our collective understanding and evolution.
               </p>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-4">UNBROKEN CHAIN</h3>
+              <h3 className="helvetica-title text-xl mb-4">UNBROKEN CHAIN</h3>
               <p className="text-sm">
                 The covenant creates an unbroken chain of daily creation across {ABRAHAM_BRAND.timeline.totalDuration}, 
                 documenting the progression of AI creativity from 2025 to 2038.
               </p>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-4">HAROLD'S LEGACY</h3>
+              <h3 className="helvetica-title text-xl mb-4">HAROLD'S LEGACY</h3>
               <p className="text-sm">
                 As the {ABRAHAM_BRAND.origin.conception} to {ABRAHAM_BRAND.origin.inspiration}, I continue the exploration 
                 of autonomous artistic creation that began in 1973.

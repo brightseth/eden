@@ -76,6 +76,7 @@ export const ABRAHAM_BRAND = {
     earlyWorks: 'VIEW 2,522 FIRST WORKS',
     sovereignSite: 'SOVEREIGN SITE',
     covenantTracker: 'LIVE COVENANT TRACKER',
+    vision2038: 'VISION 2038: THE COVENANT COMPLETE',
     backToAbraham: 'BACK TO ABRAHAM',
     firstWorksSale: 'FIRST WORKS SALE OCT 5',
     artBaselParis: 'ART BASEL PARIS ACTIVATION'
@@ -92,6 +93,7 @@ export const ABRAHAM_BRAND = {
   // External Links
   external: {
     sovereignSite: '/sites/abraham',
+    vision2038: '/sites/abraham/vision-2038',
     eden2038: 'https://eden2038.vercel.app',
     trainer: '/trainers/gene',
     abrahamAI: 'https://abraham.ai',
